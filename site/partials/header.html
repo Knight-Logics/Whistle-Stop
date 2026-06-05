@@ -11,7 +11,7 @@
     <li><a href="index.html">Home</a></li>
     <li><a href="menu.html">Menu</a></li>
     <li><a href="events.html">Events</a></li>
-    <li><a href="live-music.html">Live Music</a></li>
+    <li><a href="order.html">Order</a></li>
     <li><a href="happy-hour.html">Happy Hour</a></li>
     <li><a href="about.html">Our Story</a></li>
     <li><a href="contact.html">Visit</a></li>
@@ -20,32 +20,52 @@
 
 <a href="tel:+17277261956" class="header-call-btn header-aside">(727) 726-1956</a>
 
-<button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+<button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav-mobile">
   <span></span><span></span><span></span>
 </button>
 
-<div class="nav-mobile" aria-hidden="true">
-  <ul>
-    <li><a href="index.html">Home</a></li>
-    <li><a href="menu.html">Menu</a></li>
-    <li><a href="events.html">Events</a></li>
-    <li><a href="live-music.html">Live Music</a></li>
-    <li><a href="happy-hour.html">Happy Hour</a></li>
-    <li><a href="about.html">Our Story</a></li>
-    <li><a href="order.html">Order Online</a></li>
-    <li><a href="private-events.html">Private Events</a></li>
-    <li><a href="contact.html">Visit &amp; Contact</a></li>
-  </ul>
-  <div class="nav-mobile-socials">
-    <span class="header-socials-label">socials</span>
-    <div class="header-social-icons">
-      <a href="https://www.facebook.com/Whistlestopgrillandbar915" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-        <img src="assets/icons/facebook.svg" alt="" width="26" height="26" />
-      </a>
-      <a href="https://www.instagram.com/whistlestopgrill/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-        <img src="assets/icons/instagram.svg" alt="" width="26" height="26" />
-      </a>
+<div class="nav-backdrop" aria-hidden="true"></div>
+
+<div class="nav-mobile" id="site-nav-mobile" aria-hidden="true">
+  <div class="nav-mobile-inner">
+    <p class="nav-mobile-brand">Whistle Stop Grill &amp; Bar</p>
+    <ul class="nav-mobile-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="order.html">Order</a></li>
+      <li><a href="happy-hour.html">Happy Hour</a></li>
+      <li><a href="about.html">Our Story</a></li>
+      <li><a href="private-events.html">Private Events</a></li>
+      <li><a href="contact.html">Visit &amp; Contact</a></li>
+    </ul>
+
+    <div class="nav-mobile-ctas">
+      <a href="tel:+17277261956" class="btn btn-primary">Call (727) 726-1956</a>
+      <a href="https://www.whistlestopgrill.com/online-ordering" class="btn btn-outline" target="_blank" rel="noopener noreferrer">Order pickup online</a>
+      <a href="https://order.toasttab.com/egift/whistle-stop-grill-bar" class="btn btn-outline" target="_blank" rel="noopener noreferrer">Gift Cards</a>
+    </div>
+
+    <div class="nav-mobile-socials">
+      <span class="header-socials-label">socials</span>
+      <div class="header-social-icons">
+        <a href="https://www.facebook.com/Whistlestopgrillandbar915" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <img src="assets/icons/facebook.svg" alt="" width="26" height="26" />
+        </a>
+        <a href="https://www.instagram.com/whistlestopgrill/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <img src="assets/icons/instagram.svg" alt="" width="26" height="26" />
+        </a>
+      </div>
+    </div>
+
+    <div class="nav-mobile-legal">
+      <nav aria-label="Legal">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="accessibility.html">Accessibility</a>
+      </nav>
+      <p>© 2026 Whistle Stop Grill &amp; Bar<sup>®</sup></p>
+      <p class="nav-mobile-note">Safety Harbor, FL · Old Florida / New Vibe</p>
     </div>
   </div>
-  <a href="tel:+17277261956" class="btn btn-primary nav-mobile-call">Call (727) 726-1956</a>
 </div>

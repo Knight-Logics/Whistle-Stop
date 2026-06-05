@@ -22,6 +22,12 @@
 
     <section style="padding-top:2rem">
       <div class="container">
+        <div class="photo-gallery reveal-scale" style="margin-bottom:2.5rem">
+          <figure class="reveal-photo photo-wide"><img src="assets/gallery/WSAprilEvents.jpg" alt="April events at Whistle Stop" loading="lazy" /><figcaption>Community nights</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSMayEvents.jpg" alt="May events" loading="lazy" /><figcaption>On the patio</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSCornHole.jpg" alt="Cornhole league" loading="lazy" /><figcaption>Cornhole</figcaption></figure>
+        </div>
+
         <div class="card-grid cols-2 reveal" style="margin-bottom:3rem">
           <article class="card">
             <div class="card-img"><img src="assets/drink-food.jpg" alt="Daily specials" loading="lazy" /></div>
@@ -41,9 +47,29 @@
           </article>
         </div>
 
+        <section id="live-music" class="lineup-feature reveal" style="margin-bottom:3rem;padding-top:0">
+          <div class="lineup-dynamic" id="live-music-lineup" aria-live="polite">
+            <h3>Live music lineup</h3>
+            <p style="color:var(--text-muted);margin:0">Loading upcoming acts…</p>
+          </div>
+          <div>
+            <img src="assets/gallery/WSRocker.jpg" alt="Live music on the patio" loading="lazy" style="border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1rem" />
+            <h2 style="font-size:2rem;margin:0 0 0.75rem">On stage this week</h2>
+            <p style="color:var(--text-muted);margin:0 0 1rem">
+              Open mic Tuesdays, featured artists Friday &amp; Saturday, and acoustic Sundays — all pulled from the same schedule below. Staff updates one file; no monthly poster redesign.
+            </p>
+            <ul style="color:var(--cream-dim);padding-left:1.25rem;line-height:1.8;margin:0">
+              <li><strong style="color:var(--lime)">Tuesday</strong> — Open Mic Night</li>
+              <li><strong style="color:var(--lime)">Friday</strong> — Featured acts &amp; Music Bingo</li>
+              <li><strong style="color:var(--lime)">Saturday</strong> — Headliner locals</li>
+              <li><strong style="color:var(--lime)">Sunday</strong> — Acoustic favorites</li>
+            </ul>
+          </div>
+        </section>
+
         <div class="events-layout">
           <div class="reveal-left">
-            <h2 style="font-size:2rem;margin:0 0 1rem">Upcoming</h2>
+            <h2 style="font-size:2rem;margin:0 0 1rem">All upcoming events</h2>
             <div id="upcoming-events"></div>
             <div class="admin-panel reveal" id="gbp-events-note" hidden>
               <h3 style="margin:0 0 0.5rem;font-size:1.1rem">GBP tip</h3>

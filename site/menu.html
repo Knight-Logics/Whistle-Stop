@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Menu | Whistle Stop Grill &amp; Bar — Safety Harbor</title>
-  <meta name="description" content="Food menu, seasonal specials, bar menu, and happy hour at Whistle Stop Grill & Bar in Safety Harbor, FL." />
+  <meta name="description" content="Full food menu, burgers, grouper, salads, kids meals, ice cream, and bar at Whistle Stop Grill & Bar on Main Street, Safety Harbor, FL." />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
 </head>
@@ -12,62 +12,164 @@
   <header class="site-header"><div class="container header-inner" data-include="partials/header.html"></div></header>
 
   <main>
-    <div class="page-hero">
+    <div class="page-hero page-hero--media">
       <div class="container reveal">
         <h1>Menus</h1>
-        <p>Real. Good. Food. — crawlable text menus built for Google and hungry locals.</p>
+        <p>Real. Good. Food. — crawlable menus built for Google and hungry locals.</p>
         <div class="btn-group" style="justify-content:center;margin-top:1.5rem">
-          <a href="#food" class="btn btn-primary">Food</a>
-          <a href="#seasonal" class="btn btn-outline">Seasonal</a>
+          <a href="#small-plates" class="btn btn-primary">Small Plates</a>
+          <a href="#burgers" class="btn btn-outline">Burgers</a>
+          <a href="#large-plates" class="btn btn-outline">Entrées</a>
           <a href="#bar" class="btn btn-outline">Bar</a>
         </div>
       </div>
     </div>
 
-    <section id="food">
+    <section style="padding-top:2rem">
+      <div class="container split-media reveal">
+        <div>
+          <p class="menu-note" style="text-align:left;margin:0 0 1rem">
+            Prices and availability change seasonally — ask your server for today&rsquo;s Gulf catch and specials. Menu based on current Whistle Stop offerings.
+          </p>
+          <p style="color:var(--text-muted)">Most burgers &amp; sandwiches include a side: fresh fruit, black-eyed pea salad, coleslaw, or black beans &amp; rice. Upgrade to grilled veggies, sweet potato fries, wedges, or onion rings for $1.</p>
+        </div>
+        <img src="assets/gallery/WSMenu.jpg" alt="Whistle Stop menu board" loading="lazy" class="reveal-right" />
+      </div>
+    </section>
+
+    <section id="small-plates">
       <div class="container">
         <div class="menu-category reveal">
-          <h3>Small Plates &amp; Starters</h3>
-          <div class="menu-item"><div><h4>Fried Green Tomatoes</h4><p>Safety Harbor classic — crispy, tangy, shareable.</p></div><span class="price">MP</span></div>
-          <div class="menu-item"><div><h4>Harbor Hummus</h4><p>Pita chips, celery, carrots, cucumbers.</p></div><span class="price">$10</span></div>
-          <div class="menu-item"><div><h4>Potato Skins</h4><p>Melted cheese, bacon, scallions, sour cream.</p></div><span class="price">$10</span></div>
+          <h3>Small Plates · Starters &amp; Sharing</h3>
+          <div class="menu-item"><div><h4>Southern Sampler</h4><p>Green tomatoes, fries, dill pickles, corn fritters, chicken tenders.</p></div><span class="price">$10.90</span></div>
+          <div class="menu-item"><div><h4>Fancy Fried Green Tomatoes</h4><p>Goat cheese, chopped red tomatoes, cilantro.</p></div><span class="price">$6.90</span></div>
+          <div class="menu-item"><div><h4>Fried Green Tomatoes</h4><p>Simple, real, good — the Safety Harbor classic.</p></div><span class="price">$5.90</span></div>
+          <div class="menu-item"><div><h4>Ahi Tuna</h4><p>Sesame encrusted, seared, wasabi drizzle.</p></div><span class="price">$15.90</span></div>
+          <div class="menu-item"><div><h4>Blue Crab Cakes</h4><p>Key lime aioli.</p></div><span class="price">$11.90</span></div>
+          <div class="menu-item"><div><h4>Hummus, Fresh Fruit &amp; Veggie Plate</h4><p>Pita, flatbread crackers, cut veggies.</p></div><span class="price">$9.90</span></div>
+          <div class="menu-item"><div><h4>Whistle Stop Wings</h4><p>Your choice of heat — celery &amp; blue cheese.</p></div><span class="price">$9.90</span></div>
+          <div class="menu-item"><div><h4>Buffalo Style Shrimp</h4><p>Same heat as wings — blue cheese &amp; celery.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Smoked Fish Spread</h4><p>Made local — tastes like Key West.</p></div><span class="price">$7.90</span></div>
+          <div class="menu-item"><div><h4>Corn Fritters</h4><p>Southwest sauce — plenty to share.</p></div><span class="price">$4.90</span></div>
+          <div class="menu-item"><div><h4>Fried Dill Pickles</h4><p>Crispy &amp; tangy.</p></div><span class="price">$4.90</span></div>
           <div class="menu-item"><div><h4>WSG&amp;B Potato Chips</h4><p>Fried to order — feta, tomato, tzatziki, balsamic.</p></div><span class="price">$12</span></div>
+          <div class="menu-item"><div><h4>Potato Skins</h4><p>Melted cheese, bacon, scallions, sour cream.</p></div><span class="price">$10</span></div>
         </div>
+      </div>
+    </section>
 
+    <section id="salads" class="section-cream">
+      <div class="container">
         <div class="menu-category reveal">
-          <h3>Burgers &amp; Sandwiches</h3>
-          <div class="menu-item"><div><h4>Smash Burger Sliders</h4><p>Two sliders, grilled onions, house smash sauce. Add bacon $2.</p></div><span class="price">$10</span></div>
+          <h3>Salads</h3>
+          <p class="menu-note" style="text-align:left">Add grilled salmon $4 · grilled chicken or shrimp $3.50</p>
+          <div class="menu-item"><div><h4>Four Seasons Salad</h4><p>Artisan greens, goat cheese, seasonal fruit, nuts, red wine vinaigrette.</p></div><span class="price">$7.90</span></div>
+          <div class="menu-item"><div><h4>Ahi Tuna Salad</h4><p>Sesame seared ahi, cucumber, avocado, wasabi dressing.</p></div><span class="price">$10.90</span></div>
+          <div class="menu-item"><div><h4>Caesar Salad</h4><p>Romaine, parmesan, croutons, creamy Caesar.</p></div><span class="price">$7.90</span></div>
+          <div class="menu-item"><div><h4>Black Beans &amp; Greens Salad</h4><p>Avocado, tomato, cilantro lime vinaigrette.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Cobb Salad</h4><p>Avocado, egg, bacon, blue cheese — your choice of dressing.</p></div><span class="price">$11.90</span></div>
+          <div class="menu-item"><div><h4>Main Street Cobb</h4><p>Guest favorite — hearty &amp; shareable.</p></div><span class="price">MP</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="burgers">
+      <div class="container">
+        <div class="menu-category reveal">
+          <h3>Burgers</h3>
+          <p class="menu-note" style="text-align:left">Grass-fed beef add $2 · Angus steak burger add $1</p>
+          <div class="menu-item"><div><h4>Original Whistle Stop Burger</h4><p>Fried green tomato, provolone, onion, aioli.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Bacon Cheeseburger</h4><p>Lettuce, tomato, onion, mayo.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Black &amp; Blue Burger</h4><p>Blackened, red onion, tomato, blue cheese.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Santa Fe Burger</h4><p>Jalapeños, provolone, onion ring, avocado, southwest sauce.</p></div><span class="price">$9.90</span></div>
+          <div class="menu-item"><div><h4>Angus Steak Burger</h4><p>Grilled onions &amp; mushrooms.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Whistle Stop Grass Fed Beef Burger</h4><p>De Leon Springs cheddar, tomato, onion.</p></div><span class="price">$10.90</span></div>
+          <div class="menu-item"><div><h4>Crab &amp; Shrimp Burger</h4><p>Mango salsa, key lime aioli.</p></div><span class="price">$11.90</span></div>
+          <div class="menu-item"><div><h4>Veggie Burger</h4><p>Organic quinoa oats, provolone, artisan greens, aioli.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Smash Burger Sliders</h4><p>Two sliders, grilled onions, house smash sauce.</p></div><span class="price">$10</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sandwiches" class="section-cream">
+      <div class="container">
+        <div class="menu-category reveal">
+          <h3>Sandwiches &amp; Wraps</h3>
+          <div class="menu-item"><div><h4>BLFGT — The Ultimate BLT</h4><p>Fried green tomatoes, bacon, artisan lettuce, aioli, fresh baked roll.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Fresh Grouper Sandwich</h4><p>Blackened or grilled — market price.</p></div><span class="price">MP</span></div>
+          <div class="menu-item"><div><h4>Kicked Up Grilled Cheese</h4><p>Provolone, goat cheese, grilled green tomatoes, bacon, ciabatta.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Fresh Rib-Eye Steak Sandwich</h4><p>Sautéed onions, mushrooms — black &amp; blue add $1.50.</p></div><span class="price">$9.90</span></div>
+          <div class="menu-item"><div><h4>Portabella &amp; Roasted Red Pepper</h4><p>Balsamic mushrooms, goat cheese, ciabatta.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>BBQ Pork Sandwich</h4><p>Slow roasted in-house BBQ, pickles, fresh baked roll.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Tilapia Sandwich</h4><p>Grilled, blackened, or fried — lettuce, tomato, onion.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Florida Club Wrap</h4><p>Avocado, bacon, lettuce, tomato, blue cheese, whole wheat.</p></div><span class="price">$10.90</span></div>
+          <div class="menu-item"><div><h4>Spicy Buffalo Chicken Wrap</h4><p>Tenders, buffalo sauce, blue cheese, lettuce, tomato.</p></div><span class="price">$7.90</span></div>
           <div class="menu-item"><div><h4>Chicken Caesar Wrap</h4><p>Served with fries.</p></div><span class="price">$16</span></div>
-          <div class="menu-item"><div><h4>Grouper Sandwich</h4><p>Fresh Florida favorite — ask server for today's prep.</p></div><span class="price">MP</span></div>
-          <div class="menu-item"><div><h4>Wings</h4><p>Your choice of sauce — great with game day.</p></div><span class="price">MP</span></div>
-        </div>
-
-        <div class="menu-category reveal">
-          <h3>Salads · Bowls · Kids</h3>
-          <div class="menu-item"><div><h4>Garden &amp; Caesar Salads</h4><p>Add chicken or grouper.</p></div><span class="price">MP</span></div>
-          <div class="menu-item"><div><h4>Kids Meals</h4><p>Smaller portions for younger diners.</p></div><span class="price">MP</span></div>
         </div>
       </div>
     </section>
 
-    <section id="seasonal" class="section-cream">
+    <section id="large-plates">
       <div class="container">
         <div class="menu-category reveal">
-          <h3>Seasonal Menu</h3>
-          <div class="menu-item"><div><h4>Philly Egg Rolls</h4><p>Ribeye, peppers, onions, provolone, sweet chili sauce.</p></div><span class="price">$12</span></div>
-          <div class="menu-item"><div><h4>Classic Quesadilla</h4><p>Chicken or steak — pico &amp; sour cream.</p></div><span class="price">$10</span></div>
+          <h3>Large Plates</h3>
+          <div class="menu-item"><div><h4>Fresh Grouper Dinner</h4><p>8 oz Gulf fillet — blackened or grilled, black beans &amp; rice.</p></div><span class="price">MP</span></div>
+          <div class="menu-item"><div><h4>Balsamic Glazed Salmon</h4><p>Grilled fillet, black beans &amp; rice.</p></div><span class="price">$14.90</span></div>
+          <div class="menu-item"><div><h4>12 oz Rib Eye Steak</h4><p>USDA choice hand-cut, Yukon wedges, grilled vegetables.</p></div><span class="price">$17.90</span></div>
+          <div class="menu-item"><div><h4>Baja Fish or Shrimp Tacos</h4><p>Cabbage, cheddar, baja sauce — grouper add $2.50.</p></div><span class="price">$11.90</span></div>
+          <div class="menu-item"><div><h4>Pork Tacos</h4><p>Shredded roast pork, avocado, cilantro lime vinaigrette.</p></div><span class="price">$10.90</span></div>
+          <div class="menu-item"><div><h4>Veggies, Beans &amp; Rice Bowl</h4><p>Add salmon, shrimp, or chicken $3.50.</p></div><span class="price">$8.90</span></div>
+          <div class="menu-item"><div><h4>Tilapia Dinner</h4><p>Blackened, fried, or grilled — lemon butter, side salad.</p></div><span class="price">$10.90</span></div>
+          <div class="menu-item"><div><h4>Chicken Scaloppine &amp; Arugula</h4><p>Seared breast, shaved parmesan, grilled vegetables.</p></div><span class="price">$12.90</span></div>
+          <div class="menu-item"><div><h4>Uptown Chicken Flatbread</h4><p>Roasted red pepper, caramelized onion, blue cheese.</p></div><span class="price">$9.90</span></div>
+          <div class="menu-item"><div><h4>Steak &amp; Spinach Flatbread</h4><p>Sirloin, mushrooms, spinach, blue cheese crumble.</p></div><span class="price">$9.90</span></div>
         </div>
       </div>
     </section>
 
-    <section id="bar">
+    <section id="kids" class="section-cream">
       <div class="container">
         <div class="menu-category reveal">
+          <h3>Kids Menu · Under 10</h3>
+          <div class="menu-item"><div><h4>Big Kid</h4><p>Chicken tenders, fruit or wedges.</p></div><span class="price">$7.90</span></div>
+          <div class="menu-item"><div><h4>The Best Hot Dog</h4><p>Vienna all beef.</p></div><span class="price">$5.90</span></div>
+          <div class="menu-item"><div><h4>Grilled Cheese</h4><p>Wheat bread — bacon add $1.50.</p></div><span class="price">$5.90</span></div>
+          <div class="menu-item"><div><h4>Black Beans, Rice &amp; Chicken</h4><p></p></div><span class="price">$7.90</span></div>
+          <div class="menu-item"><div><h4>Whistle Stop Mac &amp; Cheese</h4><p>Add chicken tenders $3.50 — includes drink &amp; wedges or fruit.</p></div><span class="price">$5.90</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="desserts">
+      <div class="container">
+        <div class="menu-category reveal">
+          <h3>Ice Cream · Sundaes · Sweet Endings</h3>
+          <div class="menu-item"><div><h4>Soft Serve Cone or Cup</h4><p>Vanilla — reg / large.</p></div><span class="price">$2.70 / $3.50</span></div>
+          <div class="menu-item"><div><h4>Milkshakes &amp; Malts</h4><p>Vanilla, chocolate, strawberry, coffee, oreo &amp; more.</p></div><span class="price">$4.20</span></div>
+          <div class="menu-item"><div><h4>Bee Charmer Sundae</h4><p>Signature — peaches, honey, cinnamon sugar, whip cream.</p></div><span class="price">$5.90</span></div>
+          <div class="menu-item"><div><h4>Caitlin&rsquo;s Cake Sundae</h4><p>Brownie, hot fudge, caramel, nuts.</p></div><span class="price">$5.90</span></div>
+          <div class="menu-item"><div><h4>Pecan Pie</h4><p>Made local, chocolate drizzle, vanilla ice cream.</p></div><span class="price">$5.90</span></div>
+          <div class="menu-item"><div><h4>Key Lime Pie</h4><p>Sweet &amp; tart — Key West style.</p></div><span class="price">$4.90</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="bar" class="section-cream">
+      <div class="container split-media reveal">
+        <div class="menu-category" style="margin:0">
           <h3>Bar · 18 Taps</h3>
-          <div class="menu-item"><div><h4>Hip Sips &amp; Crafted Cocktails</h4><p>Full liquor bar — martini Mondays half-off.</p></div></div>
+          <div class="menu-item"><div><h4>Hip Sips &amp; Crafted Cocktails</h4><p>Full liquor bar — Martini Monday half-off martinis.</p></div></div>
           <div class="menu-item"><div><h4>Domestic &amp; Craft Beer</h4><p>Rotating local and craft selections on tap.</p></div></div>
           <div class="menu-item"><div><h4>Happy Hour</h4><p>4–7 PM daily · 4 PM–close Tuesdays. <a href="happy-hour.html">See happy hour →</a></p></div></div>
         </div>
+        <img src="assets/gallery/WSBar.jpg" alt="Whistle Stop bar" loading="lazy" />
+      </div>
+    </section>
+
+    <section>
+      <div class="container" style="text-align:center">
+        <p class="reveal" style="color:var(--text-muted)">Dining with us? <a href="tel:+17277261956">Call (727) 726-1956</a> for large parties or see <a href="private-events.html">private events</a>.</p>
+        <a href="order.html" class="btn btn-primary reveal">Order pickup &amp; delivery</a>
       </div>
     </section>
   </main>
