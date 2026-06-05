@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live Music Safety Harbor | Whistle Stop Grill &amp; Bar</title>
+  <meta name="description" content="Live music in Safety Harbor every week — open mic Tuesday, local artists Friday & Saturday at Whistle Stop Grill & Bar on Main Street." />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <header class="site-header"><div class="container header-inner" data-include="partials/header.html"></div></header>
+
+  <main>
+    <div class="page-hero">
+      <div class="container reveal">
+        <p class="hero-eyebrow">Local stage · Open air</p>
+        <h1>Live Music</h1>
+        <p class="script" style="font-size:1.75rem;color:var(--gold)">Talented locals · 6:30–9:30 PM</p>
+      </div>
+    </div>
+
+    <section>
+      <div class="container lineup-feature">
+        <div class="lineup-dynamic reveal-left" id="live-music-lineup" aria-live="polite">
+          <h3>Upcoming acts</h3>
+          <p style="color:var(--text-muted);margin:0">Loading lineup…</p>
+        </div>
+        <div class="reveal-right">
+          <h2>Featured acts &amp; open mic</h2>
+          <p style="color:var(--text-muted)">Same schedule as the homepage and events calendar — update once, shows everywhere.</p>
+          <div id="upcoming-events"></div>
+          <a href="events.html" class="btn btn-primary" style="margin-top:1rem">Full calendar</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-cream">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2>Weekly rhythm</h2>
+          <div class="divider" style="background:var(--rust)"></div>
+        </div>
+        <div class="card-grid cols-3">
+          <div class="card reveal stagger-1"><div class="card-body"><h3>Tuesday</h3><p>Open Mic Night — all welcome on the patio stage.</p></div></div>
+          <div class="card reveal stagger-2"><div class="card-body"><h3>Friday</h3><p>Featured artist + Music Bingo nights.</p></div></div>
+          <div class="card reveal stagger-3"><div class="card-body"><h3>Saturday</h3><p>Headliner locals — grab a table early on busy weekends.</p></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-include="partials/footer.html"></footer>
+  <nav class="mobile-cta" data-include="partials/mobile-cta.html"></nav>
+  <script src="js/includes.js"></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/events.js" defer></script>
+</body>
+</html>

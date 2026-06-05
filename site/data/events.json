@@ -1,0 +1,94 @@
+{
+  "timezone": "America/New_York",
+  "recurring": [
+    {
+      "id": "daily-specials",
+      "title": "Daily Drink & Food Specials",
+      "category": "specials",
+      "summary": "Ask your server for today's specials.",
+      "dayOfWeek": [0, 1, 2, 3, 4, 5, 6],
+      "startTime": "11:00",
+      "image": "assets/drink-food.jpg"
+    },
+    {
+      "id": "sunday-breakfast",
+      "title": "Breakfast Bloody Mary Sunday",
+      "category": "specials",
+      "summary": "$5 mimosas & bloody marys.",
+      "dayOfWeek": [0],
+      "startTime": "11:00",
+      "image": "assets/breakfast.jpg"
+    },
+    {
+      "id": "martini-monday",
+      "title": "Martini Monday · Taco Night",
+      "category": "specials",
+      "summary": "Half-off martinis & 2-for-$6 tacos, 4 PM–close.",
+      "dayOfWeek": [1],
+      "startTime": "16:00",
+      "endTime": "22:00",
+      "image": "assets/martini-monday.jpg"
+    },
+    {
+      "id": "cornhole-wed",
+      "title": "Cornhole Wednesdays",
+      "category": "community",
+      "summary": "Every Wednesday at 6 PM. Happy hour 4 PM–close.",
+      "dayOfWeek": [3],
+      "startTime": "18:00",
+      "image": "assets/cornhole.jpg"
+    },
+    {
+      "id": "open-mic",
+      "title": "Open Mic Night",
+      "category": "live-music",
+      "summary": "Local talent takes the stage.",
+      "dayOfWeek": [2],
+      "startTime": "18:30",
+      "endTime": "21:30",
+      "image": "assets/live-music.jpg"
+    },
+    {
+      "id": "live-music-weekend",
+      "title": "Live Music",
+      "category": "live-music",
+      "summary": "Featured local artists on the patio stage.",
+      "dayOfWeek": [5, 6],
+      "startTime": "18:30",
+      "endTime": "21:30",
+      "image": "assets/live-music.jpg"
+    },
+    {
+      "id": "words-wine",
+      "title": "Words & Wine Book Club",
+      "category": "community",
+      "summary": "With Safety Harbor Public Library. Every 3rd Monday, 6–8 PM.",
+      "dayOfWeek": [1],
+      "weekOfMonth": 3,
+      "startTime": "18:00",
+      "endTime": "20:00",
+      "image": "assets/words-wine.png"
+    },
+    {
+      "id": "ukulele-jam",
+      "title": "Tampa Bay Ukulele Society Open Jam",
+      "category": "community",
+      "summary": "Every 4th Thursday, 6:30–9:30 PM.",
+      "dayOfWeek": [4],
+      "weekOfMonth": 4,
+      "startTime": "18:30",
+      "endTime": "21:30",
+      "image": "assets/ukulele.jpg"
+    }
+  ],
+  "performances": [
+    { "date": "2026-06-05", "title": "Dave Sansoucie", "startTime": "18:30", "endTime": "21:30", "category": "live-music" },
+    { "date": "2026-06-06", "title": "Matt Zitwer", "startTime": "18:30", "endTime": "21:30", "category": "live-music" },
+    { "date": "2026-06-07", "title": "Christin Allyn", "startTime": "19:00", "endTime": "22:00", "category": "live-music" },
+    { "date": "2026-06-12", "title": "Music Bingo", "startTime": "18:30", "endTime": "21:30", "category": "live-music", "note": "Friday bandingo" },
+    { "date": "2026-06-13", "title": "Josh Plummer", "startTime": "18:30", "endTime": "21:30", "category": "live-music" },
+    { "date": "2026-06-14", "title": "Hanah Selby", "startTime": "19:00", "endTime": "22:00", "category": "live-music" },
+    { "date": "2026-06-20", "title": "Andy Harris", "startTime": "18:30", "endTime": "21:30", "category": "live-music" },
+    { "date": "2026-06-27", "title": "Local Artist TBA", "startTime": "18:30", "endTime": "21:30", "category": "live-music" }
+  ]
+}

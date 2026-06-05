@@ -1,0 +1,71 @@
+{
+  "google": {
+    "rating": 4.4,
+    "count": 2036,
+    "label": "Google"
+  },
+  "platforms": [
+    { "name": "Facebook", "rating": 4.6, "count": 541, "url": "https://www.facebook.com/Whistlestopgrillandbar915" },
+    { "name": "Grubhub", "rating": 4.4, "count": 16, "url": "https://www.grubhub.com/" },
+    { "name": "Uber Eats", "rating": 4.6, "count": 26, "url": "https://www.ubereats.com/" },
+    { "name": "TripAdvisor", "rating": 4.0, "count": 416, "url": "https://www.tripadvisor.com/" }
+  ],
+  "featured": [
+    {
+      "author": "Greg Bell",
+      "badge": "Local Guide",
+      "rating": 5,
+      "date": "6 days ago",
+      "meal": "Dinner · $40–50",
+      "text": "Great spot to relax and listen to local music. Food and service were amazing."
+    },
+    {
+      "author": "Karl Sauer",
+      "rating": 5,
+      "date": "3 weeks ago",
+      "meal": "Dinner · $30–40",
+      "text": "Excellent fried green tomatoes, great service with a hometown vibe. Played bandingo and enjoyed happy hour beers."
+    },
+    {
+      "author": "Shannon Schafer",
+      "rating": 5,
+      "date": "3 weeks ago",
+      "meal": "Dinner · $40–50",
+      "text": "Neal our server was great. So was music bingo. Love the hometown atmosphere! Whistle Stop is one of our favorites!"
+    },
+    {
+      "author": "Kenneth Miller",
+      "rating": 5,
+      "date": "3 weeks ago",
+      "text": "The burgers were great and Fridays have bandingo. Excellent happy hour."
+    },
+    {
+      "author": "Daniel Spisak",
+      "rating": 5,
+      "date": "1 month ago",
+      "meal": "Lunch · $30–40",
+      "text": "Great drinks, good food, better spot to watch the Rays and Lightning game!!!"
+    },
+    {
+      "author": "Mike Oszust",
+      "rating": 5,
+      "date": "1 month ago",
+      "meal": "Lunch · $20–30",
+      "text": "Food was delicious, and Neal's service was excellent. Highly recommend!"
+    },
+    {
+      "author": "Eric Fenech",
+      "rating": 5,
+      "date": "2 weeks ago",
+      "text": "Amazing experience beginning at the hostess stand. The best food and vibes!"
+    },
+    {
+      "author": "Terry Johnson",
+      "badge": "Local Guide",
+      "rating": 4,
+      "date": "2 weeks ago",
+      "meal": "Lunch · $10–20",
+      "text": "I had a business meeting here recently. The server was outstanding. I like the environment and will definitely come back again and try a different meal."
+    }
+  ]
+}
