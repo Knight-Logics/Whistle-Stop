@@ -874,6 +874,10 @@ section {
   transition: transform 0.5s var(--ease-out);
 }
 
+.card-img--food-plate img {
+  object-position: center 38%;
+}
+
 .card:hover .card-img img {
   transform: scale(1.06);
 }

@@ -150,7 +150,7 @@
       "id": "bar",
       "label": "The Bar",
       "intro": "Full liquor bar · 18 taps · craft cocktails & local beer.",
-      "image": "assets/gallery/WSBar.jpg",
+      "image": "assets/gallery/WSBar.webp",
       "categories": [
         {
           "id": "cocktails",

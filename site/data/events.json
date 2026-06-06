@@ -8,7 +8,7 @@
       "summary": "Ask your server for today's specials.",
       "dayOfWeek": [0, 1, 2, 3, 4, 5, 6],
       "startTime": "11:00",
-      "image": "assets/drink-food.jpg"
+      "image": "assets/drink-food.webp"
     },
     {
       "id": "sunday-breakfast",
@@ -17,7 +17,7 @@
       "summary": "$5 mimosas & bloody marys.",
       "dayOfWeek": [0],
       "startTime": "11:00",
-      "image": "assets/breakfast.jpg"
+      "image": "assets/breakfast.webp"
     },
     {
       "id": "martini-monday",
@@ -27,7 +27,7 @@
       "dayOfWeek": [1],
       "startTime": "16:00",
       "endTime": "22:00",
-      "image": "assets/martini-monday.jpg"
+      "image": "assets/martini-monday.webp"
     },
     {
       "id": "cornhole-wed",
@@ -36,7 +36,7 @@
       "summary": "Every Wednesday at 6 PM. Happy hour 4 PM–close.",
       "dayOfWeek": [3],
       "startTime": "18:00",
-      "image": "assets/cornhole.jpg"
+      "image": "assets/cornhole.webp"
     },
     {
       "id": "open-mic",
@@ -46,7 +46,7 @@
       "dayOfWeek": [2],
       "startTime": "18:30",
       "endTime": "21:30",
-      "image": "assets/live-music.jpg"
+      "image": "assets/live-music.webp"
     },
     {
       "id": "live-music-weekend",
@@ -56,7 +56,7 @@
       "dayOfWeek": [5, 6],
       "startTime": "18:30",
       "endTime": "21:30",
-      "image": "assets/live-music.jpg"
+      "image": "assets/live-music.webp"
     },
     {
       "id": "words-wine",
@@ -67,7 +67,7 @@
       "weekOfMonth": 3,
       "startTime": "18:00",
       "endTime": "20:00",
-      "image": "assets/words-wine.png"
+      "image": "assets/words-wine.webp"
     },
     {
       "id": "ukulele-jam",
@@ -78,7 +78,7 @@
       "weekOfMonth": 4,
       "startTime": "18:30",
       "endTime": "21:30",
-      "image": "assets/ukulele.jpg"
+      "image": "assets/ukulele.webp"
     }
   ],
   "performances": [

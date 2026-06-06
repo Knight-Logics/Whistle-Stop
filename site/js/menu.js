@@ -80,7 +80,7 @@
     const image = menu.image
       ? `<div class="menu-panel-media reveal-right"><img src="${menu.image}" alt="${escapeHtml(menu.label)}" loading="lazy" /></div>`
       : menu.id === "main-menu"
-        ? `<div class="menu-panel-media reveal-right"><img src="assets/gallery/WSMenu.jpg" alt="Whistle Stop menu" loading="lazy" /></div>`
+        ? `<div class="menu-panel-media reveal-right"><img src="assets/gallery/WSMenu.webp" alt="Whistle Stop menu" loading="lazy" /></div>`
         : "";
 
     return `
