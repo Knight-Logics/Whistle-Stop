@@ -32,7 +32,6 @@ function initReviewCarousels() {
     if (!cards.length) return;
 
     let currentIndex = 0;
-    let cachedCardWidth = 0;
 
     const singleCardQuery = window.matchMedia("(max-width: 759px)");
     const twoCardQuery = window.matchMedia("(max-width: 999px)");
@@ -41,14 +40,6 @@ function initReviewCarousels() {
       if (singleCardQuery.matches) return 1;
       if (twoCardQuery.matches) return 2;
       return 3;
-    }
-
-    function getCardWidth() {
-      if (!cachedCardWidth) {
-        const gap = Number.parseFloat(getComputedStyle(track).gap) || 16;
-        cachedCardWidth = cards[0].getBoundingClientRect().width + gap;
-      }
-      return cachedCardWidth;
     }
 
     function buildDots() {
@@ -71,7 +62,8 @@ function initReviewCarousels() {
       const visible = visibleCount();
       const maxIndex = Math.max(0, cards.length - visible);
       currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
-      track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
+      track.style.setProperty("--slides-visible", String(visible));
+      track.style.transform = `translateX(calc(-100% * ${currentIndex} / ${visible}))`;
 
       const activeDot = Math.floor(currentIndex / visible);
       dotsContainer.querySelectorAll(".review-carousel-dot").forEach((dot, i) => {
@@ -97,7 +89,6 @@ function initReviewCarousels() {
 
     let resizeTimer;
     window.addEventListener("resize", () => {
-      cachedCardWidth = 0;
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         buildDots();

@@ -144,15 +144,19 @@
 
 .review-carousel-track {
   display: flex;
-  gap: 18px;
+  gap: var(--track-gap, 18px);
   align-items: stretch;
+  width: 100%;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
+  --slides-visible: 1;
+  --track-gap: 18px;
 }
 
 .review-card {
-  min-width: calc(100% - 8px);
-  max-width: calc(100% - 8px);
+  min-width: calc((100% - (var(--slides-visible) - 1) * var(--track-gap)) / var(--slides-visible));
+  max-width: calc((100% - (var(--slides-visible) - 1) * var(--track-gap)) / var(--slides-visible));
+  flex: 0 0 calc((100% - (var(--slides-visible) - 1) * var(--track-gap)) / var(--slides-visible));
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -162,20 +166,6 @@
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
   text-align: center;
-}
-
-@media (min-width: 700px) {
-  .review-card {
-    min-width: calc(50% - 12px);
-    max-width: calc(50% - 12px);
-  }
-}
-
-@media (min-width: 920px) {
-  .review-card {
-    min-width: calc(33.333% - 14px);
-    max-width: calc(33.333% - 14px);
-  }
 }
 
 .review-card-top {
@@ -301,6 +291,39 @@
   border: 0;
   border-radius: 18px;
   display: block;
+}
+
+.map-facade {
+  display: grid;
+  gap: 0.85rem;
+  justify-items: center;
+  min-height: 280px;
+  padding: 2.5rem 1.25rem;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(20, 20, 20, 0.08), rgba(20, 20, 20, 0.02)),
+    repeating-linear-gradient(0deg, rgba(20, 20, 20, 0.04) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(90deg, rgba(20, 20, 20, 0.04) 0 1px, transparent 1px 24px);
+  text-align: center;
+}
+
+.map-facade-label {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--chalk);
+  font-weight: 700;
+}
+
+.map-facade-link {
+  color: var(--lime);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.map-facade-link:hover {
+  color: var(--gold);
 }
 
 .map-card p {

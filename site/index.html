@@ -7,8 +7,20 @@
   <meta name="description" content="Safety Harbor's landmark grill & bar since 1995. Live music, happy hour, dog-friendly patio, fried green tomatoes, and open-air dining on Main Street." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="assets/gallery/WSSunset-480.webp" as="image" type="image/webp" fetchpriority="high" />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" /></noscript>
+  <style>
+    .hero .reveal,
+    .hero .reveal.stagger-1,
+    .hero .reveal.stagger-2,
+    .hero .reveal.stagger-3,
+    .hero .reveal.stagger-4,
+    .stats-bar.reveal-scale {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
   <link rel="stylesheet" href="css/main.css" />
   <link rel="preload" href="css/reviews.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link rel="stylesheet" href="css/reviews.css" /></noscript>
@@ -23,10 +35,10 @@
     <section class="hero">
       <div class="hero-bg hero-bg--grid" aria-hidden="true">
         <div class="hero-panel hero-panel--left">
-          <img src="assets/gallery/WSSunset-768.webp" srcset="assets/gallery/WSSunset-480.webp 480w, assets/gallery/WSSunset-768.webp 768w, assets/gallery/WSSunset.webp 964w" sizes="(max-width: 767px) 50vw, 25vw" alt="" width="964" height="1280" decoding="async" fetchpriority="high" />
+          <img src="assets/gallery/WSSunset-480.webp" srcset="assets/gallery/WSSunset-400.webp 400w, assets/gallery/WSSunset-480.webp 480w, assets/gallery/WSSunset-768.webp 768w, assets/gallery/WSSunset.webp 964w" sizes="(max-width: 767px) 50vw, 25vw" alt="" width="964" height="1280" decoding="async" fetchpriority="high" />
         </div>
         <div class="hero-panel hero-panel--bottom">
-          <img src="assets/gallery/WSBar-480.webp" srcset="assets/gallery/WSBar-480.webp 480w, assets/gallery/WSBar-768.webp 768w, assets/gallery/WSBar.webp 1080w" sizes="(max-width: 767px) 50vw, 25vw" alt="" width="1080" height="1080" decoding="async" />
+          <img src="assets/gallery/WSBar-480.webp" srcset="assets/gallery/WSBar-400.webp 400w, assets/gallery/WSBar-480.webp 480w, assets/gallery/WSBar-768.webp 768w, assets/gallery/WSBar.webp 1080w" sizes="(max-width: 767px) 50vw, 25vw" alt="" width="1080" height="1080" decoding="async" />
         </div>
         <div class="hero-panel hero-panel--top">
           <img src="assets/gallery/WSRocker-480.webp" srcset="assets/gallery/WSRocker-480.webp 480w, assets/gallery/WSRocker-768.webp 768w, assets/gallery/WSRocker.webp 1080w" sizes="25vw" alt="" width="1080" height="1080" decoding="async" loading="lazy" />
@@ -40,13 +52,13 @@
         <div class="hero-social-float" data-include="partials/header-socials.html"></div>
       </div>
       <div class="container hero-content">
-        <p class="hero-eyebrow reveal">915 Main Street · Safety Harbor, FL</p>
-        <h1 class="reveal stagger-1">Whistle Stop<br />Grill &amp; Bar</h1>
-        <p class="hero-tagline reveal stagger-2">Old Florida / New Vibe</p>
-        <p class="lead reveal stagger-3">
+        <p class="hero-eyebrow reveal visible">915 Main Street · Safety Harbor, FL</p>
+        <h1 class="reveal stagger-1 visible">Whistle Stop<br />Grill &amp; Bar</h1>
+        <p class="hero-tagline reveal stagger-2 visible">Old Florida / New Vibe</p>
+        <p class="lead reveal stagger-3 visible">
           Real. Good. Food. Since 1995 — open-air dining, 18 taps, live local music, and a dog-friendly patio in the heart of downtown Safety Harbor.
         </p>
-        <div class="btn-group reveal stagger-4">
+        <div class="btn-group reveal stagger-4 visible">
           <a href="menu.html" class="btn btn-primary">View Menu</a>
           <a href="events.html" class="btn btn-outline">What's Happening</a>
           <a href="tel:+17277261956" class="btn btn-outline">(727) 726-1956</a>
@@ -55,7 +67,7 @@
     </section>
 
     <div class="container">
-      <div class="stats-bar reveal-scale">
+      <div class="stats-bar reveal-scale visible">
         <div class="stat" id="google-stat">
           <strong>4.4</strong>
           <span>2,000+ Google reviews</span>
@@ -84,7 +96,7 @@
         </div>
         <div class="card-grid cols-3">
           <article class="card reveal stagger-1">
-            <div class="card-img"><img src="assets/martini-monday-480.webp" srcset="assets/martini-monday-480.webp 480w, assets/martini-monday-768.webp 768w, assets/martini-monday.webp 800w" sizes="(min-width: 640px) 31vw, 92vw" alt="Martini Monday taco night" loading="lazy" /></div>
+            <div class="card-img"><img src="assets/martini-monday-400.webp" srcset="assets/martini-monday-400.webp 400w, assets/martini-monday-480.webp 480w, assets/martini-monday-768.webp 768w, assets/martini-monday.webp 800w" sizes="(max-width: 639px) 190px, (min-width: 640px) 320px, 360px" alt="Martini Monday taco night" loading="lazy" decoding="async" /></div>
             <div class="card-body">
               <h3>Martini Monday</h3>
               <p>Half-off martinis &amp; 2-for-$6 tacos, 4 PM–close.</p>
@@ -92,7 +104,7 @@
             </div>
           </article>
           <article class="card reveal stagger-2">
-            <div class="card-img"><img src="assets/gallery/WSCornHole-480.webp" srcset="assets/gallery/WSCornHole-480.webp 480w, assets/gallery/WSCornHole-768.webp 768w, assets/gallery/WSCornHole.webp 1080w" sizes="(min-width: 640px) 31vw, 92vw" alt="Cornhole Wednesdays" loading="lazy" /></div>
+            <div class="card-img"><img src="assets/gallery/WSCornHole-400.webp" srcset="assets/gallery/WSCornHole-400.webp 400w, assets/gallery/WSCornHole-480.webp 480w, assets/gallery/WSCornHole-768.webp 768w, assets/gallery/WSCornHole.webp 1080w" sizes="(max-width: 639px) 190px, (min-width: 640px) 320px, 360px" alt="Cornhole Wednesdays" loading="lazy" decoding="async" /></div>
             <div class="card-body">
               <h3>Cornhole Wednesdays</h3>
               <p>League night at 6 PM. Happy hour 4 PM–close.</p>
@@ -100,7 +112,7 @@
             </div>
           </article>
           <article class="card reveal stagger-3">
-            <div class="card-img"><img src="assets/gallery/WSRocker-480.webp" srcset="assets/gallery/WSRocker-480.webp 480w, assets/gallery/WSRocker-768.webp 768w, assets/gallery/WSRocker.webp 1080w" sizes="(min-width: 640px) 31vw, 92vw" alt="Live music" loading="lazy" /></div>
+            <div class="card-img"><img src="assets/gallery/WSRocker-400.webp" srcset="assets/gallery/WSRocker-400.webp 400w, assets/gallery/WSRocker-480.webp 480w, assets/gallery/WSRocker-768.webp 768w, assets/gallery/WSRocker.webp 1080w" sizes="(max-width: 639px) 190px, (min-width: 640px) 320px, 360px" alt="Live music" loading="lazy" decoding="async" /></div>
             <div class="card-body">
               <h3>Live Music</h3>
               <p>Open mic Tuesdays. Featured artists Fri &amp; Sat.</p>
@@ -151,13 +163,16 @@
           </div>
 
           <div class="map-card reveal">
-            <iframe
-              title="Whistle Stop Grill and Bar on Google Maps"
-              src="https://maps.google.com/maps?q=915+Main+Street+Safety+Harbor+FL+34695&amp;output=embed"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              allowfullscreen
-            ></iframe>
+            <div
+              class="map-facade"
+              data-map-lazy
+              data-map-src="https://maps.google.com/maps?q=915+Main+Street+Safety+Harbor+FL+34695&amp;output=embed"
+              data-map-title="Whistle Stop Grill and Bar on Google Maps"
+            >
+              <p class="map-facade-label">915 Main Street · Safety Harbor, FL 34695</p>
+              <button type="button" class="btn btn-primary map-facade-load" data-map-load>Load interactive map</button>
+              <a class="map-facade-link" href="https://www.google.com/maps/search/?api=1&amp;query=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+            </div>
             <p>
               <strong>915 Main Street, Safety Harbor, FL 34695</strong> — Map, directions, and live Google reviews are visible here so locals and visitors can confirm the location before they head to Main Street.
             </p>
@@ -210,7 +225,7 @@
         </div>
         <div class="card-grid cols-2">
           <article class="card reveal-left">
-            <div class="card-img card-img--food-plate"><img src="assets/gallery/WSFood2-480.webp" srcset="assets/gallery/WSFood2-480.webp 480w, assets/gallery/WSFood2-768.webp 768w, assets/gallery/WSFood2.webp 960w" sizes="(min-width: 640px) 46vw, 92vw" alt="Fried green tomatoes" loading="lazy" /></div>
+            <div class="card-img card-img--food-plate"><img src="assets/gallery/WSFood2-400.webp" srcset="assets/gallery/WSFood2-400.webp 400w, assets/gallery/WSFood2-480.webp 480w, assets/gallery/WSFood2-768.webp 768w, assets/gallery/WSFood2.webp 960w" sizes="(max-width: 639px) 190px, (min-width: 640px) 460px, 520px" alt="Fried green tomatoes" loading="lazy" decoding="async" /></div>
             <div class="card-body">
               <h3>Fried Green Tomatoes</h3>
               <p>A Safety Harbor staple — classic, fancy, or on the BLFGT. Worth the trip alone.</p>
@@ -218,7 +233,7 @@
             </div>
           </article>
           <article class="card reveal-right">
-            <div class="card-img"><img src="assets/gallery/WSFood3-480.webp" srcset="assets/gallery/WSFood3-480.webp 480w, assets/gallery/WSFood3-768.webp 768w, assets/gallery/WSFood3.webp 1024w" sizes="(min-width: 640px) 46vw, 92vw" alt="Burgers and bar bites" loading="lazy" /></div>
+            <div class="card-img"><img src="assets/gallery/WSFood3-400.webp" srcset="assets/gallery/WSFood3-400.webp 400w, assets/gallery/WSFood3-480.webp 480w, assets/gallery/WSFood3-768.webp 768w, assets/gallery/WSFood3.webp 1024w" sizes="(max-width: 639px) 190px, (min-width: 640px) 460px, 520px" alt="Burgers and bar bites" loading="lazy" decoding="async" /></div>
             <div class="card-body">
               <h3>Burgers, Grouper &amp; More</h3>
               <p>Original Whistle Stop Burger, fresh Gulf grouper, mac &amp; cheese, and rotating seasonal plates.</p>
@@ -236,6 +251,30 @@
   <script src="js/includes.js"></script>
   <script src="js/main.js" defer></script>
   <script src="js/reviews.js" defer></script>
-  <script src="js/events.js" defer></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const loadEvents = () => {
+        const script = document.createElement("script");
+        script.src = "js/events.js";
+        script.defer = true;
+        document.body.appendChild(script);
+      };
+      const upcoming = document.getElementById("home-upcoming");
+      if (!upcoming || !("IntersectionObserver" in window)) {
+        loadEvents();
+        return;
+      }
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            loadEvents();
+            observer.disconnect();
+          }
+        },
+        { rootMargin: "320px 0px" }
+      );
+      observer.observe(upcoming);
+    });
+  </script>
 </body>
 </html>
