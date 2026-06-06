@@ -234,6 +234,195 @@
 
 
 
+  const MONTHS_SHORT = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+  const MONTHS_LONG = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ];
+
+  const DOWS_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+
+
+  function renderUpcomingListItem(e) {
+
+    const timeStr =
+
+      e.startTime && e.endTime
+
+        ? `${formatTime(e.startTime)} – ${formatTime(e.endTime)}`
+
+        : e.startTime
+
+          ? formatTime(e.startTime)
+
+          : "";
+
+    const tagClass = e.category === "live-music" ? "music" : "";
+
+    const tagLabel =
+
+      e.category === "live-music" && !e.recurring
+
+        ? "Featured act"
+
+        : e.recurring
+
+          ? "Weekly"
+
+          : "This date";
+
+    return `
+
+        <li class="reveal">
+
+          <div class="date-box">
+
+            <div class="day">${e.date.getDate()}</div>
+
+            <div class="month">${MONTHS_SHORT[e.date.getMonth()]}</div>
+
+          </div>
+
+          <div>
+
+            <h4>${e.title}</h4>
+
+            ${timeStr ? `<div class="time">${timeStr}</div>` : ""}
+
+            ${e.summary ? `<p style="margin:0.25rem 0 0;color:var(--text-muted);font-size:0.9rem">${e.summary}</p>` : ""}
+
+            <span class="tag ${tagClass}">${tagLabel}</span>
+
+          </div>
+
+        </li>`;
+
+  }
+
+
+
+  function renderHomeEvents(container, events, today) {
+
+    const listEvents = events.slice(0, 6);
+
+    const gridStart = new Date(today);
+
+    gridStart.setDate(gridStart.getDate() - gridStart.getDay());
+
+    const gridEnd = new Date(gridStart);
+
+    gridEnd.setDate(gridEnd.getDate() + 13);
+
+
+
+    const byDay = {};
+
+    events.forEach((e) => {
+
+      if (e.date < gridStart || e.date > gridEnd) return;
+
+      const key = e.date.toDateString();
+
+      if (!byDay[key]) byDay[key] = [];
+
+      byDay[key].push(e);
+
+    });
+
+
+
+    const rangeLabel =
+
+      gridStart.getMonth() === gridEnd.getMonth()
+
+        ? `${MONTHS_LONG[gridStart.getMonth()]} ${gridStart.getDate()} – ${gridEnd.getDate()}, ${gridEnd.getFullYear()}`
+
+        : `${MONTHS_LONG[gridStart.getMonth()]} ${gridStart.getDate()} – ${MONTHS_LONG[gridEnd.getMonth()]} ${gridEnd.getDate()}, ${gridEnd.getFullYear()}`;
+
+
+
+    let calendarHtml = `<div class="home-cal-head"><p class="home-cal-range">${rangeLabel}</p></div>`;
+
+    DOWS_SHORT.forEach((d) => (calendarHtml += `<div class="cal-dow">${d}</div>`));
+
+
+
+    const cur = new Date(gridStart);
+
+    while (cur <= gridEnd) {
+
+      const isPast = cur < today;
+
+      const isToday = cur.toDateString() === today.toDateString();
+
+      const evs = byDay[cur.toDateString()] || [];
+
+      calendarHtml += `<div class="cal-day home-cal-day${isPast ? " past-day" : ""}${isToday ? " today" : ""}">
+
+        <span class="num">${cur.getDate()}</span>
+
+        <div class="home-cal-events">${evs
+
+          .map((e) => {
+
+            const timeStr = e.startTime ? formatTime(e.startTime) : "";
+
+            const evClass =
+
+              e.category === "live-music" ? "music" : e.recurring ? "weekly" : "special";
+
+            return `<article class="home-cal-ev ${evClass}">
+
+              <strong>${e.title}</strong>
+
+              ${timeStr ? `<span>${timeStr}</span>` : ""}
+
+            </article>`;
+
+          })
+
+          .join("")}</div>
+
+      </div>`;
+
+      cur.setDate(cur.getDate() + 1);
+
+    }
+
+
+
+    const listHtml = listEvents.length
+
+      ? `<ul class="upcoming-list">${listEvents.map(renderUpcomingListItem).join("")}</ul>`
+
+      : "";
+
+
+
+    container.innerHTML = `
+
+      <div class="home-events-mobile" aria-label="Upcoming events list">${listHtml}</div>
+
+      <div class="home-events-desktop calendar-grid home-calendar-grid" role="grid" aria-label="Two-week event calendar">${calendarHtml}</div>`;
+
+
+
+    requestAnimationFrame(() => {
+
+      container.querySelectorAll(".reveal").forEach((el, i) => {
+
+        setTimeout(() => el.classList.add("visible"), i * 80);
+
+      });
+
+    });
+
+  }
+
+
+
   function renderUpcoming(container, limit = 8) {
 
     const isHome = container.id === "home-upcoming";
@@ -252,8 +441,6 @@
 
     if (isHome) events = filterForHome(events);
 
-    events = events.slice(0, limit);
-
 
 
     if (!events.length) {
@@ -268,67 +455,23 @@
 
 
 
-    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    if (isHome) {
+
+      renderHomeEvents(container, events, today);
+
+      return;
+
+    }
+
+
+
+    events = events.slice(0, limit);
 
 
 
     container.innerHTML = `<ul class="upcoming-list">${events
 
-      .map((e) => {
-
-        const timeStr =
-
-          e.startTime && e.endTime
-
-            ? `${formatTime(e.startTime)} – ${formatTime(e.endTime)}`
-
-            : e.startTime
-
-              ? formatTime(e.startTime)
-
-              : "";
-
-        const tagClass = e.category === "live-music" ? "music" : "";
-
-        const tagLabel =
-
-          e.category === "live-music" && !e.recurring
-
-            ? "Featured act"
-
-            : e.recurring
-
-              ? "Weekly"
-
-              : "This date";
-
-        return `
-
-        <li class="reveal">
-
-          <div class="date-box">
-
-            <div class="day">${e.date.getDate()}</div>
-
-            <div class="month">${months[e.date.getMonth()]}</div>
-
-          </div>
-
-          <div>
-
-            <h4>${e.title}</h4>
-
-            ${timeStr ? `<div class="time">${timeStr}</div>` : ""}
-
-            ${e.summary ? `<p style="margin:0.25rem 0 0;color:var(--text-muted);font-size:0.9rem">${e.summary}</p>` : ""}
-
-            <span class="tag ${tagClass}">${tagLabel}</span>
-
-          </div>
-
-        </li>`;
-
-      })
+      .map(renderUpcomingListItem)
 
       .join("")}</ul>`;
 

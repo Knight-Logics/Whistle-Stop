@@ -36,7 +36,7 @@ function initReviewCarousels() {
 
     function visibleCount() {
       if (window.innerWidth <= 759) return 1;
-      if (window.innerWidth <= 1099) return 2;
+      if (window.innerWidth <= 999) return 2;
       return 3;
     }
 
