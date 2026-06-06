@@ -125,28 +125,9 @@
     });
   }
 
-  function initMapFacades() {
-    document.querySelectorAll("[data-map-lazy]").forEach((wrap) => {
-      if (wrap.dataset.mapBound === "1") return;
-      wrap.dataset.mapBound = "1";
-
-      const button = wrap.querySelector("[data-map-load]");
-      button?.addEventListener("click", () => {
-        const iframe = document.createElement("iframe");
-        iframe.src = wrap.dataset.mapSrc || "";
-        iframe.title = wrap.dataset.mapTitle || "Google Map";
-        iframe.loading = "lazy";
-        iframe.referrerPolicy = "no-referrer-when-downgrade";
-        iframe.allowFullscreen = true;
-        wrap.replaceChildren(iframe);
-      });
-    });
-  }
-
   function initSiteUI() {
     initHeaderScroll();
     initMobileNav();
-    initMapFacades();
     markActiveNav();
     initScrollReveal();
     initHeroPanels();
