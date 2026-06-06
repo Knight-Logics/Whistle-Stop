@@ -1,5 +1,16 @@
 # Whistle Stop Grill & Bar — Preview Rebuild
 
+## Client deliverables (PDF)
+
+| PDF | Source |
+|-----|--------|
+| `AUDIT.pdf` | Full digital presence audit |
+| `PROPOSAL.pdf` | Client proposal |
+| `PRE-VISIT-AUDITS.pdf` | Quick reference + screenshot checklist |
+| `WAVE.pdf` | Accessibility deep-dive (AIM 3.8/10) |
+
+Regenerate after editing `.md` files: open each markdown in Word/Google Docs → Export PDF, or use pandoc + Edge print-to-PDF locally.
+
 Custom static site preview for **Whistle Stop Grill & Bar** (915 Main Street, Safety Harbor, FL).
 
 ## Live preview

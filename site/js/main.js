@@ -1,7 +1,5 @@
 /* Whistle Stop — shared UI */
 (function () {
-  let navInitialized = false;
-
   function initHeaderScroll() {
     const header = document.querySelector(".site-header");
     if (!header || header.dataset.scrollInit) return;
@@ -14,20 +12,22 @@
   }
 
   function initMobileNav() {
-    if (navInitialized) return;
     const toggle = document.querySelector(".nav-toggle");
     const mobileNav = document.querySelector(".nav-mobile");
     const backdrop = document.querySelector(".nav-backdrop");
     if (!toggle || !mobileNav) return;
+    if (toggle.dataset.navBound === "1") return;
 
-    navInitialized = true;
+    toggle.dataset.navBound = "1";
 
     const setOpen = (open) => {
       mobileNav.classList.toggle("open", open);
       backdrop?.classList.toggle("open", open);
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       mobileNav.setAttribute("aria-hidden", open ? "false" : "true");
       document.body.classList.toggle("nav-open", open);
+      document.querySelector(".site-header")?.classList.toggle("nav-open", open);
     };
 
     toggle.addEventListener("click", (e) => {
@@ -82,20 +82,30 @@
     }
   }
 
+  function initHeroPanels() {
+    const hero = document.querySelector(".hero");
+    if (!hero || hero.dataset.panelsInit) return;
+    hero.dataset.panelsInit = "1";
+    requestAnimationFrame(() => {
+      hero.classList.add("hero-panels-ready");
+    });
+  }
+
   function initSiteUI() {
     initHeaderScroll();
     initMobileNav();
     markActiveNav();
     initScrollReveal();
+    initHeroPanels();
   }
 
   document.addEventListener("partials-loaded", initSiteUI);
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
-      if (document.querySelector(".nav-toggle")) initSiteUI();
+      setTimeout(initSiteUI, 0);
     });
-  } else if (document.querySelector(".nav-toggle")) {
-    initSiteUI();
+  } else {
+    setTimeout(initSiteUI, 0);
   }
 })();
