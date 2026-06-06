@@ -34,9 +34,12 @@ function initReviewCarousels() {
     let currentIndex = 0;
     let cachedCardWidth = 0;
 
+    const singleCardQuery = window.matchMedia("(max-width: 759px)");
+    const twoCardQuery = window.matchMedia("(max-width: 999px)");
+
     function visibleCount() {
-      if (window.innerWidth <= 759) return 1;
-      if (window.innerWidth <= 999) return 2;
+      if (singleCardQuery.matches) return 1;
+      if (twoCardQuery.matches) return 2;
       return 3;
     }
 

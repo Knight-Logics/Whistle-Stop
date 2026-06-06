@@ -262,7 +262,7 @@
           <span class="day">${e.date.getDate()}</span>
           <span class="month">${MONTHS_SHORT[e.date.getMonth()]}</span>
         </div>
-        <h4>${e.title}</h4>
+        <h3>${e.title}</h3>
         ${timeStr ? `<div class="time">${timeStr}</div>` : ""}
         ${e.summary ? `<p class="upcoming-card-summary">${e.summary}</p>` : ""}
         <span class="tag ${tagClass}">${tagLabel}</span>
@@ -311,7 +311,7 @@
 
           <div>
 
-            <h4>${e.title}</h4>
+            <h3>${e.title}</h3>
 
             ${timeStr ? `<div class="time">${timeStr}</div>` : ""}
 
