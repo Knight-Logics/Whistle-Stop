@@ -83,11 +83,16 @@
   }
 
   function initHeroPanels() {
-    const hero = document.querySelector(".hero");
-    if (!hero || hero.dataset.panelsInit) return;
-    hero.dataset.panelsInit = "1";
-    requestAnimationFrame(() => {
-      hero.classList.add("hero-panels-ready");
+    document.querySelectorAll(".hero, .page-hero--gallery, .menu-hero--gallery").forEach((hero) => {
+      if (hero.dataset.panelsInit) return;
+      hero.dataset.panelsInit = "1";
+      requestAnimationFrame(() => hero.classList.add("hero-panels-ready"));
+    });
+
+    document.querySelectorAll(".page-hero--photo").forEach((hero) => {
+      if (hero.dataset.photoInit) return;
+      hero.dataset.photoInit = "1";
+      requestAnimationFrame(() => hero.classList.add("page-hero-photo-ready"));
     });
   }
 

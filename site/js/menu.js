@@ -97,14 +97,21 @@
   }
 
   function render() {
-    root.innerHTML = `
+    const toolbarSlot = document.getElementById("menu-toolbar-slot");
+    const toolbarHtml = `
       <div class="menu-toolbar" id="menu-toolbar">
         <div class="container">
           <nav class="menu-tabs" role="tablist" aria-label="Menu type">
             ${renderTabs()}
           </nav>
         </div>
-      </div>
+      </div>`;
+
+    if (toolbarSlot) {
+      toolbarSlot.innerHTML = toolbarHtml;
+    }
+
+    root.innerHTML = `
       <div class="container menu-layout">
         <aside class="menu-sidebar slide-in-left" id="menu-sidebar" aria-label="Menu categories"></aside>
         <div class="menu-panels" id="menu-panels">
@@ -115,12 +122,29 @@
     bindEvents();
     updateSidebar();
     animatePanelItems();
-    setupStickyToolbar();
+    setupPinnedToolbar();
     setupScrollSpy();
   }
 
   function getMenu(id) {
     return data.menus.find((m) => m.id === id);
+  }
+
+  function getMenuScrollOffset() {
+    const headerH =
+      parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 76;
+    const toolbar = document.getElementById("menu-toolbar");
+    const toolbarH = toolbar?.getBoundingClientRect().height || 0;
+    return headerH + toolbarH + 8;
+  }
+
+  function scrollToMenuIntro(panel = document.querySelector(".menu-panel.is-active")) {
+    if (!panel) return;
+    const anchor = panel.querySelector(".menu-panel-intro") || panel.querySelector(".menu-panel-content");
+    if (!anchor) return;
+
+    const top = anchor.getBoundingClientRect().top + window.scrollY - getMenuScrollOffset();
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   }
 
   function updateSidebar() {
@@ -134,8 +158,8 @@
         const id = link.getAttribute("href").slice(1);
         const el = document.getElementById(id);
         if (el) {
-          const top = el.getBoundingClientRect().top + window.scrollY - 140;
-          window.scrollTo({ top, behavior: "smooth" });
+          const top = el.getBoundingClientRect().top + window.scrollY - getMenuScrollOffset() - 12;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
         }
         sidebar.querySelectorAll(".menu-cat-link").forEach((l) => l.classList.remove("active"));
         link.classList.add("active");
@@ -155,11 +179,13 @@
       tab.classList.toggle("is-active", on);
     });
 
+    let activePanel = null;
     document.querySelectorAll(".menu-panel").forEach((panel) => {
       const on = panel.dataset.menu === menuId;
       panel.classList.toggle("is-active", on);
       panel.hidden = !on;
       if (on) {
+        activePanel = panel;
         panel.classList.remove("panel-entered");
         requestAnimationFrame(() => {
           panel.classList.add("panel-entered");
@@ -170,6 +196,10 @@
 
     updateSidebar();
     if (pushHash) history.replaceState(null, "", `#${menuId}`);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => scrollToMenuIntro(activePanel));
+    });
   }
 
   function animatePanelItems(panel = document.querySelector(".menu-panel.is-active")) {
@@ -196,14 +226,53 @@
     }
   }
 
-  function setupStickyToolbar() {
+  function setupPinnedToolbar() {
     const toolbar = document.getElementById("menu-toolbar");
-    if (!toolbar) return;
-    const onScroll = () => {
-      toolbar.classList.toggle("is-stuck", toolbar.getBoundingClientRect().top <= 76);
+    const anchor = document.getElementById("menu-toolbar-anchor");
+    const spacer = document.getElementById("menu-toolbar-spacer");
+    if (!toolbar || !anchor) return;
+
+    const headerH =
+      parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 76;
+
+    const syncSpacer = (pinned) => {
+      if (!spacer) return;
+      spacer.style.height = pinned ? `${toolbar.offsetHeight}px` : "0";
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+
+    const setPinned = (pinned) => {
+      toolbar.classList.toggle("is-pinned", pinned);
+      syncSpacer(pinned);
+      document.documentElement.style.setProperty(
+        "--menu-toolbar-h",
+        `${toolbar.offsetHeight}px`
+      );
+    };
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        ([entry]) => setPinned(!entry.isIntersecting),
+        { root: null, threshold: 0, rootMargin: `-${headerH}px 0px 0px 0px` }
+      );
+      observer.observe(anchor);
+    } else {
+      const onScroll = () => {
+        const pinned = anchor.getBoundingClientRect().top <= headerH;
+        setPinned(pinned);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    }
+
+    window.addEventListener("resize", () => syncSpacer(toolbar.classList.contains("is-pinned")), {
+      passive: true,
+    });
+
+    document.documentElement.style.setProperty(
+      "--menu-toolbar-h",
+      `${toolbar.offsetHeight}px`
+    );
+    setPinned(false);
   }
 
   function setupScrollSpy() {
@@ -242,6 +311,11 @@
       activeMenu = readHash();
       render();
       initSidebarReveal();
+      if (location.hash) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => scrollToMenuIntro());
+        });
+      }
       window.addEventListener("hashchange", () => {
         const id = readHash();
         if (id !== activeMenu) switchMenu(id, false);

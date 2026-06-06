@@ -8,10 +8,6 @@
 
   const calendarEl = document.getElementById("event-calendar");
 
-  const gbpNote = document.getElementById("gbp-events-note");
-
-
-
   if (!upcomingEls.length && !lineupEls.length && !calendarEl) return;
 
 
@@ -245,6 +241,34 @@
 
 
 
+  function renderUpcomingGridItem(e) {
+    const timeStr =
+      e.startTime && e.endTime
+        ? `${formatTime(e.startTime)} – ${formatTime(e.endTime)}`
+        : e.startTime
+          ? formatTime(e.startTime)
+          : "";
+    const tagClass = e.category === "live-music" ? "music" : "";
+    const tagLabel =
+      e.category === "live-music" && !e.recurring
+        ? "Featured act"
+        : e.recurring
+          ? "Weekly"
+          : "This date";
+
+    return `
+      <article class="upcoming-card reveal">
+        <div class="upcoming-card-date">
+          <span class="day">${e.date.getDate()}</span>
+          <span class="month">${MONTHS_SHORT[e.date.getMonth()]}</span>
+        </div>
+        <h4>${e.title}</h4>
+        ${timeStr ? `<div class="time">${timeStr}</div>` : ""}
+        ${e.summary ? `<p class="upcoming-card-summary">${e.summary}</p>` : ""}
+        <span class="tag ${tagClass}">${tagLabel}</span>
+      </article>`;
+  }
+
   function renderUpcomingListItem(e) {
 
     const timeStr =
@@ -465,15 +489,16 @@
 
 
 
+    events = filterForHome(events);
     events = events.slice(0, limit);
 
 
 
-    container.innerHTML = `<ul class="upcoming-list">${events
+    container.innerHTML = `<div class="upcoming-grid" role="list">${events
 
-      .map(renderUpcomingListItem)
+      .map(renderUpcomingGridItem)
 
-      .join("")}</ul>`;
+      .join("")}</div>`;
 
 
 
@@ -723,15 +748,11 @@
 
 
 
-  upcomingEls.forEach((el) => renderUpcoming(el, el.id === "home-upcoming" ? 6 : 12));
+  upcomingEls.forEach((el) => renderUpcoming(el, el.id === "home-upcoming" ? 6 : 24));
 
   lineupEls.forEach((el) => renderLineup(el, 10));
 
   renderCalendar();
-
-
-
-  if (gbpNote) gbpNote.hidden = false;
 
 })();
 

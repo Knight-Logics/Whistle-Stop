@@ -12,8 +12,31 @@
   <header class="site-header"><div class="container header-inner" data-include="partials/header.html"></div></header>
 
   <main>
-    <div class="page-hero">
-      <div class="container reveal">
+    <div class="page-hero page-hero--gallery">
+      <div class="hero-bg hero-bg--grid page-hero-bg--desktop" aria-hidden="true">
+        <div class="hero-panel hero-panel--left">
+          <img src="assets/gallery/WSGirls.jpg" alt="" width="1200" height="1600" decoding="async" fetchpriority="high" />
+        </div>
+        <div class="hero-panel hero-panel--bottom">
+          <img src="assets/gallery/WSCornHole.jpg" alt="" width="1200" height="1200" decoding="async" />
+        </div>
+        <div class="hero-panel hero-panel--top">
+          <img src="assets/gallery/WSRocker2.jpg" alt="" width="1200" height="1200" decoding="async" />
+        </div>
+        <div class="hero-panel hero-panel--right">
+          <img src="assets/gallery/WSRocker.jpg" alt="" width="1200" height="1200" decoding="async" />
+        </div>
+      </div>
+      <div class="hero-bg hero-bg--grid page-hero-bg--mobile" aria-hidden="true">
+        <div class="hero-panel hero-panel--left">
+          <img src="assets/gallery/WSGirls.jpg" alt="" width="1200" height="1600" decoding="async" fetchpriority="high" />
+        </div>
+        <div class="hero-panel hero-panel--bottom">
+          <img src="assets/gallery/WSCornHole.jpg" alt="" width="1200" height="1200" decoding="async" />
+        </div>
+      </div>
+      <div class="hero-overlay page-hero-overlay" aria-hidden="true"></div>
+      <div class="container reveal page-hero-content">
         <p class="hero-eyebrow">What's happening</p>
         <h1>Events &amp; Happenings</h1>
         <p>One calendar for everything — update performers in one place instead of redesigning graphics every month.</p>
@@ -68,19 +91,13 @@
         </section>
 
         <div class="events-layout">
-          <div class="reveal-left">
-            <h2 style="font-size:2rem;margin:0 0 1rem">All upcoming events</h2>
-            <div id="upcoming-events"></div>
-            <div class="admin-panel reveal" id="gbp-events-note" hidden>
-              <h3 style="margin:0 0 0.5rem;font-size:1.1rem">GBP tip</h3>
-              <p style="margin:0;font-size:0.95rem;color:var(--text-muted)">
-                Google Business Profile events are separate from your website. This rebuild uses <strong>one JSON file</strong> for the site calendar. Optional: connect a Google Calendar and sync to GBP so you aren't typing the same show twice.
-              </p>
-            </div>
-          </div>
-          <div class="reveal-right">
-            <h2 style="font-size:2rem;margin:0 0 1rem">Month at a glance</h2>
+          <div class="events-calendar-block reveal">
+            <h2 class="events-section-title">Month at a glance</h2>
             <div class="calendar-grid" id="event-calendar"></div>
+          </div>
+          <div class="events-upcoming-block reveal">
+            <h2 class="events-section-title">All upcoming events</h2>
+            <div id="upcoming-events" aria-live="polite"></div>
           </div>
         </div>
       </div>

@@ -14,10 +14,33 @@
   </header>
 
   <main class="menu-page">
-    <div class="page-hero page-hero--media menu-hero">
-      <div class="container reveal">
+    <div class="page-hero menu-hero menu-hero--gallery">
+      <div class="hero-bg hero-bg--grid menu-hero-bg menu-hero-bg--desktop" aria-hidden="true">
+        <div class="hero-panel hero-panel--left">
+          <img src="assets/gallery/WSFood2.jpg" alt="" width="1200" height="1200" decoding="async" fetchpriority="high" />
+        </div>
+        <div class="hero-panel hero-panel--bottom">
+          <img src="assets/gallery/WSFood3.jpg" alt="" width="1200" height="1600" decoding="async" />
+        </div>
+        <div class="hero-panel hero-panel--top">
+          <img src="assets/gallery/WSFood4.jpg" alt="" width="1200" height="1200" decoding="async" />
+        </div>
+        <div class="hero-panel hero-panel--right">
+          <img src="assets/gallery/WSDrinks3.jpg" alt="" width="1200" height="1200" decoding="async" />
+        </div>
+      </div>
+      <div class="hero-bg hero-bg--grid menu-hero-bg menu-hero-bg--mobile" aria-hidden="true">
+        <div class="hero-panel hero-panel--left">
+          <img src="assets/gallery/WSDrinks3.jpg" alt="" width="1200" height="1200" decoding="async" fetchpriority="high" />
+        </div>
+        <div class="hero-panel hero-panel--bottom">
+          <img src="assets/gallery/WSFood4.jpg" alt="" width="1200" height="1200" decoding="async" />
+        </div>
+      </div>
+      <div class="hero-overlay menu-hero-overlay" aria-hidden="true"></div>
+      <div class="container reveal menu-hero-content">
         <h1>Menus</h1>
-        <p class="script" style="font-size:1.35rem;color:var(--gold)">Real. Good. Food.</p>
+        <p class="script menu-hero-tagline">Real. Good. Food.</p>
         <p>Choose your menu below — same easy selectors as our live site, built for mobile and search engines.</p>
       </div>
     </div>
@@ -26,19 +49,24 @@
       Prices and availability change seasonally — ask your server for today&rsquo;s Gulf catch and specials.
     </p>
 
-    <div id="menu-app" aria-live="polite">
-      <p class="container menu-loading">Loading menus…</p>
-    </div>
-
-    <section class="menu-footer-cta">
-      <div class="container" style="text-align:center">
-        <p class="reveal" style="color:var(--text-muted)">
-          Dining with us? <a href="tel:+17277261956">Call (727) 726-1956</a> for large parties or see
-          <a href="private-events.html">private events</a>.
-        </p>
-        <a href="order.html" class="btn btn-primary reveal">Order pickup &amp; delivery</a>
+    <div class="menu-page-body">
+      <div id="menu-toolbar-anchor" aria-hidden="true"></div>
+      <div id="menu-toolbar-slot"></div>
+      <div id="menu-toolbar-spacer" aria-hidden="true"></div>
+      <div id="menu-app" aria-live="polite">
+        <p class="container menu-loading">Loading menus…</p>
       </div>
-    </section>
+
+      <section class="menu-footer-cta">
+        <div class="container" style="text-align:center">
+          <p class="reveal" style="color:var(--text-muted)">
+            Dining with us? <a href="tel:+17277261956">Call (727) 726-1956</a> for large parties or see
+            <a href="private-events.html">private events</a>.
+          </p>
+          <a href="order.html" class="btn btn-primary reveal">Order pickup &amp; delivery</a>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer class="site-footer" data-include="partials/footer.html"></footer>
