@@ -125,12 +125,48 @@
     });
   }
 
+  function loadMap(wrap) {
+    if (wrap.dataset.mapLoaded === "1") return;
+    wrap.dataset.mapLoaded = "1";
+    const iframe = document.createElement("iframe");
+    iframe.src = wrap.dataset.mapSrc || "";
+    iframe.title = wrap.dataset.mapTitle || "Google Map";
+    iframe.loading = "lazy";
+    iframe.referrerPolicy = "no-referrer-when-downgrade";
+    iframe.allowFullscreen = true;
+    wrap.replaceChildren(iframe);
+  }
+
+  function initLazyMaps() {
+    const maps = document.querySelectorAll("[data-map-lazy]");
+    if (!maps.length) return;
+
+    if (!("IntersectionObserver" in window)) {
+      maps.forEach(loadMap);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadMap(entry.target);
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "600px 0px" }
+    );
+    maps.forEach((map) => io.observe(map));
+  }
+
   function initSiteUI() {
     initHeaderScroll();
     initMobileNav();
     markActiveNav();
     initScrollReveal();
     initHeroPanels();
+    initLazyMaps();
   }
 
   document.addEventListener("partials-loaded", initSiteUI);

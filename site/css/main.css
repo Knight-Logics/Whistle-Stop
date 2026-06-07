@@ -1786,8 +1786,38 @@ section {
 .visit-map-embed {
   border-radius: var(--radius);
   overflow: hidden;
-  min-height: 320px;
+  min-height: 360px;
   min-width: 0;
+  display: flex;
+}
+
+.visit-map-embed iframe,
+.visit-map-embed .map-placeholder {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 360px;
+  border: 0;
+}
+
+.map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(184, 224, 74, 0.12), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(20, 20, 20, 0.05) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(20, 20, 20, 0.05) 0 1px, transparent 1px 26px),
+    #eceadf;
+  color: #5a5348;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.map-placeholder-pin {
+  font-size: 1.6rem;
+  line-height: 1;
 }
 
 .visit-location-details {
