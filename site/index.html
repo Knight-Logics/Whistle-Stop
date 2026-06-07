@@ -10,59 +10,10 @@
   <link rel="preload" href="assets/gallery/WSSunset-480.webp" as="image" type="image/webp" fetchpriority="high" />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="preload" href="css/reviews.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="css/reviews.css" /></noscript>
   <style>
-    :root {
-      --chalk: #141414;
-      --chalk-mid: #1f1f1f;
-      --cream: #f4efe4;
-      --cream-dim: #d9d2c4;
-      --lime: #b8e04a;
-      --gold: #e8c547;
-      --text: #f4efe4;
-      --text-muted: #a8a095;
-      --font-display: "Bebas Neue", Impact, sans-serif;
-      --font-body: "Source Sans 3", system-ui, sans-serif;
-      --header-bar-h: 76px;
-      --header-h: var(--header-bar-h);
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: var(--font-body);
-      color: var(--text);
-      background: var(--chalk);
-    }
-    img { max-width: 100%; height: auto; display: block; }
-    .container { width: min(1140px, 92vw); margin-inline: auto; }
-    .site-header {
-      position: fixed;
-      inset: 0 0 auto;
-      z-index: 1000;
-      background: rgba(20, 20, 20, 0.92);
-      border-bottom: 1px solid rgba(184, 224, 74, 0.15);
-    }
-    .header-inner {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      height: var(--header-bar-h);
-      gap: 1rem 1.5rem;
-    }
-    .hero {
-      position: relative;
-      min-height: min(88vh, 900px);
-      display: flex;
-      align-items: center;
-      padding: calc(var(--header-h) + 2.5rem) 0 5rem;
-      overflow: hidden;
-    }
-    .hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(3rem, 10vw, 5.5rem);
-      margin: 0 0 0.5rem;
-      line-height: 1.05;
-      text-transform: uppercase;
-    }
     .hero .reveal,
     .hero .reveal.stagger-1,
     .hero .reveal.stagger-2,
@@ -72,34 +23,7 @@
       opacity: 1;
       transform: none;
     }
-    .stats-bar {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1px;
-      background: #2a2a2a;
-      border-radius: 12px;
-      overflow: hidden;
-      margin: -3rem auto 0;
-      position: relative;
-      z-index: 2;
-    }
-    .stat {
-      background: var(--chalk-mid);
-      padding: 1.25rem 1rem;
-      text-align: center;
-    }
-    .stat strong {
-      display: block;
-      font-family: var(--font-display);
-      font-size: 2rem;
-      color: var(--lime);
-      line-height: 1;
-    }
   </style>
-  <link rel="preload" href="css/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="css/main.css" /></noscript>
-  <link rel="preload" href="css/reviews.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="css/reviews.css" /></noscript>
   <link rel="icon" href="assets/logo.webp" />
 </head>
 <body>
@@ -238,7 +162,7 @@
             </div>
           </div>
 
-          <div class="map-card reveal">
+          <div class="map-card map-card--fill reveal">
             <iframe
               title="Whistle Stop Grill and Bar on Google Maps"
               src="https://maps.google.com/maps?q=915+Main+Street+Safety+Harbor+FL+34695&amp;output=embed"
@@ -246,9 +170,6 @@
               referrerpolicy="no-referrer-when-downgrade"
               allowfullscreen
             ></iframe>
-            <p>
-              <strong>915 Main Street, Safety Harbor, FL 34695</strong> — Map, directions, and live Google reviews are visible here so locals and visitors can confirm the location before they head to Main Street.
-            </p>
           </div>
         </div>
       </div>
@@ -277,14 +198,14 @@
           <div class="divider"></div>
         </div>
         <div class="photo-gallery photo-gallery--uniform reveal-scale">
-          <figure class="reveal-photo"><img src="assets/gallery/WSFood-280.webp" srcset="assets/gallery/WSFood-280.webp 280w, assets/gallery/WSFood-560.webp 560w, assets/gallery/WSFood.webp 960w" sizes="(max-width: 767px) 46vw, 280px" alt="Plates at Whistle Stop" loading="lazy" decoding="async" /><figcaption>Real. Good. Food.</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSDrinks-280.webp" srcset="assets/gallery/WSDrinks-280.webp 280w, assets/gallery/WSDrinks-560.webp 560w, assets/gallery/WSDrinks.webp 1169w" sizes="(max-width: 767px) 46vw, 280px" alt="Craft cocktails" loading="lazy" decoding="async" /><figcaption>18 taps &amp; Hip Sips</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSRocker-280.webp" srcset="assets/gallery/WSRocker-280.webp 280w, assets/gallery/WSRocker-560.webp 560w, assets/gallery/WSRocker.webp 1080w" sizes="(max-width: 767px) 46vw, 280px" alt="Live music on the patio" loading="lazy" decoding="async" /><figcaption>Live music</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSCornHole-280.webp" srcset="assets/gallery/WSCornHole-280.webp 280w, assets/gallery/WSCornHole-560.webp 560w, assets/gallery/WSCornHole.webp 1080w" sizes="(max-width: 767px) 46vw, 280px" alt="Cornhole league night" loading="lazy" decoding="async" /><figcaption>Cornhole Wednesdays</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSSunset-280.webp" srcset="assets/gallery/WSSunset-280.webp 280w, assets/gallery/WSSunset-560.webp 560w, assets/gallery/WSSunset.webp 964w" sizes="(max-width: 767px) 46vw, 280px" alt="Sunset on Main Street" loading="lazy" decoding="async" /><figcaption>Safety Harbor sunsets</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSGoodTimes-280.webp" srcset="assets/gallery/WSGoodTimes-280.webp 280w, assets/gallery/WSGoodTimes-560.webp 560w, assets/gallery/WSGoodTimes.webp 1080w" sizes="(max-width: 767px) 46vw, 280px" alt="Friends on the patio" loading="lazy" decoding="async" /><figcaption>Good times</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSBar-280.webp" srcset="assets/gallery/WSBar-280.webp 280w, assets/gallery/WSBar-560.webp 560w, assets/gallery/WSBar.webp 1080w" sizes="(max-width: 767px) 46vw, 280px" alt="Open-air bar on Main Street" loading="lazy" decoding="async" /><figcaption>Open-air bar</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSLounge-280.webp" srcset="assets/gallery/WSLounge-280.webp 280w, assets/gallery/WSLounge-560.webp 560w, assets/gallery/WSLounge.webp 960w" sizes="(max-width: 767px) 46vw, 280px" alt="Patio lounge seating" loading="lazy" decoding="async" /><figcaption>Patio hangs</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSFood-280.webp" srcset="assets/gallery/WSFood-280.webp 280w, assets/gallery/WSFood-400.webp 400w, assets/gallery/WSFood-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Plates at Whistle Stop" loading="lazy" decoding="async" /><figcaption>Real. Good. Food.</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSDrinks-280.webp" srcset="assets/gallery/WSDrinks-280.webp 280w, assets/gallery/WSDrinks-400.webp 400w, assets/gallery/WSDrinks-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Craft cocktails" loading="lazy" decoding="async" /><figcaption>18 taps &amp; Hip Sips</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSRocker-280.webp" srcset="assets/gallery/WSRocker-280.webp 280w, assets/gallery/WSRocker-400.webp 400w, assets/gallery/WSRocker-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Live music on the patio" loading="lazy" decoding="async" /><figcaption>Live music</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSCornHole-280.webp" srcset="assets/gallery/WSCornHole-280.webp 280w, assets/gallery/WSCornHole-400.webp 400w, assets/gallery/WSCornHole-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Cornhole league night" loading="lazy" decoding="async" /><figcaption>Cornhole Wednesdays</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSSunset-280.webp" srcset="assets/gallery/WSSunset-280.webp 280w, assets/gallery/WSSunset-400.webp 400w, assets/gallery/WSSunset-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Sunset on Main Street" loading="lazy" decoding="async" /><figcaption>Safety Harbor sunsets</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSGoodTimes-280.webp" srcset="assets/gallery/WSGoodTimes-280.webp 280w, assets/gallery/WSGoodTimes-400.webp 400w, assets/gallery/WSGoodTimes-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Friends on the patio" loading="lazy" decoding="async" /><figcaption>Good times</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSBar-280.webp" srcset="assets/gallery/WSBar-280.webp 280w, assets/gallery/WSBar-400.webp 400w, assets/gallery/WSBar-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Open-air bar on Main Street" loading="lazy" decoding="async" /><figcaption>Open-air bar</figcaption></figure>
+          <figure class="reveal-photo"><img src="assets/gallery/WSLounge-280.webp" srcset="assets/gallery/WSLounge-280.webp 280w, assets/gallery/WSLounge-400.webp 400w, assets/gallery/WSLounge-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Patio lounge seating" loading="lazy" decoding="async" /><figcaption>Patio hangs</figcaption></figure>
         </div>
       </div>
     </section>

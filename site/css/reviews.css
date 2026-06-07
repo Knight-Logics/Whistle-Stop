@@ -293,6 +293,17 @@
   display: block;
 }
 
+/* Map fills the whole card (no caption) */
+.map-card--fill {
+  display: flex;
+}
+
+.map-card--fill iframe {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 420px;
+}
+
 .map-facade {
   display: grid;
   gap: 0.85rem;
