@@ -69,7 +69,20 @@
         "Pub Food"
       ],
       "acceptsReservations": false,
-      "hasMenu": "https://knight-logics.github.io/Whistle-Stop/menu.html",
+      "hasMenu": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#menu"
+      },
+      "potentialAction": {
+        "@type": "OrderAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.whistlestopgrill.com/online-ordering",
+          "actionPlatform": [
+            "https://schema.org/DesktopWebPlatform",
+            "https://schema.org/MobileWebPlatform"
+          ]
+        }
+      },
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "915 Main Street",
@@ -88,6 +101,14 @@
         "https://www.facebook.com/Whistlestopgrillandbar915",
         "https://www.instagram.com/whistlestop_grill/"
       ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+17277261956",
+        "email": "admin@whistlestopgrill.com",
+        "contactType": "customer service",
+        "areaServed": "US-FL",
+        "availableLanguage": "en-US"
+      },
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
@@ -145,10 +166,20 @@
       "isPartOf": {
         "@id": "https://knight-logics.github.io/Whistle-Stop/#website"
       },
+      "publisher": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
+      },
       "about": {
         "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
       },
-      "inLanguage": "en-US"
+      "inLanguage": "en-US",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://knight-logics.github.io/Whistle-Stop/assets/gallery/WSSunset.webp"
+      },
+      "mainEntity": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
+      }
     },
     {
       "@type": "BreadcrumbList",

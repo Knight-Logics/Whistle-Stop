@@ -12,6 +12,134 @@
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "WebSite",
+      "@id": "https://knight-logics.github.io/Whistle-Stop/#website",
+      "name": "Whistle Stop Grill & Bar",
+      "url": "https://knight-logics.github.io/Whistle-Stop/",
+      "publisher": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": [
+        "Organization",
+        "Restaurant"
+      ],
+      "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant",
+      "name": "Whistle Stop Grill & Bar",
+      "alternateName": "Whistle Stop Grill and Bar",
+      "url": "https://knight-logics.github.io/Whistle-Stop/",
+      "logo": "https://knight-logics.github.io/Whistle-Stop/assets/logo.webp",
+      "image": [
+        "https://knight-logics.github.io/Whistle-Stop/assets/gallery/WSSunset.webp",
+        "https://knight-logics.github.io/Whistle-Stop/assets/gallery/WSBar.webp",
+        "https://knight-logics.github.io/Whistle-Stop/assets/gallery/WSFood.webp",
+        "https://knight-logics.github.io/Whistle-Stop/assets/gallery/WSGoodTimes.webp"
+      ],
+      "description": "Safety Harbor's landmark grill and bar since 1995, serving American bar-and-grill favorites, cocktails, 18 taps, live music, and dog-friendly open-air patio dining on Main Street.",
+      "slogan": "Old Florida / New Vibe",
+      "foundingDate": "1995",
+      "telephone": "+17277261956",
+      "email": "admin@whistlestopgrill.com",
+      "priceRange": "$$",
+      "servesCuisine": [
+        "American",
+        "Bar & Grill",
+        "Burgers",
+        "Seafood",
+        "Pub Food"
+      ],
+      "acceptsReservations": false,
+      "hasMenu": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#menu"
+      },
+      "potentialAction": {
+        "@type": "OrderAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.whistlestopgrill.com/online-ordering",
+          "actionPlatform": [
+            "https://schema.org/DesktopWebPlatform",
+            "https://schema.org/MobileWebPlatform"
+          ]
+        }
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "915 Main Street",
+        "addressLocality": "Safety Harbor",
+        "addressRegion": "FL",
+        "postalCode": "34695",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 27.990934,
+        "longitude": -82.696838
+      },
+      "hasMap": "https://www.google.com/maps/search/?api=1&query=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL",
+      "sameAs": [
+        "https://www.facebook.com/Whistlestopgrillandbar915",
+        "https://www.instagram.com/whistlestop_grill/"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+17277261956",
+        "email": "admin@whistlestopgrill.com",
+        "contactType": "customer service",
+        "areaServed": "US-FL",
+        "availableLanguage": "en-US"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Sunday"
+          ],
+          "opens": "11:00",
+          "closes": "21:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Friday",
+            "Saturday"
+          ],
+          "opens": "11:00",
+          "closes": "22:00"
+        }
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.4",
+        "reviewCount": "2036",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "amenityFeature": [
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Dog-friendly patio",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Live music",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Open-air dining",
+          "value": true
+        }
+      ]
+    },
+    {
       "@type": "WebPage",
       "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#webpage",
       "url": "https://knight-logics.github.io/Whistle-Stop/menu.html",
@@ -20,10 +148,20 @@
       "isPartOf": {
         "@id": "https://knight-logics.github.io/Whistle-Stop/#website"
       },
+      "publisher": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
+      },
       "about": {
         "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
       },
-      "inLanguage": "en-US"
+      "inLanguage": "en-US",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://knight-logics.github.io/Whistle-Stop/assets/gallery/WSFood.webp"
+      },
+      "mainEntity": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#menu"
+      }
     },
     {
       "@type": "BreadcrumbList",

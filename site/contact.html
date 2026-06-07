@@ -20,15 +20,11 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "ContactPage",
-      "@id": "https://knight-logics.github.io/Whistle-Stop/contact.html#webpage",
-      "url": "https://knight-logics.github.io/Whistle-Stop/contact.html",
-      "name": "Visit Whistle Stop | Directions & Hours",
-      "description": "Find Whistle Stop Grill & Bar at 915 Main Street in downtown Safety Harbor, FL.",
-      "isPartOf": {
-        "@id": "https://knight-logics.github.io/Whistle-Stop/#website"
-      },
-      "about": {
+      "@type": "WebSite",
+      "@id": "https://knight-logics.github.io/Whistle-Stop/#website",
+      "name": "Whistle Stop Grill & Bar",
+      "url": "https://knight-logics.github.io/Whistle-Stop/",
+      "publisher": {
         "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
       },
       "inLanguage": "en-US"
@@ -63,7 +59,20 @@
         "Pub Food"
       ],
       "acceptsReservations": false,
-      "hasMenu": "https://knight-logics.github.io/Whistle-Stop/menu.html",
+      "hasMenu": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#menu"
+      },
+      "potentialAction": {
+        "@type": "OrderAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.whistlestopgrill.com/online-ordering",
+          "actionPlatform": [
+            "https://schema.org/DesktopWebPlatform",
+            "https://schema.org/MobileWebPlatform"
+          ]
+        }
+      },
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "915 Main Street",
@@ -82,6 +91,14 @@
         "https://www.facebook.com/Whistlestopgrillandbar915",
         "https://www.instagram.com/whistlestop_grill/"
       ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+17277261956",
+        "email": "admin@whistlestopgrill.com",
+        "contactType": "customer service",
+        "areaServed": "US-FL",
+        "availableLanguage": "en-US"
+      },
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
@@ -129,6 +146,30 @@
           "value": true
         }
       ]
+    },
+    {
+      "@type": "ContactPage",
+      "@id": "https://knight-logics.github.io/Whistle-Stop/contact.html#webpage",
+      "url": "https://knight-logics.github.io/Whistle-Stop/contact.html",
+      "name": "Visit Whistle Stop | Directions & Hours",
+      "description": "Find Whistle Stop Grill & Bar at 915 Main Street in downtown Safety Harbor, FL.",
+      "isPartOf": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#website"
+      },
+      "publisher": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
+      },
+      "about": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
+      },
+      "inLanguage": "en-US",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://knight-logics.github.io/Whistle-Stop/assets/gallery/WSGoodTimes.webp"
+      },
+      "mainEntity": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
+      }
     },
     {
       "@type": "BreadcrumbList",
