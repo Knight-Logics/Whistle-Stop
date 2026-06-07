@@ -143,12 +143,12 @@ h3,
 }
 
 .header-socials-label {
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.14em;
   text-transform: lowercase;
-  color: var(--text-muted);
-  line-height: 1;
+  color: var(--cream-dim);
+  line-height: 1.2;
 }
 
 .header-social-icons {
@@ -210,7 +210,7 @@ h3,
     display: inline-flex !important;
     grid-column: 2;
     grid-row: 1;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     padding: 0.32rem 0.6rem;
     z-index: 1002;
   }
@@ -223,7 +223,7 @@ h3,
 
 @media (max-width: 400px) {
   .header-call-btn.header-aside {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     padding: 0.28rem 0.45rem;
     letter-spacing: 0.02em;
   }
@@ -264,16 +264,17 @@ h3,
   line-height: 1.1;
 }
 
-.logo-text strong {
+.logo-text .logo-name {
   font-family: var(--font-display);
   font-size: 1.15rem;
   letter-spacing: 0.12em;
+  color: var(--cream);
 }
 
 .logo-text span {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: var(--lime);
-  letter-spacing: 0.2em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -455,8 +456,8 @@ body.nav-open {
   margin-top: 1rem;
   padding-top: 0.85rem;
   border-top: 1px solid var(--chalk-light);
-  font-size: 0.72rem;
-  color: var(--text-muted);
+  font-size: 0.78rem;
+  color: var(--cream-dim);
 }
 
 .nav-mobile-legal nav {
@@ -478,7 +479,7 @@ body.nav-open {
 }
 
 .nav-mobile-note {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
 }
 
@@ -912,7 +913,7 @@ section {
 }
 
 .tag {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1094,10 +1095,10 @@ section {
 }
 
 .upcoming-card-date .month {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--cream-dim);
 }
 
 .upcoming-card h3 {
@@ -1160,10 +1161,10 @@ section {
 }
 
 .upcoming-list .date-box .month {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted);
+  color: var(--cream-dim);
 }
 
 .upcoming-list h3 {
@@ -1216,7 +1217,7 @@ section {
 }
 
 .cal-dow {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-align: center;
   text-transform: uppercase;
@@ -1226,7 +1227,7 @@ section {
 
 .cal-day {
   min-height: 64px;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   padding: 4px;
   border-radius: 6px;
   background: #fff;
@@ -1234,7 +1235,8 @@ section {
 }
 
 .cal-day.other-month {
-  opacity: 0.35;
+  background: #f3f0e8;
+  color: #5b554d;
 }
 
 .cal-day.today {
@@ -1254,7 +1256,7 @@ section {
   border-radius: 3px;
   background: var(--chalk);
   color: var(--lime);
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
@@ -1285,7 +1287,16 @@ section {
   }
 }
 
+#home-upcoming {
+  width: 100%;
+  min-width: 0;
+}
+
 .home-calendar-grid {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   background: var(--chalk-mid);
   color: var(--cream);
   border: 1px solid var(--chalk-light);
@@ -1294,6 +1305,7 @@ section {
 }
 
 .home-calendar-grid .cal-dow {
+  min-width: 0;
   color: var(--text-muted);
 }
 
@@ -1311,14 +1323,22 @@ section {
 }
 
 .home-cal-day {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
   min-height: 92px;
+  height: 100%;
+  padding: 6px;
   background: var(--chalk);
   border: 1px solid var(--chalk-light);
   color: var(--cream);
+  overflow: hidden;
 }
 
 .home-cal-day.past-day {
-  opacity: 0.42;
+  background: #1b1b1b;
+  color: var(--cream-dim);
 }
 
 .home-cal-day.today {
@@ -1334,32 +1354,35 @@ section {
 
 .home-cal-events {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
   margin-top: 4px;
 }
 
 .home-cal-ev {
+  min-width: 0;
   padding: 4px 6px;
   border-radius: 5px;
   background: rgba(255, 255, 255, 0.06);
-  font-size: 0.65rem;
-  line-height: 1.25;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .home-cal-ev strong {
   display: block;
   font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .home-cal-ev span {
   display: block;
   color: var(--purple);
   font-weight: 600;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
 }
 
 .home-cal-ev.music {
@@ -1384,11 +1407,11 @@ section {
   }
 
   .home-cal-ev {
-    font-size: 0.7rem;
+    font-size: 0.78rem;
   }
 
   .home-cal-ev span {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -1507,6 +1530,11 @@ section {
   color: var(--cream-dim);
 }
 
+.footer-tagline {
+  color: var(--cream);
+  font-weight: 700;
+}
+
 .footer-bottom {
   margin-top: 2rem;
   padding-top: 1.5rem;
@@ -1541,7 +1569,7 @@ section {
   align-items: center;
   justify-content: center;
   padding: 0.65rem 0.25rem;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1726,12 +1754,12 @@ section {
 .photo-gallery figcaption {
   position: absolute;
   inset: auto 0 0;
-  padding: 0.5rem 0.65rem;
-  font-size: 0.7rem;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  background: linear-gradient(transparent, rgba(20, 20, 20, 0.9));
+  background: rgba(13, 13, 13, 0.96);
   color: var(--cream);
 }
 
@@ -2087,7 +2115,7 @@ section {
 }
 
 .order-card-label {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
