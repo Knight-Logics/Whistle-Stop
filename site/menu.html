@@ -8,168 +8,921 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebPage",
-        "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#webpage",
-        "url": "https://knight-logics.github.io/Whistle-Stop/menu.html",
-        "name": "Menu | Whistle Stop Grill & Bar",
-        "description": "Main menu, seasonal specials, and full bar at Whistle Stop Grill & Bar in Safety Harbor.",
-        "isPartOf": {
-          "@id": "https://knight-logics.github.io/Whistle-Stop/#website"
-        },
-        "about": {
-          "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
-        },
-        "inLanguage": "en-US"
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#webpage",
+      "url": "https://knight-logics.github.io/Whistle-Stop/menu.html",
+      "name": "Menu | Whistle Stop Grill & Bar",
+      "description": "Main menu, seasonal specials, and full bar at Whistle Stop Grill & Bar.",
+      "isPartOf": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#website"
       },
-      {
-        "@type": "BreadcrumbList",
-        "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#breadcrumb",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://knight-logics.github.io/Whistle-Stop/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Menu",
-            "item": "https://knight-logics.github.io/Whistle-Stop/menu.html"
-          }
-        ]
+      "about": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
       },
-      {
-        "@type": "Menu",
-        "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#menu",
-        "name": "Whistle Stop Grill & Bar Menu",
-        "url": "https://knight-logics.github.io/Whistle-Stop/menu.html",
-        "provider": {
-          "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://knight-logics.github.io/Whistle-Stop/"
         },
-        "hasMenuSection": [
-          {
-            "@type": "MenuSection",
-            "name": "Small Plates",
-            "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#small-plates",
-            "hasMenuItem": [
-              {
-                "@type": "MenuItem",
-                "name": "Fried Green Tomatoes",
-                "description": "Simple, real, good — the Safety Harbor classic.",
-                "offers": {
-                  "@type": "Offer",
-                  "price": "5.90",
-                  "priceCurrency": "USD"
-                }
-              },
-              {
-                "@type": "MenuItem",
-                "name": "Fancy Fried Green Tomatoes",
-                "description": "Goat cheese, chopped red tomatoes, cilantro.",
-                "offers": {
-                  "@type": "Offer",
-                  "price": "6.90",
-                  "priceCurrency": "USD"
-                }
-              },
-              {
-                "@type": "MenuItem",
-                "name": "Blue Crab Cakes",
-                "description": "Key lime aioli.",
-                "offers": {
-                  "@type": "Offer",
-                  "price": "11.90",
-                  "priceCurrency": "USD"
-                }
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Menu",
+          "item": "https://knight-logics.github.io/Whistle-Stop/menu.html"
+        }
+      ]
+    },
+    {
+      "@type": "Menu",
+      "@id": "https://knight-logics.github.io/Whistle-Stop/menu.html#menu",
+      "name": "Whistle Stop Grill & Bar Menu",
+      "url": "https://knight-logics.github.io/Whistle-Stop/menu.html",
+      "provider": {
+        "@id": "https://knight-logics.github.io/Whistle-Stop/#restaurant"
+      },
+      "hasMenuSection": [
+        {
+          "@type": "MenuSection",
+          "name": "Small Plates",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#small-plates",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Southern Sampler",
+              "description": "Green tomatoes, fries, dill pickles, corn fritters, chicken tenders.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10.90",
+                "priceCurrency": "USD"
               }
-            ]
-          },
-          {
-            "@type": "MenuSection",
-            "name": "Burgers",
-            "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#burgers",
-            "hasMenuItem": [
-              {
-                "@type": "MenuItem",
-                "name": "Original Whistle Stop Burger",
-                "description": "Fried green tomato, provolone, onion, aioli.",
-                "offers": {
-                  "@type": "Offer",
-                  "price": "8.90",
-                  "priceCurrency": "USD"
-                }
-              },
-              {
-                "@type": "MenuItem",
-                "name": "Santa Fe Burger",
-                "description": "Jalapeños, provolone, onion ring, avocado, southwest sauce.",
-                "offers": {
-                  "@type": "Offer",
-                  "price": "9.90",
-                  "priceCurrency": "USD"
-                }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Fancy Fried Green Tomatoes",
+              "description": "Goat cheese, chopped red tomatoes, cilantro.",
+              "offers": {
+                "@type": "Offer",
+                "price": "6.90",
+                "priceCurrency": "USD"
               }
-            ]
-          },
-          {
-            "@type": "MenuSection",
-            "name": "Sandwiches & Wraps",
-            "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#sandwiches",
-            "hasMenuItem": [
-              {
-                "@type": "MenuItem",
-                "name": "BLFGT — The Ultimate BLT",
-                "description": "Fried green tomatoes, bacon, artisan lettuce, aioli, fresh baked roll.",
-                "offers": {
-                  "@type": "Offer",
-                  "price": "8.90",
-                  "priceCurrency": "USD"
-                }
-              },
-              {
-                "@type": "MenuItem",
-                "name": "Fresh Grouper Sandwich",
-                "description": "Blackened or grilled Gulf grouper.",
-                "offers": {
-                  "@type": "Offer",
-                  "price": "0",
-                  "priceCurrency": "USD",
-                  "description": "Market price"
-                }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Fried Green Tomatoes",
+              "description": "Simple, real, good — the Safety Harbor classic.",
+              "offers": {
+                "@type": "Offer",
+                "price": "5.90",
+                "priceCurrency": "USD"
               }
-            ]
-          },
-          {
-            "@type": "MenuSection",
-            "name": "The Bar",
-            "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#bar",
-            "hasMenuItem": [
-              {
-                "@type": "MenuItem",
-                "name": "Old Florida Mule",
-                "description": "Vodka, ginger beer, lime, mint.",
-                "offers": {
-                  "@type": "Offer",
-                  "price": "9",
-                  "priceCurrency": "USD"
-                }
-              },
-              {
-                "@type": "MenuItem",
-                "name": "Beer · 18 Taps",
-                "description": "Domestic, craft, and local beers on rotation."
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Ahi Tuna",
+              "description": "Sesame encrusted, seared, wasabi drizzle.",
+              "offers": {
+                "@type": "Offer",
+                "price": "15.90",
+                "priceCurrency": "USD"
               }
-            ]
-          }
-        ]
-      }
-    ]
-  }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Blue Crab Cakes",
+              "description": "Key lime aioli.",
+              "offers": {
+                "@type": "Offer",
+                "price": "11.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Hummus, Fresh Fruit & Veggie Plate",
+              "description": "Pita, flatbread crackers, cut veggies.",
+              "offers": {
+                "@type": "Offer",
+                "price": "9.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Whistle Stop Wings",
+              "description": "Your choice of heat — celery & blue cheese.",
+              "offers": {
+                "@type": "Offer",
+                "price": "9.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Buffalo Style Shrimp",
+              "description": "Blue cheese & celery.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Smoked Fish Spread",
+              "description": "Made local — tastes like Key West.",
+              "offers": {
+                "@type": "Offer",
+                "price": "7.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Corn Fritters",
+              "description": "Southwest sauce — plenty to share.",
+              "offers": {
+                "@type": "Offer",
+                "price": "4.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Fried Dill Pickles",
+              "description": "Crispy & tangy.",
+              "offers": {
+                "@type": "Offer",
+                "price": "4.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "WSG&B Potato Chips",
+              "description": "Fried to order — feta, tomato, tzatziki, balsamic.",
+              "offers": {
+                "@type": "Offer",
+                "price": "12",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Potato Skins",
+              "description": "Melted cheese, bacon, scallions, sour cream.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Salads",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#salads",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Four Seasons Salad",
+              "description": "Artisan greens, goat cheese, seasonal fruit, nuts, red wine vinaigrette.",
+              "offers": {
+                "@type": "Offer",
+                "price": "7.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Ahi Tuna Salad",
+              "description": "Sesame seared ahi, cucumber, avocado, wasabi dressing.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Caesar Salad",
+              "description": "Romaine, parmesan, croutons, creamy Caesar.",
+              "offers": {
+                "@type": "Offer",
+                "price": "7.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Black Beans & Greens Salad",
+              "description": "Avocado, tomato, cilantro lime vinaigrette.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Cobb Salad",
+              "description": "Avocado, egg, bacon, blue cheese — your choice of dressing.",
+              "offers": {
+                "@type": "Offer",
+                "price": "11.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Main Street Cobb",
+              "description": "Guest favorite — hearty & shareable."
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Burgers",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#burgers",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Original Whistle Stop Burger",
+              "description": "Fried green tomato, provolone, onion, aioli.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Bacon Cheeseburger",
+              "description": "Lettuce, tomato, onion, mayo.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Black & Blue Burger",
+              "description": "Blackened, red onion, tomato, blue cheese.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Santa Fe Burger",
+              "description": "Jalapeños, provolone, onion ring, avocado, southwest sauce.",
+              "offers": {
+                "@type": "Offer",
+                "price": "9.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Angus Steak Burger",
+              "description": "Grilled onions & mushrooms.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Whistle Stop Grass Fed Beef Burger",
+              "description": "De Leon Springs cheddar, tomato, onion.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Crab & Shrimp Burger",
+              "description": "Mango salsa, key lime aioli.",
+              "offers": {
+                "@type": "Offer",
+                "price": "11.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Veggie Burger",
+              "description": "Organic quinoa oats, provolone, artisan greens, aioli.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Smash Burger Sliders",
+              "description": "Two sliders, grilled onions, house smash sauce.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Sandwiches & Wraps",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#sandwiches",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "BLFGT — The Ultimate BLT",
+              "description": "Fried green tomatoes, bacon, artisan lettuce, aioli, fresh baked roll.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Fresh Grouper Sandwich",
+              "description": "Blackened or grilled — market price."
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Kicked Up Grilled Cheese",
+              "description": "Provolone, goat cheese, grilled green tomatoes, bacon, ciabatta.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Fresh Rib-Eye Steak Sandwich",
+              "description": "Sautéed onions, mushrooms — black & blue add $1.50.",
+              "offers": {
+                "@type": "Offer",
+                "price": "9.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Portabella & Roasted Red Pepper",
+              "description": "Balsamic mushrooms, goat cheese, ciabatta.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "BBQ Pork Sandwich",
+              "description": "Slow roasted in-house BBQ, pickles, fresh baked roll.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Tilapia Sandwich",
+              "description": "Grilled, blackened, or fried — lettuce, tomato, onion.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Florida Club Wrap",
+              "description": "Avocado, bacon, lettuce, tomato, blue cheese, whole wheat.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Spicy Buffalo Chicken Wrap",
+              "description": "Tenders, buffalo sauce, blue cheese, lettuce, tomato.",
+              "offers": {
+                "@type": "Offer",
+                "price": "7.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Chicken Caesar Wrap",
+              "description": "Served with fries.",
+              "offers": {
+                "@type": "Offer",
+                "price": "16",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Large Plates",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#large-plates",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Fresh Grouper Dinner",
+              "description": "8 oz Gulf fillet — blackened or grilled, black beans & rice."
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Balsamic Glazed Salmon",
+              "description": "Grilled fillet, black beans & rice.",
+              "offers": {
+                "@type": "Offer",
+                "price": "14.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "12 oz Rib Eye Steak",
+              "description": "USDA choice hand-cut, Yukon wedges, grilled vegetables.",
+              "offers": {
+                "@type": "Offer",
+                "price": "17.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Baja Fish or Shrimp Tacos",
+              "description": "Cabbage, cheddar, baja sauce — grouper add $2.50.",
+              "offers": {
+                "@type": "Offer",
+                "price": "11.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Pork Tacos",
+              "description": "Shredded roast pork, avocado, cilantro lime vinaigrette.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Veggies, Beans & Rice Bowl",
+              "description": "Add salmon, shrimp, or chicken $3.50.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Tilapia Dinner",
+              "description": "Blackened, fried, or grilled — lemon butter, side salad.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Chicken Scaloppine & Arugula",
+              "description": "Seared breast, shaved parmesan, grilled vegetables.",
+              "offers": {
+                "@type": "Offer",
+                "price": "12.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Uptown Chicken Flatbread",
+              "description": "Roasted red pepper, caramelized onion, blue cheese.",
+              "offers": {
+                "@type": "Offer",
+                "price": "9.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Steak & Spinach Flatbread",
+              "description": "Sirloin, mushrooms, spinach, blue cheese crumble.",
+              "offers": {
+                "@type": "Offer",
+                "price": "9.90",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Kids Menu",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#kids",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Big Kid",
+              "description": "Chicken tenders, fruit or wedges.",
+              "offers": {
+                "@type": "Offer",
+                "price": "7.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "The Best Hot Dog",
+              "description": "Vienna all beef.",
+              "offers": {
+                "@type": "Offer",
+                "price": "5.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Grilled Cheese",
+              "description": "Wheat bread — bacon add $1.50.",
+              "offers": {
+                "@type": "Offer",
+                "price": "5.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Black Beans, Rice & Chicken",
+              "offers": {
+                "@type": "Offer",
+                "price": "7.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Whistle Stop Mac & Cheese",
+              "description": "Add chicken tenders $3.50 — includes drink & wedges or fruit.",
+              "offers": {
+                "@type": "Offer",
+                "price": "5.90",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Ice Cream & Desserts",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#desserts",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Soft Serve Cone or Cup",
+              "description": "Vanilla — reg / large.",
+              "offers": {
+                "@type": "Offer",
+                "price": "2.70",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Milkshakes & Malts",
+              "description": "Vanilla, chocolate, strawberry, coffee, oreo & more.",
+              "offers": {
+                "@type": "Offer",
+                "price": "4.20",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Bee Charmer Sundae",
+              "description": "Peaches, honey, cinnamon sugar, whip cream.",
+              "offers": {
+                "@type": "Offer",
+                "price": "5.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Caitlin's Cake Sundae",
+              "description": "Brownie, hot fudge, caramel, nuts.",
+              "offers": {
+                "@type": "Offer",
+                "price": "5.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Pecan Pie",
+              "description": "Made local, chocolate drizzle, vanilla ice cream.",
+              "offers": {
+                "@type": "Offer",
+                "price": "5.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Key Lime Pie",
+              "description": "Sweet & tart — Key West style.",
+              "offers": {
+                "@type": "Offer",
+                "price": "4.90",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Seasonal Starters",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#seasonal-starters",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Watermelon & Feta Salad",
+              "description": "Mint, balsamic glaze, red onion.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Gulf Shrimp Ceviche",
+              "description": "Citrus, avocado, tortilla chips.",
+              "offers": {
+                "@type": "Offer",
+                "price": "12.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Summer Corn Chowder",
+              "description": "Cup or bowl.",
+              "offers": {
+                "@type": "Offer",
+                "price": "5.90",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Seasonal Plates",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#seasonal-mains",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Blackened Scallops",
+              "description": "Cilantro rice, grilled asparagus, lemon butter.",
+              "offers": {
+                "@type": "Offer",
+                "price": "18.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Mahi Tacos",
+              "description": "Slaw, mango salsa, chipotle crema — two or three.",
+              "offers": {
+                "@type": "Offer",
+                "price": "12.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Peach Glazed Pork Chop",
+              "description": "Sweet potato mash, seasonal vegetables.",
+              "offers": {
+                "@type": "Offer",
+                "price": "16.90",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Fish & Chips",
+              "description": "Beer-battered catch of the day, remoulade."
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Seasonal Sips",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#seasonal-sips",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Frozen Painkiller",
+              "description": "Rum, pineapple, coconut, nutmeg.",
+              "offers": {
+                "@type": "Offer",
+                "price": "9",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Safety Harbor Sangria",
+              "description": "Red or white — seasonal fruit.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Key Lime Martini",
+              "description": "House favorite — Martini Monday half-off.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Hip Sips & Cocktails",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#cocktails",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Old Florida Mule",
+              "description": "Vodka, ginger beer, lime, mint.",
+              "offers": {
+                "@type": "Offer",
+                "price": "9",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Safety Harbor Sunset",
+              "description": "Rum, orange, grenadine, lime.",
+              "offers": {
+                "@type": "Offer",
+                "price": "9",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Green Tomato Bloody Mary",
+              "description": "House mix, fried green tomato garnish.",
+              "offers": {
+                "@type": "Offer",
+                "price": "10",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Martini Menu",
+              "description": "Classic, dirty, espresso & seasonal — half-off Martini Mondays.",
+              "offers": {
+                "@type": "Offer",
+                "price": "8",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Beer · 18 Taps",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#beer",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Domestic Drafts",
+              "description": "Rotating favorites.",
+              "offers": {
+                "@type": "Offer",
+                "price": "4.50",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Craft & Local",
+              "description": "Florida breweries on rotation.",
+              "offers": {
+                "@type": "Offer",
+                "price": "6",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Beer Flights",
+              "description": "Four 5oz pours — ask what's on today.",
+              "offers": {
+                "@type": "Offer",
+                "price": "14",
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Wine",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#wine",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "House Red / White",
+              "description": "Glass or bottle.",
+              "offers": {
+                "@type": "Offer",
+                "price": "7",
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Premium Selections",
+              "description": "Ask your server for the current list."
+            }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Happy Hour",
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html#happy-hour-bar",
+          "hasMenuItem": [
+            {
+              "@type": "MenuItem",
+              "name": "Daily Happy Hour",
+              "description": "4–7 PM · drink & food specials."
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Tuesday Extended",
+              "description": "4 PM–close."
+            },
+            {
+              "@type": "MenuItem",
+              "name": "Full details",
+              "description": "See our happy hour page."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
   </script>
 </head>
 <body>

@@ -39,7 +39,9 @@
 }</pre>
           </li>
           <li>Recurring nights (tacos, cornhole, book club) live in <code>"recurring"</code> — change once, applies every week.</li>
-          <li>Save the file and refresh the website. Calendar + upcoming lists update automatically.</li>
+          <li>Menu updates live in <code>site/data/menus.json</code>. The same source can power visible menus and menu schema.</li>
+          <li>Before deploy, run <code>python generate-schema.py</code> from the project root. It updates Restaurant, Event, Menu, FAQ, and Breadcrumb JSON-LD from the data files.</li>
+          <li>Save, generate schema, commit, and refresh the website. Calendar, upcoming lists, menu content, and Rich Results markup stay aligned.</li>
           <li><strong>Google Business Profile:</strong> optional — connect a Google Calendar to auto-sync GBP events so you're not typing Dave Sansoucie twice.</li>
         </ol>
 
@@ -47,7 +49,7 @@
           <h3>Live preview of performances JSON</h3>
           <textarea id="events-editor" readonly></textarea>
           <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.75rem">
-            Production: replace with a simple form (Netlify CMS, WordPress admin, or Google Sheet → JSON). For the $2k build, JSON + 5-minute training is enough.
+            Production: replace with a simple form (Netlify CMS, WordPress admin, or Google Sheet → JSON). The form should save JSON, call the schema generator, then publish. GBP event sync can be added after access is granted.
           </p>
         </div>
 
