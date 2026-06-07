@@ -25,7 +25,7 @@
     return `
       <article class="menu-item menu-item--animate" style="--item-i: ${index}">
         <div class="menu-item-body">
-          <h4>${escapeHtml(item.name)}</h4>
+          <h3>${escapeHtml(item.name)}</h3>
           ${desc}
         </div>
         ${price}
@@ -41,7 +41,7 @@
       .join("");
     return `
       <section class="menu-category-block" id="${menuId}-${cat.id}" data-category="${cat.id}">
-        <h3 class="menu-category-title">${escapeHtml(cat.name)}</h3>
+        <h2 class="menu-category-title">${escapeHtml(cat.name)}</h2>
         ${note}
         <div class="menu-items">${items}</div>
       </section>`;

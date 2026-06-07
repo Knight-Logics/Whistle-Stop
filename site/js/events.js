@@ -700,7 +700,7 @@
 
       container.innerHTML =
 
-        '<h3>Upcoming acts</h3><p style="color:var(--text-muted);margin:0">Check the <a href="events.html">events calendar</a> for the latest lineup.</p>';
+        '<h2>Upcoming acts</h2><p style="color:var(--text-muted);margin:0">Check the <a href="events.html">events calendar</a> for the latest lineup.</p>';
 
       return;
 
@@ -708,7 +708,7 @@
 
 
 
-    container.innerHTML = `<h3>Upcoming acts</h3>${events
+    container.innerHTML = `<h2>Upcoming acts</h2>${events
 
       .map((e) => {
 
