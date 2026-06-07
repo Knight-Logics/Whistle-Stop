@@ -138,9 +138,13 @@ def website_schema() -> dict[str, Any]:
 
 
 def event_location_schema() -> dict[str, Any]:
+    """Standalone Place for events — do not reuse RESTAURANT_ID here.
+
+    Linking event location to the Restaurant node makes Google merge conflicting
+    Organization/Restaurant/Place types into one item.
+    """
     return {
         "@type": "Place",
-        "@id": RESTAURANT_ID,
         "name": "Whistle Stop Grill & Bar",
         "address": {
             "@type": "PostalAddress",
@@ -179,11 +183,10 @@ def breadcrumb(page: str, label: str | None = None) -> dict[str, Any]:
 
 
 def offer_for_event(url: str, valid_from: str) -> dict[str, Any]:
+    """Free-admission events: omit price (Google requires positive values)."""
     return {
         "@type": "Offer",
         "url": url,
-        "price": "0",
-        "priceCurrency": "USD",
         "availability": "https://schema.org/InStock",
         "validFrom": valid_from,
     }
@@ -216,6 +219,7 @@ def event_schema(event: dict[str, Any]) -> dict[str, Any]:
             "note",
             "Live event at Whistle Stop Grill & Bar in downtown Safety Harbor.",
         ),
+        "isAccessibleForFree": True,
         "offers": offer_for_event(abs_url("events.html"), valid_from),
     }
     if is_live_music:
@@ -235,6 +239,7 @@ def upcoming_event_schemas(limit: int = 3) -> list[dict[str, Any]]:
 
 
 def event_item_list(events: list[dict[str, Any]]) -> dict[str, Any]:
+    """Carousel ItemList — link by URL only, never inline full Event objects."""
     return {
         "@type": "ItemList",
         "@id": f"{BASE_URL}#upcoming-events",
@@ -245,7 +250,6 @@ def event_item_list(events: list[dict[str, Any]]) -> dict[str, Any]:
                 "position": i,
                 "name": event["name"],
                 "url": event["url"],
-                "item": event,
             }
             for i, event in enumerate(events, 1)
         ],
