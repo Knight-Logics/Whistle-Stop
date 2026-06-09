@@ -1,6 +1,9 @@
 /* Events engine — reads data/events.json, renders calendar + upcoming */
 
 (async function () {
+  if (new URLSearchParams(window.location.search).has("preview")) {
+    document.documentElement.classList.add("ws-preview-embed");
+  }
 
   const upcomingEls = document.querySelectorAll("#upcoming-events, #home-upcoming");
 
@@ -14,19 +17,29 @@
 
   let data;
 
-  try {
+  async function loadData() {
 
-    const res = await fetch("data/events.json");
+    try {
 
-    data = await res.json();
+      const params = new URLSearchParams(window.location.search);
+      data =
+        params.has("preview") && WSConfig.getForPreview
+          ? await WSConfig.getForPreview("events")
+          : await WSConfig.get("events");
 
-  } catch (e) {
+    } catch (e) {
 
-    console.warn("events.json not loaded", e);
+      console.warn("events.json not loaded", e);
 
-    return;
+      return false;
+
+    }
+
+    return true;
 
   }
+
+  if (!(await loadData())) return;
 
 
 
@@ -51,6 +64,50 @@
     const hr = h % 12 || 12;
 
     return `${hr}:${String(min).padStart(2, "0")} ${ampm}`;
+
+  }
+
+
+
+  function esc(s) {
+
+    return String(s ?? "")
+
+      .replace(/&/g, "&amp;")
+
+      .replace(/</g, "&lt;")
+
+      .replace(/>/g, "&gt;")
+
+      .replace(/"/g, "&quot;");
+
+  }
+
+
+
+  function eventTimeLabel(e) {
+
+    if (!e.startTime) return "";
+
+    if (e.endTime) return `${formatTime(e.startTime)} – ${formatTime(e.endTime)}`;
+
+    return formatTime(e.startTime);
+
+  }
+
+
+
+  function renderCalEventChip(e) {
+
+    const timeStr = eventTimeLabel(e);
+
+    const chipClass = `ev${e.category === "live-music" ? " music" : ""}`;
+
+    const tip = timeStr ? `${e.title} · ${timeStr}` : e.title;
+
+    const timeHtml = timeStr ? `<span class="ev-time">${esc(timeStr)}</span>` : "";
+
+    return `<span class="${chipClass}" title="${esc(tip)}">${timeHtml}<span class="ev-title">${esc(e.title)}</span></span>`;
 
   }
 
@@ -399,9 +456,9 @@
 
             return `<article class="home-cal-ev ${evClass}">
 
-              <strong>${e.title}</strong>
+              ${timeStr ? `<span class="home-cal-ev-time">${timeStr}</span>` : ""}
 
-              ${timeStr ? `<span>${timeStr}</span>` : ""}
+              <strong>${e.title}</strong>
 
             </article>`;
 
@@ -612,13 +669,7 @@
 
           .slice(0, 3)
 
-          .map(
-
-            (e) =>
-
-              `<span class="ev ${e.category === "live-music" ? "music" : ""}" title="${e.title}">${e.title}</span>`
-
-          )
+          .map((e) => renderCalEventChip(e))
 
           .join("")}
 
@@ -748,11 +799,27 @@
 
 
 
-  upcomingEls.forEach((el) => renderUpcoming(el, el.id === "home-upcoming" ? 6 : 24));
+  function renderAll() {
 
-  lineupEls.forEach((el) => renderLineup(el, 10));
+    upcomingEls.forEach((el) => renderUpcoming(el, el.id === "home-upcoming" ? 6 : 24));
 
-  renderCalendar();
+    lineupEls.forEach((el) => renderLineup(el, 10));
+
+    renderCalendar();
+
+  }
+
+  renderAll();
+
+  document.addEventListener("ws-config-updated", async (e) => {
+
+    const section = e.detail?.section;
+
+    if (section && section !== "events" && section !== "all") return;
+
+    if (await loadData()) renderAll();
+
+  });
 
 })();
 

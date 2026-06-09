@@ -11,14 +11,29 @@ npx --yes serve -l 3456
 
 Open http://localhost:3456
 
-## Update events (easy path)
+## Staff admin portal
+
+**URL:** `admin.html` (password required · not indexed by Google)
+
+Preview password: `whistlestop2026`
+
+**Staff tabs only** (reviews pull from Google at launch; business/theme/settings hidden):
+
+| Tab | Controls |
+|-----|----------|
+| Events | Calendar — add/remove dated performances |
+| Menus | Edit items and prices by menu section |
+| Promo Cards | Photo tiles on homepage & events page (with live preview) |
+| Hero Images | Per-page hero photo grids |
+
+Saves apply in-browser until you **Export** → replace `data/*.json` → run `python generate-schema.py` → push to GitHub.
+
+## Update events (manual)
 
 Edit `data/events.json`:
 
 - **`recurring`** — weekly/monthly patterns (tacos, cornhole, book club)
 - **`performances`** — one-off dates (each Friday/Saturday act)
-
-No Wix, no monthly Canva poster required for the website calendar.
 
 ## Pages
 
@@ -33,7 +48,7 @@ No Wix, no monthly Canva poster required for the website calendar.
 | contact.html | Map, hours, NAP |
 | order.html | Grubhub, Uber Eats, DoorDash, Toast |
 | private-events.html | Group dining funnel |
-| admin.html | Staff instructions |
+| admin.html | Password-gated staff dashboard |
 
 ## Assets
 

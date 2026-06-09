@@ -3,72 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Update Events (Staff) | Whistle Stop</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Staff Admin | Whistle Stop Grill &amp; Bar</title>
+  <link rel="icon" href="assets/logo.webp" type="image/webp" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
-  <style>
-    .editor-wrap { max-width: 720px; margin: 0 auto; }
-    textarea { width: 100%; min-height: 320px; font-family: monospace; font-size: 0.85rem; padding: 1rem; border-radius: 8px; border: 1px solid var(--chalk-light); background: var(--chalk); color: var(--cream); }
-    .steps { counter-reset: step; list-style: none; padding: 0; }
-    .steps li { counter-increment: step; padding: 1rem 0; border-bottom: 1px solid var(--chalk-light); padding-left: 2.5rem; position: relative; }
-    .steps li::before { content: counter(step); position: absolute; left: 0; width: 1.75rem; height: 1.75rem; background: var(--lime); color: var(--chalk); border-radius: 50%; text-align: center; font-weight: 700; line-height: 1.75rem; font-size: 0.85rem; }
-  </style>
+  <link rel="stylesheet" href="css/admin.css" />
 </head>
-<body>
-  <header class="site-header"><div class="container header-inner" data-include="partials/header.html"></div></header>
-
-  <main>
-    <div class="page-hero">
-      <div class="container">
-        <h1>Staff: Update schedule</h1>
-        <p>No Wix. No Canva every month. Edit one file — the whole site updates.</p>
-      </div>
-    </div>
-
-    <section>
-      <div class="container editor-wrap">
-        <ol class="steps reveal">
-          <li>Open <code>site/data/events.json</code> in any text editor (or Notepad).</li>
-          <li>To add a <strong>Friday band</strong>, add an object to <code>"performances"</code>:
-            <pre style="background:var(--chalk-mid);padding:1rem;border-radius:8px;overflow:auto;font-size:0.8rem">{
-  "date": "2026-06-13",
-  "title": "Artist Name",
-  "startTime": "18:30",
-  "endTime": "21:30",
-  "category": "live-music"
-}</pre>
-          </li>
-          <li>Recurring nights (tacos, cornhole, book club) live in <code>"recurring"</code> — change once, applies every week.</li>
-          <li>Menu updates live in <code>site/data/menus.json</code>. The same source can power visible menus and menu schema.</li>
-          <li>Before deploy, run <code>python generate-schema.py</code> from the project root. It updates Restaurant, Event, Menu, FAQ, and Breadcrumb JSON-LD from the data files.</li>
-          <li>Save, generate schema, commit, and refresh the website. Calendar, upcoming lists, menu content, and Rich Results markup stay aligned.</li>
-          <li><strong>Google Business Profile:</strong> optional — connect a Google Calendar to auto-sync GBP events so you're not typing Dave Sansoucie twice.</li>
-        </ol>
-
-        <div class="admin-panel reveal">
-          <h2>Live preview of performances JSON</h2>
-          <textarea id="events-editor" readonly></textarea>
-          <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.75rem">
-            Production: replace with a simple form (Netlify CMS, WordPress admin, or Google Sheet → JSON). The form should save JSON, call the schema generator, then publish. GBP event sync can be added after access is granted.
-          </p>
-        </div>
-
-        <p style="text-align:center;margin-top:2rem">
-          <a href="events.html" class="btn btn-primary">View public calendar</a>
-        </p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer" data-include="partials/footer.html"></footer>
-  <script src="js/includes.js"></script>
-  <script src="js/main.js" defer></script>
-  <script>
-    fetch("data/events.json")
-      .then((r) => r.json())
-      .then((d) => {
-        document.getElementById("events-editor").value = JSON.stringify(d, null, 2);
-      });
-  </script>
+<body class="admin-body">
+  <script src="js/config-store.js?v=17"></script>
+  <script src="js/menu-render-core.js?v=17"></script>
+  <script src="js/social-manager.js?v=18"></script>
+  <script src="js/admin-gui.js?v=17"></script>
+  <script src="js/admin-app.js?v=17"></script>
 </body>
 </html>

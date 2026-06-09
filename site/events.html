@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Events Calendar | Whistle Stop Grill &amp; Bar — Safety Harbor</title>
   <meta name="description" content="Weekly happenings, live music, cornhole, book club, and ukulele jam at Whistle Stop Grill & Bar in Safety Harbor, FL." />
+  <link rel="icon" href="assets/logo.webp" type="image/webp" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/logo-160.webp" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
   <script type="application/ld+json">
@@ -501,26 +504,26 @@
   <header class="site-header"><div class="container header-inner" data-include="partials/header.html"></div></header>
 
   <main>
-    <div class="page-hero page-hero--gallery">
+    <div class="page-hero page-hero--gallery" data-hero="events">
       <div class="hero-bg hero-bg--grid page-hero-bg--desktop" aria-hidden="true">
-        <div class="hero-panel hero-panel--left">
+        <div class="hero-panel hero-panel--left" data-hero-panel="0">
           <img src="assets/gallery/WSGirls.webp" alt="" width="1200" height="1600" decoding="async" fetchpriority="high" />
         </div>
-        <div class="hero-panel hero-panel--bottom">
+        <div class="hero-panel hero-panel--bottom" data-hero-panel="1">
           <img src="assets/gallery/WSCornHole.webp" alt="" width="1200" height="1200" decoding="async" />
         </div>
-        <div class="hero-panel hero-panel--top">
+        <div class="hero-panel hero-panel--top" data-hero-panel="2">
           <img src="assets/gallery/WSRocker2.webp" alt="" width="1200" height="1200" decoding="async" />
         </div>
-        <div class="hero-panel hero-panel--right">
+        <div class="hero-panel hero-panel--right" data-hero-panel="3">
           <img src="assets/gallery/WSRocker.webp" alt="" width="1200" height="1200" decoding="async" />
         </div>
       </div>
       <div class="hero-bg hero-bg--grid page-hero-bg--mobile" aria-hidden="true">
-        <div class="hero-panel hero-panel--left">
+        <div class="hero-panel hero-panel--left" data-hero-panel="0">
           <img src="assets/gallery/WSGirls.webp" alt="" width="1200" height="1600" decoding="async" fetchpriority="high" />
         </div>
-        <div class="hero-panel hero-panel--bottom">
+        <div class="hero-panel hero-panel--bottom" data-hero-panel="1">
           <img src="assets/gallery/WSCornHole.webp" alt="" width="1200" height="1200" decoding="async" />
         </div>
       </div>
@@ -540,29 +543,14 @@
           <figure class="reveal-photo"><img src="assets/gallery/WSCornHole.webp" alt="Cornhole league" loading="lazy" /><figcaption>Cornhole</figcaption></figure>
         </div>
 
-        <div class="section-head reveal" style="margin-top:0;margin-bottom:1.5rem">
-          <h2>Recurring favorites</h2>
-          <p>Weekly and monthly happenings that keep Main Street buzzing.</p>
-          <div class="divider"></div>
-        </div>
+        <div id="promo-recurring">
+          <div class="section-head reveal" style="margin-top:0;margin-bottom:1.5rem">
+            <h2>Recurring favorites</h2>
+            <p>Weekly and monthly happenings that keep Main Street buzzing.</p>
+            <div class="divider"></div>
+          </div>
 
-        <div class="card-grid cols-2 reveal" style="margin-bottom:3rem">
-          <article class="card">
-            <div class="card-img"><img src="assets/drink-food.webp" alt="Daily specials" loading="lazy" /></div>
-            <div class="card-body"><h3>Daily Specials</h3><p>Drink &amp; food specials — ask your server for details.</p></div>
-          </article>
-          <article class="card">
-            <div class="card-img"><img src="assets/breakfast.webp" alt="Sunday breakfast" loading="lazy" /></div>
-            <div class="card-body"><h3>Breakfast Bloody Mary Sunday</h3><p>$5 mimosas &amp; bloody marys every Sunday.</p></div>
-          </article>
-          <article class="card">
-            <div class="card-img"><img src="assets/words-wine.webp" alt="Words and Wine book club" loading="lazy" /></div>
-            <div class="card-body"><h3>Words &amp; Wine</h3><p>Book club with Safety Harbor Public Library — every 3rd Monday, 6–8 PM.</p></div>
-          </article>
-          <article class="card">
-            <div class="card-img"><img src="assets/ukulele.webp" alt="Ukulele jam" loading="lazy" /></div>
-            <div class="card-body"><h3>Tampa Bay Ukulele Open Jam</h3><p>Every 4th Thursday, 6:30–9:30 PM.</p></div>
-          </article>
+          <div class="card-grid cols-2 reveal" id="promo-cards-events" style="margin-bottom:3rem"></div>
         </div>
 
         <section id="live-music" class="lineup-feature reveal" style="margin-bottom:3rem;padding-top:0">
@@ -585,7 +573,7 @@
           </div>
         </section>
 
-        <div class="events-layout">
+        <div class="events-layout" id="events-calendar-section">
           <div class="events-calendar-block reveal">
             <h2 class="events-section-title">Month at a glance</h2>
             <div class="calendar-grid" id="event-calendar"></div>
@@ -601,8 +589,11 @@
 
   <footer class="site-footer" data-include="partials/footer.html"></footer>
   <nav class="mobile-cta" data-include="partials/mobile-cta.html"></nav>
+  <script src="js/config-store.js?v=11"></script>
+  <script src="js/site-apply.js?v=11"></script>
   <script src="js/includes.js"></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/events.js" defer></script>
+  <script src="js/main.js?v=11" defer></script>
+  <script src="js/promos.js?v=11" defer></script>
+  <script src="js/events.js?v=12" defer></script>
 </body>
 </html>

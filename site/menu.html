@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Menu | Whistle Stop Grill &amp; Bar — Safety Harbor</title>
   <meta name="description" content="Main menu, seasonal specials, and full bar at Whistle Stop Grill & Bar. Fried green tomatoes, grouper, burgers, 18 taps, and cocktails on Main Street, Safety Harbor." />
+  <link rel="icon" href="assets/logo.webp" type="image/webp" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/logo-160.webp" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
   <script type="application/ld+json">
@@ -1069,26 +1072,26 @@
   </header>
 
   <main class="menu-page">
-    <div class="page-hero menu-hero menu-hero--gallery">
+    <div class="page-hero menu-hero menu-hero--gallery" data-hero="menu">
       <div class="hero-bg hero-bg--grid menu-hero-bg menu-hero-bg--desktop" aria-hidden="true">
-        <div class="hero-panel hero-panel--left">
+        <div class="hero-panel hero-panel--left" data-hero-panel="0">
           <img src="assets/gallery/WSFood2.webp" alt="" width="1200" height="1200" decoding="async" fetchpriority="high" />
         </div>
-        <div class="hero-panel hero-panel--bottom">
+        <div class="hero-panel hero-panel--bottom" data-hero-panel="1">
           <img src="assets/gallery/WSFood3.webp" alt="" width="1200" height="1600" decoding="async" />
         </div>
-        <div class="hero-panel hero-panel--top">
+        <div class="hero-panel hero-panel--top" data-hero-panel="2">
           <img src="assets/gallery/WSFood4.webp" alt="" width="1200" height="1200" decoding="async" />
         </div>
-        <div class="hero-panel hero-panel--right">
+        <div class="hero-panel hero-panel--right" data-hero-panel="3">
           <img src="assets/gallery/WSDrinks3.webp" alt="" width="1200" height="1200" decoding="async" />
         </div>
       </div>
       <div class="hero-bg hero-bg--grid menu-hero-bg menu-hero-bg--mobile" aria-hidden="true">
-        <div class="hero-panel hero-panel--left">
+        <div class="hero-panel hero-panel--left" data-hero-panel="0">
           <img src="assets/gallery/WSDrinks3.webp" alt="" width="1200" height="1200" decoding="async" fetchpriority="high" />
         </div>
-        <div class="hero-panel hero-panel--bottom">
+        <div class="hero-panel hero-panel--bottom" data-hero-panel="1">
           <img src="assets/gallery/WSFood4.webp" alt="" width="1200" height="1200" decoding="async" />
         </div>
       </div>
@@ -1126,8 +1129,12 @@
 
   <footer class="site-footer" data-include="partials/footer.html"></footer>
   <nav class="mobile-cta" data-include="partials/mobile-cta.html"></nav>
+  <script src="js/config-store.js?v=11"></script>
+  <script src="js/site-apply.js?v=11"></script>
   <script src="js/includes.js"></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/menu.js" defer></script>
+  <script src="js/menu-render-core.js?v=11"></script>
+  <script src="js/pickup-order.js?v=11" defer></script>
+  <script src="js/main.js?v=11" defer></script>
+  <script src="js/menu.js?v=11" defer></script>
 </body>
 </html>

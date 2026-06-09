@@ -1,0 +1,205 @@
+{
+  "admin": {
+    "passwordHash": "400c226817e7e87a668c1988b211de97430bf1560be7e57a5c0577a6c76c5065"
+  },
+  "business": {
+    "name": "Whistle Stop Grill & Bar",
+    "logoName": "Whistle Stop",
+    "logoSub": "Grill & Bar · Since 1995",
+    "tagline": "Old Florida / New Vibe",
+    "secondaryTagline": "Real. Good. Food.",
+    "founded": "1995",
+    "phone": "+17277261956",
+    "phoneDisplay": "(727) 726-1956",
+    "email": "admin@whistlestopgrill.com",
+    "street": "915 Main Street",
+    "city": "Safety Harbor",
+    "state": "FL",
+    "zip": "34695",
+    "geo": { "lat": 27.990934, "lng": -82.696838 },
+    "description": "Safety Harbor's landmark grill and bar since 1995, serving American bar-and-grill favorites, cocktails, 18 taps, live music, and dog-friendly open-air patio dining on Main Street.",
+    "gm": "Raven Pendola",
+    "owners": "Dawn & Patrick Pendola"
+  },
+  "hours": {
+    "footer": "Sun–Thu 11 AM – 9 PM<br />Fri–Sat 11 AM – 10 PM",
+    "weekday": { "label": "Sun–Thu", "opens": "11:00", "closes": "21:00", "display": "11 AM – 9 PM" },
+    "weekend": { "label": "Fri–Sat", "opens": "11:00", "closes": "22:00", "display": "11 AM – 10 PM" },
+    "happyHourDaily": "4–7 PM",
+    "happyHourTuesday": "4 PM – close"
+  },
+  "social": {
+    "facebook": "https://www.facebook.com/Whistlestopgrillandbar915",
+    "instagram": "https://www.instagram.com/whistlestop_grill/"
+  },
+  "ordering": {
+    "estimatedTaxRate": 0.07,
+    "taxNote": "Safety Harbor sales tax estimate — final total set at online checkout"
+  },
+  "links": {
+    "orderOnline": "https://www.whistlestopgrill.com/online-ordering",
+    "giftCards": "https://order.toasttab.com/egift/whistle-stop-grill-bar",
+    "uberEats": "https://www.ubereats.com/store/whistle-stop-grill-%26-bar/0QZQZQZQ",
+    "doorDash": "https://www.doordash.com/store/whistle-stop-grill-&-bar-safety-harbor-12345/",
+    "grubhub": "https://www.grubhub.com/restaurant/whistle-stop-grill--bar-915-main-st-safety-harbor/1234567",
+    "googleMaps": "https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL",
+    "googleMapsEmbed": "https://maps.google.com/maps?q=915+Main+Street+Safety+Harbor+FL+34695&output=embed",
+    "googleReviews": "https://www.google.com/maps/search/?api=1&query=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL"
+  },
+  "stats": [
+    { "id": "google", "value": "4.4", "label": "2,000+ Google reviews" },
+    { "id": "founded", "value": "Since '95", "label": "Safety Harbor landmark" },
+    { "id": "taps", "value": "18 Taps", "label": "Craft & domestic beer" },
+    { "id": "music", "value": "Live Music", "label": "Fri & Sat + open mic Tue" }
+  ],
+  "theme": {
+    "colors": {
+      "chalk": "#141414",
+      "chalkMid": "#1f1f1f",
+      "chalkLight": "#2a2a2a",
+      "cream": "#f4efe4",
+      "creamDim": "#d9d2c4",
+      "lime": "#b8e04a",
+      "limeDark": "#8fb832",
+      "purple": "#c77dff",
+      "rust": "#c44b2a",
+      "gold": "#e8c547",
+      "textMuted": "#a8a095"
+    },
+    "fonts": {
+      "preset": "classic",
+      "display": "Bebas Neue",
+      "script": "Satisfy",
+      "body": "Source Sans 3",
+      "googleFontsUrl": "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap"
+    },
+    "radius": "12px"
+  },
+  "fontPresets": {
+    "classic": {
+      "label": "Classic Whistle Stop",
+      "display": "Bebas Neue",
+      "script": "Satisfy",
+      "body": "Source Sans 3",
+      "googleFontsUrl": "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap"
+    },
+    "modern": {
+      "label": "Modern Clean",
+      "display": "Oswald",
+      "script": "Pacifico",
+      "body": "Inter",
+      "googleFontsUrl": "https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Pacifico&family=Inter:wght@400;600;700&display=swap"
+    },
+    "rustic": {
+      "label": "Rustic Tavern",
+      "display": "Rye",
+      "script": "Caveat",
+      "body": "Lato",
+      "googleFontsUrl": "https://fonts.googleapis.com/css2?family=Rye&family=Caveat:wght@600&family=Lato:wght@400;700&display=swap"
+    }
+  },
+  "heroes": {
+    "index": {
+      "eyebrow": "915 Main Street · Safety Harbor, FL",
+      "titleLine1": "Whistle Stop",
+      "titleLine2": "Grill & Bar",
+      "tagline": "Old Florida / New Vibe",
+      "lead": "Real. Good. Food. Since 1995 — open-air dining, 18 taps, live local music, and a dog-friendly patio in the heart of downtown Safety Harbor.",
+      "panels": [
+        "assets/gallery/WSSunset.webp",
+        "assets/gallery/WSBar.webp",
+        "assets/gallery/WSRocker.webp",
+        "assets/gallery/WSFood3.webp"
+      ]
+    },
+    "events": {
+      "panels": [
+        "assets/gallery/WSGirls.webp",
+        "assets/gallery/WSCornHole.webp",
+        "assets/gallery/WSRocker2.webp",
+        "assets/gallery/WSRocker.webp"
+      ]
+    },
+    "menu": {
+      "panels": [
+        "assets/gallery/WSFood2.webp",
+        "assets/gallery/WSFood3.webp",
+        "assets/gallery/WSFood4.webp",
+        "assets/gallery/WSDrinks3.webp"
+      ]
+    },
+    "contact": {
+      "panels": [
+        "assets/gallery/safety-harbor-resort-spa.webp",
+        "assets/gallery/spa-marina-statue-mini-mall-safety-harbor.webp",
+        "assets/gallery/tocobaga-indian-teple-mount-safety-harbor.webp",
+        "assets/gallery/WSSunset.webp"
+      ]
+    },
+    "happyHour": {
+      "panels": [
+        "assets/gallery/WSBar.webp",
+        "assets/gallery/WSDrinks.webp",
+        "assets/gallery/WSDrinks3.webp",
+        "assets/gallery/WSGoodTimes.webp"
+      ]
+    }
+  },
+  "homepage": {
+    "gallery": [
+      { "image": "assets/gallery/WSFood.webp", "caption": "Real. Good. Food.", "alt": "Plates at Whistle Stop" },
+      { "image": "assets/gallery/WSDrinks.webp", "caption": "18 taps & Hip Sips", "alt": "Craft cocktails" },
+      { "image": "assets/gallery/WSRocker.webp", "caption": "Live music", "alt": "Live music on the patio" },
+      { "image": "assets/gallery/WSCornHole.webp", "caption": "Cornhole Wednesdays", "alt": "Cornhole league night" },
+      { "image": "assets/gallery/WSSunset.webp", "caption": "Safety Harbor sunsets", "alt": "Sunset on Main Street" },
+      { "image": "assets/gallery/WSGoodTimes.webp", "caption": "Good times", "alt": "Friends on the patio" },
+      { "image": "assets/gallery/WSBar.webp", "caption": "Open-air bar", "alt": "Open-air bar on Main Street" },
+      { "image": "assets/gallery/WSLounge.webp", "caption": "Patio hangs", "alt": "Patio lounge seating" }
+    ],
+    "signatureCards": [
+      {
+        "title": "Fried Green Tomatoes",
+        "summary": "A Safety Harbor staple — classic, fancy, or on the BLFGT. Worth the trip alone.",
+        "image": "assets/gallery/WSFood2.webp",
+        "alt": "Fried green tomatoes",
+        "ctaLabel": "View menu",
+        "ctaHref": "menu.html#small-plates"
+      },
+      {
+        "title": "Burgers, Grouper & More",
+        "summary": "Original Whistle Stop Burger, fresh Gulf grouper, mac & cheese, and rotating seasonal plates.",
+        "image": "assets/gallery/WSFood3.webp",
+        "alt": "Burgers and bar bites",
+        "ctaLabel": "Full menus",
+        "ctaHref": "menu.html"
+      }
+    ],
+    "faq": [
+      {
+        "q": "Where is Whistle Stop located?",
+        "a": "Whistle Stop Grill & Bar is located at 915 Main Street in downtown Safety Harbor, Florida 34695."
+      },
+      {
+        "q": "What are the restaurant hours?",
+        "a": "We are open Sunday through Thursday from 11 AM to 9 PM, and Friday through Saturday from 11 AM to 10 PM."
+      },
+      {
+        "q": "Is the patio dog-friendly?",
+        "a": "Yes. Our open-air Main Street patio is dog-friendly and built for relaxed Safety Harbor hangs."
+      },
+      {
+        "q": "Do you host live music and events?",
+        "a": "Yes. Check the events calendar for live music, open mic nights, cornhole, book club, happy hour, and community nights."
+      },
+      {
+        "q": "Where can I view the menu?",
+        "a": "View the main menu, seasonal menu, and bar menu on our menu page before you visit or order online."
+      }
+    ]
+  },
+  "seo": {
+    "priceRange": "$$",
+    "cuisines": ["American", "Bar & Grill", "Burgers", "Seafood", "Pub Food"],
+    "acceptsReservations": false
+  }
+}

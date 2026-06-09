@@ -2,16 +2,16 @@
   <div>
     <img src="assets/logo-80.webp" alt="" width="80" height="80" style="margin-bottom:1rem" />
     <p style="color:var(--text-muted);margin:0 0 1rem">
-      <span class="footer-tagline">Old Florida / New Vibe</span><br />
+      <span class="footer-tagline" data-site="business.tagline">Old Florida / New Vibe</span><br />
       Safety Harbor's landmark grill &amp; bar on Main Street since 1995. Open-air dining, live music, dog-friendly patio, and 18 taps.
     </p>
     <div class="header-socials" style="align-items:flex-start">
       <span class="header-socials-label">socials</span>
       <div class="header-social-icons">
-        <a href="https://www.facebook.com/Whistlestopgrillandbar915" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <a href="https://www.facebook.com/Whistlestopgrillandbar915" data-site="social.facebook" data-site-attr="href" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
           <img src="assets/icons/facebook.svg" alt="" width="24" height="24" />
         </a>
-        <a href="https://www.instagram.com/whistlestop_grill/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <a href="https://www.instagram.com/whistlestop_grill/" data-site="social.instagram" data-site-attr="href" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <img src="assets/icons/instagram.svg" alt="" width="24" height="24" />
         </a>
       </div>
@@ -20,15 +20,12 @@
   <div>
     <h2 class="footer-col-title">Visit</h2>
     <ul>
-      <li>915 Main Street</li>
-      <li>Safety Harbor, FL 34695</li>
-      <li><a href="tel:+17277261956">(727) 726-1956</a></li>
-      <li><a href="mailto:admin@whistlestopgrill.com">admin@whistlestopgrill.com</a></li>
+      <li data-site="business.street">915 Main Street</li>
+      <li data-site="business.cityStateZip">Safety Harbor, FL 34695</li>
+      <li><a href="tel:+17277261956" data-site="business.phone" data-site-attr="tel"><span data-site="business.phoneDisplay">(727) 726-1956</span></a></li>
+      <li><a href="mailto:admin@whistlestopgrill.com" data-site="business.email" data-site-attr="mailto"><span data-site="business.email">admin@whistlestopgrill.com</span></a></li>
     </ul>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-top:1rem">
-      Sun–Thu 11 AM – 9 PM<br />
-      Fri–Sat 11 AM – 10 PM
-    </p>
+    <p style="font-size:0.9rem;color:var(--text-muted);margin-top:1rem" data-site="hours.footer" data-site-attr="html">Sun–Thu 11 AM – 9 PM<br />Fri–Sat 11 AM – 10 PM</p>
   </div>
   <div>
     <h2 class="footer-col-title">Quick links</h2>
@@ -36,9 +33,8 @@
       <li><a href="menu.html">Menus</a></li>
       <li><a href="events.html">Events calendar</a></li>
       <li><a href="order.html">Order &amp; delivery</a></li>
-      <li><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar" target="_blank" rel="noopener">Gift cards</a></li>
+      <li><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar" data-site="links.giftCards" data-site-attr="href" target="_blank" rel="noopener">Gift cards</a></li>
       <li><a href="private-events.html">Private events</a></li>
-      <li><a href="admin.html">Update events (staff)</a></li>
     </ul>
   </div>
 </div>
@@ -48,5 +44,5 @@
     <a href="terms.html">Terms of Use</a>
     <a href="accessibility.html">Accessibility</a>
   </nav>
-  <p>© 2026 Whistle Stop Grill &amp; Bar · Preview rebuild for Knight Logics · Not affiliated with live site</p>
+  <p>© 2026 <span data-site="business.name">Whistle Stop Grill &amp; Bar</span></p>
 </div>

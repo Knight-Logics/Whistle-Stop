@@ -12,6 +12,10 @@
 
   <meta name="description" content="Happy hour in Safety Harbor — 4-7 PM daily, 4 PM to close Tuesdays. Craft cocktails, Hip Sips, 18 taps, and open-air patio at Whistle Stop on Main Street." />
 
+  <link rel="icon" href="assets/logo.webp" type="image/webp" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/logo-160.webp" />
+
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/main.css" />
@@ -235,29 +239,29 @@
 
   <main>
 
-    <div class="page-hero page-hero--gallery">
+    <div class="page-hero page-hero--gallery" data-hero="happyHour">
 
       <div class="hero-bg hero-bg--grid page-hero-bg--desktop" aria-hidden="true">
 
-        <div class="hero-panel hero-panel--left">
+        <div class="hero-panel hero-panel--left" data-hero-panel="0">
 
           <img src="assets/gallery/WSBar.webp" alt="" width="1200" height="1200" decoding="async" fetchpriority="high" />
 
         </div>
 
-        <div class="hero-panel hero-panel--bottom">
+        <div class="hero-panel hero-panel--bottom" data-hero-panel="1">
 
           <img src="assets/gallery/WSDrinks.webp" alt="" width="1200" height="1200" decoding="async" />
 
         </div>
 
-        <div class="hero-panel hero-panel--top">
+        <div class="hero-panel hero-panel--top" data-hero-panel="2">
 
           <img src="assets/gallery/WSDrinks3.webp" alt="" width="1200" height="1200" decoding="async" />
 
         </div>
 
-        <div class="hero-panel hero-panel--right">
+        <div class="hero-panel hero-panel--right" data-hero-panel="3">
 
           <img src="assets/gallery/WSGoodTimes.webp" alt="" width="1200" height="1200" decoding="async" />
 
@@ -267,13 +271,13 @@
 
       <div class="hero-bg hero-bg--grid page-hero-bg--mobile" aria-hidden="true">
 
-        <div class="hero-panel hero-panel--left">
+        <div class="hero-panel hero-panel--left" data-hero-panel="0">
 
           <img src="assets/gallery/WSBar.webp" alt="" width="1200" height="1200" decoding="async" fetchpriority="high" />
 
         </div>
 
-        <div class="hero-panel hero-panel--bottom">
+        <div class="hero-panel hero-panel--bottom" data-hero-panel="1">
 
           <img src="assets/gallery/WSGoodTimes.webp" alt="" width="1200" height="1200" decoding="async" />
 
@@ -587,6 +591,8 @@
 
   <nav class="mobile-cta" data-include="partials/mobile-cta.html"></nav>
 
+  <script src="js/config-store.js"></script>
+  <script src="js/site-apply.js"></script>
   <script src="js/includes.js"></script>
 
   <script src="js/main.js" defer></script>

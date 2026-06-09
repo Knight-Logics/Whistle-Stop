@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Order Online | Whistle Stop Grill &amp; Bar — Safety Harbor</title>
   <meta name="description" content="Order pickup from Whistle Stop Grill & Bar on Main Street, or get delivery via Uber Eats, DoorDash, and Grubhub. Gift cards available." />
+  <link rel="icon" href="assets/logo.webp" type="image/webp" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/logo-160.webp" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
 <script type="application/ld+json">
@@ -234,6 +237,23 @@
       </div>
     </div>
 
+    <section class="section-cream" id="pickup-order" hidden>
+      <div class="container reveal">
+        <div class="section-head">
+          <h2>Your order</h2>
+          <p>Items you added from the menu. Payment, pickup time, and your confirmation number are handled on Whistle Stop&rsquo;s online ordering page — re-add these items there to finish.</p>
+          <div class="divider"></div>
+        </div>
+        <div id="pickup-order-summary"></div>
+        <ul class="pickup-order-list" id="pickup-order-list"></ul>
+        <div class="btn-group" style="margin-top:1.25rem">
+          <button type="button" class="btn btn-primary" id="pickup-order-checkout" data-toast-handoff>Order online</button>
+          <button type="button" class="btn btn-outline" id="pickup-order-clear">Clear order</button>
+          <a href="menu.html" class="btn btn-outline">Add more items</a>
+        </div>
+      </div>
+    </section>
+
     <section style="padding-top:2rem">
       <div class="container">
         <div class="order-feature reveal">
@@ -248,7 +268,7 @@
               <li>Seasonal menu + main menu online</li>
               <li>Typical ready time ~30 minutes</li>
             </ul>
-            <a href="https://www.whistlestopgrill.com/online-ordering" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Start pickup order</a>
+            <a href="https://www.whistlestopgrill.com/online-ordering" class="btn btn-primary" data-site="links.orderOnline" data-site-attr="href" target="_blank" rel="noopener noreferrer">Start pickup order</a>
           </div>
           <img src="assets/gallery/WSFood.webp" alt="Whistle Stop food ready for pickup" loading="lazy" />
         </div>
@@ -359,7 +379,10 @@
 
   <footer class="site-footer" data-include="partials/footer.html"></footer>
   <nav class="mobile-cta" data-include="partials/mobile-cta.html"></nav>
+  <script src="js/config-store.js"></script>
+  <script src="js/site-apply.js"></script>
   <script src="js/includes.js"></script>
+  <script src="js/pickup-order.js?v=9"></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>

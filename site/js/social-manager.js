@@ -1,0 +1,537 @@
+/* Whistle Stop — Social Media Manager (admin composer + bridge client) */
+window.WSSocial = (function () {
+  const DEFAULT_BRIDGE = "http://127.0.0.1:8787";
+
+  const PLATFORM_ICONS = {
+    facebook: "f",
+    instagram: "ig",
+    x: "𝕏",
+    linkedin: "in",
+    gbp: "G",
+    tiktok: "♪",
+    youtube: "▶",
+    nextdoor: "N",
+  };
+
+  function esc(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function bridgeUrl(config) {
+    return (config?.bridgeUrl || DEFAULT_BRIDGE).replace(/\/$/, "");
+  }
+
+  async function pingBridge(config) {
+    try {
+      const res = await fetch(`${bridgeUrl(config)}/health`, { cache: "no-store" });
+      if (!res.ok) return { online: false };
+      const data = await res.json();
+      return { online: true, ...data };
+    } catch {
+      return { online: false };
+    }
+  }
+
+  async function fetchPlatforms(config) {
+    const res = await fetch(`${bridgeUrl(config)}/api/platforms`, { cache: "no-store" });
+    if (!res.ok) throw new Error("Could not load platforms from bridge");
+    return res.json();
+  }
+
+  async function postToBridge(config, payload) {
+    const res = await fetch(`${bridgeUrl(config)}/api/post`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.error || "Post failed");
+    }
+    return data;
+  }
+
+  async function fetchBridgeHistory(config) {
+    try {
+      const res = await fetch(`${bridgeUrl(config)}/api/history`, { cache: "no-store" });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return data.history || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function connectionBadge(connection) {
+    const map = {
+      demo_ready: { label: "Demo ready", cls: "is-demo" },
+      ready: { label: "Connected", cls: "is-live" },
+      needs_login: { label: "Needs login", cls: "is-warn" },
+      paused: { label: "Paused", cls: "is-warn" },
+      manual_queue: { label: "Manual queue", cls: "is-gbp" },
+      not_wired: { label: "Not wired", cls: "is-off" },
+    };
+    const m = map[connection] || { label: connection || "Unknown", cls: "is-off" };
+    return `<span class="social-platform-badge ${m.cls}">${esc(m.label)}</span>`;
+  }
+
+  function platformCard(p, checked) {
+    const icon = PLATFORM_ICONS[p.id] || "•";
+    const limit = p.charLimit ? `${p.charLimit.toLocaleString()} char max` : "";
+    const note = p.limitation ? `<p class="social-platform-note">${esc(p.limitation)}</p>` : "";
+    const muted = p.connection === "not_wired";
+    return `
+      <label class="social-platform-card${checked ? " is-selected" : ""}${muted ? " is-muted" : ""}">
+        <input type="checkbox" name="social-platform" value="${esc(p.id)}" ${checked ? "checked" : ""} />
+        <span class="social-platform-icon" aria-hidden="true">${icon}</span>
+        <span class="social-platform-body">
+          <strong>${esc(p.label)}</strong>
+          ${connectionBadge(p.connection)}
+          ${limit ? `<span class="social-platform-limit">${limit}</span>` : ""}
+          ${note}
+        </span>
+      </label>`;
+  }
+
+  function previewPlatformBody(panel, platformId, text, mediaUrl, businessName) {
+    const body = text.trim()
+      ? esc(text).replace(/\n/g, "<br>")
+      : '<span class="social-preview-placeholder">Your message will appear here…</span>';
+    const img = mediaUrl
+      ? `<div class="social-preview-media"><img src="${mediaUrl}" alt="" /></div>`
+      : "";
+
+    if (platformId === "x") {
+      return `
+        <div class="social-preview-x">
+          <div class="social-preview-x-head">
+            <span class="social-preview-avatar">WS</span>
+            <div>
+              <strong>${esc(businessName)}</strong>
+              <span>@whistlestop_grill</span>
+            </div>
+          </div>
+          <p class="social-preview-text">${body}</p>
+          ${img}
+        </div>`;
+    }
+
+    if (platformId === "instagram") {
+      return `
+        <div class="social-preview-ig">
+          ${img || '<div class="social-preview-media social-preview-media--empty">Photo</div>'}
+          <p class="social-preview-text">${body}</p>
+        </div>`;
+    }
+
+    if (platformId === "gbp") {
+      const cta = panel.querySelector("#social-gbp-cta")?.value;
+      const ctaLabel =
+        panel.querySelector("#social-gbp-cta option:checked")?.textContent?.trim() || "";
+      const topic =
+        panel.querySelector("#social-gbp-topic option:checked")?.textContent?.trim() ||
+        "Update";
+      return `
+        <div class="social-preview-gbp">
+          <div class="social-preview-gbp-brand">
+            <span class="social-preview-avatar social-preview-avatar--gbp">G</span>
+            <div>
+              <strong>${esc(businessName)}</strong>
+              <span>${esc(topic)}</span>
+            </div>
+          </div>
+          ${img}
+          <p class="social-preview-text">${body}</p>
+          ${cta && ctaLabel && ctaLabel !== "None" ? `<span class="social-preview-cta">${esc(ctaLabel)}</span>` : ""}
+        </div>`;
+    }
+
+    if (platformId === "linkedin") {
+      return `
+        <div class="social-preview-li">
+          <div class="social-preview-li-head">
+            <span class="social-preview-avatar">WS</span>
+            <strong>${esc(businessName)}</strong>
+          </div>
+          <p class="social-preview-text">${body}</p>
+          ${img}
+        </div>`;
+    }
+
+    return `
+      <div class="social-preview-fb">
+        <div class="social-preview-fb-head">
+          <span class="social-preview-avatar">WS</span>
+          <div>
+            <strong>${esc(businessName)}</strong>
+            <span>Just now · 🌐</span>
+          </div>
+        </div>
+        <p class="social-preview-text">${body}</p>
+        ${img}
+      </div>`;
+  }
+
+  function resultRow(r) {
+    const status = r.status || "unknown";
+    const cls =
+      status === "ok"
+        ? "is-ok"
+        : status === "queued_manual"
+          ? "is-gbp"
+          : status === "skipped" || status === "not_wired"
+            ? "is-warn"
+            : "is-error";
+    const detail = r.message || r.error || "";
+    return `
+      <li class="social-result-row ${cls}">
+        <strong>${esc(r.label || r.platform)}</strong>
+        <span>${esc(status.replace(/_/g, " "))}</span>
+        ${detail ? `<p>${esc(detail)}</p>` : ""}
+      </li>`;
+  }
+
+  function renderAdmin(panel, config, site) {
+    const links = { ...(site?.social || {}), ...(config?.socialLinks || {}) };
+    let platforms = [];
+    let bridgeOnline = false;
+    let gbpLimits = null;
+    let mediaDataUrl = "";
+
+    panel.innerHTML = `
+      <p class="admin-note">
+        Compose once and post to every channel. <strong>Demo mode</strong> routes Facebook &amp; X through Knight Logics accounts until Whistle Stop connects their own.
+        <strong>Google Business Profile</strong> is queued for manual publish (API not wired yet). Run <code>run_bridge.ps1</code> on this PC for live posting.
+      </p>
+      <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking local bridge…</div>
+      <div class="admin-page-split admin-social-split">
+        <div class="admin-editor-col">
+          <div class="admin-card admin-social-compose-card">
+            <h3>Compose post</h3>
+            <div class="admin-social-compose-layout">
+              <div class="social-compose-message admin-field">
+                <label>Message</label>
+                <textarea id="social-post-text" rows="6" placeholder="Tonight: live music on the patio from 6:30 PM…"></textarea>
+              </div>
+              <div class="social-compose-media admin-field">
+                <label>Photo (optional)</label>
+                <input type="file" id="social-post-media" accept="image/*" />
+                <p class="social-field-hint">GBP API does not support video; upload videos manually in Google Business Profile.</p>
+              </div>
+              <details class="social-compose-gbp admin-details social-gbp-details" id="social-gbp-options">
+                <summary><strong>Google Business Profile options</strong></summary>
+                <div class="admin-form-grid cols-2" style="margin-top:0.75rem">
+                  <div class="admin-field">
+                    <label>Post type</label>
+                    <select id="social-gbp-topic">
+                      <option value="STANDARD">Update (standard)</option>
+                      <option value="EVENT">Event</option>
+                      <option value="OFFER">Offer</option>
+                    </select>
+                  </div>
+                  <div class="admin-field">
+                    <label>Button (optional)</label>
+                    <select id="social-gbp-cta">
+                      <option value="">None</option>
+                      <option value="LEARN_MORE">Learn more</option>
+                      <option value="BOOK">Book</option>
+                      <option value="ORDER">Order online</option>
+                      <option value="CALL">Call</option>
+                    </select>
+                  </div>
+                  <div class="admin-field">
+                    <label>Button URL</label>
+                    <input type="url" id="social-gbp-cta-url" placeholder="https://www.whistlestopgrill.com/..." />
+                  </div>
+                </div>
+                <p class="social-field-hint" id="social-gbp-limit-note"></p>
+              </details>
+              <aside class="social-compose-pages" aria-label="Your social pages">
+                <h3 class="social-compose-pages-title">Your social pages</h3>
+                <ul class="social-links-list">
+                  ${Object.entries(links)
+                    .map(
+                      ([k, url]) =>
+                        `<li><strong>${esc(k)}</strong> <a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></li>`
+                    )
+                    .join("")}
+                </ul>
+              </aside>
+              <div class="social-compose-actions admin-social-actions">
+                <button type="button" class="btn btn-primary" id="social-post-btn">Post now</button>
+                <span class="social-char-count" id="social-char-count">0 characters</span>
+              </div>
+              <div id="social-post-results" class="social-post-results social-compose-results" hidden></div>
+              <section class="social-compose-preview" aria-label="Post preview">
+                <div class="social-compose-preview-head">
+                  <h4>Post preview</h4>
+                  <span class="social-compose-preview-hint">Updates as you type · one card per selected platform</span>
+                </div>
+                <div id="social-post-preview" class="social-post-preview-track"></div>
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="admin-preview-col">
+          <p class="admin-preview-label">Platforms</p>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 0.75rem">Select where this post should go. Status reflects the local posting bridge on your computer.</p>
+          <div id="social-platform-grid" class="social-platform-grid">
+            <p style="color:var(--text-muted)">Loading platforms…</p>
+          </div>
+          <div class="admin-card" style="margin-top:1rem">
+            <h3>Recent posts</h3>
+            <div id="social-history" class="social-history"><p style="color:var(--text-muted)">No posts yet.</p></div>
+          </div>
+        </div>
+      </div>`;
+
+    const textEl = panel.querySelector("#social-post-text");
+    const countEl = panel.querySelector("#social-char-count");
+    const gridEl = panel.querySelector("#social-platform-grid");
+    const statusEl = panel.querySelector("#social-bridge-status");
+    const historyEl = panel.querySelector("#social-history");
+    const resultsEl = panel.querySelector("#social-post-results");
+    const mediaInput = panel.querySelector("#social-post-media");
+    const gbpNote = panel.querySelector("#social-gbp-limit-note");
+    const previewEl = panel.querySelector("#social-post-preview");
+    const businessName = config.clientName || site?.business?.name || "Whistle Stop Grill & Bar";
+
+    function getSelectedPlatforms() {
+      return [...panel.querySelectorAll('input[name="social-platform"]:checked')].map((el) => el.value);
+    }
+
+    function updateCharCount() {
+      const n = (textEl?.value || "").length;
+      if (countEl) countEl.textContent = `${n.toLocaleString()} characters`;
+    }
+
+    function updatePreview() {
+      if (!previewEl) return;
+      const text = textEl?.value || "";
+      const selected = getSelectedPlatforms();
+      const ids = selected.length ? selected : ["facebook", "x", "gbp"];
+
+      previewEl.innerHTML = ids
+        .map((id) => {
+          const plat = platforms.find((p) => p.id === id);
+          const label = plat?.label || id;
+          const icon = PLATFORM_ICONS[id] || "•";
+          return `
+            <article class="social-preview-card social-preview-card--${esc(id)}">
+              <header class="social-preview-card-label">
+                <span aria-hidden="true">${icon}</span>
+                ${esc(label)}
+              </header>
+              ${previewPlatformBody(panel, id, text, mediaDataUrl, businessName)}
+            </article>`;
+        })
+        .join("");
+    }
+
+    function renderPlatformGrid() {
+      if (!platforms.length) {
+        gridEl.innerHTML = `<p class="social-offline-msg">Bridge offline — start <code>run_bridge.ps1</code> to see live platform status. You can still compose; posts will be simulated locally.</p>`;
+        return;
+      }
+      const defaults = new Set(["facebook", "x", "gbp"]);
+      gridEl.innerHTML = platforms.map((p) => platformCard(p, defaults.has(p.id))).join("");
+      gridEl.querySelectorAll(".social-platform-card input").forEach((input) => {
+        input.addEventListener("change", () => {
+          input.closest(".social-platform-card")?.classList.toggle("is-selected", input.checked);
+          updatePreview();
+        });
+      });
+      updatePreview();
+    }
+
+    function renderHistory(items) {
+      if (!items?.length) {
+        historyEl.innerHTML = `<p style="color:var(--text-muted)">No posts yet.</p>`;
+        return;
+      }
+      historyEl.innerHTML = items
+        .slice(0, 12)
+        .map(
+          (h) => `
+        <article class="social-history-item">
+          <time>${esc(new Date(h.createdAt).toLocaleString())}</time>
+          <p>${esc(h.text)}</p>
+          <div class="social-history-tags">${(h.platforms || [])
+            .map((p) => `<span>${esc(p)}</span>`)
+            .join("")}</div>
+        </article>`
+        )
+        .join("");
+    }
+
+    async function refreshBridge() {
+      const health = await pingBridge(config);
+      bridgeOnline = health.online;
+      if (statusEl) {
+        statusEl.className = `admin-social-bridge-status ${bridgeOnline ? "is-online" : "is-offline"}`;
+        statusEl.innerHTML = bridgeOnline
+          ? `<strong>Bridge online.</strong> Demo posts use Knight Logics accounts. GBP uses manual queue.`
+          : `<strong>Bridge offline.</strong> Run <code>E:\\KnightLogics-Growth-System\\Social\\WhistleStop\\run_bridge.ps1</code> on this computer for live posting. Offline mode will simulate results only.`;
+      }
+
+      if (bridgeOnline) {
+        try {
+          const data = await fetchPlatforms(config);
+          platforms = data.platforms || [];
+          gbpLimits = data.gbpLimitations;
+          if (gbpNote && gbpLimits) {
+            gbpNote.textContent = `GBP API limits: supports ${gbpLimits.apiSupported?.join(", ")}. Not supported: ${gbpLimits.notSupported?.join("; ")}. Rate limit: ${gbpLimits.rateLimit}.`;
+          }
+          renderPlatformGrid();
+          const hist = await fetchBridgeHistory(config);
+          renderHistory(hist);
+        } catch (e) {
+          gridEl.innerHTML = `<p class="social-offline-msg">${esc(e.message)}</p>`;
+        }
+      } else {
+        platforms = [
+          { id: "facebook", label: "Facebook", connection: "demo_ready", charLimit: 63206 },
+          { id: "instagram", label: "Instagram", connection: "not_wired", limitation: "Meta API not wired" },
+          { id: "x", label: "X (Twitter)", connection: "demo_ready", charLimit: 280 },
+          { id: "linkedin", label: "LinkedIn", connection: "paused", charLimit: 3000 },
+          { id: "gbp", label: "Google Business Profile", connection: "manual_queue", gbp: true, charLimit: 1500 },
+          { id: "tiktok", label: "TikTok", connection: "not_wired" },
+          { id: "youtube", label: "YouTube Community", connection: "not_wired" },
+          { id: "nextdoor", label: "Nextdoor", connection: "not_wired" },
+        ];
+        renderPlatformGrid();
+        renderHistory(config.postHistory || []);
+      }
+    }
+
+    mediaInput?.addEventListener("change", () => {
+      const file = mediaInput.files?.[0];
+      if (!file) {
+        mediaDataUrl = "";
+        updatePreview();
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        mediaDataUrl = String(reader.result || "");
+        updatePreview();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    ["#social-gbp-topic", "#social-gbp-cta", "#social-gbp-cta-url"].forEach((sel) => {
+      panel.querySelector(sel)?.addEventListener("change", updatePreview);
+      panel.querySelector(sel)?.addEventListener("input", updatePreview);
+    });
+
+    textEl?.addEventListener("input", () => {
+      updateCharCount();
+      updatePreview();
+    });
+    updateCharCount();
+    updatePreview();
+
+    panel.querySelector("#social-post-btn")?.addEventListener("click", async () => {
+      const text = textEl?.value?.trim() || "";
+      const selected = [...panel.querySelectorAll('input[name="social-platform"]:checked')].map(
+        (el) => el.value
+      );
+      if (!text) {
+        alert("Write a message first.");
+        return;
+      }
+      if (!selected.length) {
+        alert("Select at least one platform.");
+        return;
+      }
+
+      const btn = panel.querySelector("#social-post-btn");
+      btn.disabled = true;
+      btn.textContent = "Posting…";
+      resultsEl.hidden = false;
+      resultsEl.innerHTML = `<p>Working…</p>`;
+
+      const payload = {
+        text,
+        platforms: selected,
+        mediaBase64: mediaDataUrl || "",
+        gbp: {
+          topicType: panel.querySelector("#social-gbp-topic")?.value || "STANDARD",
+          callToAction: panel.querySelector("#social-gbp-cta")?.value || null,
+          callToActionUrl: panel.querySelector("#social-gbp-cta-url")?.value?.trim() || null,
+        },
+      };
+
+      try {
+        let results;
+        if (bridgeOnline) {
+          const data = await postToBridge(config, payload);
+          results = data.results || [];
+          config.postHistory = [data.entry, ...(config.postHistory || [])].slice(0, 50);
+          if (window.WSConfig) WSConfig.save("socialManager", config);
+          renderHistory(await fetchBridgeHistory(config));
+        } else {
+          results = selected.map((pid) => {
+            const p = platforms.find((x) => x.id === pid);
+            if (pid === "gbp") {
+              return {
+                platform: pid,
+                label: "Google Business Profile",
+                status: "queued_manual",
+                message: "Simulated — start bridge to save GBP queue file.",
+              };
+            }
+            if (p?.connection === "not_wired") {
+              return { platform: pid, label: p.label, status: "not_wired", error: "Not connected" };
+            }
+            return {
+              platform: pid,
+              label: p?.label || pid,
+              status: "simulated",
+              message: "Bridge offline — demo only",
+            };
+          });
+          const entry = {
+            id: `local_${Date.now()}`,
+            createdAt: new Date().toISOString(),
+            text: text.slice(0, 500),
+            platforms: selected,
+            results,
+          };
+          config.postHistory = [entry, ...(config.postHistory || [])].slice(0, 50);
+          if (window.WSConfig) WSConfig.save("socialManager", config);
+          renderHistory(config.postHistory);
+        }
+
+        resultsEl.innerHTML = `
+          <h4>Results</h4>
+          <ul class="social-results-list">${results.map(resultRow).join("")}</ul>`;
+        textEl.value = "";
+        mediaDataUrl = "";
+        if (mediaInput) mediaInput.value = "";
+        updateCharCount();
+        updatePreview();
+      } catch (err) {
+        const logHint = bridgeOnline
+          ? `<p class="social-field-hint">Check bridge log: <code>E:\\KnightLogics-Growth-System\\Social\\WhistleStop\\logs\\bridge.log</code> or <a href="${esc(bridgeUrl(config))}/api/logs" target="_blank" rel="noopener">view live log</a></p>`
+          : "";
+        resultsEl.innerHTML = `<p class="social-error">${esc(err.message)}</p>${logHint}`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Post now";
+      }
+    });
+
+    refreshBridge();
+  }
+
+  return {
+    renderAdmin,
+    pingBridge,
+    bridgeUrl,
+  };
+})();

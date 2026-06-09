@@ -1,0 +1,64 @@
+{
+  "templates": {
+    "heroPanel": {
+      "label": "Hero grid panel (1 of 4)",
+      "slots": 4,
+      "recommendedTags": ["hero", "gallery", "food", "drinks", "music"]
+    },
+    "eventCard": {
+      "label": "Event / promo card",
+      "slots": 1,
+      "recommendedTags": ["events", "promo", "music", "community"]
+    },
+    "signatureCard": {
+      "label": "Signature menu highlight",
+      "slots": 1,
+      "recommendedTags": ["food", "gallery"]
+    },
+    "galleryThumb": {
+      "label": "Homepage gallery thumbnail",
+      "slots": 1,
+      "recommendedTags": ["gallery", "food", "drinks", "music"]
+    },
+    "menuPanel": {
+      "label": "Menu page hero panel",
+      "slots": 1,
+      "recommendedTags": ["food", "drinks", "menu"]
+    }
+  },
+  "catalog": [
+    { "path": "assets/logo.webp", "label": "Logo", "tags": ["brand"] },
+    { "path": "assets/martini-monday.webp", "label": "Martini Monday", "tags": ["events", "promo", "drinks"] },
+    { "path": "assets/breakfast.webp", "label": "Breakfast Sunday", "tags": ["events", "promo", "food"] },
+    { "path": "assets/cornhole.webp", "label": "Cornhole", "tags": ["events", "promo", "community"] },
+    { "path": "assets/drink-food.webp", "label": "Drink & food specials", "tags": ["events", "promo"] },
+    { "path": "assets/live-music.webp", "label": "Live music stage", "tags": ["events", "promo", "music"] },
+    { "path": "assets/ukulele.webp", "label": "Ukulele jam", "tags": ["events", "promo", "music", "community"] },
+    { "path": "assets/words-wine.webp", "label": "Words & Wine", "tags": ["events", "promo", "community"] },
+    { "path": "assets/original-whistle-stop.webp", "label": "Original Whistle Stop photo", "tags": ["hero", "about", "history"] },
+    { "path": "assets/gallery/WSSunset.webp", "label": "Sunset patio", "tags": ["hero", "gallery", "ambiance"] },
+    { "path": "assets/gallery/WSBar.webp", "label": "Open-air bar", "tags": ["hero", "gallery", "drinks", "bar"] },
+    { "path": "assets/gallery/WSRocker.webp", "label": "Live music rocker", "tags": ["hero", "gallery", "music", "events"] },
+    { "path": "assets/gallery/WSRocker2.webp", "label": "Band on patio", "tags": ["hero", "gallery", "music"] },
+    { "path": "assets/gallery/WSFood.webp", "label": "Food plates", "tags": ["hero", "gallery", "food", "menu"] },
+    { "path": "assets/gallery/WSFood2.webp", "label": "Fried green tomatoes", "tags": ["gallery", "food", "menu", "signature"] },
+    { "path": "assets/gallery/WSFood3.webp", "label": "Burgers & bites", "tags": ["hero", "gallery", "food", "menu"] },
+    { "path": "assets/gallery/WSFood4.webp", "label": "Seasonal plate", "tags": ["hero", "gallery", "food", "menu"] },
+    { "path": "assets/gallery/WSDrinks.webp", "label": "Craft cocktails", "tags": ["gallery", "drinks", "bar"] },
+    { "path": "assets/gallery/WSDrinks2.webp", "label": "Cocktails at bar", "tags": ["gallery", "drinks"] },
+    { "path": "assets/gallery/WSDrinks3.webp", "label": "Hip Sips", "tags": ["hero", "gallery", "drinks", "happy-hour"] },
+    { "path": "assets/gallery/WSCornHole.webp", "label": "Cornhole league", "tags": ["hero", "gallery", "events", "community"] },
+    { "path": "assets/gallery/WSGirls.webp", "label": "Friends on patio", "tags": ["hero", "gallery", "community"] },
+    { "path": "assets/gallery/WSGirls2.webp", "label": "Group dining", "tags": ["gallery", "community", "private-events"] },
+    { "path": "assets/gallery/WSGoodTimes.webp", "label": "Good times", "tags": ["hero", "gallery", "ambiance", "happy-hour"] },
+    { "path": "assets/gallery/WSLounge.webp", "label": "Patio lounge", "tags": ["gallery", "ambiance", "private-events"] },
+    { "path": "assets/gallery/WSMenu.webp", "label": "Menu spread", "tags": ["menu", "food"] },
+    { "path": "assets/gallery/WSWorkers.webp", "label": "Team", "tags": ["about", "community"] },
+    { "path": "assets/gallery/WSWorkers2.webp", "label": "Staff", "tags": ["about"] },
+    { "path": "assets/gallery/WSAprilEvents.webp", "label": "April events flyer", "tags": ["events", "flyer"] },
+    { "path": "assets/gallery/WSMayEvents.webp", "label": "May events flyer", "tags": ["events", "flyer"] },
+    { "path": "assets/gallery/safety-harbor-resort-spa.webp", "label": "Safety Harbor Resort & Spa", "tags": ["hero", "local", "contact"] },
+    { "path": "assets/gallery/spa-marina-statue-mini-mall-safety-harbor.webp", "label": "Downtown marina", "tags": ["hero", "local", "contact"] },
+    { "path": "assets/gallery/tocobaga-indian-teple-mount-safety-harbor.webp", "label": "Tocobaga mound", "tags": ["hero", "local", "contact"] }
+  ]
+}

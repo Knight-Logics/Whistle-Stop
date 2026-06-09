@@ -3,8 +3,14 @@
   const root = document.getElementById("menu-app");
   if (!root) return;
 
+  const isMenuPreview = new URLSearchParams(window.location.search).has("menuPreview");
+  if (isMenuPreview) {
+    document.documentElement.classList.add("ws-menu-preview-embed");
+  }
+
   let data = null;
   let activeMenu = "main-menu";
+  let pendingCategoryId = null;
 
   function escapeHtml(s) {
     return String(s)
@@ -15,9 +21,18 @@
   }
 
   function renderItem(item, index) {
+    if (window.WSMenuRender?.renderItem) {
+      return window.WSMenuRender.renderItem(item, index, {
+        showOrderButton: true,
+        initialVisible: false,
+      });
+    }
     const price = item.price
       ? `<span class="price">${escapeHtml(item.price)}</span>`
       : "";
+    const orderBtn = item.toastOrderUrl
+      ? `<a href="${escapeHtml(item.toastOrderUrl)}" class="btn btn-outline menu-item-order-btn menu-item-order-link" target="_blank" rel="noopener noreferrer">Order on Toast</a>`
+      : `<button type="button" class="btn btn-outline menu-item-order-btn" data-pickup-add data-item-name="${escapeHtml(item.name)}" data-item-price="${escapeHtml(item.price || "")}">Add to order list</button>`;
     let desc = item.desc ? `<p>${escapeHtml(item.desc)}</p>` : "";
     if (item.link) {
       desc = `<p><a href="${escapeHtml(item.link)}">See happy hour →</a></p>`;
@@ -28,7 +43,7 @@
           <h3>${escapeHtml(item.name)}</h3>
           ${desc}
         </div>
-        ${price}
+        <div class="menu-item-actions">${price}${orderBtn}</div>
       </article>`;
   }
 
@@ -78,9 +93,9 @@
       .map((c) => renderCategory(c, menu.id))
       .join("");
     const image = menu.image
-      ? `<div class="menu-panel-media reveal-right"><img src="${menu.image}" alt="${escapeHtml(menu.label)}" loading="lazy" /></div>`
+      ? `<div class="menu-panel-media reveal-right visible"><img src="${menu.image}" alt="${escapeHtml(menu.label)}" loading="lazy" /></div>`
       : menu.id === "main-menu"
-        ? `<div class="menu-panel-media reveal-right"><img src="assets/gallery/WSMenu.webp" alt="Whistle Stop menu" loading="lazy" /></div>`
+        ? `<div class="menu-panel-media reveal-right visible"><img src="assets/gallery/WSMenu.webp" alt="Whistle Stop menu" loading="lazy" /></div>`
         : "";
 
     return `
@@ -120,6 +135,11 @@
       </div>`;
 
     bindEvents();
+    window.WSUI?.refreshScrollReveal?.();
+    if (window.WSPickupOrder) {
+      window.WSPickupOrder.bindMenu(root);
+      window.WSPickupOrder.updateBar();
+    }
     updateSidebar();
     animatePanelItems();
     setupPinnedToolbar();
@@ -294,8 +314,33 @@
 
   function readHash() {
     const hash = (location.hash || "#main-menu").replace("#", "");
-    if (getMenu(hash)) return hash;
+    if (getMenu(hash)) {
+      pendingCategoryId = null;
+      return hash;
+    }
+    for (const menu of data?.menus || []) {
+      for (const cat of menu.categories || []) {
+        if (`${menu.id}-${cat.id}` === hash) {
+          pendingCategoryId = cat.id;
+          return menu.id;
+        }
+      }
+    }
+    pendingCategoryId = null;
     return "main-menu";
+  }
+
+  function scrollToCategory(catId) {
+    if (!catId) return;
+    const menu = getMenu(activeMenu);
+    const el = document.getElementById(`${menu?.id}-${catId}`);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - getMenuScrollOffset() - 12;
+    window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+    const sidebar = document.getElementById("menu-sidebar");
+    sidebar?.querySelectorAll(".menu-cat-link").forEach((l) => {
+      l.classList.toggle("active", l.dataset.cat === catId);
+    });
   }
 
   async   function initSidebarReveal() {
@@ -304,27 +349,111 @@
     requestAnimationFrame(() => sidebar.classList.add("visible"));
   }
 
-  async function init() {
-    try {
-      const res = await fetch("data/menus.json");
-      data = await res.json();
-      activeMenu = readHash();
-      render();
+  function scrollToHashSection() {
+    const hash = (location.hash || "").replace("#", "");
+    if (!hash || getMenu(hash)) return;
+    for (const menu of data?.menus || []) {
+      for (const cat of menu.categories || []) {
+        if (`${menu.id}-${cat.id}` !== hash) continue;
+        if (menu.id !== activeMenu) switchMenu(menu.id, false);
+        requestAnimationFrame(() => scrollToCategory(cat.id));
+        return;
+      }
+    }
+  }
+
+  function applyPreviewData(next) {
+    data = next;
+    activeMenu = readHash();
+    render();
+    if (pendingCategoryId) {
+      const catId = pendingCategoryId;
+      pendingCategoryId = null;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => scrollToCategory(catId));
+      });
+    } else if (isMenuPreview) {
+      requestAnimationFrame(() => scrollToHashSection());
+    } else {
       initSidebarReveal();
       if (location.hash) {
         requestAnimationFrame(() => {
           requestAnimationFrame(() => scrollToMenuIntro());
         });
       }
-      window.addEventListener("hashchange", () => {
-        const id = readHash();
-        if (id !== activeMenu) switchMenu(id, false);
-      });
+    }
+  }
+
+  async function loadMenuData() {
+    if (isMenuPreview) {
+      const draft = window.WSConfig?.readPreviewSync?.("menus");
+      if (draft) return draft;
+    }
+    return WSConfig.get("menus");
+  }
+
+  function bindHashNavigation() {
+    window.addEventListener("hashchange", () => {
+      const id = readHash();
+      if (id !== activeMenu) {
+        switchMenu(id, false);
+        if (pendingCategoryId) {
+          const catId = pendingCategoryId;
+          pendingCategoryId = null;
+          requestAnimationFrame(() => scrollToCategory(catId));
+        }
+      } else if (pendingCategoryId) {
+        const catId = pendingCategoryId;
+        pendingCategoryId = null;
+        scrollToCategory(catId);
+      } else {
+        scrollToHashSection();
+      }
+    });
+  }
+
+  async function initPublic(reloadOnly) {
+    try {
+      applyPreviewData(await loadMenuData());
+      if (!reloadOnly) bindHashNavigation();
     } catch (e) {
       root.innerHTML = "<p class='menu-error'>Menu could not load. Please refresh.</p>";
       console.error(e);
     }
   }
 
-  init();
+  function onAdminPreview(menus) {
+    if (!menus?.menus) return;
+    applyPreviewData(menus);
+  }
+
+  window.WSMenuPreview = { apply: onAdminPreview };
+
+  function initPreview() {
+    window.addEventListener("message", (e) => {
+      if (e.data?.type !== "ws-menu-preview" || !e.data.menus) return;
+      onAdminPreview(e.data.menus);
+    });
+
+    try {
+      bindHashNavigation();
+      const draft = window.WSConfig?.readPreviewSync?.("menus");
+      if (draft) onAdminPreview(draft);
+      window.parent.postMessage({ type: "ws-menu-preview-ready" }, "*");
+    } catch (e) {
+      root.innerHTML = "<p class='menu-error'>Menu could not load. Please refresh.</p>";
+      console.error(e);
+    }
+  }
+
+  if (isMenuPreview) {
+    initPreview();
+  } else {
+    initPublic(false);
+    document.addEventListener("ws-config-updated", (e) => {
+      const section = e.detail?.section;
+      if (section && section !== "menus" && section !== "all") return;
+      initPublic(true);
+    });
+  }
 })();

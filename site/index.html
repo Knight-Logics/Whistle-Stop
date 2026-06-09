@@ -22,7 +22,9 @@
       transform: none;
     }
   </style>
-  <link rel="icon" href="assets/logo.webp" />
+  <link rel="icon" href="assets/logo.webp" type="image/webp" />
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/logo-160.webp" />
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -272,18 +274,18 @@
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero" data-hero="index">
       <div class="hero-bg hero-bg--grid" aria-hidden="true">
-        <div class="hero-panel hero-panel--left">
+        <div class="hero-panel hero-panel--left" data-hero-panel="0">
           <img src="assets/gallery/WSSunset-480.webp" srcset="assets/gallery/WSSunset-400.webp 400w, assets/gallery/WSSunset-480.webp 480w, assets/gallery/WSSunset-768.webp 768w, assets/gallery/WSSunset.webp 964w" sizes="(max-width: 767px) 50vw, 25vw" alt="" width="964" height="1280" decoding="async" fetchpriority="high" />
         </div>
-        <div class="hero-panel hero-panel--bottom">
+        <div class="hero-panel hero-panel--bottom" data-hero-panel="1">
           <img src="assets/gallery/WSBar-480.webp" srcset="assets/gallery/WSBar-400.webp 400w, assets/gallery/WSBar-480.webp 480w, assets/gallery/WSBar-768.webp 768w, assets/gallery/WSBar.webp 1080w" sizes="(max-width: 767px) 50vw, 25vw" alt="" width="1080" height="1080" decoding="async" />
         </div>
-        <div class="hero-panel hero-panel--top">
+        <div class="hero-panel hero-panel--top" data-hero-panel="2">
           <img src="assets/gallery/WSRocker-400.webp" srcset="assets/gallery/WSRocker-400.webp 400w, assets/gallery/WSRocker-480.webp 480w, assets/gallery/WSRocker-768.webp 768w, assets/gallery/WSRocker.webp 1080w" sizes="(max-width: 767px) 50vw, 285px" alt="" width="1080" height="1080" decoding="async" loading="lazy" />
         </div>
-        <div class="hero-panel hero-panel--right">
+        <div class="hero-panel hero-panel--right" data-hero-panel="3">
           <img src="assets/gallery/WSFood3-400.webp" srcset="assets/gallery/WSFood3-400.webp 400w, assets/gallery/WSFood3-480.webp 480w, assets/gallery/WSFood3-768.webp 768w, assets/gallery/WSFood3.webp 1024w" sizes="(max-width: 767px) 50vw, 285px" alt="" width="1024" height="1280" decoding="async" loading="lazy" />
         </div>
       </div>
@@ -292,12 +294,12 @@
         <div class="hero-social-float" data-include="partials/header-socials.html"></div>
       </div>
       <div class="container hero-content">
-        <p class="hero-eyebrow reveal visible">915 Main Street · Safety Harbor, FL</p>
+        <p class="hero-eyebrow reveal visible" data-hero-eyebrow>915 Main Street · Safety Harbor, FL</p>
         <h1 class="reveal stagger-1 visible">
-          <span class="hero-title">Whistle Stop<br />Grill &amp; Bar</span>
-          <span class="hero-tagline">Old Florida / New Vibe</span>
+          <span class="hero-title"><span data-hero-title-1>Whistle Stop</span><br /><span data-hero-title-2>Grill &amp; Bar</span></span>
+          <span class="hero-tagline" data-hero-tagline>Old Florida / New Vibe</span>
         </h1>
-        <p class="lead reveal stagger-3 visible">
+        <p class="lead reveal stagger-3 visible" data-hero-lead>
           Real. Good. Food. Since 1995 — open-air dining, 18 taps, live local music, and a dog-friendly patio in the heart of downtown Safety Harbor.
         </p>
         <div class="btn-group reveal stagger-4 visible">
@@ -309,7 +311,7 @@
     </section>
 
     <div class="container">
-      <div class="stats-bar reveal-scale visible">
+      <div class="stats-bar reveal-scale visible" id="home-stats">
         <div class="stat" id="google-stat">
           <strong>4.4</strong>
           <span>2,000+ Google reviews</span>
@@ -329,39 +331,14 @@
       </div>
     </div>
 
-    <section class="section-cream">
+    <section class="section-cream" id="promo-happenings">
       <div class="container">
         <div class="section-head reveal">
           <h2>Weekly &amp; monthly happenings</h2>
           <p>Recurring favorites that keep Main Street buzzing — no more hunting through image flyers.</p>
           <div class="divider"></div>
         </div>
-        <div class="card-grid cols-3">
-          <article class="card reveal stagger-1">
-            <div class="card-img"><img src="assets/martini-monday-400.webp" srcset="assets/martini-monday-400.webp 400w, assets/martini-monday-480.webp 480w, assets/martini-monday-768.webp 768w, assets/martini-monday.webp 800w" sizes="(max-width: 639px) 190px, (min-width: 640px) 320px, 360px" alt="Martini Monday taco night" loading="lazy" decoding="async" /></div>
-            <div class="card-body">
-              <h3>Martini Monday</h3>
-              <p>Half-off martinis &amp; 2-for-$6 tacos, 4 PM–close.</p>
-              <div class="card-meta"><span class="tag">Every Monday</span></div>
-            </div>
-          </article>
-          <article class="card reveal stagger-2">
-            <div class="card-img"><img src="assets/gallery/WSCornHole-400.webp" srcset="assets/gallery/WSCornHole-400.webp 400w, assets/gallery/WSCornHole-480.webp 480w, assets/gallery/WSCornHole-768.webp 768w, assets/gallery/WSCornHole.webp 1080w" sizes="(max-width: 639px) 190px, (min-width: 640px) 320px, 360px" alt="Cornhole Wednesdays" loading="lazy" decoding="async" /></div>
-            <div class="card-body">
-              <h3>Cornhole Wednesdays</h3>
-              <p>League night at 6 PM. Happy hour 4 PM–close.</p>
-              <div class="card-meta"><span class="tag">Every Wednesday</span></div>
-            </div>
-          </article>
-          <article class="card reveal stagger-3">
-            <div class="card-img"><img src="assets/gallery/WSRocker-400.webp" srcset="assets/gallery/WSRocker-400.webp 400w, assets/gallery/WSRocker-480.webp 480w, assets/gallery/WSRocker-768.webp 768w, assets/gallery/WSRocker.webp 1080w" sizes="(max-width: 639px) 190px, (min-width: 640px) 320px, 360px" alt="Live music" loading="lazy" decoding="async" /></div>
-            <div class="card-body">
-              <h3>Live Music</h3>
-              <p>Open mic Tuesdays. Featured artists Fri &amp; Sat.</p>
-              <div class="card-meta"><span class="tag music">Live Music</span></div>
-            </div>
-          </article>
-        </div>
+        <div class="card-grid cols-3" id="promo-cards-home"></div>
         <p style="text-align:center;margin-top:2rem" class="reveal">
           <a href="events.html" class="btn btn-primary">Full events calendar</a>
         </p>
@@ -441,16 +418,7 @@
           <p>Open-air dining under the oaks, cold drinks, live locals, and good times on the patio.</p>
           <div class="divider"></div>
         </div>
-        <div class="photo-gallery photo-gallery--uniform reveal-scale">
-          <figure class="reveal-photo"><img src="assets/gallery/WSFood-280.webp" srcset="assets/gallery/WSFood-280.webp 280w, assets/gallery/WSFood-400.webp 400w, assets/gallery/WSFood-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Plates at Whistle Stop" loading="lazy" decoding="async" /><figcaption>Real. Good. Food.</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSDrinks-280.webp" srcset="assets/gallery/WSDrinks-280.webp 280w, assets/gallery/WSDrinks-400.webp 400w, assets/gallery/WSDrinks-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Craft cocktails" loading="lazy" decoding="async" /><figcaption>18 taps &amp; Hip Sips</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSRocker-280.webp" srcset="assets/gallery/WSRocker-280.webp 280w, assets/gallery/WSRocker-400.webp 400w, assets/gallery/WSRocker-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Live music on the patio" loading="lazy" decoding="async" /><figcaption>Live music</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSCornHole-280.webp" srcset="assets/gallery/WSCornHole-280.webp 280w, assets/gallery/WSCornHole-400.webp 400w, assets/gallery/WSCornHole-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Cornhole league night" loading="lazy" decoding="async" /><figcaption>Cornhole Wednesdays</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSSunset-280.webp" srcset="assets/gallery/WSSunset-280.webp 280w, assets/gallery/WSSunset-400.webp 400w, assets/gallery/WSSunset-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Sunset on Main Street" loading="lazy" decoding="async" /><figcaption>Safety Harbor sunsets</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSGoodTimes-280.webp" srcset="assets/gallery/WSGoodTimes-280.webp 280w, assets/gallery/WSGoodTimes-400.webp 400w, assets/gallery/WSGoodTimes-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Friends on the patio" loading="lazy" decoding="async" /><figcaption>Good times</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSBar-280.webp" srcset="assets/gallery/WSBar-280.webp 280w, assets/gallery/WSBar-400.webp 400w, assets/gallery/WSBar-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Open-air bar on Main Street" loading="lazy" decoding="async" /><figcaption>Open-air bar</figcaption></figure>
-          <figure class="reveal-photo"><img src="assets/gallery/WSLounge-280.webp" srcset="assets/gallery/WSLounge-280.webp 280w, assets/gallery/WSLounge-400.webp 400w, assets/gallery/WSLounge-560.webp 560w" sizes="(max-width: 767px) 46vw, 280px" width="400" height="400" alt="Patio lounge seating" loading="lazy" decoding="async" /><figcaption>Patio hangs</figcaption></figure>
-        </div>
+        <div class="photo-gallery photo-gallery--uniform reveal-scale" id="home-gallery"></div>
       </div>
     </section>
 
@@ -461,24 +429,7 @@
           <p>From fried green tomatoes to Gulf grouper — fresh plates and a full bar.</p>
           <div class="divider"></div>
         </div>
-        <div class="card-grid cols-2">
-          <article class="card reveal-left">
-            <div class="card-img card-img--food-plate"><img src="assets/gallery/WSFood2-400.webp" srcset="assets/gallery/WSFood2-400.webp 400w, assets/gallery/WSFood2-480.webp 480w, assets/gallery/WSFood2-768.webp 768w, assets/gallery/WSFood2.webp 960w" sizes="(max-width: 639px) 190px, (min-width: 640px) 460px, 520px" alt="Fried green tomatoes" loading="lazy" decoding="async" /></div>
-            <div class="card-body">
-              <h3>Fried Green Tomatoes</h3>
-              <p>A Safety Harbor staple — classic, fancy, or on the BLFGT. Worth the trip alone.</p>
-              <a href="menu.html#small-plates" class="btn btn-primary">View menu</a>
-            </div>
-          </article>
-          <article class="card reveal-right">
-            <div class="card-img"><img src="assets/gallery/WSFood3-400.webp" srcset="assets/gallery/WSFood3-400.webp 400w, assets/gallery/WSFood3-480.webp 480w, assets/gallery/WSFood3-768.webp 768w, assets/gallery/WSFood3.webp 1024w" sizes="(max-width: 639px) 190px, (min-width: 640px) 460px, 520px" alt="Burgers and bar bites" loading="lazy" decoding="async" /></div>
-            <div class="card-body">
-              <h3>Burgers, Grouper &amp; More</h3>
-              <p>Original Whistle Stop Burger, fresh Gulf grouper, mac &amp; cheese, and rotating seasonal plates.</p>
-              <a href="menu.html" class="btn btn-primary">Full menus</a>
-            </div>
-          </article>
-        </div>
+        <div class="card-grid cols-2" id="signature-cards"></div>
       </div>
     </section>
 
@@ -489,38 +440,7 @@
           <p>Quick answers for first-time visitors heading to Main Street.</p>
           <div class="divider"></div>
         </div>
-        <div class="card-grid cols-2">
-          <article class="card reveal-left">
-            <div class="card-body">
-              <h3>Where is Whistle Stop located?</h3>
-              <p>Whistle Stop Grill &amp; Bar is located at 915 Main Street in downtown Safety Harbor, Florida 34695.</p>
-            </div>
-          </article>
-          <article class="card reveal-right">
-            <div class="card-body">
-              <h3>What are the restaurant hours?</h3>
-              <p>We are open Sunday through Thursday from 11 AM to 9 PM, and Friday through Saturday from 11 AM to 10 PM.</p>
-            </div>
-          </article>
-          <article class="card reveal-left">
-            <div class="card-body">
-              <h3>Is the patio dog-friendly?</h3>
-              <p>Yes. Our open-air Main Street patio is dog-friendly and built for relaxed Safety Harbor hangs.</p>
-            </div>
-          </article>
-          <article class="card reveal-right">
-            <div class="card-body">
-              <h3>Do you host live music and events?</h3>
-              <p>Yes. Check the events calendar for live music, open mic nights, cornhole, book club, happy hour, and community nights.</p>
-            </div>
-          </article>
-          <article class="card reveal-left">
-            <div class="card-body">
-              <h3>Where can I view the menu?</h3>
-              <p>View the main menu, seasonal menu, and bar menu on our menu page before you visit or order online.</p>
-            </div>
-          </article>
-        </div>
+        <div class="card-grid cols-2" id="home-faq"></div>
       </div>
     </section>
   </main>
@@ -528,8 +448,12 @@
   <footer class="site-footer" data-include="partials/footer.html"></footer>
   <nav class="mobile-cta" data-include="partials/mobile-cta.html"></nav>
 
+  <script src="js/config-store.js?v=11"></script>
+  <script src="js/site-apply.js?v=11"></script>
   <script src="js/includes.js" defer></script>
-  <script src="js/main.js" defer></script>
+  <script src="js/main.js?v=11" defer></script>
+  <script src="js/promos.js?v=11" defer></script>
+  <script src="js/home-content.js?v=11" defer></script>
   <script src="js/reviews.js" defer></script>
   <script>
     window.addEventListener("DOMContentLoaded", () => {

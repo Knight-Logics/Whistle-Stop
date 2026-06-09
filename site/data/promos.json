@@ -1,0 +1,90 @@
+{
+  "homepageFeatured": [
+    {
+      "id": "martini-monday",
+      "title": "Martini Monday",
+      "summary": "Half-off martinis & 2-for-$6 tacos, 4 PM–close.",
+      "tag": "Every Monday",
+      "tagClass": "",
+      "image": "assets/martini-monday.webp",
+      "alt": "Martini Monday taco night",
+      "recurringId": "martini-monday"
+    },
+    {
+      "id": "cornhole-wed",
+      "title": "Cornhole Wednesdays",
+      "summary": "League night at 6 PM. Happy hour 4 PM–close.",
+      "tag": "Every Wednesday",
+      "tagClass": "",
+      "image": "assets/gallery/WSCornHole.webp",
+      "alt": "Cornhole Wednesdays",
+      "recurringId": "cornhole-wed"
+    },
+    {
+      "id": "live-music",
+      "title": "Live Music",
+      "summary": "Open mic Tuesdays. Featured artists Fri & Sat.",
+      "tag": "Live Music",
+      "tagClass": "music",
+      "image": "assets/gallery/WSRocker.webp",
+      "alt": "Live music",
+      "recurringId": "live-music-weekend"
+    }
+  ],
+  "eventsPageFeatured": [
+    {
+      "id": "martini-monday",
+      "title": "Martini Monday · Taco Night",
+      "summary": "Half-off martinis & 2-for-$6 tacos, 4 PM–close.",
+      "tag": "Every Monday",
+      "tagClass": "",
+      "image": "assets/martini-monday.webp",
+      "alt": "Martini Monday"
+    },
+    {
+      "id": "cornhole-wed",
+      "title": "Cornhole Wednesdays",
+      "summary": "Every Wednesday at 6 PM. Happy hour 4 PM–close.",
+      "tag": "Every Wednesday",
+      "tagClass": "",
+      "image": "assets/cornhole.webp",
+      "alt": "Cornhole league"
+    },
+    {
+      "id": "open-mic",
+      "title": "Open Mic Night",
+      "summary": "Local talent takes the stage — Tuesdays.",
+      "tag": "Every Tuesday",
+      "tagClass": "music",
+      "image": "assets/live-music.webp",
+      "alt": "Open mic night"
+    },
+    {
+      "id": "words-wine",
+      "title": "Words & Wine Book Club",
+      "summary": "With Safety Harbor Public Library. Every 3rd Monday, 6–8 PM.",
+      "tag": "Monthly",
+      "tagClass": "",
+      "image": "assets/words-wine.webp",
+      "alt": "Words and Wine book club"
+    },
+    {
+      "id": "ukulele-jam",
+      "title": "Tampa Bay Ukulele Society",
+      "summary": "Open jam every 4th Thursday, 6:30–9:30 PM.",
+      "tag": "Monthly",
+      "tagClass": "music",
+      "image": "assets/ukulele.webp",
+      "alt": "Ukulele jam"
+    },
+    {
+      "id": "sunday-breakfast",
+      "title": "Breakfast Bloody Mary Sunday",
+      "summary": "$5 mimosas & bloody marys.",
+      "tag": "Every Sunday",
+      "tagClass": "",
+      "image": "assets/breakfast.webp",
+      "alt": "Sunday breakfast specials"
+    }
+  ]
+}

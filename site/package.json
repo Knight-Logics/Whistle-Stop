@@ -1,0 +1,15 @@
+{
+  "name": "site",
+  "version": "1.0.0",
+  "description": "Knight Logics prospect demo. **Not production** — preview for client pitch.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

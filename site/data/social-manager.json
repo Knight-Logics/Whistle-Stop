@@ -1,0 +1,17 @@
+{
+  "demoMode": true,
+  "bridgeUrl": "http://127.0.0.1:8787",
+  "clientName": "Whistle Stop Grill & Bar",
+  "gbp": {
+    "businessName": "Whistle Stop Grill & Bar",
+    "address": "915 Main Street, Safety Harbor, FL 34695",
+    "dashboardUrl": "https://business.google.com/",
+    "defaultTopicType": "STANDARD",
+    "mode": "manual_queue"
+  },
+  "socialLinks": {
+    "facebook": "https://www.facebook.com/Whistlestopgrillandbar915",
+    "instagram": "https://www.instagram.com/whistlestop_grill/"
+  },
+  "postHistory": []
+}

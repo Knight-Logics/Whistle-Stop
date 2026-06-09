@@ -106,30 +106,30 @@ function initReviewCarousels() {
 
   if (!trackEl) return;
 
-  let data;
-  try {
-    const res = await fetch("data/reviews.json");
-    data = await res.json();
-  } catch {
-    return;
-  }
+  async function renderReviews() {
+    let data;
+    try {
+      data = await WSConfig.get("reviews");
+    } catch {
+      return;
+    }
 
-  const g = data.google;
-  if (scoreEl && g) {
-    scoreEl.innerHTML = `<span class="review-stars" aria-label="${g.rating} out of 5 stars">${"★".repeat(Math.round(g.rating))}</span><span>${g.rating} · ${g.count.toLocaleString()} reviews</span>`;
-  }
+    const g = data.google;
+    if (scoreEl && g) {
+      scoreEl.innerHTML = `<span class="review-stars" aria-label="${g.rating} out of 5 stars">${"★".repeat(Math.round(g.rating))}</span><span>${g.rating} · ${g.count.toLocaleString()} reviews</span>`;
+    }
 
-  if (googleStatEl && g) {
-    googleStatEl.innerHTML = `<strong>${g.rating}</strong><span>${g.count.toLocaleString()}+ Google reviews</span>`;
-  }
+    if (googleStatEl && g) {
+      googleStatEl.innerHTML = `<strong>${g.rating}</strong><span>${g.count.toLocaleString()}+ Google reviews</span>`;
+    }
 
-  trackEl.innerHTML = (data.featured || [])
-    .map((r, i) => {
-      const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
-      const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
-      const quote =
-        r.text.length > 160 ? `${r.text.slice(0, 157).trim()}...` : r.text;
-      return `
+    trackEl.innerHTML = (data.featured || [])
+      .map((r, i) => {
+        const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
+        const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+        const quote =
+          r.text.length > 160 ? `${r.text.slice(0, 157).trim()}...` : r.text;
+        return `
         <article class="review-card">
           <div class="review-card-top">
             <div class="review-avatar review-avatar--${color}">${initials(r.author)}</div>
@@ -142,12 +142,21 @@ function initReviewCarousels() {
           <p class="review-card-quote">"${quote}"</p>
           <p class="review-card-date">${r.date}</p>
         </article>`;
-    })
-    .join("");
+      })
+      .join("");
 
-  initReviewCarousels();
+    initReviewCarousels();
 
-  trackEl.querySelectorAll(".review-card").forEach((el, i) => {
-    setTimeout(() => el.classList.add("visible"), i * 60);
+    trackEl.querySelectorAll(".review-card").forEach((el, i) => {
+      setTimeout(() => el.classList.add("visible"), i * 60);
+    });
+  }
+
+  await renderReviews();
+
+  document.addEventListener("ws-config-updated", (e) => {
+    const section = e.detail?.section;
+    if (section && section !== "reviews" && section !== "all") return;
+    renderReviews();
   });
 })();

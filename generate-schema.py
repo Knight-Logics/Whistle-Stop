@@ -52,11 +52,28 @@ def write_jsonld(page: Path, graph: list[dict[str, Any]]) -> None:
     page.write_text(text, encoding="utf-8", newline="")
 
 
+def load_site() -> dict[str, Any]:
+    return read_json(SITE / "data" / "site.json")
+
+
+def load_reviews() -> dict[str, Any]:
+    return read_json(SITE / "data" / "reviews.json")
+
+
 def restaurant_schema() -> dict[str, Any]:
+    site = load_site()
+    reviews = load_reviews()
+    business = site.get("business", {})
+    social = site.get("social", {})
+    links = site.get("links", {})
+    seo = site.get("seo", {})
+    hours = site.get("hours", {})
+    google = reviews.get("google", {})
+
     return {
         "@type": ["Organization", "Restaurant"],
         "@id": RESTAURANT_ID,
-        "name": "Whistle Stop Grill & Bar",
+        "name": business.get("name", "Whistle Stop Grill & Bar"),
         "alternateName": "Whistle Stop Grill and Bar",
         "url": BASE_URL,
         "logo": abs_url("assets/logo.webp"),
@@ -66,24 +83,29 @@ def restaurant_schema() -> dict[str, Any]:
             abs_url("assets/gallery/WSFood.webp"),
             abs_url("assets/gallery/WSGoodTimes.webp"),
         ],
-        "description": (
-            "Safety Harbor's landmark grill and bar since 1995, serving "
-            "American bar-and-grill favorites, cocktails, 18 taps, live music, "
-            "and dog-friendly open-air patio dining on Main Street."
+        "description": business.get(
+            "description",
+            (
+                "Safety Harbor's landmark grill and bar since 1995, serving "
+                "American bar-and-grill favorites, cocktails, 18 taps, live music, "
+                "and dog-friendly open-air patio dining on Main Street."
+            ),
         ),
-        "slogan": "Old Florida / New Vibe",
-        "foundingDate": "1995",
-        "telephone": PHONE,
-        "email": EMAIL,
-        "priceRange": "$$",
-        "servesCuisine": ["American", "Bar & Grill", "Burgers", "Seafood", "Pub Food"],
-        "acceptsReservations": False,
+        "slogan": business.get("tagline", "Old Florida / New Vibe"),
+        "foundingDate": business.get("founded", "1995"),
+        "telephone": business.get("phone", PHONE),
+        "email": business.get("email", EMAIL),
+        "priceRange": seo.get("priceRange", "$$"),
+        "servesCuisine": seo.get(
+            "cuisines", ["American", "Bar & Grill", "Burgers", "Seafood", "Pub Food"]
+        ),
+        "acceptsReservations": seo.get("acceptsReservations", False),
         "hasMenu": {"@id": abs_url("menu.html#menu")},
         "potentialAction": {
             "@type": "OrderAction",
             "target": {
                 "@type": "EntryPoint",
-                "urlTemplate": ORDER_URL,
+                "urlTemplate": links.get("orderOnline", ORDER_URL),
                 "actionPlatform": [
                     "https://schema.org/DesktopWebPlatform",
                     "https://schema.org/MobileWebPlatform",
@@ -92,29 +114,32 @@ def restaurant_schema() -> dict[str, Any]:
         },
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "915 Main Street",
-            "addressLocality": "Safety Harbor",
-            "addressRegion": "FL",
-            "postalCode": "34695",
+            "streetAddress": business.get("street", "915 Main Street"),
+            "addressLocality": business.get("city", "Safety Harbor"),
+            "addressRegion": business.get("state", "FL"),
+            "postalCode": business.get("zip", "34695"),
             "addressCountry": "US",
         },
         "geo": {
             "@type": "GeoCoordinates",
-            "latitude": 27.990934,
-            "longitude": -82.696838,
+            "latitude": business.get("geo", {}).get("lat", 27.990934),
+            "longitude": business.get("geo", {}).get("lng", -82.696838),
         },
-        "hasMap": (
-            "https://www.google.com/maps/search/?api=1&query="
-            "Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL"
+        "hasMap": links.get(
+            "googleMaps",
+            (
+                "https://www.google.com/maps/search/?api=1&query="
+                "Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL"
+            ),
         ),
         "sameAs": [
-            "https://www.facebook.com/Whistlestopgrillandbar915",
-            "https://www.instagram.com/whistlestop_grill/",
+            social.get("facebook", "https://www.facebook.com/Whistlestopgrillandbar915"),
+            social.get("instagram", "https://www.instagram.com/whistlestop_grill/"),
         ],
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": PHONE,
-            "email": EMAIL,
+            "telephone": business.get("phone", PHONE),
+            "email": business.get("email", EMAIL),
             "contactType": "customer service",
             "areaServed": "US-FL",
             "availableLanguage": "en-US",
@@ -123,20 +148,20 @@ def restaurant_schema() -> dict[str, Any]:
             {
                 "@type": "OpeningHoursSpecification",
                 "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Sunday"],
-                "opens": "11:00",
-                "closes": "21:00",
+                "opens": hours.get("weekday", {}).get("opens", "11:00"),
+                "closes": hours.get("weekday", {}).get("closes", "21:00"),
             },
             {
                 "@type": "OpeningHoursSpecification",
                 "dayOfWeek": ["Friday", "Saturday"],
-                "opens": "11:00",
-                "closes": "22:00",
+                "opens": hours.get("weekend", {}).get("opens", "11:00"),
+                "closes": hours.get("weekend", {}).get("closes", "22:00"),
             },
         ],
         "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": "4.4",
-            "reviewCount": "2036",
+            "ratingValue": str(google.get("rating", "4.4")),
+            "reviewCount": str(google.get("count", "2036")),
             "bestRating": "5",
             "worstRating": "1",
         },
@@ -330,60 +355,18 @@ def menu_schema() -> dict[str, Any]:
 
 
 def faq_schema() -> dict[str, Any]:
+    site = load_site()
+    faq_items = site.get("homepage", {}).get("faq", [])
     return {
         "@type": "FAQPage",
         "@id": f"{BASE_URL}#faq",
         "mainEntity": [
             {
                 "@type": "Question",
-                "name": "Where is Whistle Stop Grill & Bar located?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": (
-                        "Whistle Stop Grill & Bar is located at 915 Main Street "
-                        "in downtown Safety Harbor, Florida 34695."
-                    ),
-                },
-            },
-            {
-                "@type": "Question",
-                "name": "What are the restaurant hours?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": (
-                        "Whistle Stop is open Sunday through Thursday from 11 AM "
-                        "to 9 PM, and Friday through Saturday from 11 AM to 10 PM."
-                    ),
-                },
-            },
-            {
-                "@type": "Question",
-                "name": "Does Whistle Stop have a dog-friendly patio?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes. Whistle Stop has a dog-friendly open-air patio on Main Street in Safety Harbor.",
-                },
-            },
-            {
-                "@type": "Question",
-                "name": "Does Whistle Stop offer live music and events?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": (
-                        "Yes. Whistle Stop hosts live music, open mic nights, "
-                        "cornhole, book club events, happy hour specials, and "
-                        "other community happenings."
-                    ),
-                },
-            },
-            {
-                "@type": "Question",
-                "name": "Where can I view the menu?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": f"The main menu, seasonal menu, and bar menu are available at {abs_url('menu.html')}.",
-                },
-            },
+                "name": item["q"],
+                "acceptedAnswer": {"@type": "Answer", "text": item["a"]},
+            }
+            for item in faq_items
         ],
     }
 
