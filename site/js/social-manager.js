@@ -25,7 +25,16 @@ window.WSSocial = (function () {
     return (config?.bridgeUrl || DEFAULT_BRIDGE).replace(/\/$/, "");
   }
 
+  function isHttpsAdmin() {
+    return window.location.protocol === "https:";
+  }
+
+  const LOCAL_ADMIN_URL = "http://127.0.0.1:8080/admin.html";
+
   async function pingBridge(config) {
+    if (isHttpsAdmin()) {
+      return { online: false, blocked: true, reason: "mixed_content" };
+    }
     try {
       const res = await fetch(`${bridgeUrl(config)}/health`, { cache: "no-store" });
       if (!res.ok) return { online: false };
@@ -64,6 +73,73 @@ window.WSSocial = (function () {
     } catch {
       return [];
     }
+  }
+
+  const DEFAULT_ACCESS_NOTES = {
+    facebook: {
+      now: "Posts through Knight Logics Facebook Page (demo on this PC).",
+      pending: "Whistle Stop Page authorization — then posts go to their Facebook Page.",
+    },
+    x: {
+      now: "Posts through @KnightLogics (demo on this PC).",
+      pending: "Whistle Stop X account API keys — then posts go to their profile.",
+    },
+    instagram: {
+      now: "Cannot post from here yet.",
+      pending: "Meta Business verification + Instagram linked to Whistle Stop Facebook Page.",
+    },
+    gbp: {
+      now: "Text + post type saved to a manual queue; paste into Google Business Profile.",
+      pending:
+        "Google OAuth (business.manage) — updates, events & offers auto-publish with 1 still photo each. GIFs: static image only via API. Videos: dashboard only, not API.",
+    },
+    linkedin: {
+      now: "Paused — not posting.",
+      pending: "LinkedIn company page access for Whistle Stop.",
+    },
+    tiktok: { now: "Not connected.", pending: "TikTok Business API authorization." },
+    youtube: { now: "Not connected.", pending: "YouTube channel + Community tab API access." },
+    nextdoor: {
+      now: "Not connected.",
+      pending: "Nextdoor Business account link (may stay manual — limited API).",
+    },
+  };
+
+  function accessState(connection) {
+    const map = {
+      demo_ready: { label: "Demo — works now", cls: "is-demo" },
+      ready: { label: "Connected", cls: "is-live" },
+      manual_queue: { label: "Manual queue", cls: "is-gbp" },
+      needs_login: { label: "Needs login", cls: "is-warn" },
+      paused: { label: "Paused", cls: "is-warn" },
+      not_wired: { label: "Not available", cls: "is-off" },
+    };
+    return map[connection] || { label: connection || "Unknown", cls: "is-off" };
+  }
+
+  function renderAccessNoticeHtml(platforms, accessNotes) {
+    const notes = { ...DEFAULT_ACCESS_NOTES, ...(accessNotes || {}) };
+    if (!platforms?.length) {
+      return `<p class="social-access-empty">Start the local bridge to see per-platform access status.</p>`;
+    }
+    return `<ul class="social-access-list">
+      ${platforms
+        .map((p) => {
+          const note = notes[p.id] || {};
+          const state = accessState(p.connection);
+          const now = note.now || p.limitation || "Status unknown.";
+          const pending = note.pending || "";
+          return `<li class="social-access-item">
+            <div class="social-access-item-head">
+              <strong>${esc(p.label)}</strong>
+              <span class="social-access-state ${state.cls}">${esc(state.label)}</span>
+            </div>
+            <p class="social-access-now"><span>Now:</span> ${esc(now)}</p>
+            ${pending ? `<p class="social-access-pending"><span>Until authorized:</span> ${esc(pending)}</p>` : ""}
+          </li>`;
+        })
+        .join("")}
+    </ul>`;
   }
 
   function connectionBadge(connection) {
@@ -204,10 +280,17 @@ window.WSSocial = (function () {
 
     panel.innerHTML = `
       <p class="admin-note">
-        Compose once and post to every channel. <strong>Demo mode</strong> routes Facebook &amp; X through Knight Logics accounts until Whistle Stop connects their own.
-        <strong>Google Business Profile</strong> is queued for manual publish (API not wired yet). Run <code>run_bridge.ps1</code> on this PC for live posting.
+        Compose once for <strong>Facebook, X, Google Business Profile, and more</strong>. Pick platforms on the right; see <strong>Access &amp; limitations</strong> below for what works today vs what needs authorization.
+        Run <code>run_bridge.ps1</code> or <code>START-DEMO.ps1</code> on this PC for live posting.
       </p>
       <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking local bridge…</div>
+      <section class="social-access-notice" id="social-access-notice" aria-label="Platform access and limitations">
+        <header class="social-access-notice-head">
+          <strong>Access &amp; limitations</strong>
+          <span>What works now · what we need from each platform</span>
+        </header>
+        <div id="social-access-list">${renderAccessNoticeHtml([], config.accessNotes)}</div>
+      </section>
       <div class="admin-page-split admin-social-split">
         <div class="admin-editor-col">
           <div class="admin-card admin-social-compose-card">
@@ -218,19 +301,23 @@ window.WSSocial = (function () {
                 <textarea id="social-post-text" rows="6" placeholder="Tonight: live music on the patio from 6:30 PM…"></textarea>
               </div>
               <div class="social-compose-media admin-field">
-                <label>Photo (optional)</label>
-                <input type="file" id="social-post-media" accept="image/*" />
-                <p class="social-field-hint">GBP API does not support video; upload videos manually in Google Business Profile.</p>
+                <label>Photo attachment (optional)</label>
+                <input type="file" id="social-post-media" accept="image/jpeg,image/png,image/webp,image/gif" />
+                <p class="social-field-hint" id="social-media-hint">Attaches to Facebook &amp; X when selected. Also saved for Google Business Profile (1 still photo per update/event/offer). GIF = static on Google. No video via GBP API.</p>
+                <div class="social-media-thumb" id="social-media-thumb" hidden>
+                  <img id="social-media-thumb-img" alt="Attached photo preview" />
+                  <button type="button" class="btn btn-outline admin-btn-sm" id="social-media-clear">Remove photo</button>
+                </div>
               </div>
               <details class="social-compose-gbp admin-details social-gbp-details" id="social-gbp-options">
-                <summary><strong>Google Business Profile options</strong></summary>
+                <summary><strong>Google Business Profile options</strong> <span class="social-gbp-summary-hint">— same “post,” different type on Google</span></summary>
                 <div class="admin-form-grid cols-2" style="margin-top:0.75rem">
                   <div class="admin-field">
-                    <label>Post type</label>
+                    <label>Google post type</label>
                     <select id="social-gbp-topic">
-                      <option value="STANDARD">Update (standard)</option>
-                      <option value="EVENT">Event</option>
-                      <option value="OFFER">Offer</option>
+                      <option value="STANDARD">Update (news / announcement)</option>
+                      <option value="EVENT">Event (shows on Maps with date)</option>
+                      <option value="OFFER">Offer (promo / special)</option>
                     </select>
                   </div>
                   <div class="admin-field">
@@ -296,7 +383,11 @@ window.WSSocial = (function () {
     const historyEl = panel.querySelector("#social-history");
     const resultsEl = panel.querySelector("#social-post-results");
     const mediaInput = panel.querySelector("#social-post-media");
+    const mediaHint = panel.querySelector("#social-media-hint");
+    const mediaThumb = panel.querySelector("#social-media-thumb");
+    const mediaThumbImg = panel.querySelector("#social-media-thumb-img");
     const gbpNote = panel.querySelector("#social-gbp-limit-note");
+    const accessListEl = panel.querySelector("#social-access-list");
     const previewEl = panel.querySelector("#social-post-preview");
     const businessName = config.clientName || site?.business?.name || "Whistle Stop Grill & Bar";
 
@@ -332,7 +423,14 @@ window.WSSocial = (function () {
         .join("");
     }
 
+    function renderAccessNotice() {
+      if (accessListEl) {
+        accessListEl.innerHTML = renderAccessNoticeHtml(platforms, config.accessNotes);
+      }
+    }
+
     function renderPlatformGrid() {
+      renderAccessNotice();
       if (!platforms.length) {
         gridEl.innerHTML = `<p class="social-offline-msg">Bridge offline — start <code>run_bridge.ps1</code> to see live platform status. You can still compose; posts will be simulated locally.</p>`;
         return;
@@ -373,9 +471,13 @@ window.WSSocial = (function () {
       bridgeOnline = health.online;
       if (statusEl) {
         statusEl.className = `admin-social-bridge-status ${bridgeOnline ? "is-online" : "is-offline"}`;
-        statusEl.innerHTML = bridgeOnline
-          ? `<strong>Bridge online.</strong> Demo posts use Knight Logics accounts. GBP uses manual queue.`
-          : `<strong>Bridge offline.</strong> Run <code>E:\\KnightLogics-Growth-System\\Social\\WhistleStop\\run_bridge.ps1</code> on this computer for live posting. Offline mode will simulate results only.`;
+        if (bridgeOnline) {
+          statusEl.innerHTML = `<strong>Bridge online.</strong> Facebook &amp; X post live (demo accounts). GBP saves to manual queue until Google is connected.`;
+        } else if (health.blocked && health.reason === "mixed_content") {
+          statusEl.innerHTML = `<strong>Bridge blocked by browser.</strong> You opened admin on <em>HTTPS</em> (GitHub Pages). Browsers cannot reach the local bridge from HTTPS. Use <a href="${LOCAL_ADMIN_URL}" target="_blank" rel="noopener"><strong>${LOCAL_ADMIN_URL}</strong></a> — run <code>START-DEMO.ps1</code> from the flash drive first.`;
+        } else {
+          statusEl.innerHTML = `<strong>Bridge offline.</strong> Run <code>START-DEMO.ps1</code> or <code>WhistleStop\\run_bridge.ps1</code> from the Social folder on this PC. If the bridge is running, open admin at <a href="${LOCAL_ADMIN_URL}" target="_blank" rel="noopener">${LOCAL_ADMIN_URL}</a> (not GitHub Pages).`;
+        }
       }
 
       if (bridgeOnline) {
@@ -384,7 +486,7 @@ window.WSSocial = (function () {
           platforms = data.platforms || [];
           gbpLimits = data.gbpLimitations;
           if (gbpNote && gbpLimits) {
-            gbpNote.textContent = `GBP API limits: supports ${gbpLimits.apiSupported?.join(", ")}. Not supported: ${gbpLimits.notSupported?.join("; ")}. Rate limit: ${gbpLimits.rateLimit}.`;
+            gbpNote.textContent = `Until Google OAuth: queue only. After authorization: event/update/offer posts can include 1 still photo (JPG/PNG/WebP URL). GIFs won’t animate via API. Videos and multi-photo posts: use the Google Business Profile dashboard — not supported on local-post API.`;
           }
           renderPlatformGrid();
           const hist = await fetchBridgeHistory(config);
@@ -398,7 +500,14 @@ window.WSSocial = (function () {
           { id: "instagram", label: "Instagram", connection: "not_wired", limitation: "Meta API not wired" },
           { id: "x", label: "X (Twitter)", connection: "demo_ready", charLimit: 280 },
           { id: "linkedin", label: "LinkedIn", connection: "paused", charLimit: 3000 },
-          { id: "gbp", label: "Google Business Profile", connection: "manual_queue", gbp: true, charLimit: 1500 },
+          {
+            id: "gbp",
+            label: "Google Business Profile",
+            connection: "manual_queue",
+            gbp: true,
+            charLimit: 1500,
+            limitation: "Queued for Google — paste or auto-post when OAuth is connected.",
+          },
           { id: "tiktok", label: "TikTok", connection: "not_wired" },
           { id: "youtube", label: "YouTube Community", connection: "not_wired" },
           { id: "nextdoor", label: "Nextdoor", connection: "not_wired" },
@@ -408,19 +517,46 @@ window.WSSocial = (function () {
       }
     }
 
+    function setMediaPreview(url, fileName, fileType) {
+      mediaDataUrl = url || "";
+      if (mediaThumbImg) {
+        if (url) mediaThumbImg.src = url;
+        else mediaThumbImg.removeAttribute("src");
+      }
+      if (mediaThumb) mediaThumb.hidden = !url;
+      if (mediaHint) {
+        if (!url) {
+          mediaHint.textContent =
+            "Attaches to Facebook & X when selected. Also saved for Google Business Profile (1 still photo per update/event/offer). GIF = static on Google. No video via GBP API.";
+          mediaHint.classList.remove("is-warn");
+        } else if (fileType?.startsWith("video/")) {
+          mediaHint.textContent = "Videos cannot go to GBP via API. Facebook/X may still accept video when wired.";
+          mediaHint.classList.add("is-warn");
+        } else if (fileType === "image/gif") {
+          mediaHint.textContent = `${fileName || "GIF"} attached — animates on Facebook/X; Google gets a still image only.`;
+          mediaHint.classList.remove("is-warn");
+        } else {
+          mediaHint.textContent = `${fileName || "Photo"} attached — posts to Facebook/X; saved with GBP queue for Google.`;
+          mediaHint.classList.remove("is-warn");
+        }
+      }
+      updatePreview();
+    }
+
     mediaInput?.addEventListener("change", () => {
       const file = mediaInput.files?.[0];
       if (!file) {
-        mediaDataUrl = "";
-        updatePreview();
+        setMediaPreview("");
         return;
       }
       const reader = new FileReader();
-      reader.onload = () => {
-        mediaDataUrl = String(reader.result || "");
-        updatePreview();
-      };
+      reader.onload = () => setMediaPreview(String(reader.result || ""), file.name, file.type);
       reader.readAsDataURL(file);
+    });
+
+    panel.querySelector("#social-media-clear")?.addEventListener("click", () => {
+      if (mediaInput) mediaInput.value = "";
+      setMediaPreview("");
     });
 
     ["#social-gbp-topic", "#social-gbp-cta", "#social-gbp-cta-url"].forEach((sel) => {
@@ -511,10 +647,9 @@ window.WSSocial = (function () {
           <h4>Results</h4>
           <ul class="social-results-list">${results.map(resultRow).join("")}</ul>`;
         textEl.value = "";
-        mediaDataUrl = "";
         if (mediaInput) mediaInput.value = "";
+        setMediaPreview("");
         updateCharCount();
-        updatePreview();
       } catch (err) {
         const logHint = bridgeOnline
           ? `<p class="social-field-hint">Check bridge log: <code>E:\\KnightLogics-Growth-System\\Social\\WhistleStop\\logs\\bridge.log</code> or <a href="${esc(bridgeUrl(config))}/api/logs" target="_blank" rel="noopener">view live log</a></p>`

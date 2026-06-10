@@ -13,5 +13,39 @@
     "facebook": "https://www.facebook.com/Whistlestopgrillandbar915",
     "instagram": "https://www.instagram.com/whistlestop_grill/"
   },
-  "postHistory": []
+  "postHistory": [],
+  "accessNotes": {
+    "facebook": {
+      "now": "Posts through Knight Logics Facebook Page (demo on this PC).",
+      "pending": "Whistle Stop Page authorization — then posts go to facebook.com/Whistlestopgrillandbar915."
+    },
+    "x": {
+      "now": "Posts through @KnightLogics (demo on this PC).",
+      "pending": "Whistle Stop X account API keys — then posts go to their profile."
+    },
+    "instagram": {
+      "now": "Cannot post from here yet.",
+      "pending": "Meta Business verification + Instagram linked to Whistle Stop Facebook Page."
+    },
+    "gbp": {
+      "now": "Text + post type saved to a manual queue; you paste into Google Business Profile.",
+      "pending": "Google OAuth (business.manage) — then updates, events, and offers auto-publish with up to 1 still photo each. GIFs: only as a static image via API. Videos: not via API — upload in the Google dashboard."
+    },
+    "linkedin": {
+      "now": "Paused — not posting.",
+      "pending": "LinkedIn company page access for Whistle Stop."
+    },
+    "tiktok": {
+      "now": "Not connected.",
+      "pending": "TikTok Business API authorization."
+    },
+    "youtube": {
+      "now": "Not connected.",
+      "pending": "YouTube channel + Community tab API access."
+    },
+    "nextdoor": {
+      "now": "Not connected.",
+      "pending": "Nextdoor Business account link (no public API yet — may stay manual)."
+    }
+  }
 }

@@ -870,7 +870,7 @@ window.WSAdminGUI = (function () {
     }
 
     panel.innerHTML = `
-      <p class="admin-note"><strong>Recurring favorites</strong> on the events page — photo tiles for weekly/monthly happenings (cornhole, book club, etc.). <strong>Weekly &amp; monthly happenings</strong> on the homepage are edited under the <strong>Homepage</strong> tab. Click <em>Save changes</em> when done.</p>
+      <p class="admin-note"><strong>Featured promo cards</strong> on the events page — photo tiles for weekly/monthly happenings (cornhole, book club, etc.). This is not the public <strong>Events</strong> calendar (dates &amp; times) or <strong>Campaign Calendar</strong> (marketing plan). Homepage happenings are under <strong>Homepage</strong>. Click <em>Save changes</em> when done.</p>
       <p style="color:var(--text-muted);font-size:0.9rem;margin:0.75rem 0 1rem">${esc(PROMO_PLACEMENTS.events.hint)}</p>
       <div class="admin-page-split">
         <div class="admin-editor-col">

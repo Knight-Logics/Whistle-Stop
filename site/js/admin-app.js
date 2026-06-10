@@ -13,15 +13,56 @@
     socialManager: null,
   };
 
-  /* Staff-only tabs. Business, theme, links, settings hidden until role-based access. */
-  const TABS = [
-    { id: "events", label: "Events" },
-    { id: "menus", label: "Menus" },
-    { id: "promos", label: "Events Promos" },
-    { id: "homepage", label: "Homepage" },
-    { id: "social", label: "Social Media" },
-    { id: "heroes", label: "Hero Images" },
+  /* Operational tabs — unchanged behavior. Mock tabs are preview-only GUIs. */
+  const NAV_SECTIONS = [
+    {
+      title: "Website Manager",
+      tabs: [
+        { id: "events", label: "Events", hint: "Guest-facing dates & times" },
+        { id: "menus", label: "Menus", hint: "Food & drink menus" },
+        { id: "promos", label: "Events Promos", hint: "Photo cards on the site" },
+        { id: "homepage", label: "Homepage", hint: "Homepage content" },
+        { id: "heroes", label: "Hero Images", hint: "Top banner photos" },
+      ],
+    },
+    {
+      title: "Marketing Manager",
+      tabs: [
+        { id: "social", label: "Social Poster", hint: "Cross-post incl. GBP" },
+        { id: "gbp", label: "Google Business Profile", hint: "Event dates & queue", mock: true },
+        { id: "reviews-mgr", label: "Review Manager", hint: "Ratings & replies", mock: true },
+        {
+          id: "campaign-calendar",
+          label: "Campaign Calendar",
+          hint: "When to promote what (staff only)",
+          mock: true,
+        },
+        { id: "qr-codes", label: "QR Codes", hint: "Trackable print codes", mock: true },
+      ],
+    },
+    {
+      title: "Revenue Tools",
+      tabs: [
+        { id: "ordering-hub", label: "Ordering Hub", mock: true },
+        { id: "private-events", label: "Private Events", mock: true },
+      ],
+    },
+    {
+      title: "Reports",
+      tabs: [{ id: "reports", label: "Reports", hint: "Weekly snapshot · not full GA4", mock: true }],
+    },
+    {
+      title: "Coming soon",
+      tabs: [
+        { id: "integrations", label: "Integrations", mock: true },
+        { id: "vip-club", label: "VIP Club", mock: true },
+        { id: "86-board", label: "86 Board", mock: true },
+      ],
+    },
   ];
+
+  const TABS = NAV_SECTIONS.flatMap((s) => s.tabs);
+  const MOCK_TABS = new Set(TABS.filter((t) => t.mock).map((t) => t.id));
 
   function $(sel, root = document) {
     return root.querySelector(sel);
@@ -164,14 +205,24 @@
       </div>`;
 
     const nav = $("#admin-nav");
-    TABS.forEach((t) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = t.label;
-      btn.dataset.tab = t.id;
-      if (t.id === state.tab) btn.classList.add("is-active");
-      btn.addEventListener("click", () => switchTab(t.id));
-      nav.appendChild(btn);
+    NAV_SECTIONS.forEach((section) => {
+      const head = document.createElement("div");
+      head.className = "admin-nav-section-title";
+      head.textContent = section.title;
+      nav.appendChild(head);
+      section.tabs.forEach((t) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.dataset.tab = t.id;
+        if (t.mock) btn.dataset.mock = "1";
+        if (t.hint) btn.title = t.hint;
+        btn.innerHTML = t.hint
+          ? `<span class="admin-nav-label">${t.label}</span><span class="admin-nav-hint">${t.hint}</span>`
+          : `<span class="admin-nav-label">${t.label}</span>`;
+        if (t.id === state.tab) btn.classList.add("is-active");
+        btn.addEventListener("click", () => switchTab(t.id));
+        nav.appendChild(btn);
+      });
     });
 
     $("#admin-logout").addEventListener("click", () => {
@@ -205,11 +256,10 @@
   async function renderTab() {
     const tab = TABS.find((t) => t.id === state.tab);
     const main = $("#admin-main");
-    main.classList.toggle(
-      "admin-main--wide",
-      ["heroes", "events", "menus", "promos", "homepage", "social"].includes(state.tab)
-    );
+    const isMockTab = MOCK_TABS.has(state.tab);
     const isSocialTab = state.tab === "social";
+    const isWideTab = ["heroes", "events", "menus", "promos", "homepage", "social"].includes(state.tab) || isMockTab;
+    main.classList.toggle("admin-main--wide", isWideTab);
     main.innerHTML = `
       <div class="admin-topbar">
         <h2>${tab.label}</h2>
@@ -217,7 +267,9 @@
           ${
             isSocialTab
               ? `<span class="admin-social-top-hint">Posts publish via the local bridge — no save button needed.</span>`
-              : `<button type="button" class="btn btn-primary" id="admin-save-tab">Save changes</button>`
+              : isMockTab
+                ? `<span class="admin-social-top-hint">Preview module — not connected to live data yet.</span>`
+                : `<button type="button" class="btn btn-primary" id="admin-save-tab">Save changes</button>`
           }
         </div>
       </div>
@@ -248,6 +300,36 @@
         case "heroes":
           g.renderHeroes(panel, state.site, state.images);
           break;
+        case "gbp":
+          window.WSAdminMockups?.renderGbp(panel);
+          break;
+        case "reviews-mgr":
+          window.WSAdminMockups?.renderReviews(panel);
+          break;
+        case "campaign-calendar":
+          window.WSAdminMockups?.renderCampaignCalendar(panel);
+          break;
+        case "qr-codes":
+          window.WSAdminMockups?.renderQrCodes(panel);
+          break;
+        case "ordering-hub":
+          window.WSAdminMockups?.renderOrderingHub(panel);
+          break;
+        case "private-events":
+          window.WSAdminMockups?.renderPrivateEvents(panel);
+          break;
+        case "reports":
+          window.WSAdminMockups?.renderReports(panel);
+          break;
+        case "integrations":
+          window.WSAdminMockups?.renderIntegrations(panel);
+          break;
+        case "vip-club":
+          window.WSAdminMockups?.renderVipClub(panel);
+          break;
+        case "86-board":
+          window.WSAdminMockups?.render86Board(panel);
+          break;
         default:
           break;
       }
@@ -256,7 +338,7 @@
       console.error(err);
     }
 
-    if (!isSocialTab) {
+    if (!isSocialTab && !isMockTab) {
       wireUnsavedBanner(panel);
       $("#admin-save-tab")?.addEventListener("click", () => saveTab(state.tab));
     }
