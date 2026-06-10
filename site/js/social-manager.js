@@ -92,15 +92,37 @@ window.WSSocial = (function () {
   }
 
   async function postToBridge(config, payload) {
-    const res = await fetch(bridgeRoutes(config).post, {
+    const url = bridgeRoutes(config).post;
+    const body = JSON.stringify(payload);
+    const debug = {
+      url,
+      textLen: String(payload.text || "").length,
+      platforms: payload.platforms || [],
+      mediaChars: payload.mediaBase64 ? String(payload.mediaBase64).length : 0,
+      bodyBytes: body.length,
+      hasApiKey: Boolean(sanitizeBridgeApiKey(config?.bridgeApiKey)),
+    };
+    console.info("[WSSocial] posting", debug);
+
+    const res = await fetch(url, {
       method: "POST",
       headers: bridgeHeaders(config),
-      body: JSON.stringify(payload),
+      body,
     });
-    const data = await res.json();
-    if (!res.ok || data.ok === false) {
-      throw new Error(data.error || "Post failed");
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (parseErr) {
+      console.error("[WSSocial] non-JSON response", { status: res.status, url, parseErr });
+      throw new Error(`Bridge returned ${res.status} without JSON. Check URL: ${url}`);
     }
+
+    if (!res.ok || data.ok === false) {
+      console.error("[WSSocial] post failed", { status: res.status, debug, response: data });
+      const detail = data.debug ? ` (${JSON.stringify(data.debug)})` : "";
+      throw new Error((data.error || `Post failed (${res.status})`) + detail);
+    }
+    console.info("[WSSocial] post ok", { results: data.results });
     return data;
   }
 
