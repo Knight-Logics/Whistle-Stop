@@ -25,6 +25,35 @@ window.WSSocial = (function () {
     return (config?.bridgeUrl || DEFAULT_BRIDGE).replace(/\/$/, "");
   }
 
+  function isLocalBridge(base) {
+    return /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(base);
+  }
+
+  function bridgeRoutes(config) {
+    const base = bridgeUrl(config);
+    if (!isLocalBridge(base)) {
+      return {
+        health: `${base}/health`,
+        platforms: `${base}/platforms`,
+        post: `${base}/post`,
+        history: `${base}/history`,
+      };
+    }
+    return {
+      health: `${base}/health`,
+      platforms: `${base}/api/platforms`,
+      post: `${base}/api/post`,
+      history: `${base}/api/history`,
+    };
+  }
+
+  function bridgeHeaders(config, json = true) {
+    const headers = {};
+    if (json) headers["Content-Type"] = "application/json";
+    if (config?.bridgeApiKey) headers["X-WS-Social-Key"] = config.bridgeApiKey;
+    return headers;
+  }
+
   function isHttpsAdmin() {
     return window.location.protocol === "https:";
   }
@@ -32,11 +61,12 @@ window.WSSocial = (function () {
   const LOCAL_ADMIN_URL = "http://127.0.0.1:8080/admin.html";
 
   async function pingBridge(config) {
-    if (isHttpsAdmin()) {
+    const base = bridgeUrl(config);
+    if (isHttpsAdmin() && isLocalBridge(base)) {
       return { online: false, blocked: true, reason: "mixed_content" };
     }
     try {
-      const res = await fetch(`${bridgeUrl(config)}/health`, { cache: "no-store" });
+      const res = await fetch(bridgeRoutes(config).health, { cache: "no-store" });
       if (!res.ok) return { online: false };
       const data = await res.json();
       return { online: true, ...data };
@@ -46,15 +76,15 @@ window.WSSocial = (function () {
   }
 
   async function fetchPlatforms(config) {
-    const res = await fetch(`${bridgeUrl(config)}/api/platforms`, { cache: "no-store" });
+    const res = await fetch(bridgeRoutes(config).platforms, { cache: "no-store" });
     if (!res.ok) throw new Error("Could not load platforms from bridge");
     return res.json();
   }
 
   async function postToBridge(config, payload) {
-    const res = await fetch(`${bridgeUrl(config)}/api/post`, {
+    const res = await fetch(bridgeRoutes(config).post, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: bridgeHeaders(config),
       body: JSON.stringify(payload),
     });
     const data = await res.json();
@@ -66,7 +96,7 @@ window.WSSocial = (function () {
 
   async function fetchBridgeHistory(config) {
     try {
-      const res = await fetch(`${bridgeUrl(config)}/api/history`, { cache: "no-store" });
+      const res = await fetch(bridgeRoutes(config).history, { cache: "no-store" });
       if (!res.ok) return [];
       const data = await res.json();
       return data.history || [];
@@ -284,6 +314,22 @@ window.WSSocial = (function () {
         Run <code>run_bridge.ps1</code> or <code>START-DEMO.ps1</code> on this PC for live posting.
       </p>
       <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking local bridge…</div>
+      <details class="admin-details social-bridge-settings" id="social-bridge-settings">
+        <summary><strong>Posting connection</strong> <span class="social-gbp-summary-hint">— cloud (Vercel) or local bridge</span></summary>
+        <div class="admin-form-grid cols-2" style="margin-top:0.75rem">
+          <div class="admin-field admin-field--full">
+            <label>Bridge URL</label>
+            <input type="url" id="social-bridge-url" value="${esc(bridgeUrl(config))}" placeholder="https://knightlogics.com/api/whistle-stop-social" />
+            <p class="social-field-hint">GitHub Pages admin: use Vercel URL above. Local demo: <code>http://127.0.0.1:8787</code></p>
+          </div>
+          <div class="admin-field admin-field--full">
+            <label>API key (Vercel only)</label>
+            <input type="password" id="social-bridge-api-key" value="${esc(config.bridgeApiKey || "")}" placeholder="Matches WS_SOCIAL_API_KEY on Vercel" autocomplete="off" />
+            <p class="social-field-hint">Saved in this browser only — not published to GitHub. Required to post via cloud bridge.</p>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline admin-btn-sm" id="social-bridge-save">Save connection</button>
+      </details>
       <section class="social-access-notice" id="social-access-notice" aria-label="Platform access and limitations">
         <header class="social-access-notice-head">
           <strong>Access &amp; limitations</strong>
@@ -472,11 +518,21 @@ window.WSSocial = (function () {
       if (statusEl) {
         statusEl.className = `admin-social-bridge-status ${bridgeOnline ? "is-online" : "is-offline"}`;
         if (bridgeOnline) {
-          statusEl.innerHTML = `<strong>Bridge online.</strong> Facebook &amp; X post live (demo accounts). GBP saves to manual queue until Google is connected.`;
+          const isCloud = !isLocalBridge(bridgeUrl(config));
+          const keyNote =
+            isCloud && !config.bridgeApiKey
+              ? ` Set <code>bridgeApiKey</code> in Social settings (matches Vercel <code>WS_SOCIAL_API_KEY</code>) before posting.`
+              : "";
+          statusEl.innerHTML = isCloud
+            ? `<strong>Cloud bridge online.</strong> Facebook &amp; X via Graph/X API on Vercel (demo Knight Logics accounts).${keyNote}`
+            : `<strong>Local bridge online.</strong> Facebook &amp; X post live (demo accounts). GBP saves to manual queue until Google is connected.`;
         } else if (health.blocked && health.reason === "mixed_content") {
-          statusEl.innerHTML = `<strong>Bridge blocked by browser.</strong> You opened admin on <em>HTTPS</em> (GitHub Pages). Browsers cannot reach the local bridge from HTTPS. Use <a href="${LOCAL_ADMIN_URL}" target="_blank" rel="noopener"><strong>${LOCAL_ADMIN_URL}</strong></a> — run <code>START-DEMO.ps1</code> from the flash drive first.`;
+          statusEl.innerHTML = `<strong>Local bridge blocked on HTTPS.</strong> GitHub Pages admin should use the Vercel cloud bridge (<code>bridgeUrl</code> in social settings). For Playwright demo, use <a href="${LOCAL_ADMIN_URL}" target="_blank" rel="noopener">${LOCAL_ADMIN_URL}</a> with <code>START-DEMO.ps1</code>.`;
         } else {
-          statusEl.innerHTML = `<strong>Bridge offline.</strong> Run <code>START-DEMO.ps1</code> or <code>WhistleStop\\run_bridge.ps1</code> from the Social folder on this PC. If the bridge is running, open admin at <a href="${LOCAL_ADMIN_URL}" target="_blank" rel="noopener">${LOCAL_ADMIN_URL}</a> (not GitHub Pages).`;
+          const isCloud = !isLocalBridge(bridgeUrl(config));
+          statusEl.innerHTML = isCloud
+            ? `<strong>Cloud bridge offline.</strong> Deploy <code>/api/whistle-stop-social</code> on Vercel and set env vars (see MainSite <code>api/whistle-stop-social.env.example</code>).`
+            : `<strong>Bridge offline.</strong> Run <code>START-DEMO.ps1</code> or <code>WhistleStop\\run_bridge.ps1</code> on this PC, or switch <code>bridgeUrl</code> to the Vercel API.`;
         }
       }
 
@@ -659,6 +715,15 @@ window.WSSocial = (function () {
         btn.disabled = false;
         btn.textContent = "Post now";
       }
+    });
+
+    panel.querySelector("#social-bridge-save")?.addEventListener("click", () => {
+      const url = panel.querySelector("#social-bridge-url")?.value?.trim();
+      const key = panel.querySelector("#social-bridge-api-key")?.value?.trim() || "";
+      if (url) config.bridgeUrl = url;
+      config.bridgeApiKey = key;
+      if (window.WSConfig) WSConfig.save("socialManager", config);
+      refreshBridge();
     });
 
     refreshBridge();

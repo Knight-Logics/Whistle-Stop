@@ -1,6 +1,7 @@
 {
   "demoMode": true,
-  "bridgeUrl": "http://127.0.0.1:8787",
+  "bridgeUrl": "https://knightlogics.com/api/whistle-stop-social",
+  "bridgeApiKey": "",
   "clientName": "Whistle Stop Grill & Bar",
   "gbp": {
     "businessName": "Whistle Stop Grill & Bar",
@@ -16,11 +17,11 @@
   "postHistory": [],
   "accessNotes": {
     "facebook": {
-      "now": "Posts through Knight Logics Facebook Page (demo on this PC).",
+      "now": "Posts via Graph API (Knight Logics Page demo on Vercel/local bridge).",
       "pending": "Whistle Stop Page authorization — then posts go to facebook.com/Whistlestopgrillandbar915."
     },
     "x": {
-      "now": "Posts through @KnightLogics (demo on this PC).",
+      "now": "Posts via X API (@KnightLogics demo on Vercel/local bridge).",
       "pending": "Whistle Stop X account API keys — then posts go to their profile."
     },
     "instagram": {
