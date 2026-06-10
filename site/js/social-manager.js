@@ -392,7 +392,7 @@ window.WSSocial = (function () {
 
     panel.innerHTML = `
       <p class="admin-note">
-        Compose once for <strong>Facebook, X, Google Business Profile, and more</strong>. Pick platforms on the right; see <strong>Access &amp; limitations</strong> below for what works today vs what needs authorization.
+        Compose once for <strong>Facebook, X, Google Business Profile, and more</strong>. Pick platforms on the right; expand <strong>Access &amp; limitations</strong> if you need platform authorization details.
         On GitHub Pages / any device: posts go through the <strong>cloud bridge</strong> on knightlogics.com after you log in. Local bridge is only for demos on this PC.
       </p>
       <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking cloud bridge…</div>
@@ -412,13 +412,13 @@ window.WSSocial = (function () {
         </div>
         <button type="button" class="btn btn-outline admin-btn-sm" id="social-bridge-save">Save connection</button>
       </details>
-      <section class="social-access-notice" id="social-access-notice" aria-label="Platform access and limitations">
-        <header class="social-access-notice-head">
+      <details class="admin-details social-access-notice" id="social-access-notice" aria-label="Platform access and limitations">
+        <summary class="social-access-notice-head">
           <strong>Access &amp; limitations</strong>
           <span>What works now · what we need from each platform</span>
-        </header>
+        </summary>
         <div id="social-access-list">${renderAccessNoticeHtml([], config.accessNotes)}</div>
-      </section>
+      </details>
       <div class="admin-page-split admin-social-split">
         <div class="admin-editor-col">
           <div class="admin-card admin-social-compose-card">
@@ -465,18 +465,18 @@ window.WSSocial = (function () {
                   </div>
                 </div>
                 <p class="social-field-hint" id="social-gbp-limit-note"></p>
+                <aside class="social-compose-pages social-compose-pages--nested" aria-label="Your social pages">
+                  <h4 class="social-compose-pages-title">Your social pages</h4>
+                  <ul class="social-links-list social-links-list--inline">
+                    ${Object.entries(links)
+                      .map(
+                        ([k, url]) =>
+                          `<li><strong>${esc(k)}</strong> <a href="${esc(url)}" target="_blank" rel="noopener" title="${esc(url)}">${esc(url)}</a></li>`
+                      )
+                      .join("")}
+                  </ul>
+                </aside>
               </details>
-              <aside class="social-compose-pages" aria-label="Your social pages">
-                <h3 class="social-compose-pages-title">Your social pages</h3>
-                <ul class="social-links-list">
-                  ${Object.entries(links)
-                    .map(
-                      ([k, url]) =>
-                        `<li><strong>${esc(k)}</strong> <a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></li>`
-                    )
-                    .join("")}
-                </ul>
-              </aside>
               <div class="social-compose-actions admin-social-actions">
                 <button type="button" class="btn btn-primary" id="social-post-btn">Post now</button>
                 <span class="social-char-count" id="social-char-count">0 characters</span>
