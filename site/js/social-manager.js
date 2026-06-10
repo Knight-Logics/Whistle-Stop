@@ -1,6 +1,7 @@
 /* Whistle Stop — Social Media Manager (admin composer + bridge client) */
 window.WSSocial = (function () {
-  const DEFAULT_BRIDGE = "http://127.0.0.1:8787";
+  const LOCAL_BRIDGE = "http://127.0.0.1:8787";
+  const CLOUD_BRIDGE = "https://knightlogics.com/api/whistle-stop-social";
   const CLOUD_MEDIA_MAX_BYTES = 3.5 * 1024 * 1024;
   const LOCAL_MEDIA_MAX_BYTES = 12 * 1024 * 1024;
 
@@ -24,7 +25,24 @@ window.WSSocial = (function () {
   }
 
   function bridgeUrl(config) {
-    return (config?.bridgeUrl || DEFAULT_BRIDGE).replace(/\/$/, "");
+    const fromConfig = String(config?.bridgeUrl || "").trim().replace(/\/$/, "");
+    if (isHttpsAdmin()) {
+      if (fromConfig && !isLocalBridge(fromConfig)) return fromConfig;
+      return CLOUD_BRIDGE;
+    }
+    return fromConfig || LOCAL_BRIDGE;
+  }
+
+  function normalizeCloudBridgeConfig(config) {
+    if (!config || !isHttpsAdmin()) return config;
+    const resolved = bridgeUrl(config);
+    if (config.bridgeUrl !== resolved || isLocalBridge(config.bridgeUrl || "")) {
+      config.bridgeUrl = resolved;
+      if (window.WSConfig) {
+        WSConfig.save("socialManager", { bridgeUrl: resolved, bridgeApiKey: config.bridgeApiKey || "" });
+      }
+    }
+    return config;
   }
 
   function isLocalBridge(base) {
@@ -351,6 +369,7 @@ window.WSSocial = (function () {
   }
 
   function renderAdmin(panel, config, site) {
+    config = normalizeCloudBridgeConfig(config);
     const links = { ...(site?.social || {}), ...(config?.socialLinks || {}) };
     let platforms = [];
     let bridgeOnline = false;
@@ -361,9 +380,9 @@ window.WSSocial = (function () {
     panel.innerHTML = `
       <p class="admin-note">
         Compose once for <strong>Facebook, X, Google Business Profile, and more</strong>. Pick platforms on the right; see <strong>Access &amp; limitations</strong> below for what works today vs what needs authorization.
-        Run <code>run_bridge.ps1</code> or <code>START-DEMO.ps1</code> on this PC for live posting.
+        On GitHub Pages / any device: posts go through the <strong>cloud bridge</strong> on knightlogics.com after you log in. Local bridge is only for demos on this PC.
       </p>
-      <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking local bridge…</div>
+      <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking cloud bridge…</div>
       <details class="admin-details social-bridge-settings" id="social-bridge-settings">
         <summary><strong>Posting connection</strong> <span class="social-gbp-summary-hint">— optional; cloud works after admin login on any device</span></summary>
         <div class="admin-form-grid cols-2" style="margin-top:0.75rem">
@@ -813,7 +832,14 @@ window.WSSocial = (function () {
         const keyInput = panel.querySelector("#social-bridge-api-key");
         if (keyInput) keyInput.value = key;
       }
-      if (url) config.bridgeUrl = url;
+      if (url) {
+        if (isHttpsAdmin() && isLocalBridge(url)) {
+          alert("On GitHub Pages admin, use the cloud bridge URL (knightlogics.com). Local 127.0.0.1 only works on this PC over http://localhost.");
+          config.bridgeUrl = CLOUD_BRIDGE;
+        } else {
+          config.bridgeUrl = url;
+        }
+      }
       config.bridgeApiKey = key;
       if (window.WSConfig) WSConfig.save("socialManager", config);
       refreshBridge();
