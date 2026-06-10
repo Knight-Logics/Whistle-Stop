@@ -2,6 +2,8 @@
 window.WSSocial = (function () {
   const LOCAL_BRIDGE = "http://127.0.0.1:8787";
   const CLOUD_BRIDGE = "https://knightlogics.com/api/whistle-stop-social";
+  // Baked into GitHub Pages admin so every device works without per-browser API key setup.
+  const CLOUD_BRIDGE_API_KEY = "ws-whistlestop-9611b65b47f34c8a9d297daaa119620e";
   const CLOUD_MEDIA_MAX_BYTES = 3.5 * 1024 * 1024;
   const LOCAL_MEDIA_MAX_BYTES = 12 * 1024 * 1024;
 
@@ -74,8 +76,15 @@ window.WSSocial = (function () {
       .trim();
   }
 
+  function resolveBridgeApiKey(config) {
+    const saved = sanitizeBridgeApiKey(config?.bridgeApiKey);
+    if (saved) return saved;
+    if (isHttpsAdmin()) return CLOUD_BRIDGE_API_KEY;
+    return "";
+  }
+
   function bridgeAuthReady(config) {
-    if (sanitizeBridgeApiKey(config?.bridgeApiKey)) return true;
+    if (resolveBridgeApiKey(config)) return true;
     if (window.WSConfig?.getAdminAuthHash?.()) return true;
     return false;
   }
@@ -83,14 +92,14 @@ window.WSSocial = (function () {
   function bridgeHeaders(config, json = true) {
     const headers = {};
     if (json) headers["Content-Type"] = "application/json";
-    const apiKey = sanitizeBridgeApiKey(config?.bridgeApiKey);
+    const apiKey = resolveBridgeApiKey(config);
     if (apiKey) headers["X-WS-Social-Key"] = apiKey;
     return headers;
   }
 
   function withBridgeAuth(config, payload) {
     const out = { ...payload };
-    if (sanitizeBridgeApiKey(config?.bridgeApiKey)) return out;
+    if (resolveBridgeApiKey(config)) return out;
     const adminHash = window.WSConfig?.getAdminAuthHash?.();
     if (adminHash) out.adminPasswordHash = adminHash;
     return out;
@@ -133,7 +142,7 @@ window.WSSocial = (function () {
       platforms: payload.platforms || [],
       mediaChars: payload.mediaBase64 ? String(payload.mediaBase64).length : 0,
       bodyBytes: body.length,
-      auth: sanitizeBridgeApiKey(config?.bridgeApiKey) ? "api-key" : window.WSConfig?.getAdminAuthHash?.() ? "admin-login" : "none",
+      auth: resolveBridgeApiKey(config) ? "api-key" : window.WSConfig?.getAdminAuthHash?.() ? "admin-login" : "none",
     };
     console.info("[WSSocial] posting", debug);
 
@@ -398,7 +407,7 @@ window.WSSocial = (function () {
           <div class="admin-field admin-field--full">
             <label>API key (Vercel only)</label>
             <input type="password" id="social-bridge-api-key" value="${esc(sanitizeBridgeApiKey(config.bridgeApiKey || ""))}" placeholder="Paste ws-whistlestop-… key only" autocomplete="off" />
-            <p class="social-field-hint">Optional. If blank, posting uses your <strong>admin login</strong> on this device (works on laptop, tablet, etc. after you sign in).</p>
+            <p class="social-field-hint">Optional override. Cloud posting is automatic on GitHub Pages — leave blank on new devices.</p>
           </div>
         </div>
         <button type="button" class="btn btn-outline admin-btn-sm" id="social-bridge-save">Save connection</button>
