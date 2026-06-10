@@ -1,6 +1,8 @@
 /* Whistle Stop — Social Media Manager (admin composer + bridge client) */
 window.WSSocial = (function () {
   const DEFAULT_BRIDGE = "http://127.0.0.1:8787";
+  const CLOUD_MEDIA_MAX_BYTES = 3.5 * 1024 * 1024;
+  const LOCAL_MEDIA_MAX_BYTES = 12 * 1024 * 1024;
 
   const PLATFORM_ICONS = {
     facebook: "f",
@@ -203,13 +205,19 @@ window.WSSocial = (function () {
       </label>`;
   }
 
-  function previewPlatformBody(panel, platformId, text, mediaUrl, businessName) {
+  function previewMediaHtml(mediaUrl, mediaType) {
+    if (!mediaUrl) return "";
+    if (mediaType?.startsWith("video/")) {
+      return `<div class="social-preview-media"><video src="${mediaUrl}" controls muted playsinline></video></div>`;
+    }
+    return `<div class="social-preview-media"><img src="${mediaUrl}" alt="" /></div>`;
+  }
+
+  function previewPlatformBody(panel, platformId, text, mediaUrl, businessName, mediaType) {
     const body = text.trim()
       ? esc(text).replace(/\n/g, "<br>")
       : '<span class="social-preview-placeholder">Your message will appear here…</span>';
-    const img = mediaUrl
-      ? `<div class="social-preview-media"><img src="${mediaUrl}" alt="" /></div>`
-      : "";
+    const img = previewMediaHtml(mediaUrl, mediaType);
 
     if (platformId === "x") {
       return `
@@ -307,6 +315,7 @@ window.WSSocial = (function () {
     let bridgeOnline = false;
     let gbpLimits = null;
     let mediaDataUrl = "";
+    let mediaFileType = "";
 
     panel.innerHTML = `
       <p class="admin-note">
@@ -347,12 +356,13 @@ window.WSSocial = (function () {
                 <textarea id="social-post-text" rows="6" placeholder="Tonight: live music on the patio from 6:30 PM…"></textarea>
               </div>
               <div class="social-compose-media admin-field">
-                <label>Photo attachment (optional)</label>
-                <input type="file" id="social-post-media" accept="image/jpeg,image/png,image/webp,image/gif" />
-                <p class="social-field-hint" id="social-media-hint">Attaches to Facebook &amp; X when selected. Also saved for Google Business Profile (1 still photo per update/event/offer). GIF = static on Google. No video via GBP API.</p>
+                <label>Photo, GIF, or video (optional)</label>
+                <input type="file" id="social-post-media" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm,video/x-m4v" />
+                <p class="social-field-hint" id="social-media-hint">JPG, PNG, WebP, GIF, MP4, MOV, WebM. Cloud bridge: keep under ~3.5 MB. Facebook &amp; X accept all types; Google queue saves stills only (no video via API).</p>
                 <div class="social-media-thumb" id="social-media-thumb" hidden>
-                  <img id="social-media-thumb-img" alt="Attached photo preview" />
-                  <button type="button" class="btn btn-outline admin-btn-sm" id="social-media-clear">Remove photo</button>
+                  <img id="social-media-thumb-img" alt="Attached media preview" hidden />
+                  <video id="social-media-thumb-video" controls muted playsinline hidden></video>
+                  <button type="button" class="btn btn-outline admin-btn-sm" id="social-media-clear">Remove attachment</button>
                 </div>
               </div>
               <details class="social-compose-gbp admin-details social-gbp-details" id="social-gbp-options">
@@ -432,6 +442,7 @@ window.WSSocial = (function () {
     const mediaHint = panel.querySelector("#social-media-hint");
     const mediaThumb = panel.querySelector("#social-media-thumb");
     const mediaThumbImg = panel.querySelector("#social-media-thumb-img");
+    const mediaThumbVideo = panel.querySelector("#social-media-thumb-video");
     const gbpNote = panel.querySelector("#social-gbp-limit-note");
     const accessListEl = panel.querySelector("#social-access-list");
     const previewEl = panel.querySelector("#social-post-preview");
@@ -463,7 +474,7 @@ window.WSSocial = (function () {
                 <span aria-hidden="true">${icon}</span>
                 ${esc(label)}
               </header>
-              ${previewPlatformBody(panel, id, text, mediaDataUrl, businessName)}
+              ${previewPlatformBody(panel, id, text, mediaDataUrl, businessName, mediaFileType)}
             </article>`;
         })
         .join("");
@@ -573,20 +584,40 @@ window.WSSocial = (function () {
       }
     }
 
+    function mediaMaxBytes(config) {
+      return isLocalBridge(bridgeUrl(config)) ? LOCAL_MEDIA_MAX_BYTES : CLOUD_MEDIA_MAX_BYTES;
+    }
+
     function setMediaPreview(url, fileName, fileType) {
       mediaDataUrl = url || "";
+      mediaFileType = fileType || "";
+      const isVideo = fileType?.startsWith("video/");
       if (mediaThumbImg) {
-        if (url) mediaThumbImg.src = url;
-        else mediaThumbImg.removeAttribute("src");
+        if (url && !isVideo) {
+          mediaThumbImg.src = url;
+          mediaThumbImg.hidden = false;
+        } else {
+          mediaThumbImg.removeAttribute("src");
+          mediaThumbImg.hidden = true;
+        }
+      }
+      if (mediaThumbVideo) {
+        if (url && isVideo) {
+          mediaThumbVideo.src = url;
+          mediaThumbVideo.hidden = false;
+        } else {
+          mediaThumbVideo.removeAttribute("src");
+          mediaThumbVideo.hidden = true;
+        }
       }
       if (mediaThumb) mediaThumb.hidden = !url;
       if (mediaHint) {
         if (!url) {
           mediaHint.textContent =
-            "Attaches to Facebook & X when selected. Also saved for Google Business Profile (1 still photo per update/event/offer). GIF = static on Google. No video via GBP API.";
+            "JPG, PNG, WebP, GIF, MP4, MOV, WebM. Cloud bridge: keep under ~3.5 MB. Facebook & X accept all types; Google queue saves stills only (no video via API).";
           mediaHint.classList.remove("is-warn");
         } else if (fileType?.startsWith("video/")) {
-          mediaHint.textContent = "Videos cannot go to GBP via API. Facebook/X may still accept video when wired.";
+          mediaHint.textContent = `${fileName || "Video"} attached — posts to Facebook/X. GBP: upload video manually in Google (API cannot).`;
           mediaHint.classList.add("is-warn");
         } else if (fileType === "image/gif") {
           mediaHint.textContent = `${fileName || "GIF"} attached — animates on Facebook/X; Google gets a still image only.`;
@@ -602,6 +633,14 @@ window.WSSocial = (function () {
     mediaInput?.addEventListener("change", () => {
       const file = mediaInput.files?.[0];
       if (!file) {
+        setMediaPreview("");
+        return;
+      }
+      const maxBytes = mediaMaxBytes(config);
+      if (file.size > maxBytes) {
+        const maxMb = (maxBytes / (1024 * 1024)).toFixed(1);
+        alert(`File is too large for this bridge (${maxMb} MB max). Use a smaller clip or switch to the local bridge for bigger files.`);
+        mediaInput.value = "";
         setMediaPreview("");
         return;
       }
