@@ -84,13 +84,16 @@ window.WSSocial = (function () {
     const headers = {};
     if (json) headers["Content-Type"] = "application/json";
     const apiKey = sanitizeBridgeApiKey(config?.bridgeApiKey);
-    if (apiKey) {
-      headers["X-WS-Social-Key"] = apiKey;
-      return headers;
-    }
-    const adminHash = window.WSConfig?.getAdminAuthHash?.();
-    if (adminHash) headers["X-WS-Admin-Hash"] = adminHash;
+    if (apiKey) headers["X-WS-Social-Key"] = apiKey;
     return headers;
+  }
+
+  function withBridgeAuth(config, payload) {
+    const out = { ...payload };
+    if (sanitizeBridgeApiKey(config?.bridgeApiKey)) return out;
+    const adminHash = window.WSConfig?.getAdminAuthHash?.();
+    if (adminHash) out.adminPasswordHash = adminHash;
+    return out;
   }
 
   function isHttpsAdmin() {
@@ -122,7 +125,8 @@ window.WSSocial = (function () {
 
   async function postToBridge(config, payload) {
     const url = bridgeRoutes(config).post;
-    const body = JSON.stringify(payload);
+    const authPayload = withBridgeAuth(config, payload);
+    const body = JSON.stringify(authPayload);
     const debug = {
       url,
       textLen: String(payload.text || "").length,
@@ -811,8 +815,11 @@ window.WSSocial = (function () {
         setMediaPreview("");
         updateCharCount();
       } catch (err) {
+        const isCloud = bridgeOnline && !isLocalBridge(bridgeUrl(config));
         const logHint = bridgeOnline
-          ? `<p class="social-field-hint">Check bridge log: <code>E:\\KnightLogics-Growth-System\\Social\\WhistleStop\\logs\\bridge.log</code> or <a href="${esc(bridgeUrl(config))}/api/logs" target="_blank" rel="noopener">view live log</a></p>`
+          ? isCloud
+            ? `<p class="social-field-hint">Cloud bridge error — hard-refresh admin, confirm you are logged in, and try a smaller image if attached. Open browser DevTools (F12) → Console for <code>[WSSocial]</code> logs.</p>`
+            : `<p class="social-field-hint">Check bridge log: <code>E:\\KnightLogics-Growth-System\\Social\\WhistleStop\\logs\\bridge.log</code></p>`
           : "";
         resultsEl.innerHTML = `<p class="social-error">${esc(err.message)}</p>${logHint}`;
       } finally {
