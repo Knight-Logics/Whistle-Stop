@@ -49,10 +49,18 @@ window.WSSocial = (function () {
     };
   }
 
+  function sanitizeBridgeApiKey(value) {
+    return String(value ?? "")
+      .replace(/^\uFEFF/, "")
+      .replace(/[^\x20-\x7E]/g, "")
+      .trim();
+  }
+
   function bridgeHeaders(config, json = true) {
     const headers = {};
     if (json) headers["Content-Type"] = "application/json";
-    if (config?.bridgeApiKey) headers["X-WS-Social-Key"] = config.bridgeApiKey;
+    const apiKey = sanitizeBridgeApiKey(config?.bridgeApiKey);
+    if (apiKey) headers["X-WS-Social-Key"] = apiKey;
     return headers;
   }
 
@@ -333,7 +341,7 @@ window.WSSocial = (function () {
           </div>
           <div class="admin-field admin-field--full">
             <label>API key (Vercel only)</label>
-            <input type="password" id="social-bridge-api-key" value="${esc(config.bridgeApiKey || "")}" placeholder="Matches WS_SOCIAL_API_KEY on Vercel" autocomplete="off" />
+            <input type="password" id="social-bridge-api-key" value="${esc(sanitizeBridgeApiKey(config.bridgeApiKey || ""))}" placeholder="Paste ws-whistlestop-… key only" autocomplete="off" />
             <p class="social-field-hint">Saved in this browser only — not published to GitHub. Required to post via cloud bridge.</p>
           </div>
         </div>
@@ -531,7 +539,7 @@ window.WSSocial = (function () {
         if (bridgeOnline) {
           const isCloud = !isLocalBridge(bridgeUrl(config));
           const keyNote =
-            isCloud && !config.bridgeApiKey
+            isCloud && !sanitizeBridgeApiKey(config.bridgeApiKey)
               ? ` Set <code>bridgeApiKey</code> in Social settings (matches Vercel <code>WS_SOCIAL_API_KEY</code>) before posting.`
               : "";
           statusEl.innerHTML = isCloud
@@ -758,7 +766,15 @@ window.WSSocial = (function () {
 
     panel.querySelector("#social-bridge-save")?.addEventListener("click", () => {
       const url = panel.querySelector("#social-bridge-url")?.value?.trim();
-      const key = panel.querySelector("#social-bridge-api-key")?.value?.trim() || "";
+      const rawKey = panel.querySelector("#social-bridge-api-key")?.value || "";
+      const key = sanitizeBridgeApiKey(rawKey);
+      if (rawKey && key !== rawKey.trim()) {
+        alert(
+          "API key had invisible or special characters (often from copying the label line in the key file). Only the ws-whistlestop-… line was saved."
+        );
+        const keyInput = panel.querySelector("#social-bridge-api-key");
+        if (keyInput) keyInput.value = key;
+      }
       if (url) config.bridgeUrl = url;
       config.bridgeApiKey = key;
       if (window.WSConfig) WSConfig.save("socialManager", config);
