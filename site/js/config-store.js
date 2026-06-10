@@ -481,9 +481,21 @@
     if (hash !== stored) return false;
     sessionStorage.setItem(
       SESSION_KEY,
-      JSON.stringify({ at: Date.now(), token: hash.slice(0, 16) })
+      JSON.stringify({ at: Date.now(), token: hash.slice(0, 16), adminHash: hash })
     );
     return true;
+  }
+
+  function getAdminAuthHash() {
+    try {
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      if (!raw) return null;
+      const { at, adminHash } = JSON.parse(raw);
+      if (!adminHash || Date.now() - at >= SESSION_HOURS * 60 * 60 * 1000) return null;
+      return adminHash;
+    } catch {
+      return null;
+    }
   }
 
   function logout() {
@@ -552,6 +564,7 @@
     login,
     logout,
     isAuthed,
+    getAdminAuthHash,
     changePassword,
     sha256,
     getPath,

@@ -56,11 +56,22 @@ window.WSSocial = (function () {
       .trim();
   }
 
+  function bridgeAuthReady(config) {
+    if (sanitizeBridgeApiKey(config?.bridgeApiKey)) return true;
+    if (window.WSConfig?.getAdminAuthHash?.()) return true;
+    return false;
+  }
+
   function bridgeHeaders(config, json = true) {
     const headers = {};
     if (json) headers["Content-Type"] = "application/json";
     const apiKey = sanitizeBridgeApiKey(config?.bridgeApiKey);
-    if (apiKey) headers["X-WS-Social-Key"] = apiKey;
+    if (apiKey) {
+      headers["X-WS-Social-Key"] = apiKey;
+      return headers;
+    }
+    const adminHash = window.WSConfig?.getAdminAuthHash?.();
+    if (adminHash) headers["X-WS-Admin-Hash"] = adminHash;
     return headers;
   }
 
@@ -100,7 +111,7 @@ window.WSSocial = (function () {
       platforms: payload.platforms || [],
       mediaChars: payload.mediaBase64 ? String(payload.mediaBase64).length : 0,
       bodyBytes: body.length,
-      hasApiKey: Boolean(sanitizeBridgeApiKey(config?.bridgeApiKey)),
+      auth: sanitizeBridgeApiKey(config?.bridgeApiKey) ? "api-key" : window.WSConfig?.getAdminAuthHash?.() ? "admin-login" : "none",
     };
     console.info("[WSSocial] posting", debug);
 
@@ -354,7 +365,7 @@ window.WSSocial = (function () {
       </p>
       <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking local bridge…</div>
       <details class="admin-details social-bridge-settings" id="social-bridge-settings">
-        <summary><strong>Posting connection</strong> <span class="social-gbp-summary-hint">— cloud (Vercel) or local bridge</span></summary>
+        <summary><strong>Posting connection</strong> <span class="social-gbp-summary-hint">— optional; cloud works after admin login on any device</span></summary>
         <div class="admin-form-grid cols-2" style="margin-top:0.75rem">
           <div class="admin-field admin-field--full">
             <label>Bridge URL</label>
@@ -364,7 +375,7 @@ window.WSSocial = (function () {
           <div class="admin-field admin-field--full">
             <label>API key (Vercel only)</label>
             <input type="password" id="social-bridge-api-key" value="${esc(sanitizeBridgeApiKey(config.bridgeApiKey || ""))}" placeholder="Paste ws-whistlestop-… key only" autocomplete="off" />
-            <p class="social-field-hint">Saved in this browser only — not published to GitHub. Required to post via cloud bridge.</p>
+            <p class="social-field-hint">Optional. If blank, posting uses your <strong>admin login</strong> on this device (works on laptop, tablet, etc. after you sign in).</p>
           </div>
         </div>
         <button type="button" class="btn btn-outline admin-btn-sm" id="social-bridge-save">Save connection</button>
@@ -560,9 +571,10 @@ window.WSSocial = (function () {
         statusEl.className = `admin-social-bridge-status ${bridgeOnline ? "is-online" : "is-offline"}`;
         if (bridgeOnline) {
           const isCloud = !isLocalBridge(bridgeUrl(config));
+          const canPost = bridgeAuthReady(config);
           const keyNote =
-            isCloud && !sanitizeBridgeApiKey(config.bridgeApiKey)
-              ? ` Set <code>bridgeApiKey</code> in Social settings (matches Vercel <code>WS_SOCIAL_API_KEY</code>) before posting.`
+            isCloud && !canPost
+              ? ` Log into admin to post from this device (or save an optional API key under Posting connection).`
               : "";
           statusEl.innerHTML = isCloud
             ? `<strong>Cloud bridge online.</strong> Facebook &amp; X via Graph/X API on Vercel (demo Knight Logics accounts).${keyNote}`
@@ -707,6 +719,10 @@ window.WSSocial = (function () {
       }
       if (!selected.length) {
         alert("Select at least one platform.");
+        return;
+      }
+      if (bridgeOnline && !isLocalBridge(bridgeUrl(config)) && !bridgeAuthReady(config)) {
+        alert("Log into Whistle Stop admin to post from this device (cloud bridge uses your admin login).");
         return;
       }
 
