@@ -1,7 +1,13 @@
 {
-  "versionId": "ws-bootstrap",
-  "publishedAt": "2026-01-01T00:00:00.000Z",
-  "sections": ["site", "events", "menus", "reviews", "promos"],
+  "versionId": "ws-1781756354329-33c98c31",
+  "publishedAt": "2026-06-18T04:19:14.329Z",
+  "sections": [
+    "site",
+    "events",
+    "menus",
+    "reviews",
+    "promos"
+  ],
   "uploadCount": 0,
-  "source": "bootstrap"
+  "source": "knightlogics-content-bridge"
 }

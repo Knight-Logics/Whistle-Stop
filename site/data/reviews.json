@@ -5,10 +5,30 @@
     "label": "Google"
   },
   "platforms": [
-    { "name": "Facebook", "rating": 4.6, "count": 541, "url": "https://www.facebook.com/Whistlestopgrillandbar915" },
-    { "name": "Grubhub", "rating": 4.4, "count": 16, "url": "https://www.grubhub.com/" },
-    { "name": "Uber Eats", "rating": 4.6, "count": 26, "url": "https://www.ubereats.com/" },
-    { "name": "TripAdvisor", "rating": 4.0, "count": 416, "url": "https://www.tripadvisor.com/" }
+    {
+      "name": "Facebook",
+      "rating": 4.6,
+      "count": 541,
+      "url": "https://www.facebook.com/Whistlestopgrillandbar915"
+    },
+    {
+      "name": "Grubhub",
+      "rating": 4.4,
+      "count": 16,
+      "url": "https://www.grubhub.com/"
+    },
+    {
+      "name": "Uber Eats",
+      "rating": 4.6,
+      "count": 26,
+      "url": "https://www.ubereats.com/"
+    },
+    {
+      "name": "TripAdvisor",
+      "rating": 4,
+      "count": 416,
+      "url": "https://www.tripadvisor.com/"
+    }
   ],
   "featured": [
     {

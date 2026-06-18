@@ -9,19 +9,71 @@
           "id": "small-plates",
           "name": "Small Plates",
           "items": [
-            { "name": "Southern Sampler", "desc": "Green tomatoes, fries, dill pickles, corn fritters, chicken tenders.", "price": "$10.90" },
-            { "name": "Fancy Fried Green Tomatoes", "desc": "Goat cheese, chopped red tomatoes, cilantro.", "price": "$6.90" },
-            { "name": "Fried Green Tomatoes", "desc": "Simple, real, good — the Safety Harbor classic.", "price": "$5.90" },
-            { "name": "Ahi Tuna", "desc": "Sesame encrusted, seared, wasabi drizzle.", "price": "$15.90" },
-            { "name": "Blue Crab Cakes", "desc": "Key lime aioli.", "price": "$11.90" },
-            { "name": "Hummus, Fresh Fruit & Veggie Plate", "desc": "Pita, flatbread crackers, cut veggies.", "price": "$9.90" },
-            { "name": "Whistle Stop Wings", "desc": "Your choice of heat — celery & blue cheese.", "price": "$9.90" },
-            { "name": "Buffalo Style Shrimp", "desc": "Blue cheese & celery.", "price": "$8.90" },
-            { "name": "Smoked Fish Spread", "desc": "Made local — tastes like Key West.", "price": "$7.90" },
-            { "name": "Corn Fritters", "desc": "Southwest sauce — plenty to share.", "price": "$4.90" },
-            { "name": "Fried Dill Pickles", "desc": "Crispy & tangy.", "price": "$4.90" },
-            { "name": "WSG&B Potato Chips", "desc": "Fried to order — feta, tomato, tzatziki, balsamic.", "price": "$12" },
-            { "name": "Potato Skins", "desc": "Melted cheese, bacon, scallions, sour cream.", "price": "$10" }
+            {
+              "name": "Southern Sampler",
+              "desc": "Green tomatoes, fries, dill pickles, corn fritters, chicken tenders.",
+              "price": "$10.90"
+            },
+            {
+              "name": "Fancy Fried Green Tomatoes",
+              "desc": "Goat cheese, chopped red tomatoes, cilantro.",
+              "price": "$6.90"
+            },
+            {
+              "name": "Fried Green Tomatoes",
+              "desc": "Simple, real, good — the Safety Harbor classic.",
+              "price": "$5.90"
+            },
+            {
+              "name": "Ahi Tuna",
+              "desc": "Sesame encrusted, seared, wasabi drizzle.",
+              "price": "$15.90"
+            },
+            {
+              "name": "Blue Crab Cakes",
+              "desc": "Key lime aioli.",
+              "price": "$11.90"
+            },
+            {
+              "name": "Hummus, Fresh Fruit & Veggie Plate",
+              "desc": "Pita, flatbread crackers, cut veggies.",
+              "price": "$9.90"
+            },
+            {
+              "name": "Whistle Stop Wings",
+              "desc": "Your choice of heat — celery & blue cheese.",
+              "price": "$9.90"
+            },
+            {
+              "name": "Buffalo Style Shrimp",
+              "desc": "Blue cheese & celery.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Smoked Fish Spread",
+              "desc": "Made local — tastes like Key West.",
+              "price": "$7.90"
+            },
+            {
+              "name": "Corn Fritters",
+              "desc": "Southwest sauce — plenty to share.",
+              "price": "$4.90"
+            },
+            {
+              "name": "Fried Dill Pickles",
+              "desc": "Crispy & tangy.",
+              "price": "$4.90"
+            },
+            {
+              "name": "WSG&B Potato Chips",
+              "desc": "Fried to order — feta, tomato, tzatziki, balsamic.",
+              "price": "$12"
+            },
+            {
+              "name": "Potato Skins",
+              "desc": "Melted cheese, bacon, scallions, sour cream.",
+              "price": "$10"
+            }
           ]
         },
         {
@@ -29,12 +81,36 @@
           "name": "Salads",
           "note": "Add grilled salmon $4 · grilled chicken or shrimp $3.50",
           "items": [
-            { "name": "Four Seasons Salad", "desc": "Artisan greens, goat cheese, seasonal fruit, nuts, red wine vinaigrette.", "price": "$7.90" },
-            { "name": "Ahi Tuna Salad", "desc": "Sesame seared ahi, cucumber, avocado, wasabi dressing.", "price": "$10.90" },
-            { "name": "Caesar Salad", "desc": "Romaine, parmesan, croutons, creamy Caesar.", "price": "$7.90" },
-            { "name": "Black Beans & Greens Salad", "desc": "Avocado, tomato, cilantro lime vinaigrette.", "price": "$8.90" },
-            { "name": "Cobb Salad", "desc": "Avocado, egg, bacon, blue cheese — your choice of dressing.", "price": "$11.90" },
-            { "name": "Main Street Cobb", "desc": "Guest favorite — hearty & shareable.", "price": "MP" }
+            {
+              "name": "Four Seasons Salad",
+              "desc": "Artisan greens, goat cheese, seasonal fruit, nuts, red wine vinaigrette.",
+              "price": "$7.90"
+            },
+            {
+              "name": "Ahi Tuna Salad",
+              "desc": "Sesame seared ahi, cucumber, avocado, wasabi dressing.",
+              "price": "$10.90"
+            },
+            {
+              "name": "Caesar Salad",
+              "desc": "Romaine, parmesan, croutons, creamy Caesar.",
+              "price": "$7.90"
+            },
+            {
+              "name": "Black Beans & Greens Salad",
+              "desc": "Avocado, tomato, cilantro lime vinaigrette.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Cobb Salad",
+              "desc": "Avocado, egg, bacon, blue cheese — your choice of dressing.",
+              "price": "$11.90"
+            },
+            {
+              "name": "Main Street Cobb",
+              "desc": "Guest favorite — hearty & shareable.",
+              "price": "MP"
+            }
           ]
         },
         {
@@ -42,47 +118,163 @@
           "name": "Burgers",
           "note": "Grass-fed beef add $2 · Angus steak burger add $1",
           "items": [
-            { "name": "Original Whistle Stop Burger", "desc": "Fried green tomato, provolone, onion, aioli.", "price": "$8.90" },
-            { "name": "Bacon Cheeseburger", "desc": "Lettuce, tomato, onion, mayo.", "price": "$8.90" },
-            { "name": "Black & Blue Burger", "desc": "Blackened, red onion, tomato, blue cheese.", "price": "$8.90" },
-            { "name": "Santa Fe Burger", "desc": "Jalapeños, provolone, onion ring, avocado, southwest sauce.", "price": "$9.90" },
-            { "name": "Angus Steak Burger", "desc": "Grilled onions & mushrooms.", "price": "$8.90" },
-            { "name": "Whistle Stop Grass Fed Beef Burger", "desc": "De Leon Springs cheddar, tomato, onion.", "price": "$10.90" },
-            { "name": "Crab & Shrimp Burger", "desc": "Mango salsa, key lime aioli.", "price": "$11.90" },
-            { "name": "Veggie Burger", "desc": "Organic quinoa oats, provolone, artisan greens, aioli.", "price": "$8.90" },
-            { "name": "Smash Burger Sliders", "desc": "Two sliders, grilled onions, house smash sauce.", "price": "$10" }
+            {
+              "name": "Original Whistle Stop Burger",
+              "desc": "Fried green tomato, provolone, onion, aioli.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Bacon Cheeseburger",
+              "desc": "Lettuce, tomato, onion, mayo.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Black & Blue Burger",
+              "desc": "Blackened, red onion, tomato, blue cheese.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Santa Fe Burger",
+              "desc": "Jalapeños, provolone, onion ring, avocado, southwest sauce.",
+              "price": "$9.90"
+            },
+            {
+              "name": "Angus Steak Burger",
+              "desc": "Grilled onions & mushrooms.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Whistle Stop Grass Fed Beef Burger",
+              "desc": "De Leon Springs cheddar, tomato, onion.",
+              "price": "$10.90"
+            },
+            {
+              "name": "Crab & Shrimp Burger",
+              "desc": "Mango salsa, key lime aioli.",
+              "price": "$11.90"
+            },
+            {
+              "name": "Veggie Burger",
+              "desc": "Organic quinoa oats, provolone, artisan greens, aioli.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Smash Burger Sliders",
+              "desc": "Two sliders, grilled onions, house smash sauce.",
+              "price": "$10"
+            }
           ]
         },
         {
           "id": "sandwiches",
           "name": "Sandwiches & Wraps",
           "items": [
-            { "name": "BLFGT — The Ultimate BLT", "desc": "Fried green tomatoes, bacon, artisan lettuce, aioli, fresh baked roll.", "price": "$8.90" },
-            { "name": "Fresh Grouper Sandwich", "desc": "Blackened or grilled — market price.", "price": "MP" },
-            { "name": "Kicked Up Grilled Cheese", "desc": "Provolone, goat cheese, grilled green tomatoes, bacon, ciabatta.", "price": "$8.90" },
-            { "name": "Fresh Rib-Eye Steak Sandwich", "desc": "Sautéed onions, mushrooms — black & blue add $1.50.", "price": "$9.90" },
-            { "name": "Portabella & Roasted Red Pepper", "desc": "Balsamic mushrooms, goat cheese, ciabatta.", "price": "$8.90" },
-            { "name": "BBQ Pork Sandwich", "desc": "Slow roasted in-house BBQ, pickles, fresh baked roll.", "price": "$8.90" },
-            { "name": "Tilapia Sandwich", "desc": "Grilled, blackened, or fried — lettuce, tomato, onion.", "price": "$8.90" },
-            { "name": "Florida Club Wrap", "desc": "Avocado, bacon, lettuce, tomato, blue cheese, whole wheat.", "price": "$10.90" },
-            { "name": "Spicy Buffalo Chicken Wrap", "desc": "Tenders, buffalo sauce, blue cheese, lettuce, tomato.", "price": "$7.90" },
-            { "name": "Chicken Caesar Wrap", "desc": "Served with fries.", "price": "$16" }
+            {
+              "name": "BLFGT — The Ultimate BLT",
+              "desc": "Fried green tomatoes, bacon, artisan lettuce, aioli, fresh baked roll.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Fresh Grouper Sandwich",
+              "desc": "Blackened or grilled — market price.",
+              "price": "MP"
+            },
+            {
+              "name": "Kicked Up Grilled Cheese",
+              "desc": "Provolone, goat cheese, grilled green tomatoes, bacon, ciabatta.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Fresh Rib-Eye Steak Sandwich",
+              "desc": "Sautéed onions, mushrooms — black & blue add $1.50.",
+              "price": "$9.90"
+            },
+            {
+              "name": "Portabella & Roasted Red Pepper",
+              "desc": "Balsamic mushrooms, goat cheese, ciabatta.",
+              "price": "$8.90"
+            },
+            {
+              "name": "BBQ Pork Sandwich",
+              "desc": "Slow roasted in-house BBQ, pickles, fresh baked roll.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Tilapia Sandwich",
+              "desc": "Grilled, blackened, or fried — lettuce, tomato, onion.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Florida Club Wrap",
+              "desc": "Avocado, bacon, lettuce, tomato, blue cheese, whole wheat.",
+              "price": "$10.90"
+            },
+            {
+              "name": "Spicy Buffalo Chicken Wrap",
+              "desc": "Tenders, buffalo sauce, blue cheese, lettuce, tomato.",
+              "price": "$7.90"
+            },
+            {
+              "name": "Chicken Caesar Wrap",
+              "desc": "Served with fries.",
+              "price": "$16"
+            }
           ]
         },
         {
           "id": "large-plates",
           "name": "Large Plates",
           "items": [
-            { "name": "Fresh Grouper Dinner", "desc": "8 oz Gulf fillet — blackened or grilled, black beans & rice.", "price": "MP" },
-            { "name": "Balsamic Glazed Salmon", "desc": "Grilled fillet, black beans & rice.", "price": "$14.90" },
-            { "name": "12 oz Rib Eye Steak", "desc": "USDA choice hand-cut, Yukon wedges, grilled vegetables.", "price": "$17.90" },
-            { "name": "Baja Fish or Shrimp Tacos", "desc": "Cabbage, cheddar, baja sauce — grouper add $2.50.", "price": "$11.90" },
-            { "name": "Pork Tacos", "desc": "Shredded roast pork, avocado, cilantro lime vinaigrette.", "price": "$10.90" },
-            { "name": "Veggies, Beans & Rice Bowl", "desc": "Add salmon, shrimp, or chicken $3.50.", "price": "$8.90" },
-            { "name": "Tilapia Dinner", "desc": "Blackened, fried, or grilled — lemon butter, side salad.", "price": "$10.90" },
-            { "name": "Chicken Scaloppine & Arugula", "desc": "Seared breast, shaved parmesan, grilled vegetables.", "price": "$12.90" },
-            { "name": "Uptown Chicken Flatbread", "desc": "Roasted red pepper, caramelized onion, blue cheese.", "price": "$9.90" },
-            { "name": "Steak & Spinach Flatbread", "desc": "Sirloin, mushrooms, spinach, blue cheese crumble.", "price": "$9.90" }
+            {
+              "name": "Fresh Grouper Dinner",
+              "desc": "8 oz Gulf fillet — blackened or grilled, black beans & rice.",
+              "price": "MP"
+            },
+            {
+              "name": "Balsamic Glazed Salmon",
+              "desc": "Grilled fillet, black beans & rice.",
+              "price": "$14.90"
+            },
+            {
+              "name": "12 oz Rib Eye Steak",
+              "desc": "USDA choice hand-cut, Yukon wedges, grilled vegetables.",
+              "price": "$17.90"
+            },
+            {
+              "name": "Baja Fish or Shrimp Tacos",
+              "desc": "Cabbage, cheddar, baja sauce — grouper add $2.50.",
+              "price": "$11.90"
+            },
+            {
+              "name": "Pork Tacos",
+              "desc": "Shredded roast pork, avocado, cilantro lime vinaigrette.",
+              "price": "$10.90"
+            },
+            {
+              "name": "Veggies, Beans & Rice Bowl",
+              "desc": "Add salmon, shrimp, or chicken $3.50.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Tilapia Dinner",
+              "desc": "Blackened, fried, or grilled — lemon butter, side salad.",
+              "price": "$10.90"
+            },
+            {
+              "name": "Chicken Scaloppine & Arugula",
+              "desc": "Seared breast, shaved parmesan, grilled vegetables.",
+              "price": "$12.90"
+            },
+            {
+              "name": "Uptown Chicken Flatbread",
+              "desc": "Roasted red pepper, caramelized onion, blue cheese.",
+              "price": "$9.90"
+            },
+            {
+              "name": "Steak & Spinach Flatbread",
+              "desc": "Sirloin, mushrooms, spinach, blue cheese crumble.",
+              "price": "$9.90"
+            }
           ]
         },
         {
@@ -90,23 +282,67 @@
           "name": "Kids Menu",
           "note": "Under 10",
           "items": [
-            { "name": "Big Kid", "desc": "Chicken tenders, fruit or wedges.", "price": "$7.90" },
-            { "name": "The Best Hot Dog", "desc": "Vienna all beef.", "price": "$5.90" },
-            { "name": "Grilled Cheese", "desc": "Wheat bread — bacon add $1.50.", "price": "$5.90" },
-            { "name": "Black Beans, Rice & Chicken", "desc": "", "price": "$7.90" },
-            { "name": "Whistle Stop Mac & Cheese", "desc": "Add chicken tenders $3.50 — includes drink & wedges or fruit.", "price": "$5.90" }
+            {
+              "name": "Big Kid",
+              "desc": "Chicken tenders, fruit or wedges.",
+              "price": "$7.90"
+            },
+            {
+              "name": "The Best Hot Dog",
+              "desc": "Vienna all beef.",
+              "price": "$5.90"
+            },
+            {
+              "name": "Grilled Cheese",
+              "desc": "Wheat bread — bacon add $1.50.",
+              "price": "$5.90"
+            },
+            {
+              "name": "Black Beans, Rice & Chicken",
+              "desc": "",
+              "price": "$7.90"
+            },
+            {
+              "name": "Whistle Stop Mac & Cheese",
+              "desc": "Add chicken tenders $3.50 — includes drink & wedges or fruit.",
+              "price": "$5.90"
+            }
           ]
         },
         {
           "id": "desserts",
           "name": "Ice Cream & Desserts",
           "items": [
-            { "name": "Soft Serve Cone or Cup", "desc": "Vanilla — reg / large.", "price": "$2.70 / $3.50" },
-            { "name": "Milkshakes & Malts", "desc": "Vanilla, chocolate, strawberry, coffee, oreo & more.", "price": "$4.20" },
-            { "name": "Bee Charmer Sundae", "desc": "Peaches, honey, cinnamon sugar, whip cream.", "price": "$5.90" },
-            { "name": "Caitlin's Cake Sundae", "desc": "Brownie, hot fudge, caramel, nuts.", "price": "$5.90" },
-            { "name": "Pecan Pie", "desc": "Made local, chocolate drizzle, vanilla ice cream.", "price": "$5.90" },
-            { "name": "Key Lime Pie", "desc": "Sweet & tart — Key West style.", "price": "$4.90" }
+            {
+              "name": "Soft Serve Cone or Cup",
+              "desc": "Vanilla — reg / large.",
+              "price": "$2.70 / $3.50"
+            },
+            {
+              "name": "Milkshakes & Malts",
+              "desc": "Vanilla, chocolate, strawberry, coffee, oreo & more.",
+              "price": "$4.20"
+            },
+            {
+              "name": "Bee Charmer Sundae",
+              "desc": "Peaches, honey, cinnamon sugar, whip cream.",
+              "price": "$5.90"
+            },
+            {
+              "name": "Caitlin's Cake Sundae",
+              "desc": "Brownie, hot fudge, caramel, nuts.",
+              "price": "$5.90"
+            },
+            {
+              "name": "Pecan Pie",
+              "desc": "Made local, chocolate drizzle, vanilla ice cream.",
+              "price": "$5.90"
+            },
+            {
+              "name": "Key Lime Pie",
+              "desc": "Sweet & tart — Key West style.",
+              "price": "$4.90"
+            }
           ]
         }
       ]
@@ -120,19 +356,47 @@
           "id": "seasonal-starters",
           "name": "Seasonal Starters",
           "items": [
-            { "name": "Watermelon & Feta Salad", "desc": "Mint, balsamic glaze, red onion.", "price": "$8.90" },
-            { "name": "Gulf Shrimp Ceviche", "desc": "Citrus, avocado, tortilla chips.", "price": "$12.90" },
-            { "name": "Summer Corn Chowder", "desc": "Cup or bowl.", "price": "$5.90 / $7.90" }
+            {
+              "name": "Watermelon & Feta Salad",
+              "desc": "Mint, balsamic glaze, red onion.",
+              "price": "$8.90"
+            },
+            {
+              "name": "Gulf Shrimp Ceviche",
+              "desc": "Citrus, avocado, tortilla chips.",
+              "price": "$12.90"
+            },
+            {
+              "name": "Summer Corn Chowder",
+              "desc": "Cup or bowl.",
+              "price": "$5.90 / $7.90"
+            }
           ]
         },
         {
           "id": "seasonal-mains",
           "name": "Seasonal Plates",
           "items": [
-            { "name": "Blackened Scallops", "desc": "Cilantro rice, grilled asparagus, lemon butter.", "price": "$18.90" },
-            { "name": "Mahi Tacos", "desc": "Slaw, mango salsa, chipotle crema — two or three.", "price": "$12.90 / $15.90" },
-            { "name": "Peach Glazed Pork Chop", "desc": "Sweet potato mash, seasonal vegetables.", "price": "$16.90" },
-            { "name": "Fish & Chips", "desc": "Beer-battered catch of the day, remoulade.", "price": "MP" }
+            {
+              "name": "Blackened Scallops",
+              "desc": "Cilantro rice, grilled asparagus, lemon butter.",
+              "price": "$18.90"
+            },
+            {
+              "name": "Mahi Tacos",
+              "desc": "Slaw, mango salsa, chipotle crema — two or three.",
+              "price": "$12.90 / $15.90"
+            },
+            {
+              "name": "Peach Glazed Pork Chop",
+              "desc": "Sweet potato mash, seasonal vegetables.",
+              "price": "$16.90"
+            },
+            {
+              "name": "Fish & Chips",
+              "desc": "Beer-battered catch of the day, remoulade.",
+              "price": "MP"
+            }
           ]
         },
         {
@@ -141,9 +405,21 @@
           "orderable": false,
           "orderNote": "Seasonal drinks are shown for dine-in and ID-verified service only; pickup and delivery ordering uses food items.",
           "items": [
-            { "name": "Frozen Painkiller", "desc": "Rum, pineapple, coconut, nutmeg.", "price": "$9" },
-            { "name": "Safety Harbor Sangria", "desc": "Red or white — seasonal fruit.", "price": "$8 / $28 pitcher" },
-            { "name": "Key Lime Martini", "desc": "House favorite — Martini Monday half-off.", "price": "$10" }
+            {
+              "name": "Frozen Painkiller",
+              "desc": "Rum, pineapple, coconut, nutmeg.",
+              "price": "$9"
+            },
+            {
+              "name": "Safety Harbor Sangria",
+              "desc": "Red or white — seasonal fruit.",
+              "price": "$8 / $28 pitcher"
+            },
+            {
+              "name": "Key Lime Martini",
+              "desc": "House favorite — Martini Monday half-off.",
+              "price": "$10"
+            }
           ]
         }
       ]
@@ -160,36 +436,85 @@
           "id": "cocktails",
           "name": "Hip Sips & Cocktails",
           "items": [
-            { "name": "Old Florida Mule", "desc": "Vodka, ginger beer, lime, mint.", "price": "$9" },
-            { "name": "Safety Harbor Sunset", "desc": "Rum, orange, grenadine, lime.", "price": "$9" },
-            { "name": "Green Tomato Bloody Mary", "desc": "House mix, fried green tomato garnish.", "price": "$10" },
-            { "name": "Martini Menu", "desc": "Classic, dirty, espresso & seasonal — half-off Martini Mondays.", "price": "from $8" }
+            {
+              "name": "Old Florida Mule",
+              "desc": "Vodka, ginger beer, lime, mint.",
+              "price": "$9"
+            },
+            {
+              "name": "Safety Harbor Sunset",
+              "desc": "Rum, orange, grenadine, lime.",
+              "price": "$9"
+            },
+            {
+              "name": "Green Tomato Bloody Mary",
+              "desc": "House mix, fried green tomato garnish.",
+              "price": "$10"
+            },
+            {
+              "name": "Martini Menu",
+              "desc": "Classic, dirty, espresso & seasonal — half-off Martini Mondays.",
+              "price": "from $8"
+            }
           ]
         },
         {
           "id": "beer",
           "name": "Beer · 18 Taps",
           "items": [
-            { "name": "Domestic Drafts", "desc": "Rotating favorites.", "price": "$4.50" },
-            { "name": "Craft & Local", "desc": "Florida breweries on rotation.", "price": "$6–8" },
-            { "name": "Beer Flights", "desc": "Four 5oz pours — ask what's on today.", "price": "$14" }
+            {
+              "name": "Domestic Drafts",
+              "desc": "Rotating favorites.",
+              "price": "$4.50"
+            },
+            {
+              "name": "Craft & Local",
+              "desc": "Florida breweries on rotation.",
+              "price": "$6–8"
+            },
+            {
+              "name": "Beer Flights",
+              "desc": "Four 5oz pours — ask what's on today.",
+              "price": "$14"
+            }
           ]
         },
         {
           "id": "wine",
           "name": "Wine",
           "items": [
-            { "name": "House Red / White", "desc": "Glass or bottle.", "price": "$7 / $26" },
-            { "name": "Premium Selections", "desc": "Ask your server for the current list.", "price": "MP" }
+            {
+              "name": "House Red / White",
+              "desc": "Glass or bottle.",
+              "price": "$7 / $26"
+            },
+            {
+              "name": "Premium Selections",
+              "desc": "Ask your server for the current list.",
+              "price": "MP"
+            }
           ]
         },
         {
           "id": "happy-hour-bar",
           "name": "Happy Hour",
           "items": [
-            { "name": "Daily Happy Hour", "desc": "4–7 PM · drink & food specials.", "price": "" },
-            { "name": "Tuesday Extended", "desc": "4 PM–close.", "price": "" },
-            { "name": "Full details", "desc": "See our happy hour page.", "price": "", "link": "happy-hour.html" }
+            {
+              "name": "Daily Happy Hour",
+              "desc": "4–7 PM · drink & food specials.",
+              "price": ""
+            },
+            {
+              "name": "Tuesday Extended",
+              "desc": "4 PM–close.",
+              "price": ""
+            },
+            {
+              "name": "Full details",
+              "desc": "See our happy hour page.",
+              "price": "",
+              "link": "happy-hour.html"
+            }
           ]
         }
       ]

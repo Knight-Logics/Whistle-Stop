@@ -16,15 +16,28 @@
     "city": "Safety Harbor",
     "state": "FL",
     "zip": "34695",
-    "geo": { "lat": 27.990934, "lng": -82.696838 },
+    "geo": {
+      "lat": 27.990934,
+      "lng": -82.696838
+    },
     "description": "Safety Harbor's landmark grill and bar since 1995, serving American bar-and-grill favorites, cocktails, 18 taps, live music, and dog-friendly open-air patio dining on Main Street.",
     "gm": "Raven Pendola",
     "owners": "Dawn & Patrick Pendola"
   },
   "hours": {
     "footer": "Sun–Thu 11 AM – 9 PM<br />Fri–Sat 11 AM – 10 PM",
-    "weekday": { "label": "Sun–Thu", "opens": "11:00", "closes": "21:00", "display": "11 AM – 9 PM" },
-    "weekend": { "label": "Fri–Sat", "opens": "11:00", "closes": "22:00", "display": "11 AM – 10 PM" },
+    "weekday": {
+      "label": "Sun–Thu",
+      "opens": "11:00",
+      "closes": "21:00",
+      "display": "11 AM – 9 PM"
+    },
+    "weekend": {
+      "label": "Fri–Sat",
+      "opens": "11:00",
+      "closes": "22:00",
+      "display": "11 AM – 10 PM"
+    },
     "happyHourDaily": "4–7 PM",
     "happyHourTuesday": "4 PM – close"
   },
@@ -55,10 +68,26 @@
     "googleReviews": "https://www.google.com/maps/search/?api=1&query=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL"
   },
   "stats": [
-    { "id": "google", "value": "4.4", "label": "2,000+ Google reviews" },
-    { "id": "founded", "value": "Since '95", "label": "Safety Harbor landmark" },
-    { "id": "taps", "value": "18 Taps", "label": "Craft & domestic beer" },
-    { "id": "music", "value": "Live Music", "label": "Fri & Sat + open mic Tue" }
+    {
+      "id": "google",
+      "value": "4.4",
+      "label": "2,000+ Google reviews"
+    },
+    {
+      "id": "founded",
+      "value": "Since '95",
+      "label": "Safety Harbor landmark"
+    },
+    {
+      "id": "taps",
+      "value": "18 Taps",
+      "label": "Craft & domestic beer"
+    },
+    {
+      "id": "music",
+      "value": "Live Music",
+      "label": "Fri & Sat + open mic Tue"
+    }
   ],
   "theme": {
     "colors": {
@@ -155,14 +184,46 @@
   },
   "homepage": {
     "gallery": [
-      { "image": "assets/gallery/WSFood.webp", "caption": "Real. Good. Food.", "alt": "Plates at Whistle Stop" },
-      { "image": "assets/gallery/WSDrinks.webp", "caption": "18 taps & Hip Sips", "alt": "Craft cocktails" },
-      { "image": "assets/gallery/WSRocker.webp", "caption": "Live music", "alt": "Live music on the patio" },
-      { "image": "assets/gallery/WSCornHole.webp", "caption": "Cornhole Wednesdays", "alt": "Cornhole league night" },
-      { "image": "assets/gallery/WSSunset.webp", "caption": "Safety Harbor sunsets", "alt": "Sunset on Main Street" },
-      { "image": "assets/gallery/WSGoodTimes.webp", "caption": "Good times", "alt": "Friends on the patio" },
-      { "image": "assets/gallery/WSBar.webp", "caption": "Open-air bar", "alt": "Open-air bar on Main Street" },
-      { "image": "assets/gallery/WSLounge.webp", "caption": "Patio hangs", "alt": "Patio lounge seating" }
+      {
+        "image": "assets/gallery/WSFood.webp",
+        "caption": "Real. Good. Food.",
+        "alt": "Plates at Whistle Stop"
+      },
+      {
+        "image": "assets/gallery/WSDrinks.webp",
+        "caption": "18 taps & Hip Sips",
+        "alt": "Craft cocktails"
+      },
+      {
+        "image": "assets/gallery/WSRocker.webp",
+        "caption": "Live music",
+        "alt": "Live music on the patio"
+      },
+      {
+        "image": "assets/gallery/WSCornHole.webp",
+        "caption": "Cornhole Wednesdays",
+        "alt": "Cornhole league night"
+      },
+      {
+        "image": "assets/gallery/WSSunset.webp",
+        "caption": "Safety Harbor sunsets",
+        "alt": "Sunset on Main Street"
+      },
+      {
+        "image": "assets/gallery/WSGoodTimes.webp",
+        "caption": "Good times",
+        "alt": "Friends on the patio"
+      },
+      {
+        "image": "assets/gallery/WSBar.webp",
+        "caption": "Open-air bar",
+        "alt": "Open-air bar on Main Street"
+      },
+      {
+        "image": "assets/gallery/WSLounge.webp",
+        "caption": "Patio hangs",
+        "alt": "Patio lounge seating"
+      }
     ],
     "signatureCards": [
       {
@@ -207,7 +268,13 @@
   },
   "seo": {
     "priceRange": "$$",
-    "cuisines": ["American", "Bar & Grill", "Burgers", "Seafood", "Pub Food"],
+    "cuisines": [
+      "American",
+      "Bar & Grill",
+      "Burgers",
+      "Seafood",
+      "Pub Food"
+    ],
     "acceptsReservations": false
   }
 }
