@@ -483,11 +483,12 @@
   }
 
   async function login(password) {
+    const normalized = String(password || "").trim();
     const site = await fetchFile("site");
-    const hash = await sha256(password);
+    const hash = await sha256(normalized);
     const stored = readOverlay().passwordHash || site.admin?.passwordHash;
     if (hash !== stored) return false;
-    sessionPassword = password;
+    sessionPassword = normalized;
     sessionStorage.setItem(
       SESSION_KEY,
       JSON.stringify({ at: Date.now(), token: hash.slice(0, 16), adminHash: hash })
@@ -568,7 +569,7 @@
   }
 
   async function publishContent({ adminPassword, sourceTab } = {}) {
-    const password = adminPassword || getSessionPassword();
+    const password = String(adminPassword || getSessionPassword() || "").trim();
     if (!password) {
       throw new Error("Enter the admin password to publish live.");
     }

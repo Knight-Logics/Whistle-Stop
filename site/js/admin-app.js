@@ -383,7 +383,7 @@
         if (saved && passwordInput) passwordInput.value = saved;
 
         confirmBtn?.addEventListener("click", async () => {
-          const password = passwordInput?.value || "";
+          const password = (passwordInput?.value || "").trim();
           if (!password) {
             toast("Enter the admin password to publish live.");
             passwordInput?.focus();
