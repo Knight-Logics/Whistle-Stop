@@ -20,19 +20,35 @@
       .replace(/"/g, "&quot;");
   }
 
-  function renderItem(item, index) {
+  function menuOrderNote(menu, cat) {
+    return (
+      cat.orderNote ||
+      menu.orderNote ||
+      "Shown for dine-in and ID-verified service only; pickup and delivery ordering uses food items."
+    );
+  }
+
+  function isCategoryOrderable(menu, cat) {
+    return menu?.orderable !== false && cat?.orderable !== false;
+  }
+
+  function renderItem(item, index, options = {}) {
+    const canOrder = options.showOrderButton !== false && item.orderable !== false;
     if (window.WSMenuRender?.renderItem) {
       return window.WSMenuRender.renderItem(item, index, {
-        showOrderButton: true,
+        showOrderButton: canOrder,
+        orderable: canOrder,
         initialVisible: false,
       });
     }
     const price = item.price
       ? `<span class="price">${escapeHtml(item.price)}</span>`
       : "";
-    const orderBtn = item.toastOrderUrl
-      ? `<a href="${escapeHtml(item.toastOrderUrl)}" class="btn btn-outline menu-item-order-btn menu-item-order-link" target="_blank" rel="noopener noreferrer">Order on Toast</a>`
-      : `<button type="button" class="btn btn-outline menu-item-order-btn" data-pickup-add data-item-name="${escapeHtml(item.name)}" data-item-price="${escapeHtml(item.price || "")}">Add to order list</button>`;
+    const orderBtn = canOrder
+      ? item.toastOrderUrl
+        ? `<a href="${escapeHtml(item.toastOrderUrl)}" class="btn btn-outline menu-item-order-btn menu-item-order-link" target="_blank" rel="noopener noreferrer">Order on Toast</a>`
+        : `<button type="button" class="btn btn-outline menu-item-order-btn" data-pickup-add data-item-name="${escapeHtml(item.name)}" data-item-price="${escapeHtml(item.price || "")}">Add to order</button>`
+      : "";
     let desc = item.desc ? `<p>${escapeHtml(item.desc)}</p>` : "";
     if (item.link) {
       desc = `<p><a href="${escapeHtml(item.link)}">See happy hour →</a></p>`;
@@ -47,17 +63,21 @@
       </article>`;
   }
 
-  function renderCategory(cat, menuId) {
+  function renderCategory(cat, menu) {
+    const canOrder = isCategoryOrderable(menu, cat);
     const note = cat.note
       ? `<p class="menu-cat-note">${escapeHtml(cat.note)}</p>`
       : "";
+    const orderNote = !canOrder
+      ? `<p class="menu-cat-note menu-cat-order-note">${escapeHtml(menuOrderNote(menu, cat))}</p>`
+      : "";
     const items = (cat.items || [])
-      .map((item, i) => renderItem(item, i))
+      .map((item, i) => renderItem(item, i, { showOrderButton: canOrder }))
       .join("");
     return `
-      <section class="menu-category-block" id="${menuId}-${cat.id}" data-category="${cat.id}">
+      <section class="menu-category-block" id="${menu.id}-${cat.id}" data-category="${cat.id}">
         <h2 class="menu-category-title">${escapeHtml(cat.name)}</h2>
-        ${note}
+        ${note}${orderNote}
         <div class="menu-items">${items}</div>
       </section>`;
   }
@@ -90,7 +110,7 @@
   function renderPanel(menu) {
     const isActive = menu.id === activeMenu;
     const categories = menu.categories
-      .map((c) => renderCategory(c, menu.id))
+      .map((c) => renderCategory(c, menu))
       .join("");
     const image = menu.image
       ? `<div class="menu-panel-media reveal-right visible"><img src="${menu.image}" alt="${escapeHtml(menu.label)}" loading="lazy" /></div>`

@@ -13,8 +13,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
 
   relocateMobileNav();
+  ensureMotionScript();
   document.dispatchEvent(new Event("partials-loaded"));
 });
+
+function ensureMotionScript() {
+  if (document.querySelector("script[data-ws-motion]")) return;
+  const script = document.createElement("script");
+  script.src = "js/ws-motion.js";
+  script.defer = true;
+  script.dataset.wsMotion = "1";
+  document.head.appendChild(script);
+}
 
 function relocateMobileNav() {
   const backdrop = document.querySelector(".nav-backdrop");

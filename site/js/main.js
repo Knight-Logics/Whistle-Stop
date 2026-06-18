@@ -4,11 +4,9 @@
     const header = document.querySelector(".site-header");
     if (!header || header.dataset.scrollInit) return;
     header.dataset.scrollInit = "1";
-    window.addEventListener(
-      "scroll",
-      () => header.classList.toggle("scrolled", window.scrollY > 40),
-      { passive: true }
-    );
+    const update = () => header.classList.toggle("scrolled", window.scrollY > 12);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
   }
 
   function initMobileNav() {

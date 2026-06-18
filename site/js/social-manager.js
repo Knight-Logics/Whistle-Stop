@@ -2,8 +2,6 @@
 window.WSSocial = (function () {
   const LOCAL_BRIDGE = "http://127.0.0.1:8787";
   const CLOUD_BRIDGE = "https://knightlogics.com/api/whistle-stop-social";
-  // Baked into GitHub Pages admin so every device works without per-browser API key setup.
-  const CLOUD_BRIDGE_API_KEY = "ws-whistlestop-9611b65b47f34c8a9d297daaa119620e";
   const CLOUD_MEDIA_MAX_BYTES = 3.5 * 1024 * 1024;
   const LOCAL_MEDIA_MAX_BYTES = 12 * 1024 * 1024;
 
@@ -77,15 +75,12 @@ window.WSSocial = (function () {
   }
 
   function resolveBridgeApiKey(config) {
-    const saved = sanitizeBridgeApiKey(config?.bridgeApiKey);
-    if (saved) return saved;
-    if (isHttpsAdmin()) return CLOUD_BRIDGE_API_KEY;
-    return "";
+    return sanitizeBridgeApiKey(config?.bridgeApiKey);
   }
 
   function bridgeAuthReady(config) {
     if (resolveBridgeApiKey(config)) return true;
-    if (window.WSConfig?.getAdminAuthHash?.()) return true;
+    if (window.WSConfig?.getSessionPassword?.()) return true;
     return false;
   }
 
@@ -100,8 +95,11 @@ window.WSSocial = (function () {
   function withBridgeAuth(config, payload) {
     const out = { ...payload };
     if (resolveBridgeApiKey(config)) return out;
-    const adminHash = window.WSConfig?.getAdminAuthHash?.();
-    if (adminHash) out.adminPasswordHash = adminHash;
+    const password = window.WSConfig?.getSessionPassword?.();
+    if (password) {
+      out.adminPassword = password;
+      return out;
+    }
     return out;
   }
 
@@ -142,7 +140,7 @@ window.WSSocial = (function () {
       platforms: payload.platforms || [],
       mediaChars: payload.mediaBase64 ? String(payload.mediaBase64).length : 0,
       bodyBytes: body.length,
-      auth: resolveBridgeApiKey(config) ? "api-key" : window.WSConfig?.getAdminAuthHash?.() ? "admin-login" : "none",
+      auth: resolveBridgeApiKey(config) ? "api-key" : window.WSConfig?.getSessionPassword?.() ? "admin-password" : "none",
     };
     console.info("[WSSocial] posting", debug);
 
@@ -684,7 +682,11 @@ window.WSSocial = (function () {
           mediaThumbVideo.hidden = true;
         }
       }
-      if (mediaThumb) mediaThumb.hidden = !url;
+      if (mediaThumb) {
+        mediaThumb.hidden = !url;
+        if (url) mediaThumb.removeAttribute("hidden");
+        else mediaThumb.setAttribute("hidden", "");
+      }
       if (mediaHint) {
         if (!url) {
           mediaHint.textContent =
@@ -861,6 +863,7 @@ window.WSSocial = (function () {
       refreshBridge();
     });
 
+    setMediaPreview("");
     refreshBridge();
   }
 

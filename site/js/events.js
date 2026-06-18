@@ -1,7 +1,10 @@
 /* Events engine — reads data/events.json, renders calendar + upcoming */
 
 (async function () {
-  if (new URLSearchParams(window.location.search).has("preview")) {
+  const params = new URLSearchParams(window.location.search);
+  const isPreview = params.has("preview");
+
+  if (isPreview) {
     document.documentElement.classList.add("ws-preview-embed");
   }
 
@@ -21,7 +24,6 @@
 
     try {
 
-      const params = new URLSearchParams(window.location.search);
       data =
         params.has("preview") && WSConfig.getForPreview
           ? await WSConfig.getForPreview("events")
@@ -49,6 +51,10 @@
 
     return new Date(y, m - 1, d);
 
+  }
+
+  function formatISODate(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   }
 
 
@@ -107,8 +113,64 @@
 
     const timeHtml = timeStr ? `<span class="ev-time">${esc(timeStr)}</span>` : "";
 
-    return `<span class="${chipClass}" title="${esc(tip)}">${timeHtml}<span class="ev-title">${esc(e.title)}</span></span>`;
+    const adminAttrs = isPreview
+      ? ` data-admin-event-id="${esc(e.id || "")}" data-admin-event-date="${esc(formatISODate(e.date))}" data-admin-event-title="${esc(e.title)}" data-admin-event-start="${esc(e.startTime || "")}" data-admin-event-recurring="${e.recurring ? "1" : "0"}"`
+      : "";
 
+    return `<span class="${chipClass}" title="${esc(tip)}"${adminAttrs}>${timeHtml}<span class="ev-title">${esc(e.title)}</span></span>`;
+
+  }
+
+  function postAdminCalendarMessage(payload) {
+    if (!isPreview || window.parent === window) return;
+    window.parent.postMessage({ source: "ws-events-preview", ...payload }, window.location.origin);
+  }
+
+  let adminHighlightDate = "";
+
+  function applyAdminHighlightDate(dateStr) {
+    adminHighlightDate = dateStr || "";
+    if (!isPreview || !calendarEl) return;
+    calendarEl.querySelectorAll(".cal-day.admin-editing").forEach((el) => el.classList.remove("admin-editing"));
+    if (!adminHighlightDate) return;
+    calendarEl.querySelector(`[data-admin-date="${adminHighlightDate}"]`)?.classList.add("admin-editing");
+  }
+
+  if (isPreview) {
+    window.addEventListener("message", (event) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.source !== "ws-admin-preview") return;
+      if (event.data.type === "highlight-date") applyAdminHighlightDate(event.data.date || "");
+    });
+  }
+
+  function bindAdminCalendarClicks() {
+    if (!isPreview || !calendarEl || calendarEl.dataset.adminClickBound) return;
+    calendarEl.dataset.adminClickBound = "1";
+    calendarEl.addEventListener("click", (event) => {
+      const chip = event.target.closest("[data-admin-event-id]");
+      if (chip) {
+        event.preventDefault();
+        event.stopPropagation();
+        postAdminCalendarMessage({
+          type: "event",
+          id: chip.dataset.adminEventId,
+          date: chip.dataset.adminEventDate,
+          title: chip.dataset.adminEventTitle,
+          startTime: chip.dataset.adminEventStart,
+          recurring: chip.dataset.adminEventRecurring === "1",
+        });
+        return;
+      }
+
+      const day = event.target.closest("[data-admin-date]");
+      if (!day) return;
+      event.preventDefault();
+      postAdminCalendarMessage({
+        type: "day",
+        date: day.dataset.adminDate,
+      });
+    });
   }
 
 
@@ -661,7 +723,9 @@
 
       const evs = byDay[cur.toDateString()] || [];
 
-      html += `<div class="cal-day${inMonth ? "" : " other-month"}${isToday ? " today" : ""}">
+      const adminDayAttrs = isPreview ? ` data-admin-date="${esc(formatISODate(cur))}" title="Click to add or edit this date"` : "";
+
+      html += `<div class="cal-day${inMonth ? "" : " other-month"}${isToday ? " today" : ""}"${adminDayAttrs}>
 
         <span class="num">${cur.getDate()}</span>
 
@@ -682,6 +746,8 @@
 
 
     calendarEl.innerHTML = html;
+    bindAdminCalendarClicks();
+    applyAdminHighlightDate(adminHighlightDate);
 
     calendarEl.querySelector("#cal-prev")?.addEventListener("click", () => {
 

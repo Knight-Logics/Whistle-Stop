@@ -567,6 +567,112 @@
 
 
 
+    <section class="section-cream page-section" id="contact-form-section">
+
+      <div class="container">
+
+        <div class="section-head reveal">
+
+          <h2>Send us a message</h2>
+
+          <p>Questions about hours, parking, private events, or your visit? Drop a note — we&rsquo;ll get back to you at the restaurant.</p>
+
+          <div class="divider"></div>
+
+        </div>
+
+        <div class="contact-form-layout reveal">
+
+          <form id="contact-form" class="contact-form" novalidate>
+
+            <div class="contact-form-row">
+
+              <label class="contact-form-field">
+
+                <span>Name</span>
+
+                <input type="text" name="name" autocomplete="name" required />
+
+              </label>
+
+              <label class="contact-form-field">
+
+                <span>Email</span>
+
+                <input type="email" name="email" autocomplete="email" required />
+
+              </label>
+
+            </div>
+
+            <label class="contact-form-field">
+
+              <span>Phone <span class="contact-form-optional">(optional)</span></span>
+
+              <input type="tel" name="phone" autocomplete="tel" />
+
+            </label>
+
+            <label class="contact-form-field">
+
+              <span>Topic</span>
+
+              <select name="topic">
+
+                <option value="General question">General question</option>
+
+                <option value="Private event inquiry">Private event inquiry</option>
+
+                <option value="Feedback">Feedback</option>
+
+                <option value="Other">Other</option>
+
+              </select>
+
+            </label>
+
+            <label class="contact-form-field">
+
+              <span>Message</span>
+
+              <textarea name="message" rows="5" required placeholder="How can we help?"></textarea>
+
+            </label>
+
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="contact-form-honeypot" />
+
+            <p class="contact-form-status" data-form-status role="status" aria-live="polite" hidden></p>
+
+            <div class="btn-group">
+
+              <button type="submit" class="btn btn-primary">Send message</button>
+
+              <a href="tel:+17277261956" class="btn btn-outline">Or call (727) 726-1956</a>
+
+            </div>
+
+          </form>
+
+          <aside class="contact-form-aside">
+
+            <h3>Prefer email or phone?</h3>
+
+            <p style="color:var(--text-muted)">You can always reach the team directly while we finish wiring the contact form for launch.</p>
+
+            <p><a href="mailto:admin@whistlestopgrill.com">admin@whistlestopgrill.com</a></p>
+
+            <p><a href="tel:+17277261956">(727) 726-1956</a></p>
+
+          </aside>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
     <section class="section-cream page-section">
 
       <div class="container reveal" style="text-align:center">
@@ -604,6 +710,8 @@
   <script src="js/config-store.js"></script>
   <script src="js/site-apply.js"></script>
   <script src="js/includes.js"></script>
+
+  <script src="js/contact-form.js" defer></script>
 
   <script src="js/main.js" defer></script>
 

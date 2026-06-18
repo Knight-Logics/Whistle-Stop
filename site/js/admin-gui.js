@@ -14,6 +14,128 @@ window.WSAdminGUI = (function () {
     return `<div class="admin-field"><label>${label}</label>${html}</div>`;
   }
 
+  const EVENT_CATEGORIES = [
+    ["live-music", "Live music"],
+    ["community", "Community"],
+    ["specials", "Specials / promos"],
+  ];
+
+  function dayOfWeekFromDate(dateStr) {
+    const [y, m, d] = dateStr.split("-").map(Number);
+    if (!y || !m || !d) return 0;
+    return new Date(y, m - 1, d).getDay();
+  }
+
+  function formatDaysOfWeek(days) {
+    if (!Array.isArray(days) || !days.length) return "No days selected";
+    if (days.length === 7) return "Every day";
+    return days.map((d) => DAYS[d]).join(", ");
+  }
+
+  function daysOfWeekField(selectedDays, attrName) {
+    const selected = new Set(Array.isArray(selectedDays) ? selectedDays : []);
+    const boxes = DAYS.map(
+      (label, i) => `
+        <label class="admin-dow-option">
+          <input type="checkbox" ${attrName}="day" value="${i}"${selected.has(i) ? " checked" : ""} />
+          <span>${label}</span>
+        </label>`
+    ).join("");
+    return `<div class="admin-field admin-field--full"><label>Repeats on</label><div class="admin-dow-picker" role="group" aria-label="Days of week">${boxes}</div></div>`;
+  }
+
+  function readCheckedDays(scope, selector) {
+    return [...scope.querySelectorAll(selector)]
+      .filter((el) => el.checked)
+      .map((el) => Number(el.value))
+      .sort((a, b) => a - b);
+  }
+
+  function eventCategoryField(name, value, attr = "data-field") {
+    const options = EVENT_CATEGORIES.map(
+      ([val, label]) => `<option value="${val}"${value === val ? " selected" : ""}>${label}</option>`
+    ).join("");
+    return field("Category", `<select ${attr}="${name}">${options}</select>`);
+  }
+
+  function weekOfMonthField(name, value, attr = "data-field") {
+    const weeks = [
+      ["", "Every week"],
+      ["1", "1st week of month"],
+      ["2", "2nd week of month"],
+      ["3", "3rd week of month"],
+      ["4", "4th week of month"],
+      ["5", "5th week of month"],
+    ];
+    const options = weeks
+      .map(([val, label]) => `<option value="${val}"${String(value || "") === val ? " selected" : ""}>${label}</option>`)
+      .join("");
+    return field("Week of month", `<select ${attr}="${name}">${options}</select>`);
+  }
+
+  function modalSectionHead(title, { btnId = "", btnLabel = "" } = {}) {
+    const btn = btnId
+      ? `<button type="button" class="btn btn-primary admin-btn-sm" id="${btnId}" aria-expanded="false">${btnLabel}</button>`
+      : "";
+    return `
+      <div class="admin-modal-day-section-head">
+        <h3 class="admin-modal-day-section-title">${title}</h3>
+        ${btn}
+      </div>`;
+  }
+
+  function slugEventId(title) {
+    const base = String(title || "event")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    return `${base || "event"}-${Date.now().toString(36)}`;
+  }
+
+  function addEventPanelHtml(dateStr) {
+    const dow = dayOfWeekFromDate(dateStr);
+    return `
+      <div id="modal-add-event-panel" class="admin-modal-add-panel" hidden>
+        <div class="admin-modal-add-panel-inner">
+          <div class="admin-field admin-field--centered">
+            <label>Event type</label>
+            <div class="admin-event-type-toggle" role="radiogroup" aria-label="Event type">
+              <label class="admin-event-type-option">
+                <input type="radio" name="add-event-type" value="one-off" checked />
+                <span>One-off on this date</span>
+              </label>
+              <label class="admin-event-type-option">
+                <input type="radio" name="add-event-type" value="weekly" />
+                <span>Weekly recurring</span>
+              </label>
+            </div>
+          </div>
+          <div id="modal-add-one-off-fields">
+            <div class="admin-form-grid cols-2">
+              ${field("Event name", `<input data-add-oneoff-field="title" placeholder="e.g. Josh Plummer" />`)}
+              ${eventCategoryField("category", "live-music", "data-add-oneoff-field")}
+              ${field("Start time", `<input type="time" data-add-oneoff-field="startTime" value="18:30" />`)}
+              ${field("End time", `<input type="time" data-add-oneoff-field="endTime" value="21:30" />`)}
+              ${field("Note (optional)", `<input data-add-oneoff-field="note" placeholder="e.g. Friday bandingo" />`)}
+            </div>
+          </div>
+          <div id="modal-add-weekly-fields" hidden>
+            <div class="admin-form-grid cols-2">
+              ${field("Event name", `<input data-add-weekly-field="title" placeholder="e.g. Martini Monday" />`)}
+              ${eventCategoryField("category", "community", "data-add-weekly-field")}
+              ${daysOfWeekField([dow], "data-add-weekly-field")}
+              ${field("Summary", `<textarea data-add-weekly-field="summary" rows="2" placeholder="Short description for the calendar"></textarea>`)}
+              ${field("Start time", `<input type="time" data-add-weekly-field="startTime" value="18:00" />`)}
+              ${field("End time (optional)", `<input type="time" data-add-weekly-field="endTime" value="" />`)}
+              ${weekOfMonthField("weekOfMonth", "", "data-add-weekly-field")}
+            </div>
+            <p class="admin-modal-add-hint">Check the days this repeats (e.g. Mon for every Monday). Use week of month only for events like “3rd Monday book club.”</p>
+          </div>
+          <button type="button" class="btn btn-primary admin-btn-sm" id="modal-add-event-submit">Add to calendar</button>
+        </div>
+      </div>`;
+  }
+
   function getCatalog(imagesData) {
     if (Array.isArray(imagesData)) return imagesData;
     return imagesData?.catalog || [];
@@ -38,78 +160,8 @@ window.WSAdminGUI = (function () {
       <input type="hidden" data-field="${esc(name)}" value="${esc(value || "")}" />`;
   }
 
-  function mediaPicker(name, value, mediaType, imagesData, tags) {
-    const imgs = getCatalog(imagesData).filter(
-      (img) => !tags?.length || tags.some((t) => img.tags?.includes(t))
-    );
-    const isUpload = window.WSConfig?.isUploadRef?.(value);
-    const urlValue = value && !isUpload ? value : "";
-    return `
-      <div class="admin-media-picker" data-media-picker data-media-field="${esc(name)}" data-media-type-field="mediaType">
-        <div class="admin-media-toolbar">
-          <label class="btn btn-outline admin-btn-sm admin-media-upload-btn">
-            Upload file
-            <input type="file" data-media-file hidden accept="image/*,video/*,.gif,.webp,.avif,.mp4,.webm,.mov,.m4v" />
-          </label>
-          <span class="admin-media-hint">Images, GIFs, and videos up to 100 MB</span>
-        </div>
-        <div class="admin-media-dropzone" data-media-dropzone tabindex="0">
-          <strong>Drag &amp; drop a file here</strong>
-          <span>or use Upload file above</span>
-        </div>
-        <div class="admin-media-current" data-media-current aria-live="polite"></div>
-        <div class="admin-field admin-media-url-field">
-          <label>Or paste a site path / URL</label>
-          <input type="text" data-media-url value="${esc(urlValue)}" placeholder="assets/gallery/photo.webp or https://..." />
-        </div>
-        <details class="admin-media-library" open>
-          <summary>Site photo library</summary>
-          <div class="admin-img-picker" data-picker="${esc(name)}">
-            ${imgs
-              .map(
-                (img) => `
-              <button type="button" class="admin-img-option${img.path === value ? " is-selected" : ""}"
-                data-path="${esc(img.path)}" title="${esc(img.label)}">
-                <img src="${esc(img.path)}" alt="" loading="lazy" />
-              </button>`
-              )
-              .join("")}
-          </div>
-        </details>
-        <input type="hidden" data-field="${esc(name)}" value="${esc(value || "")}" />
-        <input type="hidden" data-field="mediaType" value="${esc(mediaType || "")}" />
-      </div>`;
-  }
-
-  async function renderMediaCurrent(el, src, mediaType, label) {
-    if (!el) return;
-    if (!src) {
-      el.innerHTML = `<p class="admin-media-empty">No file selected yet.</p>`;
-      return;
-    }
-    const resolved = window.WSConfig ? await WSConfig.resolveMediaSrc(src) : src;
-    const type =
-      mediaType ||
-      (window.WSConfig ? WSConfig.inferMediaType("", src) : "image");
-    const name = label || src;
-    if (type === "video") {
-      el.innerHTML = `
-        <div class="admin-media-current-card is-video">
-          <video src="${esc(resolved)}" muted loop playsinline controls></video>
-          <p><strong>${esc(name)}</strong><span>Video</span></p>
-        </div>`;
-      return;
-    }
-    el.innerHTML = `
-      <div class="admin-media-current-card">
-        <img src="${esc(resolved)}" alt="" />
-        <p><strong>${esc(name)}</strong><span>${type === "gif" ? "GIF" : "Image"}</span></p>
-      </div>`;
-  }
-
   function bindImagePickers(root, onChange) {
     root.querySelectorAll("[data-picker]").forEach((picker) => {
-      if (picker.closest("[data-media-picker]")) return;
       const hidden = picker.parentElement.querySelector('input[type="hidden"]');
       picker.querySelectorAll(".admin-img-option").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -119,85 +171,6 @@ window.WSAdminGUI = (function () {
           onChange?.(picker);
         });
       });
-    });
-  }
-
-  function bindMediaPickers(root, onChange) {
-    root.querySelectorAll("[data-media-picker]").forEach((wrap) => {
-      const fieldName = wrap.dataset.mediaField || "image";
-      const typeField = wrap.dataset.mediaTypeField || "mediaType";
-      const hiddenImage = wrap.querySelector(`[data-field="${fieldName}"]`);
-      const hiddenType = wrap.querySelector(`[data-field="${typeField}"]`);
-      const current = wrap.querySelector("[data-media-current]");
-      const urlInput = wrap.querySelector("[data-media-url]");
-      const fileInput = wrap.querySelector("[data-media-file]");
-      const dropzone = wrap.querySelector("[data-media-dropzone]");
-      const catalog = wrap.querySelector("[data-picker]");
-
-      async function applyMedia(ref, type, label) {
-        if (hiddenImage) hiddenImage.value = ref || "";
-        const mediaType =
-          type ||
-          (window.WSConfig ? WSConfig.inferMediaType("", ref) : "image");
-        if (hiddenType) hiddenType.value = mediaType;
-        if (urlInput && ref && !WSConfig?.isUploadRef?.(ref)) urlInput.value = ref;
-        if (urlInput && WSConfig?.isUploadRef?.(ref)) urlInput.value = "";
-        catalog?.querySelectorAll(".admin-img-option").forEach((btn) => {
-          btn.classList.toggle("is-selected", btn.dataset.path === ref);
-        });
-        await renderMediaCurrent(current, ref, mediaType, label);
-        onChange?.(wrap);
-      }
-
-      async function handleFile(file) {
-        if (!file || !window.WSConfig?.saveUpload) return;
-        try {
-          dropzone?.classList.add("is-uploading");
-          const result = await WSConfig.saveUpload(file);
-          await applyMedia(result.ref, result.mediaType, result.name);
-        } catch (err) {
-          alert(err.message || "Upload failed.");
-        } finally {
-          dropzone?.classList.remove("is-uploading");
-          if (fileInput) fileInput.value = "";
-        }
-      }
-
-      fileInput?.addEventListener("change", () => handleFile(fileInput.files?.[0]));
-
-      dropzone?.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        dropzone.classList.add("is-dragover");
-      });
-      dropzone?.addEventListener("dragleave", () => dropzone.classList.remove("is-dragover"));
-      dropzone?.addEventListener("drop", (e) => {
-        e.preventDefault();
-        dropzone.classList.remove("is-dragover");
-        handleFile(e.dataTransfer?.files?.[0]);
-      });
-
-      urlInput?.addEventListener("change", () => {
-        const value = urlInput.value.trim();
-        if (!value) return;
-        applyMedia(value, WSConfig.inferMediaType("", value), value);
-      });
-
-      catalog?.querySelectorAll(".admin-img-option").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          catalog.querySelectorAll(".admin-img-option").forEach((b) => b.classList.remove("is-selected"));
-          btn.classList.add("is-selected");
-          applyMedia(btn.dataset.path, "image", btn.title);
-        });
-      });
-
-      const initial = hiddenImage?.value || "";
-      const initialType = hiddenType?.value || "";
-      if (initial) {
-        const label = WSConfig?.isUploadRef?.(initial) ? "Uploaded file" : initial;
-        renderMediaCurrent(current, initial, initialType, label);
-      } else {
-        renderMediaCurrent(current, "", "", "");
-      }
     });
   }
 
@@ -216,32 +189,6 @@ window.WSAdminGUI = (function () {
     },
   };
 
-  function promoMediaHtml(src, mediaType, alt) {
-    const safeSrc = esc(src || "assets/gallery/WSGoodTimes.webp");
-    const safeAlt = esc(alt || "");
-    if (mediaType === "video") {
-      return `<video src="${safeSrc}" muted loop playsinline autoplay></video>`;
-    }
-    return `<img src="${safeSrc}" alt="${safeAlt}" />`;
-  }
-
-  function promoPreviewHtml(p, resolvedSrc) {
-    const tagClass = p.tagClass === "music" ? " music" : "";
-    const mediaType =
-      p.mediaType ||
-      (window.WSConfig ? WSConfig.inferMediaType("", p.image) : "image");
-    const src = resolvedSrc || p.image || "assets/gallery/WSGoodTimes.webp";
-    return `
-      <article class="card admin-promo-preview-card${p.layout === "highlight" ? " card-promo-highlight" : ""}">
-        <div class="card-img">${promoMediaHtml(src, mediaType, p.alt || p.title)}</div>
-        <div class="card-body">
-          <h3>${esc(p.title || "Card title")}</h3>
-          <p>${esc(p.summary || "Description appears here.")}</p>
-          <div class="card-meta"><span class="tag${tagClass}">${esc(p.tag || "Tag")}</span></div>
-        </div>
-      </article>`;
-  }
-
   function readPromoRow(row) {
     return {
       title: rowVal(row, "title"),
@@ -255,24 +202,6 @@ window.WSAdminGUI = (function () {
     };
   }
 
-  async function updatePromoPreview(row) {
-    const preview = row.querySelector("[data-promo-preview]");
-    if (!preview) return;
-    const draft = readPromoRow(row);
-    const resolved = window.WSConfig
-      ? await WSConfig.resolveMediaSrc(draft.image || "assets/gallery/WSGoodTimes.webp")
-      : draft.image;
-    preview.innerHTML = promoPreviewHtml(draft, resolved);
-  }
-
-  function bindPromoRow(row) {
-    row.querySelectorAll("[data-field]").forEach((el) => {
-      el.addEventListener("input", () => updatePromoPreview(row));
-      el.addEventListener("change", () => updatePromoPreview(row));
-    });
-    updatePromoPreview(row);
-  }
-
   function val(root, name) {
     const el = root.querySelector(`[data-field="${name}"]`);
     return el ? el.value.trim() : "";
@@ -281,6 +210,69 @@ window.WSAdminGUI = (function () {
   function rowVal(row, name) {
     const el = row.querySelector(`[data-field="${name}"]`);
     return el ? el.value.trim() : "";
+  }
+
+  function ensureAdminModalRoot() {
+    let root = document.getElementById("admin-modal-root");
+    if (!root) {
+      root = document.createElement("div");
+      root.id = "admin-modal-root";
+      document.body.appendChild(root);
+    }
+    return root;
+  }
+
+  function closeAdminModal() {
+    const root = document.getElementById("admin-modal-root");
+    if (root) root.replaceChildren();
+    document.body.classList.remove("admin-modal-open");
+  }
+
+  function openAdminModal({ title, subtitle = "", bodyHtml = "", footerHtml = "", wide = false, onMount, onClose }) {
+    closeAdminModal();
+    const root = ensureAdminModalRoot();
+    root.innerHTML = `
+      <div class="admin-modal-backdrop" data-admin-modal-backdrop>
+        <div class="admin-modal${wide ? " admin-modal--wide" : ""}" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+          <div class="admin-modal__header">
+            <div>
+              <h3 id="admin-modal-title">${title}</h3>
+              ${subtitle ? `<p class="admin-modal__subtitle">${subtitle}</p>` : ""}
+            </div>
+            <button type="button" class="admin-modal__close" data-admin-modal-close aria-label="Close">&times;</button>
+          </div>
+          <div class="admin-modal__body">${bodyHtml}</div>
+          ${footerHtml ? `<div class="admin-modal__footer">${footerHtml}</div>` : ""}
+        </div>
+      </div>`;
+    document.body.classList.add("admin-modal-open");
+    const backdrop = root.querySelector("[data-admin-modal-backdrop]");
+    const dialog = root.querySelector(".admin-modal");
+    const close = () => {
+      onClose?.();
+      closeAdminModal();
+    };
+    backdrop?.addEventListener("click", (e) => {
+      if (e.target === backdrop) close();
+    });
+    root.querySelectorAll("[data-admin-modal-close]").forEach((btn) => {
+      btn.addEventListener("click", close);
+    });
+    dialog?.addEventListener("click", (e) => e.stopPropagation());
+    onMount?.(root);
+    return root;
+  }
+
+  function formatAdminDate(dateStr) {
+    if (!dateStr) return "Selected date";
+    const [y, m, d] = dateStr.split("-").map(Number);
+    if (!y || !m || !d) return dateStr;
+    return new Date(y, m - 1, d).toLocaleDateString(undefined, {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
   }
 
   function numVal(root, name, fallback) {
@@ -310,37 +302,59 @@ window.WSAdminGUI = (function () {
   /* ——— Events ——— */
   function renderEvents(panel, data, images) {
     let eventsData = JSON.parse(JSON.stringify(data || { performances: [], recurring: [] }));
+    eventsData.performances = eventsData.performances || [];
+    eventsData.recurring = eventsData.recurring || [];
     let previewTimer = null;
+    let nextPerfId = 1;
 
-    function collectFromPanel() {
-      const out = { ...eventsData, performances: [], recurring: [] };
-      panel.querySelectorAll("[data-perf]").forEach((row) => {
-        const title = rowVal(row, "title");
-        const date = rowVal(row, "date");
-        if (!title || !date) return;
-        const item = {
-          date,
-          title,
-          startTime: rowVal(row, "startTime") || "18:30",
-          endTime: rowVal(row, "endTime") || "21:30",
-          category: "live-music",
-        };
-        const note = rowVal(row, "note");
-        if (note) item.note = note;
-        out.performances.push(item);
-      });
+    eventsData.performances.forEach((p) => {
+      if (!p.__adminId) p.__adminId = `perf-${nextPerfId++}`;
+    });
+
+    function cleanPerformance(p) {
+      const item = {
+        date: p.date || "",
+        title: p.title || "",
+        startTime: p.startTime || "18:30",
+        endTime: p.endTime || "21:30",
+        category: p.category || "live-music",
+      };
+      if (p.note) item.note = p.note;
+      return item;
+    }
+
+    function syncRecurringFromPanel() {
+      const recurring = [];
       panel.querySelectorAll("[data-recurring]").forEach((row) => {
         const i = row.dataset.recurring;
         const orig = eventsData.recurring?.[Number(i)] || {};
-        out.recurring.push({
+        recurring.push({
           ...orig,
           title: rowVal(row, "title") || orig.title,
           summary: rowVal(row, "summary") || orig.summary,
         });
       });
+      if (recurring.length) eventsData.recurring = recurring;
+    }
+
+    function sortedPerformances() {
+      return [...eventsData.performances].sort((a, b) => {
+        return (a.date || "").localeCompare(b.date || "") || (a.startTime || "").localeCompare(b.startTime || "");
+      });
+    }
+
+    function performanceById(id) {
+      return eventsData.performances.find((p) => p.__adminId === id);
+    }
+
+    function collectFromPanel() {
+      syncRecurringFromPanel();
+      const out = { ...eventsData, performances: [], recurring: eventsData.recurring || [] };
+      out.performances = sortedPerformances()
+        .map(cleanPerformance)
+        .filter((p) => p.date && p.title);
       out.performances.sort((a, b) => a.date.localeCompare(b.date));
-      eventsData = out;
-      return eventsData;
+      return out;
     }
 
     function refreshEventsPreview() {
@@ -350,8 +364,7 @@ window.WSAdminGUI = (function () {
     }
 
     function pushEventsDraft(reloadFrame) {
-      collectFromPanel();
-      if (window.WSConfig) WSConfig.savePreview("events", eventsData);
+      if (window.WSConfig) WSConfig.savePreview("events", collectFromPanel());
       if (reloadFrame) refreshEventsPreview();
     }
 
@@ -360,53 +373,495 @@ window.WSAdminGUI = (function () {
       previewTimer = setTimeout(() => pushEventsDraft(true), 300);
     }
 
-    const perfs = eventsData.performances || [];
-    panel.innerHTML = `
-      <p class="admin-note">Add or update <strong>dated acts</strong> (Friday bands, Sunday acoustic, etc.). The calendar on the right updates as you edit — click <em>Save changes</em> when done.</p>
-      <div class="admin-page-split">
-        <div class="admin-editor-col">
-          <div class="admin-card">
-            <h3>Upcoming performances</h3>
-            <div id="perf-rows">${perfs.map((p) => perfRow(p)).join("")}</div>
-            <button type="button" class="btn btn-outline" id="add-perf" style="margin-top:0.75rem">+ Add performance</button>
-          </div>
-          <details class="admin-card admin-details">
-            <summary><h3 style="display:inline;margin:0">Weekly recurring nights</h3></summary>
-            <p style="color:var(--text-muted);font-size:0.9rem">These power the calendar every week. Edit titles and descriptions only if the promo changed.</p>
-            <div id="recurring-rows">${(eventsData.recurring || []).map((r, i) => recurringRow(r, i)).join("")}</div>
-          </details>
-        </div>
-        <div class="admin-preview-col">
-          <p class="admin-preview-label">Live preview — calendar</p>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 0.75rem">Same month-at-a-glance calendar as the events page. Use ‹ › inside the preview to change months.</p>
-          <iframe id="events-page-iframe" class="admin-preview-frame" title="Events calendar preview" src="events.html?preview=1#events-calendar-section"></iframe>
-        </div>
-      </div>`;
-
-    panel.querySelector("#add-perf")?.addEventListener("click", () => {
-      panel.querySelector("#perf-rows")?.insertAdjacentHTML(
-        "beforeend",
-        perfRow({ date: "", title: "", startTime: "18:30", endTime: "21:30", category: "live-music" })
+    function highlightPreviewDate(date) {
+      const iframe = panel.querySelector("#events-page-iframe");
+      iframe?.contentWindow?.postMessage(
+        { source: "ws-admin-preview", type: "highlight-date", date: date || "" },
+        window.location.origin
       );
-      bindRemove(panel);
-      panel.querySelectorAll("[data-remove-perf]").forEach((btn) => {
-        btn.onclick = () => {
-          btn.closest("[data-perf]")?.remove();
+    }
+
+    let editingDate = "";
+
+    function performancesForDate(date) {
+      return sortedPerformances().filter((p) => p.date === date);
+    }
+
+    function recurringForDate(dateStr) {
+      const [y, m, d] = dateStr.split("-").map(Number);
+      if (!y || !m || !d) return [];
+      const cur = new Date(y, m - 1, d);
+      const dow = cur.getDay();
+      return (eventsData.recurring || [])
+        .map((ev, index) => ({ ev, index }))
+        .filter(({ ev }) => {
+          if (!Array.isArray(ev.dayOfWeek) || !ev.dayOfWeek.includes(dow)) return false;
+          if (ev.weekOfMonth) {
+            const week = Math.ceil(cur.getDate() / 7);
+            if (week !== ev.weekOfMonth) return false;
+          }
+          return true;
+        });
+    }
+
+    function recurringEditorFieldsHtml(ev) {
+      return `
+        <div class="admin-form-grid cols-2">
+          ${field("Event name", `<input data-recurring-field="title" value="${esc(ev.title || "")}" />`)}
+          ${eventCategoryField("category", ev.category || "community", "data-recurring-field")}
+          ${daysOfWeekField(ev.dayOfWeek || [], "data-recurring-field")}
+          ${field("Summary", `<textarea data-recurring-field="summary" rows="2">${esc(ev.summary || "")}</textarea>`)}
+          ${field("Start time", `<input type="time" data-recurring-field="startTime" value="${esc(ev.startTime || "")}" />`)}
+          ${field("End time (optional)", `<input type="time" data-recurring-field="endTime" value="${esc(ev.endTime || "")}" />`)}
+          ${weekOfMonthField("weekOfMonth", ev.weekOfMonth || "", "data-recurring-field")}
+        </div>`;
+    }
+
+    function bindRecurringEditor(root, index, { onRemove } = {}) {
+      const ev = eventsData.recurring?.[index];
+      if (!ev) return;
+      root.querySelectorAll('[data-recurring-field="day"]').forEach((cb) => {
+        cb.addEventListener("change", () => {
+          const days = readCheckedDays(root, '[data-recurring-field="day"]');
+          if (!days.length) {
+            cb.checked = true;
+            alert("Select at least one day of the week.");
+            return;
+          }
+          ev.dayOfWeek = days;
           scheduleEventsPreview();
+          panel._markUnsaved?.();
+        });
+      });
+      root.querySelectorAll("[data-recurring-field]").forEach((input) => {
+        if (input.dataset.recurringField === "day") return;
+        const update = () => {
+          const key = input.dataset.recurringField;
+          if (key === "weekOfMonth") {
+            const raw = input.value.trim();
+            if (raw) ev.weekOfMonth = Number(raw);
+            else delete ev.weekOfMonth;
+          } else {
+            ev[key] = input.value.trim();
+          }
+          scheduleEventsPreview();
+          panel._markUnsaved?.();
+        };
+        input.addEventListener("input", update);
+        input.addEventListener("change", update);
+      });
+      root.querySelector("[data-remove-recurring]")?.addEventListener("click", onRemove);
+    }
+
+    function perfEditorFieldsHtml(perf, { showDate = false } = {}) {
+      return `
+        <div class="admin-form-grid cols-2">
+          ${showDate ? field("Date", `<input type="date" data-field="date" data-focus-field="date" value="${esc(perf.date)}" />`) : ""}
+          ${field("Event name", `<input data-field="title" data-focus-field="title" value="${esc(perf.title)}" placeholder="e.g. Josh Plummer" />`)}
+          ${eventCategoryField("category", perf.category || "live-music", "data-focus-field")}
+          ${field("Start time", `<input type="time" data-field="startTime" data-focus-field="startTime" value="${esc(perf.startTime || "18:30")}" />`)}
+          ${field("End time", `<input type="time" data-field="endTime" data-focus-field="endTime" value="${esc(perf.endTime || "21:30")}" />`)}
+          ${field("Note (optional)", `<input data-field="note" data-focus-field="note" value="${esc(perf.note || "")}" placeholder="e.g. Friday bandingo" />`)}
+        </div>`;
+    }
+
+    function bindPerfEditor(root, perf, { onChange, onRemove, onDuplicate } = {}) {
+      root.querySelectorAll("[data-focus-field]").forEach((input) => {
+        const update = () => {
+          perf[input.dataset.focusField] = input.value.trim();
+          onChange?.();
+          scheduleEventsPreview();
+          panel._markUnsaved?.();
+        };
+        input.addEventListener("input", update);
+        input.addEventListener("change", update);
+      });
+      root.querySelector("[data-duplicate-perf]")?.addEventListener("click", onDuplicate);
+      root.querySelector("[data-remove-perf]")?.addEventListener("click", onRemove);
+    }
+
+    function bindAddEventPanel(root, { expandAdd = false, addType = "one-off" } = {}) {
+      const toggleBtn = root.querySelector("#modal-toggle-add-event");
+      const addPanel = root.querySelector("#modal-add-event-panel");
+      const oneOffFields = root.querySelector("#modal-add-one-off-fields");
+      const weeklyFields = root.querySelector("#modal-add-weekly-fields");
+      const typeRadios = root.querySelectorAll('input[name="add-event-type"]');
+
+      function setAddPanelOpen(open) {
+        if (!addPanel || !toggleBtn) return;
+        addPanel.hidden = !open;
+        toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        toggleBtn.textContent = open ? "Cancel" : "+ Add event";
+      }
+
+      function syncAddType(type) {
+        if (oneOffFields) oneOffFields.hidden = type !== "one-off";
+        if (weeklyFields) weeklyFields.hidden = type !== "weekly";
+      }
+
+      toggleBtn?.addEventListener("click", () => {
+        const open = toggleBtn.getAttribute("aria-expanded") !== "true";
+        setAddPanelOpen(open);
+        if (open) {
+          const type = root.querySelector('input[name="add-event-type"]:checked')?.value || "one-off";
+          root.querySelector(`[data-add-${type === "weekly" ? "weekly" : "oneoff"}-field="title"]`)?.focus();
+        }
+      });
+
+      typeRadios.forEach((radio) => {
+        radio.addEventListener("change", () => syncAddType(radio.value));
+      });
+
+      if (expandAdd) {
+        const typeRadio = root.querySelector(`input[name="add-event-type"][value="${addType}"]`);
+        if (typeRadio) {
+          typeRadio.checked = true;
+          syncAddType(addType);
+        }
+        setAddPanelOpen(true);
+      } else {
+        syncAddType("one-off");
+      }
+
+      root.querySelector("#modal-add-event-submit")?.addEventListener("click", () => {
+        const type = root.querySelector('input[name="add-event-type"]:checked')?.value || "one-off";
+        if (type === "one-off") {
+          const title = root.querySelector('[data-add-oneoff-field="title"]')?.value.trim() || "";
+          const category = root.querySelector('[data-add-oneoff-field="category"]')?.value || "live-music";
+          const startTime = root.querySelector('[data-add-oneoff-field="startTime"]')?.value.trim() || "18:30";
+          const endTime = root.querySelector('[data-add-oneoff-field="endTime"]')?.value.trim() || "21:30";
+          const note = root.querySelector('[data-add-oneoff-field="note"]')?.value.trim() || "";
+          if (!title) {
+            alert("Add an event name.");
+            return;
+          }
+          const newPerf = {
+            __adminId: `perf-${nextPerfId++}`,
+            date: editingDate,
+            title,
+            category,
+            startTime,
+            endTime,
+            note,
+          };
+          eventsData.performances.push(newPerf);
+          scheduleEventsPreview();
+          panel._markUnsaved?.();
+          openEventsDayModal(editingDate, { focusId: newPerf.__adminId });
+          return;
+        }
+
+        const title = root.querySelector('[data-add-weekly-field="title"]')?.value.trim() || "";
+        const category = root.querySelector('[data-add-weekly-field="category"]')?.value || "community";
+        const summary = root.querySelector('[data-add-weekly-field="summary"]')?.value.trim() || "";
+        const startTime = root.querySelector('[data-add-weekly-field="startTime"]')?.value.trim() || "18:00";
+        const endTime = root.querySelector('[data-add-weekly-field="endTime"]')?.value.trim() || "";
+        const weekRaw = root.querySelector('[data-add-weekly-field="weekOfMonth"]')?.value.trim() || "";
+        const days = readCheckedDays(root, '#modal-add-weekly-fields [data-add-weekly-field="day"]');
+        if (!title) {
+          alert("Add an event name.");
+          return;
+        }
+        if (!days.length) {
+          alert("Select at least one day of the week.");
+          return;
+        }
+        const newRecurring = {
+          id: slugEventId(title),
+          title,
+          category,
+          summary,
+          dayOfWeek: days,
+          startTime,
+          image: "assets/live-music.webp",
+        };
+        if (endTime) newRecurring.endTime = endTime;
+        if (weekRaw) newRecurring.weekOfMonth = Number(weekRaw);
+        eventsData.recurring.push(newRecurring);
+        scheduleEventsPreview();
+        panel._markUnsaved?.();
+        openEventsDayModal(editingDate, {
+          recurringPayload: { id: newRecurring.id, title: newRecurring.title, recurring: true },
+        });
+      });
+    }
+
+    function openEventsDayModal(date, { focusId = null, recurringPayload = null, expandAdd = false, addType = "one-off" } = {}) {
+      editingDate = date || "";
+      highlightPreviewDate(editingDate);
+
+      const dayRecurring = recurringForDate(editingDate);
+      const dayPerfs = performancesForDate(editingDate);
+      const hasAnyEvents = dayRecurring.length > 0 || dayPerfs.length > 0;
+
+      const recurringListHtml = dayRecurring.length
+        ? dayRecurring
+            .map(({ ev, index }) => {
+              const isFocus =
+                recurringPayload &&
+                (recurringPayload.id === ev.id ||
+                  (recurringPayload.title === ev.title && recurringPayload.recurring));
+              return `
+                <div class="admin-modal-day-event admin-modal-day-event--recurring${isFocus ? " is-focus" : ""}" data-modal-recurring="${index}">
+                  <div class="admin-modal-day-event-head">
+                    <div class="admin-modal-day-event-title-wrap">
+                      <strong>${esc(ev.title || "Weekly event")}</strong>
+                      <span class="admin-modal-recurring-badge">${esc(formatDaysOfWeek(ev.dayOfWeek))}${ev.weekOfMonth ? ` · ${ev.weekOfMonth}${ev.weekOfMonth === 1 ? "st" : ev.weekOfMonth === 2 ? "nd" : ev.weekOfMonth === 3 ? "rd" : "th"} week` : ""}</span>
+                    </div>
+                    <button type="button" class="btn btn-outline admin-btn-sm" data-remove-recurring>Remove</button>
+                  </div>
+                  ${recurringEditorFieldsHtml(ev)}
+                </div>`;
+            })
+            .join("")
+        : `<p class="admin-events-empty admin-events-empty--subtle">No weekly events on this day.</p>`;
+
+      const recurringHtml = `<div class="admin-modal-day-section">
+            ${modalSectionHead("Weekly events on this day", { btnId: "modal-toggle-add-event", btnLabel: "+ Add event" })}
+            ${addEventPanelHtml(editingDate)}
+            <div class="admin-modal-day-events">${recurringListHtml}</div>
+          </div>`;
+
+      const perfHtml = dayPerfs.length
+        ? dayPerfs
+            .map((perf) => {
+              const isFocus = focusId === perf.__adminId || (!focusId && !dayRecurring.length && dayPerfs.length === 1);
+              return `
+                <div class="admin-modal-day-event${isFocus ? " is-focus" : ""}" data-modal-perf="${esc(perf.__adminId)}">
+                  <div class="admin-modal-day-event-head">
+                    <strong>${esc(perf.title || "New act")}</strong>
+                    <div class="admin-events-summary-actions">
+                      <button type="button" class="btn btn-outline admin-btn-sm" data-duplicate-perf>Duplicate</button>
+                      <button type="button" class="btn btn-outline admin-btn-sm" data-remove-perf>Remove</button>
+                    </div>
+                  </div>
+                  ${perfEditorFieldsHtml(perf)}
+                </div>`;
+            })
+            .join("")
+        : hasAnyEvents
+          ? `<p class="admin-events-empty admin-events-empty--subtle">No one-off performances on this date.</p>`
+          : `<p class="admin-events-empty">No events on this date yet. Use + Add event above.</p>`;
+
+      const perfSectionHtml = `<div class="admin-modal-day-section">
+            ${modalSectionHead("One-off performances")}
+            <div class="admin-modal-day-events">${perfHtml}</div>
+          </div>`;
+
+      openAdminModal({
+        title: formatAdminDate(editingDate),
+        subtitle: "Green = today · Red highlight = date you are editing",
+        wide: true,
+        bodyHtml: `
+          ${recurringHtml}
+          ${perfSectionHtml}`,
+        footerHtml: `<button type="button" class="btn btn-outline admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onClose: () => highlightPreviewDate(""),
+        onMount: (root) => {
+          bindAddEventPanel(root, { expandAdd, addType });
+
+          root.querySelectorAll("[data-modal-recurring]").forEach((block) => {
+            const index = Number(block.dataset.modalRecurring);
+            bindRecurringEditor(block, index, {
+              onRemove: () => {
+                const ev = eventsData.recurring?.[index];
+                const label = ev?.title || "this weekly event";
+                if (
+                  !window.confirm(
+                    `Remove "${label}" from the weekly calendar? It will disappear from every matching day going forward.`
+                  )
+                ) {
+                  return;
+                }
+                eventsData.recurring.splice(index, 1);
+                scheduleEventsPreview();
+                panel._markUnsaved?.();
+                openEventsDayModal(editingDate);
+              },
+            });
+          });
+
+          root.querySelectorAll("[data-modal-perf]").forEach((block) => {
+            const perf = performanceById(block.dataset.modalPerf);
+            if (!perf) return;
+            bindPerfEditor(block, perf, {
+              onDuplicate: () => {
+                const copy = {
+                  ...perf,
+                  __adminId: `perf-${nextPerfId++}`,
+                  title: `${perf.title || "New act"} copy`,
+                };
+                eventsData.performances.push(copy);
+                scheduleEventsPreview();
+                panel._markUnsaved?.();
+                openEventsDayModal(editingDate, { focusId: copy.__adminId });
+              },
+              onRemove: () => {
+                removePerformance(perf.__adminId, { reopen: false });
+                openEventsDayModal(editingDate);
+              },
+            });
+          });
+        },
+      });
+    }
+
+    function openEventsBulkModal(initialTab = "performances") {
+      openAdminModal({
+        title: "Manage all events",
+        subtitle: "Upcoming performances and weekly recurring nights",
+        wide: true,
+        bodyHtml: `
+          <div class="admin-events-toolbar">
+            <div class="admin-events-tabs" role="tablist" aria-label="Events editor views">
+              <button type="button" class="admin-events-tab${initialTab === "performances" ? " is-active" : ""}" role="tab" data-events-tab="performances">Upcoming performances</button>
+              <button type="button" class="admin-events-tab${initialTab === "recurring" ? " is-active" : ""}" role="tab" data-events-tab="recurring">Weekly recurring nights</button>
+            </div>
+          </div>
+          <div class="admin-events-panel${initialTab === "performances" ? " is-active" : ""}" id="events-tab-performances"${initialTab === "performances" ? "" : " hidden"}>
+            <div id="perf-rows"></div>
+          </div>
+          <div class="admin-events-panel${initialTab === "recurring" ? " is-active" : ""}" id="events-tab-recurring"${initialTab === "recurring" ? "" : " hidden"}>
+            <p class="admin-events-panel-hint">These power the calendar every week. Edit titles and descriptions only if the promo changed.</p>
+            <div id="recurring-rows">${(eventsData.recurring || []).map((r, i) => recurringRow(r, i)).join("")}</div>
+          </div>`,
+        footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => {
+          bindEventsTabs(root);
+          bindEventsPreviewInputs(root, scheduleEventsPreview);
+          renderPerformanceList(root);
+          root.querySelectorAll("[data-edit-perf]").forEach((btn) => {
+            btn.onclick = () => {
+              const id = btn.closest("[data-perf]")?.dataset.perfId;
+              const perf = performanceById(id);
+              closeAdminModal();
+              if (perf?.date) openEventsDayModal(perf.date, { focusId: id });
+            };
+          });
+        },
+      });
+    }
+
+    function renderPerformanceList(scope = panel) {
+      const list = scope.querySelector("#perf-rows");
+      if (!list) return;
+      const perfs = sortedPerformances();
+      list.innerHTML = perfs.length
+        ? perfs.map((p) => perfSummaryRow(p, false)).join("")
+        : `<p class="admin-events-empty">No dated performances yet. Click a calendar date to add one.</p>`;
+
+      list.querySelectorAll("[data-edit-perf]").forEach((btn) => {
+        btn.onclick = () => {
+          const id = btn.closest("[data-perf]")?.dataset.perfId;
+          const perf = performanceById(id);
+          closeAdminModal();
+          if (perf?.date) openEventsDayModal(perf.date, { focusId: id });
         };
       });
-    });
-    bindRemove(panel);
-    panel.querySelectorAll("[data-remove-perf]").forEach((btn) => {
-      btn.onclick = () => {
-        btn.closest("[data-perf]")?.remove();
-        scheduleEventsPreview();
-      };
-    });
-    bindEventsPreviewInputs(panel, scheduleEventsPreview);
+      list.querySelectorAll("[data-remove-perf]").forEach((btn) => {
+        btn.onclick = () => removePerformance(btn.closest("[data-perf]")?.dataset.perfId);
+      });
+    }
+
+    function addPerformance(date, seed = {}) {
+      openEventsDayModal(date || new Date().toISOString().slice(0, 10), {
+        expandAdd: true,
+        addType: seed.recurring ? "weekly" : "one-off",
+        recurringPayload: seed.recurring ? seed : null,
+      });
+    }
+
+    function removePerformance(id, { reopen = true } = {}) {
+      if (!id) return;
+      eventsData.performances = eventsData.performances.filter((p) => p.__adminId !== id);
+      scheduleEventsPreview();
+      panel._markUnsaved?.();
+      if (reopen && editingDate) openEventsDayModal(editingDate);
+    }
+
+    function findPerformanceFromPreview(payload) {
+      return eventsData.performances.find(
+        (p) =>
+          p.date === payload.date &&
+          p.title === payload.title &&
+          (!payload.startTime || p.startTime === payload.startTime)
+      );
+    }
+
+    function handlePreviewMessage(event) {
+      if (!panel.isConnected) {
+        window.removeEventListener("message", handlePreviewMessage);
+        return;
+      }
+      if (event.origin !== window.location.origin || event.data?.source !== "ws-events-preview") return;
+      const payload = event.data;
+      if (payload.type === "day") {
+        openEventsDayModal(payload.date);
+        return;
+      }
+      if (payload.type === "event") {
+        if (payload.recurring) {
+          openEventsDayModal(payload.date, { recurringPayload: payload });
+          return;
+        }
+        const perf = findPerformanceFromPreview(payload);
+        if (perf) openEventsDayModal(payload.date, { focusId: perf.__adminId });
+        else
+          openEventsDayModal(payload.date, {
+            focusId: null,
+          });
+      }
+    }
+
+    panel.innerHTML = `
+      <p class="admin-note">This is a <strong>draft preview</strong>. Click any calendar date to add or edit everything on that day — weekly events and one-off performances (highlighted in red). Today stays green. <em>Save changes</em> keeps the draft on this device; public files stay unchanged until export/publish.</p>
+      <div class="admin-draft-full">
+        <div class="admin-draft-full__toolbar">
+          <div>
+            <p class="admin-preview-label">Draft preview — events calendar</p>
+            <p>Click a date or event chip in the calendar below. Edits open in a popup.</p>
+          </div>
+          <div class="admin-draft-full__toolbar-actions">
+            <button type="button" class="btn btn-outline admin-btn-sm" id="events-manage-all">Manage all events</button>
+            <button type="button" class="btn btn-primary admin-btn-sm" id="add-perf">+ Add performance</button>
+          </div>
+        </div>
+        <iframe id="events-page-iframe" class="admin-preview-frame admin-events-preview-frame" title="Draft events calendar preview" src="events.html?preview=1#events-calendar-section"></iframe>
+      </div>`;
+
+    panel.querySelector("#add-perf")?.addEventListener("click", () =>
+      openEventsDayModal(new Date().toISOString().slice(0, 10), { expandAdd: true, addType: "one-off" })
+    );
+    panel.querySelector("#events-manage-all")?.addEventListener("click", () => openEventsBulkModal("performances"));
     panel._getEvents = collectFromPanel;
     panel._refreshPagePreview = refreshEventsPreview;
+    window.addEventListener("message", handlePreviewMessage);
     pushEventsDraft(true);
+  }
+
+  function bindEventsTabs(panel) {
+    const tabs = panel.querySelectorAll("[data-events-tab]");
+    const panels = {
+      performances: panel.querySelector("#events-tab-performances"),
+      recurring: panel.querySelector("#events-tab-recurring"),
+    };
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const id = tab.dataset.eventsTab;
+        tabs.forEach((t) => {
+          const active = t === tab;
+          t.classList.toggle("is-active", active);
+          t.setAttribute("aria-selected", active ? "true" : "false");
+          t.tabIndex = active ? 0 : -1;
+        });
+        Object.entries(panels).forEach(([key, el]) => {
+          if (!el) return;
+          const active = key === id;
+          el.classList.toggle("is-active", active);
+          el.hidden = !active;
+        });
+      });
+    });
   }
 
   function bindEventsPreviewInputs(panel, onChange) {
@@ -423,20 +878,23 @@ window.WSAdminGUI = (function () {
     });
   }
 
-  function perfRow(p) {
+  function formatPerfSummary(p) {
+    const date = p.date || "No date";
+    const time = p.startTime ? `${p.startTime}${p.endTime ? `-${p.endTime}` : ""}` : "No time";
+    return `${date} / ${time}`;
+  }
+
+  function perfSummaryRow(p, selected) {
     return `
-      <div class="admin-list-item" data-perf>
+      <div class="admin-list-item admin-events-summary-row${selected ? " is-selected" : ""}" data-perf data-perf-id="${esc(p.__adminId || "")}">
         <div class="admin-list-item-head">
           <strong>${esc(p.title || "New act")}</strong>
-          <button type="button" class="btn btn-outline admin-btn-sm" data-remove-perf>Remove</button>
+          <div class="admin-events-summary-actions">
+            <button type="button" class="btn btn-outline admin-btn-sm" data-edit-perf>Edit</button>
+            <button type="button" class="btn btn-outline admin-btn-sm" data-remove-perf>Remove</button>
+          </div>
         </div>
-        <div class="admin-form-grid cols-2">
-          ${field("Date", `<input type="date" data-field="date" value="${esc(p.date)}" />`)}
-          ${field("Artist / event name", `<input data-field="title" value="${esc(p.title)}" placeholder="e.g. Josh Plummer" />`)}
-          ${field("Start time", `<input type="time" data-field="startTime" value="${esc(p.startTime || "18:30")}" />`)}
-          ${field("End time", `<input type="time" data-field="endTime" value="${esc(p.endTime || "21:30")}" />`)}
-          ${field("Note (optional)", `<input data-field="note" value="${esc(p.note || "")}" placeholder="e.g. Friday bandingo" />`)}
-        </div>
+        <p class="admin-events-summary-meta">${esc(formatPerfSummary(p))}${p.note ? ` / ${esc(p.note)}` : ""}</p>
       </div>`;
   }
 
@@ -501,13 +959,6 @@ window.WSAdminGUI = (function () {
       return { menu, cat, menuIdx, catIdx };
     }
 
-    function menuPreviewHash() {
-      const { menu, cat } = getSelection();
-      if (!menu) return "#main-menu";
-      if (!cat) return `#${menu.id}`;
-      return `#${menu.id}-${cat.id}`;
-    }
-
     function markSyncedSection() {
       panel.dataset.syncedMenuIdx = menuSelect.value;
       panel.dataset.syncedCatIdx = catSelect.value;
@@ -517,7 +968,10 @@ window.WSAdminGUI = (function () {
       if (!panel.dataset.menuEditorReady) return;
       const menuIdx = Number(panel.dataset.syncedMenuIdx ?? menuSelect.value ?? 0);
       const catIdx = Number(panel.dataset.syncedCatIdx ?? catSelect.value ?? 0);
-      menusData = syncMenuSection(panel, menusData, menuIdx, catIdx);
+      const modalRoot = document.getElementById("admin-modal-root");
+      const scope = modalRoot?.querySelector("#menu-items") ? modalRoot : panel;
+      if (!scope.querySelector("#menu-items")) return;
+      menusData = syncMenuSection(scope, menusData, menuIdx, catIdx);
       menus = menusData.menus;
     }
 
@@ -527,9 +981,6 @@ window.WSAdminGUI = (function () {
       const mount = panel.querySelector("#menu-draft-preview");
       const { menu, cat } = getSelection();
       if (!mount || !window.WSMenuRender || !menu) return;
-      const hash = menuPreviewHash();
-      const openLink = panel.querySelector("#menu-open-preview");
-      if (openLink) openLink.href = `menu.html${hash}`;
       mount.innerHTML = WSMenuRender.renderApp(menusData, menu.id, cat?.id || "");
       const section = cat ? mount.querySelector(`#${menu.id}-${cat.id}`) : null;
       if (section) section.scrollIntoView({ block: "start", behavior: "auto" });
@@ -540,31 +991,92 @@ window.WSAdminGUI = (function () {
       previewTimer = setTimeout(renderMenuDraftPreview, 200);
     }
 
+    function openMenuSectionModal(focusItemIndex = null) {
+      syncCurrentEditorSection();
+      const { menu, cat, menuIdx, catIdx } = getSelection();
+      if (!cat) return;
+
+      openAdminModal({
+        title: `${menu?.label || "Menu"} — ${cat.name}`,
+        subtitle: "Edit items in this section. The draft preview updates as you type.",
+        wide: true,
+        bodyHtml: `<div id="menu-items"></div>`,
+        footerHtml: `
+          <button type="button" class="btn btn-outline admin-btn-sm" id="modal-add-menu-item">+ Add item</button>
+          <button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => {
+          const container = root.querySelector("#menu-items");
+          container.innerHTML = (cat.items || []).map((item) => menuItemRow(item)).join("");
+          bindRemove(root);
+          root.querySelectorAll("[data-remove-item]").forEach((btn) => {
+            btn.onclick = () => {
+              btn.closest("[data-menu-item]")?.remove();
+              renderMenuDraftPreview();
+              panel._markUnsaved?.();
+            };
+          });
+          if (focusItemIndex != null) {
+            const row = container.querySelectorAll("[data-menu-item]")[focusItemIndex];
+            row?.scrollIntoView({ block: "nearest" });
+            row?.classList.add("is-focus");
+          }
+          bindMenuPreviewInputs(root, scheduleMenuPreview);
+          root.querySelector("#modal-add-menu-item")?.addEventListener("click", () => {
+            container.insertAdjacentHTML("beforeend", menuItemRow({ name: "", desc: "", price: "" }));
+            bindRemove(root);
+            root.querySelectorAll("[data-remove-item]").forEach((btn) => {
+              btn.onclick = () => {
+                btn.closest("[data-menu-item]")?.remove();
+                renderMenuDraftPreview();
+                panel._markUnsaved?.();
+              };
+            });
+            renderMenuDraftPreview();
+          });
+          panel.dataset.syncedMenuIdx = String(menuIdx);
+          panel.dataset.syncedCatIdx = String(catIdx);
+        },
+        onClose: () => {
+          const modalRoot = document.getElementById("admin-modal-root");
+          const modalItems = modalRoot?.querySelector("#menu-items");
+          if (modalItems) {
+            const { menuIdx, catIdx } = getSelection();
+            const cat = menus[menuIdx]?.categories?.[catIdx];
+            if (cat) {
+              const items = [];
+              modalItems.querySelectorAll("[data-menu-item]").forEach((row) => {
+                const name = rowVal(row, "name");
+                if (!name) return;
+                const item = { name };
+                const desc = rowVal(row, "desc");
+                const price = rowVal(row, "price");
+                if (desc) item.desc = desc;
+                if (price) item.price = price;
+                items.push(item);
+              });
+              cat.items = items;
+              menusData.menus = menus;
+            }
+          }
+          renderMenuDraftPreview();
+        },
+      });
+    }
+
     panel.innerHTML = `
-      <p class="admin-note">Update item names, descriptions, and prices. The preview on the right shows your edits before you save — nothing goes live on the website until you click <em>Save changes</em>.</p>
-      <div class="admin-page-split">
-        <div class="admin-editor-col">
-          <div class="admin-card">
-            <div class="admin-form-grid cols-2">
-              ${field("Menu", `<select id="menu-select">${menuOptions}</select>`)}
-              ${field("Section", `<select id="cat-select"></select>`)}
-            </div>
+      <p class="admin-note">Update item names, descriptions, and prices. Click a menu item in the preview to edit it, or use Edit section. <em>Save changes</em> keeps the draft on this device; public files stay unchanged until export/publish.</p>
+      <div class="admin-draft-full">
+        <div class="admin-draft-full__toolbar">
+          <div class="admin-form-grid cols-2" style="margin:0;flex:1;min-width:min(100%,520px)">
+            ${field("Menu", `<select id="menu-select">${menuOptions}</select>`)}
+            ${field("Section", `<select id="cat-select"></select>`)}
           </div>
-          <div class="admin-card">
-            <h3 id="cat-heading">Items</h3>
-            <div id="menu-items"></div>
-            <button type="button" class="btn btn-outline" id="add-menu-item" style="margin-top:0.75rem">+ Add item to this section</button>
+          <div class="admin-draft-full__toolbar-actions">
+            <button type="button" class="btn btn-outline admin-btn-sm" id="edit-menu-section">Edit section</button>
+            <button type="button" class="btn btn-primary admin-btn-sm" id="add-menu-item">+ Add item</button>
           </div>
         </div>
-        <div class="admin-preview-col">
-          <p class="admin-preview-label">Draft preview — if you save</p>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 0.75rem">Shows how the menu page will look after you click <em>Save changes</em>. The live site stays unchanged until then.</p>
-          <div id="menu-draft-preview" class="admin-menu-draft-preview admin-preview-frame" aria-label="Menu draft preview"></div>
-          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem">
-            <button type="button" class="btn btn-outline admin-btn-sm" id="menu-refresh-preview">Refresh preview</button>
-            <a href="menu.html#main-menu" target="_blank" rel="noopener" class="btn btn-outline admin-btn-sm" id="menu-open-preview">Open menu page ↗</a>
-          </div>
-        </div>
+        <div id="menu-draft-preview" class="admin-menu-draft-preview admin-preview-frame" aria-label="Menu draft preview"></div>
       </div>`;
 
     const menuSelect = panel.querySelector("#menu-select");
@@ -582,23 +1094,10 @@ window.WSAdminGUI = (function () {
     function renderItems() {
       const menu = menus[Number(menuSelect.value)] || menus[0];
       const cat = menu?.categories?.[Number(catSelect.value)];
-      const heading = panel.querySelector("#cat-heading");
-      const container = panel.querySelector("#menu-items");
-      if (!cat) {
-        container.innerHTML = "<p>No sections in this menu.</p>";
-        return;
-      }
-      heading.textContent = cat.name;
-      container.innerHTML = (cat.items || []).map((item) => menuItemRow(item)).join("");
+      if (!cat) return;
       panel.dataset.menuEditorReady = "1";
       markSyncedSection();
-      bindRemove(panel);
-      panel.querySelectorAll("[data-remove-item]").forEach((btn) => {
-        btn.onclick = () => {
-          btn.closest("[data-menu-item]")?.remove();
-          renderMenuDraftPreview();
-        };
-      });
+      renderMenuDraftPreview();
     }
 
     function switchMenu() {
@@ -614,21 +1113,16 @@ window.WSAdminGUI = (function () {
 
     menuSelect.addEventListener("change", switchMenu);
     catSelect.addEventListener("change", switchCategory);
-    panel.querySelector("#add-menu-item")?.addEventListener("click", () => {
-      panel.querySelector("#menu-items")?.insertAdjacentHTML(
-        "beforeend",
-        menuItemRow({ name: "", desc: "", price: "" })
-      );
-      panel.querySelectorAll("[data-remove-item]").forEach((btn) => {
-        btn.onclick = () => {
-          btn.closest("[data-menu-item]")?.remove();
-          renderMenuDraftPreview();
-        };
-      });
-      renderMenuDraftPreview();
+    panel.querySelector("#edit-menu-section")?.addEventListener("click", () => openMenuSectionModal());
+    panel.querySelector("#add-menu-item")?.addEventListener("click", () => openMenuSectionModal());
+    panel.querySelector("#menu-draft-preview")?.addEventListener("click", (e) => {
+      const itemEl = e.target.closest(".menu-item");
+      if (!itemEl) return;
+      const { cat } = getSelection();
+      const items = itemEl.parentElement?.querySelectorAll(".menu-item");
+      const index = items ? [...items].indexOf(itemEl) : -1;
+      if (index >= 0) openMenuSectionModal(index);
     });
-    panel.querySelector("#menu-refresh-preview")?.addEventListener("click", renderMenuDraftPreview);
-
     panel._getMenus = () => {
       syncCurrentEditorSection();
       return menusData;
@@ -665,16 +1159,16 @@ window.WSAdminGUI = (function () {
       </div>`;
   }
 
-  function syncMenuSection(panel, menus, menuIdx, catIdx) {
+  function syncMenuSection(scope, menus, menuIdx, catIdx) {
     const out = JSON.parse(JSON.stringify(menus));
-    if (!panel.dataset.menuEditorReady) return out;
-    const mIdx = menuIdx ?? Number(panel.querySelector("#menu-select")?.value || 0);
-    const cIdx = catIdx ?? Number(panel.querySelector("#cat-select")?.value || 0);
+    if (!scope?.querySelector("#menu-items")) return out;
+    const mIdx = menuIdx ?? Number(scope.querySelector("#menu-select")?.value || 0);
+    const cIdx = catIdx ?? Number(scope.querySelector("#cat-select")?.value || 0);
     const cat = out.menus?.[mIdx]?.categories?.[cIdx];
     if (!cat) return out;
 
     const items = [];
-    panel.querySelectorAll("#menu-items [data-menu-item]").forEach((row) => {
+    scope.querySelectorAll("#menu-items [data-menu-item]").forEach((row) => {
       const name = rowVal(row, "name");
       if (!name) return;
       const item = { name };
@@ -761,88 +1255,242 @@ window.WSAdminGUI = (function () {
   }
 
   /* ——— Promos ——— */
-  function promoEditorRow(p, placement, imagesData) {
+  const PROMO_IMAGE_TAGS = ["events", "promo", "gallery", "food", "music"];
+
+  function promoLayoutLabel(layout) {
+    return layout === "highlight" ? "Highlight" : "Standard";
+  }
+
+  function emptyPromoCard(placement) {
+    return {
+      id: `new-${Date.now()}`,
+      title: "",
+      summary: "",
+      tag: "",
+      tagClass: "",
+      layout: "standard",
+      image: "assets/gallery/WSGoodTimes.webp",
+      mediaType: "image",
+      alt: "",
+      placement,
+    };
+  }
+
+  const PROMO_DRAG_HANDLE_SVG = `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm0 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm0 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm12-12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm0 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm0 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>`;
+
+  function promoSummaryRow(p, placement) {
     const pl = PROMO_PLACEMENTS[placement];
+    const img = p.image || "assets/gallery/WSGoodTimes.webp";
     return `
-      <div class="admin-list-item admin-promo-editor" data-promo-placement="${placement}" data-promo-id="${esc(p.id || "")}">
-        <div class="admin-list-item-head">
-          <strong>${esc(p.title || "New promo card")}</strong>
-          <span class="admin-placement-badge">${esc(pl.label)}</span>
-          <button type="button" class="btn btn-outline admin-btn-sm" data-remove-promo>Remove</button>
+      <div class="admin-list-item admin-promo-summary" data-promo-summary data-promo-placement="${placement}" data-promo-id="${esc(p.id || "")}">
+        <div class="admin-promo-summary-layout">
+          <button type="button" class="admin-promo-drag-handle" data-promo-drag-handle draggable="true" aria-label="Drag to reorder" title="Drag to reorder">${PROMO_DRAG_HANDLE_SVG}</button>
+          <img class="admin-promo-summary-thumb" src="${esc(img)}" alt="" loading="lazy" />
+          <div class="admin-promo-summary-body">
+            <div class="admin-promo-summary-head">
+              <strong>${esc(p.title || "Untitled card")}</strong>
+              <span class="admin-placement-badge">${esc(pl.label)}</span>
+            </div>
+            <p class="admin-promo-summary-meta">${esc(p.tag || "No tag line")} · ${esc(promoLayoutLabel(p.layout))}${p.tagClass === "music" ? " · Live music tag" : ""}</p>
+            <p class="admin-promo-summary-desc">${esc(p.summary || "")}</p>
+          </div>
+          <div class="admin-promo-summary-actions">
+            <button type="button" class="btn btn-outline admin-btn-sm" data-edit-promo>Edit</button>
+            <button type="button" class="btn btn-outline admin-btn-sm" data-remove-promo>Remove</button>
+          </div>
         </div>
-        <div class="admin-form-grid cols-2">
-          ${field("Card style", `
-            <select data-field="layout">
-              <option value="standard"${p.layout !== "highlight" ? " selected" : ""}>Standard — photo on top</option>
-              <option value="highlight"${p.layout === "highlight" ? " selected" : ""}>Highlight — live music accent</option>
-            </select>`)}
-          ${field("Tag style", `
-            <select data-field="tagClass">
-              <option value=""${!p.tagClass ? " selected" : ""}>Default tag</option>
-              <option value="music"${p.tagClass === "music" ? " selected" : ""}>Live music (purple tag)</option>
-            </select>`)}
-          ${field("Title", `<input data-field="title" value="${esc(p.title)}" placeholder="Martini Monday" />`)}
-          ${field("Tag line", `<input data-field="tag" value="${esc(p.tag)}" placeholder="Every Monday" />`)}
-          ${field("Description", `<textarea data-field="summary" rows="3">${esc(p.summary)}</textarea>`)}
-          ${field("Image alt text", `<input data-field="alt" value="${esc(p.alt || p.title)}" />`)}
-        </div>
-        <label style="font-size:0.8rem;color:var(--text-muted);display:block;margin:0.75rem 0 0.35rem">Media — upload, library, or URL</label>
-        ${mediaPicker("image", p.image || "", p.mediaType || "", imagesData, ["events", "promo", "gallery", "food", "music"])}
-        <p style="font-size:0.8rem;color:var(--text-muted);margin:0.5rem 0 0">Upload images, GIFs, or videos — they are saved with the card when you click <em>Save changes</em>.</p>
       </div>`;
   }
 
-  function syncPromoPlacement(panel, promosData, placement) {
-    const key = PROMO_PLACEMENTS[placement].key;
-    const items = [];
-    panel.querySelectorAll(`[data-promo-placement="${placement}"]`).forEach((row) => {
-      const draft = readPromoRow(row);
-      if (!draft.title) return;
-      const id = row.dataset.promoId;
-      const orig = (promosData[key] || []).find((c) => c.id === id) || {};
-      items.push({
-        ...orig,
-        id: orig.id || id || draft.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-        placement,
-        layout: draft.layout,
-        title: draft.title,
-        summary: draft.summary,
-        tag: draft.tag,
-        tagClass: draft.tagClass,
-        image: draft.image || orig.image,
-        mediaType:
-          draft.mediaType ||
-          orig.mediaType ||
-          (window.WSConfig ? WSConfig.inferMediaType("", draft.image || orig.image) : "image"),
-        alt: draft.alt || draft.title,
-      });
-    });
-    promosData[key] = items;
-    return promosData;
+  function promoEditorFieldsHtml(p, imagesData) {
+    return `
+      <div class="admin-form-grid cols-2">
+        ${field("Card style", `
+          <select data-field="layout">
+            <option value="standard"${p.layout !== "highlight" ? " selected" : ""}>Standard — photo on top</option>
+            <option value="highlight"${p.layout === "highlight" ? " selected" : ""}>Highlight — live music accent</option>
+          </select>`)}
+        ${field("Tag style", `
+          <select data-field="tagClass">
+            <option value=""${!p.tagClass ? " selected" : ""}>Default tag</option>
+            <option value="music"${p.tagClass === "music" ? " selected" : ""}>Live music (purple tag)</option>
+          </select>`)}
+        ${field("Title", `<input data-field="title" value="${esc(p.title)}" placeholder="Martini Monday" />`)}
+        ${field("Tag line", `<input data-field="tag" value="${esc(p.tag)}" placeholder="Every Monday" />`)}
+        ${field("Description", `<textarea data-field="summary" rows="3">${esc(p.summary)}</textarea>`)}
+        ${field("Image alt text", `<input data-field="alt" value="${esc(p.alt || p.title)}" />`)}
+        <div class="admin-field admin-field--full admin-field--promo-photo">
+          <label>Photo</label>
+          ${imagePicker("image", p.image || "", imagesData, PROMO_IMAGE_TAGS)}
+          <input type="hidden" data-field="mediaType" value="${esc(p.mediaType || "image")}" />
+        </div>
+      </div>`;
   }
 
-  function renderPromoList(panel, promosData, placement, images, listId, onChange) {
-    const key = PROMO_PLACEMENTS[placement].key;
+  function syncPromoOrderFromList(list, promosData, key) {
     const cards = promosData[key] || [];
-    const list = panel.querySelector(`#${listId}`);
-    if (!list) return;
-    list.innerHTML = cards.length
-      ? cards.map((p) => promoEditorRow({ ...p, placement }, placement, images)).join("")
-      : `<p style="color:var(--text-muted)">No cards yet. Click “Add promo card” below.</p>`;
-    list.querySelectorAll(".admin-promo-editor").forEach((row) => {
-      row.querySelectorAll("[data-field]").forEach((el) => {
-        el.addEventListener("input", onChange);
-        el.addEventListener("change", onChange);
+    const byId = new Map(cards.map((c) => [c.id, c]));
+    promosData[key] = [...list.querySelectorAll("[data-promo-summary]")]
+      .map((row) => byId.get(row.dataset.promoId))
+      .filter(Boolean);
+  }
+
+  function bindPromoDragReorder(list, promosData, key, onChange) {
+    if (!list || list.dataset.promoDragBound) return;
+    list.dataset.promoDragBound = "1";
+    let dragId = null;
+
+    list.addEventListener("dragstart", (e) => {
+      const handle = e.target.closest("[data-promo-drag-handle]");
+      if (!handle) {
+        e.preventDefault();
+        return;
+      }
+      const row = handle.closest("[data-promo-summary]");
+      if (!row) return;
+      dragId = row.dataset.promoId;
+      row.classList.add("is-dragging");
+      if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", dragId);
+        e.dataTransfer.setDragImage(row, 40, 40);
+      }
+    });
+
+    list.addEventListener("dragend", () => {
+      const dragging = dragId
+        ? list.querySelector(`[data-promo-summary][data-promo-id="${dragId}"]`)
+        : null;
+      dragging?.classList.remove("is-dragging");
+      if (dragId) syncPromoOrderFromList(list, promosData, key);
+      dragId = null;
+      onChange(true);
+    });
+
+    list.addEventListener("dragover", (e) => {
+      if (!dragId) return;
+      e.preventDefault();
+      const dragging = list.querySelector(`[data-promo-summary][data-promo-id="${dragId}"]`);
+      if (!dragging) return;
+      const row = e.target.closest("[data-promo-summary]");
+      if (!row || row === dragging) return;
+      const rect = row.getBoundingClientRect();
+      const after = e.clientY > rect.top + rect.height / 2;
+      if (after) row.after(dragging);
+      else row.before(dragging);
+    });
+
+    list.addEventListener("drop", (e) => {
+      e.preventDefault();
+      if (dragId) syncPromoOrderFromList(list, promosData, key);
+    });
+  }
+
+  function promoCardFromDraft(draft, orig, placement, id) {
+    const image = draft.image || orig.image || "assets/gallery/WSGoodTimes.webp";
+    return {
+      ...orig,
+      id:
+        orig.id && !String(orig.id).startsWith("new-")
+          ? orig.id
+          : id || draft.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") || `promo-${Date.now()}`,
+      placement,
+      layout: draft.layout || "standard",
+      title: draft.title,
+      summary: draft.summary,
+      tag: draft.tag,
+      tagClass: draft.tagClass,
+      image,
+      mediaType:
+        draft.mediaType ||
+        orig.mediaType ||
+        (window.WSConfig ? WSConfig.inferMediaType("", image) : "image"),
+      alt: draft.alt || draft.title,
+    };
+  }
+
+  function mountPromoEditorWorkflow(panel, promosData, placement, images, listId, editorId, addBtnId, onChange) {
+    const key = PROMO_PLACEMENTS[placement].key;
+    let editingId = null;
+
+    function getCards() {
+      promosData[key] = promosData[key] || [];
+      return promosData[key];
+    }
+
+    function renderSummaries() {
+      const list = panel.querySelector(`#${listId}`);
+      if (!list) return;
+      const cards = getCards();
+      list.innerHTML = cards.length
+        ? cards.map((p) => promoSummaryRow(p, placement)).join("")
+        : `<p class="admin-promo-empty">No cards yet. Click “Add promo card” above.</p>`;
+      list.querySelectorAll("[data-edit-promo]").forEach((btn) => {
+        btn.onclick = () => openEditor(btn.closest("[data-promo-summary]")?.dataset.promoId);
       });
-    });
-    bindMediaPickers(list, onChange);
-    bindRemove(panel);
-    list.querySelectorAll("[data-remove-promo]").forEach((btn) => {
-      btn.onclick = () => {
-        btn.closest("[data-promo-placement]")?.remove();
-        onChange();
-      };
-    });
+      list.querySelectorAll("[data-remove-promo]").forEach((btn) => {
+        btn.onclick = () => {
+          const id = btn.closest("[data-promo-summary]")?.dataset.promoId;
+          if (!id) return;
+          promosData[key] = getCards().filter((c) => c.id !== id);
+          if (editingId === id) closeEditor();
+          renderSummaries();
+          onChange();
+        };
+      });
+      bindPromoDragReorder(list, promosData, key, onChange);
+    }
+
+    function closeEditor() {
+      editingId = null;
+      closeAdminModal();
+    }
+
+    function openEditor(id) {
+      const cards = getCards();
+      const orig = id ? cards.find((c) => c.id === id) : emptyPromoCard(placement);
+      if (id && !orig) return;
+      editingId = id || orig.id;
+      openAdminModal({
+        title: id ? "Edit promo card" : "New promo card",
+        subtitle: PROMO_PLACEMENTS[placement]?.label || "Promo card",
+        wide: true,
+        bodyHtml: `
+          ${promoEditorFieldsHtml(orig, images)}
+          <div class="admin-promo-editor-actions">
+            <button type="button" class="btn btn-primary admin-btn-sm" data-promo-editor-save>Save card</button>
+          </div>`,
+        footerHtml: `<button type="button" class="btn btn-outline admin-btn-sm" data-promo-editor-cancel>Cancel</button>`,
+        onMount: (root) => {
+          bindImagePickers(root, onChange);
+          root.querySelector("[data-promo-editor-cancel]")?.addEventListener("click", closeEditor);
+          root.querySelector("[data-promo-editor-save]")?.addEventListener("click", () => saveEditor(root));
+        },
+      });
+    }
+
+    function saveEditor(formRoot) {
+      if (!formRoot) formRoot = panel.querySelector(`#${editorId} .admin-promo-editor-panel`);
+      if (!formRoot) return;
+      const draft = readPromoRow(formRoot);
+      if (!draft.title) {
+        alert("Add a title before saving this promo card.");
+        return;
+      }
+      const cards = getCards();
+      const idx = editingId ? cards.findIndex((c) => c.id === editingId) : -1;
+      const orig = idx >= 0 ? cards[idx] : emptyPromoCard(placement);
+      const saved = promoCardFromDraft(draft, orig, placement, editingId || orig.id);
+      if (idx >= 0) cards[idx] = saved;
+      else cards.push(saved);
+      closeEditor();
+      renderSummaries();
+      onChange();
+    }
+
+    panel.querySelector(`#${addBtnId}`)?.addEventListener("click", () => openEditor(null));
+    renderSummaries();
+    return { renderSummaries, closeEditor, openEditor };
   }
 
   function renderPromos(panel, data, images) {
@@ -851,64 +1499,101 @@ window.WSAdminGUI = (function () {
     let previewTimer = null;
 
     function pushDraftToBrowser(reloadFrame) {
-      promosData = syncPromoPlacement(panel, promosData, activePlacement);
       if (window.WSConfig) WSConfig.savePreview("promos", promosData);
       if (reloadFrame) refreshPagePreview(true);
     }
 
-    function scheduleDraftPreview() {
+    function scheduleDraftPreview(immediate) {
       clearTimeout(previewTimer);
-      previewTimer = setTimeout(() => pushDraftToBrowser(false), 500);
+      if (immediate) {
+        pushDraftToBrowser(true);
+        return;
+      }
+      previewTimer = setTimeout(() => pushDraftToBrowser(true), 300);
+    }
+
+    function notifyPromoPreviewFrame(iframe) {
+      if (!iframe?.contentWindow) return false;
+      try {
+        iframe.contentWindow.postMessage({ type: "ws-promo-preview-refresh" }, window.location.origin);
+        return true;
+      } catch {
+        return false;
+      }
     }
 
     function refreshPagePreview(reload) {
       const iframe = panel.querySelector("#promo-page-iframe");
-      const openLink = panel.querySelector("#promo-open-preview");
-      if (openLink) openLink.href = "events.html#promo-recurring";
-      if (!iframe) return;
-      if (reload) iframe.src = `events.html?promoPreview=1#promo-recurring&_=${Date.now()}`;
+      if (!iframe || !reload) return;
+      notifyPromoPreviewFrame(iframe);
+      iframe.src = `events.html?promoPreview=1#promo-recurring&_=${Date.now()}`;
     }
 
     panel.innerHTML = `
-      <p class="admin-note"><strong>Featured promo cards</strong> on the events page — photo tiles for weekly/monthly happenings (cornhole, book club, etc.). This is not the public <strong>Events</strong> calendar (dates &amp; times) or <strong>Campaign Calendar</strong> (marketing plan). Homepage happenings are under <strong>Homepage</strong>. Click <em>Save changes</em> when done.</p>
+      <p class="admin-note"><strong>Featured promo cards</strong> on the events page — photo tiles for weekly/monthly happenings. Click <em>Manage promo cards</em> to add or edit. <em>Save changes</em> when done.</p>
       <p style="color:var(--text-muted);font-size:0.9rem;margin:0.75rem 0 1rem">${esc(PROMO_PLACEMENTS.events.hint)}</p>
-      <div class="admin-page-split">
-        <div class="admin-editor-col">
-          <div id="promo-list"></div>
-          <button type="button" class="btn btn-outline" id="add-promo" style="margin-top:0.75rem">+ Add promo card</button>
-        </div>
-        <div class="admin-preview-col">
-          <p class="admin-preview-label">Live preview — Events page</p>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 0.75rem">Recurring favorites grid on events.html.</p>
-          <iframe id="promo-page-iframe" class="admin-preview-frame" title="Events promo preview" src="events.html?promoPreview=1#promo-recurring"></iframe>
-          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem">
-            <button type="button" class="btn btn-outline admin-btn-sm" id="promo-refresh-preview">Refresh preview</button>
-            <a href="events.html#promo-recurring" target="_blank" rel="noopener" class="btn btn-outline admin-btn-sm" id="promo-open-preview">Open full page ↗</a>
+      <div class="admin-draft-full">
+        <div class="admin-draft-full__toolbar">
+          <div>
+            <p class="admin-preview-label">Draft preview — events promos</p>
+            <p>Full-width preview. Use Manage promo cards to edit the recurring favorites grid.</p>
+          </div>
+          <div class="admin-draft-full__toolbar-actions">
+            <button type="button" class="btn btn-outline admin-btn-sm" id="manage-promos">Manage promo cards</button>
+            <button type="button" class="btn btn-primary admin-btn-sm" id="add-promo">+ Add promo card</button>
           </div>
         </div>
-      </div>`;
+        <iframe id="promo-page-iframe" class="admin-preview-frame" title="Events promo preview" src="events.html?promoPreview=1#promo-recurring"></iframe>
+      </div>
+      <div id="promo-editor" hidden></div>
+      <div id="promo-list" hidden></div>`;
 
-    panel.querySelector("#promo-refresh-preview")?.addEventListener("click", () => pushDraftToBrowser(true));
-    panel.querySelector("#add-promo")?.addEventListener("click", () => {
-      const key = PROMO_PLACEMENTS[activePlacement].key;
-      promosData[key] = promosData[key] || [];
-      promosData[key].push({
-        id: `new-${Date.now()}`,
-        title: "",
-        summary: "",
-        tag: "",
-        tagClass: "",
-        layout: "standard",
-        image: "assets/gallery/WSGoodTimes.webp",
-        mediaType: "image",
-        alt: "",
-        placement: activePlacement,
+    const promoWorkflow = mountPromoEditorWorkflow(
+      panel,
+      promosData,
+      activePlacement,
+      images,
+      "promo-list",
+      "promo-editor",
+      "add-promo",
+      scheduleDraftPreview
+    );
+
+    panel.querySelector("#manage-promos")?.addEventListener("click", () => {
+      promoWorkflow.renderSummaries();
+      const list = panel.querySelector("#promo-list");
+      openAdminModal({
+        title: "Events promo cards",
+        subtitle: "Click Edit on any card · drag handles to reorder",
+        wide: true,
+        bodyHtml: `<div id="promo-list-modal">${list.innerHTML}</div>`,
+        footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => {
+          const modalList = root.querySelector("#promo-list-modal");
+          modalList.innerHTML = list.innerHTML;
+          bindPromoDragReorder(modalList, promosData, PROMO_PLACEMENTS.events.key, scheduleDraftPreview);
+          modalList.querySelectorAll("[data-edit-promo]").forEach((btn) => {
+            btn.onclick = () => {
+              const id = btn.closest("[data-promo-summary]")?.dataset.promoId;
+              closeAdminModal();
+              promoWorkflow.openEditor(id);
+            };
+          });
+          modalList.querySelectorAll("[data-remove-promo]").forEach((btn) => {
+            btn.onclick = () => {
+              const id = btn.closest("[data-promo-summary]")?.dataset.promoId;
+              if (!id) return;
+              promosData.eventsPageFeatured = (promosData.eventsPageFeatured || []).filter((c) => c.id !== id);
+              promoWorkflow.renderSummaries();
+              scheduleDraftPreview();
+              panel._markUnsaved?.();
+            };
+          });
+        },
       });
-      renderPromoList(panel, promosData, activePlacement, images, "promo-list", scheduleDraftPreview);
     });
 
     panel._getPromos = (base) => {
-      promosData = syncPromoPlacement(panel, promosData, activePlacement);
       const out = JSON.parse(JSON.stringify(base || promosData));
       out.eventsPageFeatured = promosData.eventsPageFeatured || [];
       if (base?.homepageFeatured) out.homepageFeatured = base.homepageFeatured;
@@ -916,7 +1601,6 @@ window.WSAdminGUI = (function () {
     };
     panel._refreshPagePreview = () => refreshPagePreview(true);
 
-    renderPromoList(panel, promosData, activePlacement, images, "promo-list", scheduleDraftPreview);
     pushDraftToBrowser(true);
   }
 
@@ -931,139 +1615,151 @@ window.WSAdminGUI = (function () {
     let promosData = JSON.parse(JSON.stringify(promos || { homepageFeatured: [], eventsPageFeatured: [] }));
     let previewTimer = null;
 
-    function pushHomepagePromoPreview(reloadFrame) {
-      promosData = syncPromoPlacement(panel, promosData, "homepage");
-      if (window.WSConfig) WSConfig.savePreview("promos", promosData);
-      const iframe = panel.querySelector("#homepage-preview-iframe");
-      if (iframe && reloadFrame) {
-        iframe.src = `index.html?promoPreview=1#promo-happenings&_=${Date.now()}`;
+    function notifyHomepagePromoFrame(iframe) {
+      if (!iframe?.contentWindow) return false;
+      try {
+        iframe.contentWindow.postMessage({ type: "ws-promo-preview-refresh" }, window.location.origin);
+        return true;
+      } catch {
+        return false;
       }
     }
 
-    function scheduleHomepagePromoPreview() {
+    function pushHomepagePromoPreview(reloadFrame) {
+      if (window.WSConfig) WSConfig.savePreview("promos", promosData);
+      const iframe = panel.querySelector("#homepage-preview-iframe");
+      if (!iframe || !reloadFrame) return;
+      notifyHomepagePromoFrame(iframe);
+      iframe.src = `index.html?promoPreview=1#promo-happenings&_=${Date.now()}`;
+    }
+
+    function scheduleHomepagePromoPreview(immediate) {
       clearTimeout(previewTimer);
-      previewTimer = setTimeout(() => pushHomepagePromoPreview(false), 500);
+      if (immediate) {
+        pushHomepagePromoPreview(true);
+        return;
+      }
+      previewTimer = setTimeout(() => pushHomepagePromoPreview(true), 300);
     }
 
     panel.innerHTML = `
-      <p class="admin-note">Everything on the homepage: <strong>Weekly &amp; monthly happenings</strong>, <strong>Main Street vibes</strong>, <strong>Signature favorites</strong>, and <strong>Good to know</strong>. Swap photos, remove rows, or add new ones — click <em>Save changes</em> when done. Hero photos are under <strong>Hero Images</strong>; events-page promos under <strong>Events Promos</strong>.</p>
-      <div class="admin-page-split">
-        <div class="admin-editor-col">
-          <div class="admin-card">
-            <h3>Homepage welcome text</h3>
+      <p class="admin-note">Edit homepage sections from the toolbar — the full-width preview updates as you work. Click <em>Save changes</em> when done.</p>
+      <div class="admin-draft-full">
+        <div class="admin-draft-full__toolbar">
+          <div>
+            <p class="admin-preview-label">Draft preview — homepage</p>
+            <p>Use the buttons to edit welcome text, promos, gallery, signatures, and FAQ.</p>
+          </div>
+          <div class="admin-draft-full__toolbar-actions">
+            <button type="button" class="btn btn-outline admin-btn-sm" data-homepage-modal="welcome">Welcome text</button>
+            <button type="button" class="btn btn-outline admin-btn-sm" data-homepage-modal="promos">Happenings</button>
+            <button type="button" class="btn btn-outline admin-btn-sm" data-homepage-modal="gallery">Gallery</button>
+            <button type="button" class="btn btn-outline admin-btn-sm" data-homepage-modal="signatures">Signatures</button>
+            <button type="button" class="btn btn-outline admin-btn-sm" data-homepage-modal="faq">FAQ</button>
+          </div>
+        </div>
+        <iframe id="homepage-preview-iframe" class="admin-preview-frame" title="Homepage preview" src="index.html?promoPreview=1#promo-happenings"></iframe>
+      </div>
+      <div id="homepage-hidden-editors" hidden>
+          <div id="homepage-welcome-editor">
             <div class="admin-form-grid">
               ${field("Location line", `<input data-field="heroes.index.eyebrow" value="${esc(site.heroes?.index?.eyebrow)}" />`)}
               ${field("Intro paragraph", `<textarea data-field="heroes.index.lead" rows="3">${esc(site.heroes?.index?.lead)}</textarea>`)}
             </div>
           </div>
-          <div class="admin-card">
-            <div class="admin-list-item-head" style="margin-bottom:0.75rem">
-              <h3 style="margin:0">Weekly &amp; monthly happenings</h3>
-            </div>
+          <div id="homepage-promos-editor">
             <p style="color:var(--text-muted);font-size:0.88rem;margin:0 0 1rem">${esc(PROMO_PLACEMENTS.homepage.hint)}</p>
-            <div id="homepage-promo-list"></div>
-            <button type="button" class="btn btn-outline" id="add-homepage-promo" style="margin-top:0.75rem">+ Add promo card</button>
-          </div>
-          <div class="admin-card">
-            <div class="admin-list-item-head" style="margin-bottom:0.75rem">
-              <h3 style="margin:0">Main Street vibes — photo gallery</h3>
+            <div class="admin-promo-toolbar">
+              <button type="button" class="btn btn-outline admin-btn-sm" id="add-homepage-promo">+ Add promo card</button>
             </div>
+            <div id="homepage-promo-editor" hidden></div>
+            <div id="homepage-promo-list"></div>
+          </div>
+          <div id="homepage-gallery-editor">
             <div id="gallery-rows">${(hp.gallery || []).map((g, i) => galleryRow(g, i, images)).join("")}</div>
             <button type="button" class="btn btn-outline" id="add-gallery" style="margin-top:0.75rem">+ Add gallery photo</button>
           </div>
-          <div class="admin-card">
-            <div class="admin-list-item-head" style="margin-bottom:0.75rem">
-              <h3 style="margin:0">Signature favorites</h3>
-            </div>
+          <div id="homepage-signatures-editor">
             <div id="sig-rows">${(hp.signatureCards || []).map((c, i) => sigRow(c, i, images)).join("")}</div>
             <button type="button" class="btn btn-outline" id="add-sig" style="margin-top:0.75rem">+ Add signature card</button>
           </div>
-          <div class="admin-card">
-            <h3>Good to know — FAQ</h3>
+          <div id="homepage-faq-editor">
             <div id="faq-rows">${(hp.faq || []).map((f, i) => faqRow(f, i)).join("")}</div>
             <button type="button" class="btn btn-outline" id="add-faq" style="margin-top:0.75rem">+ Add FAQ</button>
           </div>
-        </div>
-        <div class="admin-preview-col">
-          <p class="admin-preview-label">Homepage sections preview</p>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 0.75rem">Scroll the homepage below after saving, or use Open full page.</p>
-          <iframe id="homepage-preview-iframe" class="admin-preview-frame" title="Homepage preview" src="index.html?promoPreview=1#promo-happenings"></iframe>
-          <a href="index.html" target="_blank" rel="noopener" class="btn btn-outline admin-btn-sm" style="margin-top:0.75rem">Open full page ↗</a>
-        </div>
       </div>`;
 
-    renderPromoList(
+    const homepageModalMap = {
+      welcome: { title: "Homepage welcome text", id: "homepage-welcome-editor" },
+      promos: { title: "Weekly & monthly happenings", id: "homepage-promos-editor" },
+      gallery: { title: "Main Street vibes — gallery", id: "homepage-gallery-editor" },
+      signatures: { title: "Signature favorites", id: "homepage-signatures-editor" },
+      faq: { title: "Good to know — FAQ", id: "homepage-faq-editor" },
+    };
+
+    const homepagePromoWorkflow = mountPromoEditorWorkflow(
       panel,
       promosData,
       "homepage",
       images,
       "homepage-promo-list",
+      "homepage-promo-editor",
+      "add-homepage-promo",
       scheduleHomepagePromoPreview
     );
-    panel.querySelector("#add-homepage-promo")?.addEventListener("click", () => {
-      promosData.homepageFeatured = promosData.homepageFeatured || [];
-      promosData.homepageFeatured.push({
-        id: `new-${Date.now()}`,
-        title: "",
-        summary: "",
-        tag: "",
-        tagClass: "",
-        layout: "standard",
-        image: "assets/gallery/WSGoodTimes.webp",
-        mediaType: "image",
-        alt: "",
-        placement: "homepage",
+
+    panel.querySelectorAll("[data-homepage-modal]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cfg = homepageModalMap[btn.dataset.homepageModal];
+        const block = panel.querySelector(`#${cfg.id}`);
+        if (!block) return;
+        openAdminModal({
+          title: cfg.title,
+          wide: true,
+          bodyHtml: block.innerHTML,
+          footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+          onMount: (root) => {
+            bindImagePickers(root);
+            bindRemove(root);
+            root.querySelector("#add-gallery")?.addEventListener("click", () => {
+              const rows = root.querySelector("#gallery-rows");
+              rows.insertAdjacentHTML(
+                "beforeend",
+                galleryRow({ caption: "", alt: "", image: "assets/gallery/WSGoodTimes.webp" }, rows.children.length, images)
+              );
+              bindImagePickers(root);
+              bindRemove(root);
+            });
+            root.querySelector("#add-sig")?.addEventListener("click", () => {
+              const rows = root.querySelector("#sig-rows");
+              rows.insertAdjacentHTML(
+                "beforeend",
+                sigRow({ title: "", summary: "", image: "assets/gallery/WSFood.webp", ctaLabel: "View menu", ctaHref: "menu.html" }, rows.children.length, images)
+              );
+              bindImagePickers(root);
+              bindRemove(root);
+            });
+            root.querySelector("#add-faq")?.addEventListener("click", () => {
+              root.querySelector("#faq-rows")?.insertAdjacentHTML("beforeend", faqRow({ q: "", a: "" }));
+              bindRemove(root);
+            });
+            root.querySelector("#add-homepage-promo")?.addEventListener("click", () => homepagePromoWorkflow.openEditor(null));
+          },
+          onClose: () => {
+            const modalRoot = document.getElementById("admin-modal-root");
+            const body = modalRoot?.querySelector(".admin-modal__body");
+            if (body) block.innerHTML = body.innerHTML;
+            bindImagePickers(panel);
+            bindRemove(panel);
+            scheduleHomepagePromoPreview(true);
+          },
+        });
       });
-      renderPromoList(
-        panel,
-        promosData,
-        "homepage",
-        images,
-        "homepage-promo-list",
-        scheduleHomepagePromoPreview
-      );
     });
 
-    panel.querySelector("#add-gallery")?.addEventListener("click", () => {
-      const rows = panel.querySelector("#gallery-rows");
-      const i = rows.children.length;
-      rows.insertAdjacentHTML(
-        "beforeend",
-        galleryRow({ caption: "", alt: "", image: "assets/gallery/WSGoodTimes.webp" }, i, images)
-      );
-      bindImagePickers(panel);
-      bindRemove(panel);
-    });
-    panel.querySelector("#add-sig")?.addEventListener("click", () => {
-      const rows = panel.querySelector("#sig-rows");
-      const i = rows.children.length;
-      rows.insertAdjacentHTML(
-        "beforeend",
-        sigRow(
-          {
-            title: "",
-            summary: "",
-            image: "assets/gallery/WSFood.webp",
-            ctaLabel: "View menu",
-            ctaHref: "menu.html",
-          },
-          i,
-          images
-        )
-      );
-      bindImagePickers(panel);
-      bindRemove(panel);
-    });
-    panel.querySelector("#add-faq")?.addEventListener("click", () => {
-      const rows = panel.querySelector("#faq-rows");
-      const i = rows.children.length;
-      rows.insertAdjacentHTML("beforeend", faqRow({ q: "", a: "" }, i));
-      bindRemove(panel);
-    });
     bindImagePickers(panel);
     bindRemove(panel);
     panel._getHomepagePromos = (base) => {
-      promosData = syncPromoPlacement(panel, promosData, "homepage");
       const out = JSON.parse(JSON.stringify(base || promosData));
       out.homepageFeatured = promosData.homepageFeatured || [];
       return out;
@@ -1178,8 +1874,10 @@ window.WSAdminGUI = (function () {
 
     function syncActivePage() {
       heroesData[activePage] = heroesData[activePage] || { panels: ["", "", "", ""] };
+      const modalRoot = document.getElementById("admin-modal-root");
+      const scope = modalRoot?.querySelector(`[data-field="hero.${activePage}.0"]`) ? modalRoot : panel;
       heroesData[activePage].panels = [0, 1, 2, 3].map((i) => {
-        const v = panel.querySelector(`[data-field="hero.${activePage}.${i}"]`);
+        const v = scope.querySelector(`[data-field="hero.${activePage}.${i}"]`);
         return v ? v.value.trim() : heroesData[activePage].panels[i] || "";
       });
     }
@@ -1205,14 +1903,14 @@ window.WSAdminGUI = (function () {
       if (reload) iframe.src = `${base}&_=${Date.now()}`;
     }
 
-    function renderEditor() {
+    function openHeroEditorModal() {
       const pl = HERO_PAGES.find((p) => p.key === activePage);
       const panels = heroesData[activePage]?.panels || ["", "", "", ""];
-      const col = panel.querySelector("#hero-editor-col");
-      if (!col) return;
-      col.innerHTML = `
-        <div class="admin-card admin-hero-editor-card">
-          <h3>${esc(pl.label)}</h3>
+      openAdminModal({
+        title: `${pl?.label || "Page"} hero photos`,
+        subtitle: "Pick four rotating hero images for this page",
+        wide: true,
+        bodyHtml: `
           ${[0, 1, 2, 3]
             .map(
               (i) => `
@@ -1221,28 +1919,47 @@ window.WSAdminGUI = (function () {
               ${imagePicker(`hero.${activePage}.${i}`, panels[i] || "", images, ["hero", "gallery"])}
             </div>`
             )
-            .join("")}
-        </div>`;
-      bindImagePickers(col, scheduleHeroPreview);
+            .join("")}`,
+        footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => {
+          bindImagePickers(root, scheduleHeroPreview);
+        },
+        onClose: () => {
+          syncActivePage();
+          pushHeroPreview();
+          refreshHeroIframe(true);
+        },
+      });
+    }
+
+    function renderEditor() {
+      /* hero editor now opens in modal */
     }
 
     panel.innerHTML = `
-      <p class="admin-note">Pick four hero photos per page. The preview on the right updates as you select thumbnails — click <em>Save changes</em> when done.</p>
+      <p class="admin-note">Pick four hero photos per page. Use the draft preview below, then <em>Edit hero photos</em> to change images. Click <em>Save changes</em> when done.</p>
       <div class="admin-placement-tabs" id="hero-page-tabs">
         ${HERO_PAGES.map(
           (p) =>
             `<button type="button" class="admin-placement-tab${p.key === activePage ? " is-active" : ""}" data-hero-page="${p.key}">${esc(p.label)}</button>`
         ).join("")}
       </div>
-      <div class="admin-page-split admin-hero-page-split">
-        <div class="admin-editor-col admin-hero-editor-col" id="hero-editor-col"></div>
-        <div class="admin-preview-col admin-hero-preview-col">
-          <p class="admin-preview-label">Live preview — ${esc(HERO_PAGES[0].label)}</p>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 0.75rem">Shows the real page hero as visitors see it.</p>
-          <iframe id="hero-page-preview" class="admin-preview-frame admin-hero-preview-frame" title="Hero preview" src="index.html?heroPreview=1"></iframe>
-          <a href="index.html" target="_blank" rel="noopener" class="btn btn-outline admin-btn-sm" id="hero-open-page" style="margin-top:0.75rem">Open full page ↗</a>
+      <div class="admin-draft-full">
+        <div class="admin-draft-full__toolbar">
+          <div>
+            <p class="admin-preview-label">Draft preview — ${esc(HERO_PAGES.find((p) => p.key === activePage)?.label || "Hero")}</p>
+            <p>Switch pages above · edit photos in the popup.</p>
+          </div>
+          <div class="admin-draft-full__toolbar-actions">
+            <button type="button" class="btn btn-primary admin-btn-sm" id="hero-edit-photos">Edit hero photos</button>
+            <a href="index.html" target="_blank" rel="noopener" class="btn btn-outline admin-btn-sm" id="hero-open-page">Open full page ↗</a>
+          </div>
         </div>
-      </div>`;
+        <iframe id="hero-page-preview" class="admin-preview-frame admin-hero-preview-frame" title="Hero preview" src="index.html?heroPreview=1"></iframe>
+      </div>
+      <div id="hero-editor-col" hidden></div>`;
+
+    panel.querySelector("#hero-edit-photos")?.addEventListener("click", openHeroEditorModal);
 
     panel.querySelectorAll("[data-hero-page]").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -1252,9 +1969,8 @@ window.WSAdminGUI = (function () {
           b.classList.toggle("is-active", b.dataset.heroPage === activePage);
         });
         const pl = HERO_PAGES.find((p) => p.key === activePage);
-        const label = panel.querySelector(".admin-hero-preview-col .admin-preview-label");
-        if (label && pl) label.textContent = `Live preview — ${pl.label}`;
-        renderEditor();
+        const label = panel.querySelector(".admin-draft-full .admin-preview-label");
+        if (label && pl) label.textContent = `Draft preview — ${pl.label}`;
         pushHeroPreview();
         refreshHeroIframe(true);
       });
@@ -1268,7 +1984,6 @@ window.WSAdminGUI = (function () {
     };
     panel._refreshPagePreview = () => refreshHeroIframe(true);
 
-    renderEditor();
     pushHeroPreview();
     refreshHeroIframe(true);
   }
@@ -1296,9 +2011,6 @@ window.WSAdminGUI = (function () {
     panel.querySelectorAll("[data-remove-faq]").forEach((btn) => {
       btn.onclick = () => btn.closest("[data-faq]")?.remove();
     });
-    panel.querySelectorAll("[data-remove-promo]").forEach((btn) => {
-      btn.onclick = () => btn.closest("[data-promo-placement]")?.remove();
-    });
     panel.querySelectorAll("[data-remove-gallery]").forEach((btn) => {
       btn.onclick = () => btn.closest("[data-gallery]")?.remove();
     });
@@ -1308,6 +2020,8 @@ window.WSAdminGUI = (function () {
   }
 
   return {
+    openAdminModal,
+    closeAdminModal,
     renderSocial,
     collectSocial,
     renderEvents,

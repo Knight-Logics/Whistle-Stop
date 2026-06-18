@@ -193,7 +193,7 @@
           "@type": "ListItem",
           "position": 1,
           "name": "Order direct for pickup",
-          "url": "https://www.whistlestopgrill.com/online-ordering"
+          "url": "https://knight-logics.github.io/Whistle-Stop/menu.html"
         },
         {
           "@type": "ListItem",
@@ -233,7 +233,7 @@
       <div class="container reveal">
         <p class="hero-eyebrow">915 Main Street · Safety Harbor</p>
         <h1>Order Whistle Stop Grill &amp; Bar</h1>
-        <p>Pickup from the kitchen on Main Street, or let a delivery partner bring Whistle Stop favorites to you.</p>
+        <p>Pickup from the kitchen on Main Street, or get delivery through our Uber Eats, DoorDash, and Grubhub partners.</p>
       </div>
     </div>
 
@@ -241,13 +241,13 @@
       <div class="container reveal">
         <div class="section-head">
           <h2>Your order</h2>
-          <p>Items you added from the menu. Payment, pickup time, and your confirmation number are handled on Whistle Stop&rsquo;s online ordering page — re-add these items there to finish.</p>
+          <p>Items you added from the menu. Choose pickup or a delivery partner when you&rsquo;re ready — your list helps you re-add favorites on the checkout page you pick.</p>
           <div class="divider"></div>
         </div>
         <div id="pickup-order-summary"></div>
         <ul class="pickup-order-list" id="pickup-order-list"></ul>
         <div class="btn-group" style="margin-top:1.25rem">
-          <button type="button" class="btn btn-primary" id="pickup-order-checkout" data-toast-handoff>Order online</button>
+          <button type="button" class="btn btn-primary" id="pickup-order-checkout" data-fulfillment-checkout>Pickup or delivery</button>
           <button type="button" class="btn btn-outline" id="pickup-order-clear">Clear order</button>
           <a href="menu.html" class="btn btn-outline">Add more items</a>
         </div>
@@ -258,17 +258,17 @@
       <div class="container">
         <div class="order-feature reveal">
           <div class="order-feature-copy">
-            <span class="tag">Recommended</span>
-            <h2>Order direct for pickup</h2>
+            <span class="tag">Step 1</span>
+            <h2>Build your order on the menu</h2>
             <p style="color:var(--text-muted);margin:0 0 1rem">
-              Browse the full menu, schedule pickup, and check out on Whistle Stop&rsquo;s own ordering page — the same system tied to their current website.
+              Add dishes to your list, then checkout — pickup goes through Whistle Stop&rsquo;s online ordering; delivery uses Uber Eats, DoorDash, or Grubhub.
             </p>
             <ul class="order-checklist">
-              <li>Pickup at <strong>915 Main Street</strong></li>
-              <li>Seasonal menu + main menu online</li>
-              <li>Typical ready time ~30 minutes</li>
+              <li>Start on the <strong>menu</strong> — add what you want</li>
+              <li><strong>Pickup</strong> — pay online, collect at 915 Main Street</li>
+              <li><strong>Delivery</strong> — choose a partner app (fees apply)</li>
             </ul>
-            <a href="https://www.whistlestopgrill.com/online-ordering" class="btn btn-primary" data-site="links.orderOnline" data-site-attr="href" target="_blank" rel="noopener noreferrer">Start pickup order</a>
+            <a href="menu.html" class="btn btn-primary" data-site="links.orderMenu" data-site-attr="href">Browse menu &amp; order</a>
           </div>
           <img src="assets/gallery/WSFood.webp" alt="Whistle Stop food ready for pickup" loading="lazy" />
         </div>
@@ -382,7 +382,7 @@
   <script src="js/config-store.js"></script>
   <script src="js/site-apply.js"></script>
   <script src="js/includes.js"></script>
-  <script src="js/pickup-order.js?v=9"></script>
+  <script src="js/pickup-order.js?v=10"></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>

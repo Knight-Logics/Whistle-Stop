@@ -49,7 +49,7 @@
     { "path": "assets/gallery/WSDrinks3.webp", "label": "Hip Sips", "tags": ["hero", "gallery", "drinks", "happy-hour"] },
     { "path": "assets/gallery/WSCornHole.webp", "label": "Cornhole league", "tags": ["hero", "gallery", "events", "community"] },
     { "path": "assets/gallery/WSGirls.webp", "label": "Friends on patio", "tags": ["hero", "gallery", "community"] },
-    { "path": "assets/gallery/WSGirls2.webp", "label": "Group dining", "tags": ["gallery", "community", "private-events"] },
+    { "path": "assets/gallery/WSGirls2.jpg", "label": "Group dining", "tags": ["gallery", "community", "private-events"] },
     { "path": "assets/gallery/WSGoodTimes.webp", "label": "Good times", "tags": ["hero", "gallery", "ambiance", "happy-hour"] },
     { "path": "assets/gallery/WSLounge.webp", "label": "Patio lounge", "tags": ["gallery", "ambiance", "private-events"] },
     { "path": "assets/gallery/WSMenu.webp", "label": "Menu spread", "tags": ["menu", "food"] },

@@ -36,12 +36,20 @@
     "estimatedTaxRate": 0.07,
     "taxNote": "Safety Harbor sales tax estimate — final total set at online checkout"
   },
+  "forms": {
+    "contact": {
+      "endpoint": "",
+      "formspreeSetupUrl": "https://formspree.io/"
+    }
+  },
   "links": {
-    "orderOnline": "https://www.whistlestopgrill.com/online-ordering",
+    "orderMenu": "menu.html",
+    "orderOnline": "menu.html",
+    "toastCheckout": "https://www.whistlestopgrill.com/online-ordering",
     "giftCards": "https://order.toasttab.com/egift/whistle-stop-grill-bar",
-    "uberEats": "https://www.ubereats.com/store/whistle-stop-grill-%26-bar/0QZQZQZQ",
-    "doorDash": "https://www.doordash.com/store/whistle-stop-grill-&-bar-safety-harbor-12345/",
-    "grubhub": "https://www.grubhub.com/restaurant/whistle-stop-grill--bar-915-main-st-safety-harbor/1234567",
+    "uberEats": "https://www.ubereats.com/store/whistle-stop-grill-%26-bar/zy-ne-DhQW-IryRjRNjCIg",
+    "doorDash": "https://www.doordash.com/search?query=Whistle+Stop+Grill+Safety+Harbor",
+    "grubhub": "https://www.grubhub.com/search?searchQuery=whistle+stop+grill+safety+harbor",
     "googleMaps": "https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL",
     "googleMapsEmbed": "https://maps.google.com/maps?q=915+Main+Street+Safety+Harbor+FL+34695&output=embed",
     "googleReviews": "https://www.google.com/maps/search/?api=1&query=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL"

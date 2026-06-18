@@ -16,7 +16,7 @@
   /* Operational tabs — unchanged behavior. Mock tabs are preview-only GUIs. */
   const NAV_SECTIONS = [
     {
-      title: "Website Manager",
+      title: "Draft Website Manager",
       tabs: [
         { id: "events", label: "Events", hint: "Guest-facing dates & times" },
         { id: "menus", label: "Menus", hint: "Food & drink menus" },
@@ -63,6 +63,15 @@
 
   const TABS = NAV_SECTIONS.flatMap((s) => s.tabs);
   const MOCK_TABS = new Set(TABS.filter((t) => t.mock).map((t) => t.id));
+  const DRAFT_MANAGER_TABS = new Set(["events", "menus", "promos", "homepage", "heroes"]);
+
+  function escHtml(s) {
+    return String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
 
   function $(sel, root = document) {
     return root.querySelector(sel);
@@ -80,7 +89,7 @@
       banner.hidden = true;
       banner.setAttribute("role", "status");
       banner.innerHTML =
-        "<strong>Changes are currently not saved.</strong> Click <em>Save changes</em> at the top to publish your updates.";
+        "<strong>Unsaved draft changes.</strong> The draft preview updates while you work; click <em>Save changes</em> to keep this version on this device.";
       note.insertAdjacentElement("afterend", banner);
     } else {
       banner.hidden = true;
@@ -107,7 +116,7 @@
     panel.addEventListener("click", (e) => {
       if (
         e.target.closest(
-          "[data-remove-perf], [data-remove-item], [data-remove-promo], [data-remove-gallery], [data-remove-sig], [data-remove-faq], #add-perf, #add-menu-item, #add-promo, #add-homepage-promo, #add-gallery, #add-sig, #add-faq"
+          "[data-remove-perf], [data-remove-item], [data-remove-promo], [data-remove-gallery], [data-remove-sig], [data-remove-faq], [data-edit-promo], [data-promo-editor-save], #add-perf, #add-menu-item, #add-promo, #add-homepage-promo, #add-gallery, #add-sig, #add-faq"
         ) ||
         e.target.closest(".admin-img-option") ||
         e.target.closest("[data-media-dropzone]") ||
@@ -193,7 +202,7 @@
         <aside class="admin-sidebar">
           <div class="admin-sidebar-brand">
             <strong>Whistle Stop</strong>
-            <span>Staff updates</span>
+            <span>Draft content editor</span>
           </div>
           <nav class="admin-nav" id="admin-nav"></nav>
           <div style="padding:1rem 1.25rem 0">
@@ -260,6 +269,7 @@
     const isSocialTab = state.tab === "social";
     const isWideTab = ["heroes", "events", "menus", "promos", "homepage", "social"].includes(state.tab) || isMockTab;
     main.classList.toggle("admin-main--wide", isWideTab);
+    main.classList.toggle("admin-main--draft-manager", DRAFT_MANAGER_TABS.has(state.tab));
     main.innerHTML = `
       <div class="admin-topbar">
         <h2>${tab.label}</h2>
@@ -269,7 +279,7 @@
               ? `<span class="admin-social-top-hint">Posts publish via the local bridge — no save button needed.</span>`
               : isMockTab
                 ? `<span class="admin-social-top-hint">Preview module — not connected to live data yet.</span>`
-                : `<button type="button" class="btn btn-primary" id="admin-save-tab">Save changes</button>`
+                : `<span class="admin-draft-state">Draft preview mode</span><button type="button" class="btn btn-outline" id="admin-save-tab">Save draft</button><button type="button" class="btn btn-primary" id="admin-publish-live">Publish live</button>`
           }
         </div>
       </div>
@@ -341,7 +351,78 @@
     if (!isSocialTab && !isMockTab) {
       wireUnsavedBanner(panel);
       $("#admin-save-tab")?.addEventListener("click", () => saveTab(state.tab));
+      $("#admin-publish-live")?.addEventListener("click", () => openPublishLiveModal(state.tab));
     }
+  }
+
+  function openPublishLiveModal(tab) {
+    const g = GUI();
+    if (!g?.openAdminModal) {
+      toast("Publish UI failed to load. Hard refresh and try again.");
+      return;
+    }
+
+    g.openAdminModal({
+      title: "Publish live to website",
+      subtitle: "Updates the public GitHub Pages site for all visitors. Requires admin password.",
+      bodyHtml: `
+        <p class="admin-note" style="margin-top:0">This sends your current draft content (events, menus, promos, homepage, heroes) to the secure Knight Logics publish bridge. GitHub Pages usually updates within 1–3 minutes.</p>
+        <div class="admin-field">
+          <label for="admin-publish-password">Admin password</label>
+          <input type="password" id="admin-publish-password" autocomplete="current-password" placeholder="Same password used to sign in" />
+        </div>
+        <p id="admin-publish-status" class="admin-publish-status" hidden></p>`,
+      footerHtml: `
+        <button type="button" class="btn btn-outline admin-btn-sm" data-admin-modal-close>Cancel</button>
+        <button type="button" class="btn btn-primary admin-btn-sm" id="admin-publish-confirm">Publish live</button>`,
+      onMount: (root) => {
+        const passwordInput = root.querySelector("#admin-publish-password");
+        const statusEl = root.querySelector("#admin-publish-status");
+        const confirmBtn = root.querySelector("#admin-publish-confirm");
+        const saved = WSConfig.getSessionPassword?.();
+        if (saved && passwordInput) passwordInput.value = saved;
+
+        confirmBtn?.addEventListener("click", async () => {
+          const password = passwordInput?.value || "";
+          if (!password) {
+            toast("Enter the admin password to publish live.");
+            passwordInput?.focus();
+            return;
+          }
+
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = "Publishing…";
+          if (statusEl) {
+            statusEl.hidden = false;
+            statusEl.textContent = "Saving draft and sending to publish bridge…";
+          }
+
+          try {
+            await saveTab(tab, { quiet: true });
+            const result = await WSConfig.publishContent({ adminPassword: password, sourceTab: tab });
+            if (statusEl) {
+              statusEl.textContent = "Published to GitHub. Waiting for the live site to refresh…";
+            }
+            toast("Publish sent. Waiting for GitHub Pages…");
+            const live = await WSConfig.waitForPublishLive(result.versionId, { attempts: 24, intervalMs: 5000 });
+            await WSConfig.finalizeLocalAfterPublish();
+            await loadAll();
+            g.closeAdminModal();
+            await renderTab();
+            if (live.live) {
+              toast("Live site updated successfully.");
+            } else {
+              toast("Publish completed. Live site may still be refreshing — check again in a minute.");
+            }
+          } catch (err) {
+            if (statusEl) statusEl.textContent = err.message || "Publish failed.";
+            toast(err.message || "Publish failed.");
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = "Publish live";
+          }
+        });
+      },
+    });
   }
 
   async function saveTab(tab, opts = {}) {
@@ -385,7 +466,7 @@
       panel._refreshPagePreview?.();
       panel._clearUnsaved?.();
       if (!opts.quiet) {
-        toast("Saved! Your changes are live on the website — refresh or open the site to view.");
+        toast("Draft saved on this device. Use Publish live when ready for everyone to see it.");
       }
       return true;
     } catch (e) {

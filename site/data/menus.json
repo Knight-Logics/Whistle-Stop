@@ -138,6 +138,8 @@
         {
           "id": "seasonal-sips",
           "name": "Seasonal Sips",
+          "orderable": false,
+          "orderNote": "Seasonal drinks are shown for dine-in and ID-verified service only; pickup and delivery ordering uses food items.",
           "items": [
             { "name": "Frozen Painkiller", "desc": "Rum, pineapple, coconut, nutmeg.", "price": "$9" },
             { "name": "Safety Harbor Sangria", "desc": "Red or white — seasonal fruit.", "price": "$8 / $28 pitcher" },
@@ -151,6 +153,8 @@
       "label": "The Bar",
       "intro": "Full liquor bar · 18 taps · craft cocktails & local beer.",
       "image": "assets/gallery/WSBar.webp",
+      "orderable": false,
+      "orderNote": "Bar items are shown for dine-in and ID-verified service only; they are not added to pickup or delivery orders.",
       "categories": [
         {
           "id": "cocktails",

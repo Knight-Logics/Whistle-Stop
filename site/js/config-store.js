@@ -25,9 +25,14 @@
   const MEDIA_STORE = "uploads";
   const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 
+  const PUBLISH_API = "https://knightlogics.com/api/whistle-stop-content";
+  const LIVE_VERSION_URL = "https://knight-logics.github.io/Whistle-Stop/data/content-version.json";
+
   const cache = {};
   const blobUrlCache = new Map();
   let overlay = null;
+  /** In-memory only — never persisted. Used for HTTPS publish/social calls this tab session. */
+  let sessionPassword = null;
 
   function readOverlay() {
     if (overlay) return overlay;
@@ -76,9 +81,6 @@
   function deepMerge(base, patch) {
     if (patch === null || patch === undefined) return base;
     if (Array.isArray(patch)) {
-      if (patch.length === 0 && Array.isArray(base) && base.length > 0) {
-        return base.slice();
-      }
       return patch.slice();
     }
     if (typeof patch !== "object" || typeof base !== "object" || Array.isArray(base)) {
@@ -120,8 +122,13 @@
 
   function savePreview(section, data) {
     const store = readPreviewStore();
-    store[section] = data;
+    store[section] = JSON.parse(JSON.stringify(data));
     writePreviewStore(store);
+    if (typeof document !== "undefined") {
+      document.dispatchEvent(
+        new CustomEvent("ws-config-updated", { detail: { section } })
+      );
+    }
   }
 
   function readPreviewSync(section) {
@@ -140,9 +147,10 @@
   }
 
   async function getForPreview(section) {
+    const base = await get(section);
     const draft = readPreviewSync(section);
-    if (draft) return draft;
-    return get(section);
+    if (!draft) return base;
+    return deepMerge(base, draft);
   }
 
   function migrateMenuSaveOnly() {
@@ -479,11 +487,115 @@
     const hash = await sha256(password);
     const stored = readOverlay().passwordHash || site.admin?.passwordHash;
     if (hash !== stored) return false;
+    sessionPassword = password;
     sessionStorage.setItem(
       SESSION_KEY,
       JSON.stringify({ at: Date.now(), token: hash.slice(0, 16), adminHash: hash })
     );
     return true;
+  }
+
+  function getSessionPassword() {
+    if (!isAuthed()) {
+      sessionPassword = null;
+      return null;
+    }
+    return sessionPassword;
+  }
+
+  function setSessionPassword(password) {
+    if (!password) {
+      sessionPassword = null;
+      return;
+    }
+    sessionPassword = String(password);
+  }
+
+  function getPublishApiBase() {
+    return PUBLISH_API;
+  }
+
+  async function publishApiFetch(route, options = {}) {
+    const base = getPublishApiBase().replace(/\/$/, "");
+    const path = route ? `/${route.replace(/^\//, "")}` : "";
+    const res = await fetch(`${base}${path}`, {
+      ...options,
+      cache: "no-store",
+      headers: {
+        ...(options.headers || {}),
+      },
+    });
+    let data = {};
+    try {
+      data = await res.json();
+    } catch {
+      data = {};
+    }
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.error || `Publish request failed (${res.status}).`);
+    }
+    return data;
+  }
+
+  async function checkPublishHealth() {
+    return publishApiFetch("health", { method: "GET" });
+  }
+
+  async function checkPublishStatus(versionId) {
+    const query = versionId ? `?version=${encodeURIComponent(versionId)}&_=${Date.now()}` : `?_=${Date.now()}`;
+    const res = await fetch(`${LIVE_VERSION_URL}${query}`, { cache: "no-store" });
+    if (!res.ok) {
+      return { ok: true, live: false, versionId, liveVersionId: null, liveUrl: LIVE_VERSION_URL };
+    }
+    const data = await res.json();
+    return {
+      ok: true,
+      live: Boolean(versionId && data.versionId === versionId),
+      versionId,
+      liveVersionId: data.versionId || null,
+      publishedAt: data.publishedAt || null,
+      liveUrl: LIVE_VERSION_URL,
+    };
+  }
+
+  async function waitForPublishLive(versionId, { attempts = 24, intervalMs = 5000 } = {}) {
+    for (let i = 0; i < attempts; i += 1) {
+      const status = await checkPublishStatus(versionId);
+      if (status.live) return status;
+      await new Promise((resolve) => setTimeout(resolve, intervalMs));
+    }
+    return checkPublishStatus(versionId);
+  }
+
+  async function publishContent({ adminPassword, sourceTab } = {}) {
+    const password = adminPassword || getSessionPassword();
+    if (!password) {
+      throw new Error("Enter the admin password to publish live.");
+    }
+    const bundle = await exportBundle();
+    const result = await publishApiFetch("publish", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        bundle,
+        adminPassword: password,
+        source: { tab: sourceTab || "" },
+      }),
+    });
+    setSessionPassword(password);
+    return result;
+  }
+
+  async function finalizeLocalAfterPublish() {
+    readOverlay();
+    CONTENT_SECTIONS.forEach((section) => {
+      if (section !== "socialManager") delete overlay.data[section];
+    });
+    writeOverlay();
+    clearPreview();
+    Object.keys(cache).forEach((k) => delete cache[k]);
+    overlay = null;
+    document.dispatchEvent(new CustomEvent("ws-config-updated", { detail: { section: "all" } }));
   }
 
   function getAdminAuthHash() {
@@ -499,6 +611,7 @@
   }
 
   function logout() {
+    sessionPassword = null;
     sessionStorage.removeItem(SESSION_KEY);
   }
 
@@ -565,6 +678,14 @@
     logout,
     isAuthed,
     getAdminAuthHash,
+    getSessionPassword,
+    setSessionPassword,
+    getPublishApiBase,
+    checkPublishHealth,
+    checkPublishStatus,
+    waitForPublishLive,
+    publishContent,
+    finalizeLocalAfterPublish,
     changePassword,
     sha256,
     getPath,

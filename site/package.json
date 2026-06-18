@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node tests/menu-draft-preview-smoke.mjs && node tests/presentation-smoke.mjs"
   },
   "keywords": [],
   "author": "",

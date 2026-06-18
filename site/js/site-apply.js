@@ -92,7 +92,13 @@
 
     document.querySelectorAll('[data-site="social.facebook"][data-site-attr="href"]').forEach((el) => setHref(el, s.facebook));
     document.querySelectorAll('[data-site="social.instagram"][data-site-attr="href"]').forEach((el) => setHref(el, s.instagram));
-    document.querySelectorAll('[data-site="links.orderOnline"][data-site-attr="href"]').forEach((el) => setHref(el, l.orderOnline));
+    document.querySelectorAll('[data-site="business.phoneDisplay"]').forEach((el) => setText(el, b.phoneDisplay));
+    document.querySelectorAll('[data-site="links.orderMenu"][data-site-attr="href"]').forEach((el) =>
+      setHref(el, l.orderMenu || l.orderOnline || "menu.html")
+    );
+    document.querySelectorAll('[data-site="links.orderOnline"][data-site-attr="href"]').forEach((el) =>
+      setHref(el, l.orderMenu || l.orderOnline || "menu.html")
+    );
     document.querySelectorAll('[data-site="links.giftCards"][data-site-attr="href"]').forEach((el) => setHref(el, l.giftCards));
     document.querySelectorAll('[data-site="links.googleMaps"][data-site-attr="href"]').forEach((el) => setHref(el, l.googleMaps));
     document.querySelectorAll('[data-site="links.googleReviews"][data-site-attr="href"]').forEach((el) => setHref(el, l.googleReviews));

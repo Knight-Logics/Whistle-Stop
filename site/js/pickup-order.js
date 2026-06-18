@@ -1,9 +1,15 @@
 /* Order list + Toast online ordering handoff (Toast does not sync external carts) */
 window.WSPickupOrder = (function () {
   const STORAGE_KEY = "ws-pickup-order";
-  const DEFAULT_ORDER_URL = "https://www.whistlestopgrill.com/online-ordering";
-  const DEFAULT_TAX_RATE = 0.07;
+  const DEFAULT_CHECKOUT_URL = "https://www.whistlestopgrill.com/online-ordering";
+  const DEFAULT_PARTNERS = {
+    uberEats: "https://www.ubereats.com/store/whistle-stop-grill-%26-bar/zy-ne-DhQW-IryRjRNjCIg",
+    doorDash: "https://www.doordash.com/search?query=Whistle+Stop+Grill+Safety+Harbor",
+    grubhub: "https://www.grubhub.com/search?searchQuery=whistle+stop+grill+safety+harbor",
+  };
   let resolvedOrderUrl = null;
+  let deliveryLinks = { ...DEFAULT_PARTNERS };
+  const DEFAULT_TAX_RATE = 0.07;
   let taxRate = DEFAULT_TAX_RATE;
   let taxNote = "Final total is calculated at Toast checkout (tax + any fees).";
 
@@ -54,11 +60,9 @@ window.WSPickupOrder = (function () {
     window.dispatchEvent(new CustomEvent("ws-pickup-order-change", { detail: { count: items.length } }));
   }
 
-  function getOrderUrl() {
+  function getCheckoutUrl() {
     if (resolvedOrderUrl) return resolvedOrderUrl;
-    const link = document.querySelector('[data-site="links.orderOnline"]');
-    const href = link?.getAttribute("href");
-    return href && href !== "#" ? href : DEFAULT_ORDER_URL;
+    return DEFAULT_CHECKOUT_URL;
   }
 
   async function loadSiteOrderingConfig() {
@@ -69,13 +73,20 @@ window.WSPickupOrder = (function () {
           taxRate = Number(site.ordering.estimatedTaxRate) || DEFAULT_TAX_RATE;
         }
         if (site.ordering?.taxNote) taxNote = site.ordering.taxNote;
-        resolvedOrderUrl = site.links?.orderOnline || DEFAULT_ORDER_URL;
+        resolvedOrderUrl =
+          site.links?.toastCheckout || site.links?.orderOnline || DEFAULT_CHECKOUT_URL;
+        if (resolvedOrderUrl === "menu.html" || resolvedOrderUrl.endsWith("/menu.html")) {
+          resolvedOrderUrl = DEFAULT_CHECKOUT_URL;
+        }
+        if (site.links?.uberEats) deliveryLinks.uberEats = site.links.uberEats;
+        if (site.links?.doorDash) deliveryLinks.doorDash = site.links.doorDash;
+        if (site.links?.grubhub) deliveryLinks.grubhub = site.links.grubhub;
         return resolvedOrderUrl;
       }
     } catch {
       /* fall through */
     }
-    resolvedOrderUrl = getOrderUrl();
+    resolvedOrderUrl = getCheckoutUrl();
     return resolvedOrderUrl;
   }
 
@@ -161,76 +172,288 @@ window.WSPickupOrder = (function () {
     showToast._timer = setTimeout(() => toast.classList.remove("is-visible"), 2600);
   }
 
-  function updateHandoffTotals(modal) {
-    const slot = modal.querySelector("#toast-handoff-totals");
-    if (!slot) return;
-    const items = readItems();
-    const { html } = renderTotalsSummary(items, { compact: false });
-    slot.innerHTML = html;
+  function renderItemReferenceList(items) {
+    if (!items.length) return "";
+    const lines = items.map((item) => `<li>${escapeHtml(item.name)}</li>`).join("");
+    return `<ul class="fulfillment-item-list">${lines}</ul>`;
   }
 
-  function ensureHandoffModal() {
-    let modal = document.getElementById("toast-handoff-modal");
+  function showFulfillmentStep(modal, step) {
+    modal.querySelector("#fulfillment-step-choose")?.toggleAttribute("hidden", step !== "choose");
+    modal.querySelector("#fulfillment-step-pickup")?.toggleAttribute("hidden", step !== "pickup");
+    modal.querySelector("#fulfillment-step-delivery")?.toggleAttribute("hidden", step !== "delivery");
+    modal.dataset.fulfillmentStep = step;
+  }
+
+  function ensureFulfillmentModal() {
+    let modal = document.getElementById("ws-fulfillment-modal");
     if (modal) return modal;
 
     modal = document.createElement("div");
-    modal.id = "toast-handoff-modal";
+    modal.id = "ws-fulfillment-modal";
     modal.className = "toast-handoff-modal";
     modal.hidden = true;
     modal.innerHTML = `
-      <div class="toast-handoff-backdrop" data-toast-handoff-close></div>
-      <div class="toast-handoff-dialog" role="dialog" aria-modal="true" aria-labelledby="toast-handoff-title">
-        <button type="button" class="toast-handoff-close" data-toast-handoff-close aria-label="Close">&times;</button>
-        <h2 id="toast-handoff-title">Finish &amp; pay online</h2>
-        <p>Your list here is a helper only. Whistle Stop&rsquo;s online ordering page is where you add items to cart, pay, pick a pickup time, and get your confirmation number.</p>
-        <div id="toast-handoff-totals"></div>
-        <ol class="toast-handoff-steps">
-          <li>Open online ordering below</li>
-          <li>Re-add items, pay, and pick up at 915 Main Street</li>
-        </ol>
-        <p class="toast-handoff-note">If a menu section says &ldquo;Schedule Pickup Time,&rdquo; that category may not be open for ordering yet — try another section or call (727) 726-1956.</p>
-        <div class="toast-handoff-actions">
-          <a href="${escapeHtml(DEFAULT_ORDER_URL)}" class="btn btn-primary" id="toast-handoff-open" target="_blank" rel="noopener noreferrer">Open online ordering</a>
+      <div class="toast-handoff-backdrop" data-fulfillment-close></div>
+      <div class="toast-handoff-dialog" role="dialog" aria-modal="true" aria-labelledby="fulfillment-title">
+        <button type="button" class="toast-handoff-close" data-fulfillment-close aria-label="Close">&times;</button>
+        <div id="fulfillment-step-choose" class="fulfillment-step">
+          <h2 id="fulfillment-title">Pickup or delivery?</h2>
+          <p>Build your food list from the menu first, then choose pickup or delivery. Bar drinks stay informational here because alcohol requires ID-verified service through approved checkout or staff.</p>
+          <div id="fulfillment-totals"></div>
+          <div class="fulfillment-choices">
+            <button type="button" class="fulfillment-choice" data-fulfillment-pick>
+              <span class="fulfillment-choice__title">Pickup</span>
+              <span class="fulfillment-choice__desc">Pay online &amp; pick up at 915 Main Street (~30 min)</span>
+            </button>
+            <button type="button" class="fulfillment-choice" data-fulfillment-deliver>
+              <span class="fulfillment-choice__title">Delivery</span>
+              <span class="fulfillment-choice__desc">Uber Eats, DoorDash, or Grubhub brings it to you</span>
+            </button>
+          </div>
+        </div>
+        <div id="fulfillment-step-pickup" class="fulfillment-step" hidden>
+          <button type="button" class="fulfillment-back" data-fulfillment-back>← Back</button>
+          <h2>Pickup checkout</h2>
+          <p>Re-add your items on Whistle Stop&rsquo;s online ordering page, pay, and choose a pickup time. Your list below is a helper — carts don&rsquo;t sync automatically.</p>
+          <div id="fulfillment-pickup-totals"></div>
+          <div id="fulfillment-pickup-items"></div>
+          <ol class="toast-handoff-steps">
+            <li>Open online ordering</li>
+            <li>Re-add items, pay, and pick up at 915 Main Street</li>
+          </ol>
+          <p class="toast-handoff-note">Whistle Stop does not deliver in-house — pickup is the direct restaurant order.</p>
+          <div class="toast-handoff-actions">
+            <a href="${escapeHtml(DEFAULT_CHECKOUT_URL)}" class="btn btn-primary" id="fulfillment-pickup-open" target="_blank" rel="noopener noreferrer">Open pickup ordering</a>
+          </div>
+        </div>
+        <div id="fulfillment-step-delivery" class="fulfillment-step" hidden>
+          <button type="button" class="fulfillment-back" data-fulfillment-back>← Back</button>
+          <h2>Choose a delivery partner</h2>
+          <p>Whistle Stop partners with these apps. Menus, fees, delivery zones, and any age-restricted items are controlled by each platform.</p>
+          <div id="fulfillment-delivery-items"></div>
+          <div class="fulfillment-partners">
+            <a class="fulfillment-partner" id="fulfillment-uber" target="_blank" rel="noopener noreferrer" href="${escapeHtml(DEFAULT_PARTNERS.uberEats)}">
+              <strong>Uber Eats</strong><span>Order delivery →</span>
+            </a>
+            <a class="fulfillment-partner" id="fulfillment-doordash" target="_blank" rel="noopener noreferrer" href="${escapeHtml(DEFAULT_PARTNERS.doorDash)}">
+              <strong>DoorDash</strong><span>Order delivery →</span>
+            </a>
+            <a class="fulfillment-partner" id="fulfillment-grubhub" target="_blank" rel="noopener noreferrer" href="${escapeHtml(DEFAULT_PARTNERS.grubhub)}">
+              <strong>Grubhub</strong><span>Order delivery →</span>
+            </a>
+          </div>
+          <p class="toast-handoff-note">Third-party apps add service and delivery fees. Pickup is often fastest on busy nights.</p>
         </div>
       </div>`;
     document.body.appendChild(modal);
 
-    modal.querySelectorAll("[data-toast-handoff-close]").forEach((el) => {
-      el.addEventListener("click", () => closeHandoffModal());
+    modal.querySelectorAll("[data-fulfillment-close]").forEach((el) => {
+      el.addEventListener("click", () => closeFulfillmentModal());
     });
+    modal.querySelectorAll("[data-fulfillment-back]").forEach((el) => {
+      el.addEventListener("click", () => showFulfillmentStep(modal, "choose"));
+    });
+    modal.querySelector("[data-fulfillment-pick]")?.addEventListener("click", () => showFulfillmentStep(modal, "pickup"));
+    modal.querySelector("[data-fulfillment-deliver]")?.addEventListener("click", () => showFulfillmentStep(modal, "delivery"));
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !modal.hidden) closeHandoffModal();
+      if (e.key === "Escape" && !modal.hidden) closeFulfillmentModal();
     });
 
     return modal;
   }
 
-  async function openHandoffModal() {
-    const modal = ensureHandoffModal();
-    const openBtn = modal.querySelector("#toast-handoff-open");
-    const url = await loadSiteOrderingConfig();
-    if (openBtn) openBtn.setAttribute("href", url);
-    updateHandoffTotals(modal);
-    modal.hidden = false;
-    document.body.classList.add("toast-handoff-open");
-    modal.querySelector("#toast-handoff-open")?.focus();
+  function updateFulfillmentModalContent(modal) {
+    const items = readItems();
+    const { html } = renderTotalsSummary(items, { compact: false });
+    modal.querySelector("#fulfillment-totals")?.replaceChildren();
+    const totalsSlot = modal.querySelector("#fulfillment-totals");
+    if (totalsSlot) totalsSlot.innerHTML = html;
+    const pickupTotals = modal.querySelector("#fulfillment-pickup-totals");
+    if (pickupTotals) pickupTotals.innerHTML = html;
+    const itemHtml = renderItemReferenceList(items);
+    modal.querySelector("#fulfillment-pickup-items")?.replaceChildren();
+    const pickupItems = modal.querySelector("#fulfillment-pickup-items");
+    if (pickupItems && itemHtml) pickupItems.innerHTML = itemHtml;
+    const deliveryItems = modal.querySelector("#fulfillment-delivery-items");
+    if (deliveryItems && itemHtml) deliveryItems.innerHTML = itemHtml;
   }
 
-  function closeHandoffModal() {
-    const modal = document.getElementById("toast-handoff-modal");
+  async function openFulfillmentModal() {
+    await loadSiteOrderingConfig();
+    const modal = ensureFulfillmentModal();
+    const pickupBtn = modal.querySelector("#fulfillment-pickup-open");
+    if (pickupBtn) pickupBtn.setAttribute("href", getCheckoutUrl());
+    modal.querySelector("#fulfillment-uber")?.setAttribute("href", deliveryLinks.uberEats);
+    modal.querySelector("#fulfillment-doordash")?.setAttribute("href", deliveryLinks.doorDash);
+    modal.querySelector("#fulfillment-grubhub")?.setAttribute("href", deliveryLinks.grubhub);
+    updateFulfillmentModalContent(modal);
+    showFulfillmentStep(modal, "choose");
+    modal.hidden = false;
+    document.body.classList.add("toast-handoff-open");
+    modal.querySelector(".fulfillment-choice")?.focus();
+  }
+
+  function closeFulfillmentModal() {
+    const modal = document.getElementById("ws-fulfillment-modal");
     if (!modal) return;
     modal.hidden = true;
     document.body.classList.remove("toast-handoff-open");
   }
 
-  function bindToastCheckout(el) {
-    if (!el || el.dataset.toastBound === "1") return;
-    el.dataset.toastBound = "1";
+  function bindFulfillmentCheckout(el) {
+    if (!el || el.dataset.fulfillmentBound === "1") return;
+    el.dataset.fulfillmentBound = "1";
     el.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      if (!readItems().length) return;
-      openHandoffModal();
+      if (!readItems().length) {
+        window.location.href = "menu.html";
+        return;
+      }
+      openFulfillmentModal();
+    });
+  }
+
+  function setHeaderOrderPanelOpen(wrap, open) {
+    if (!wrap || !wrap.classList.contains("ws-header-order-wrap--active")) return;
+    wrap.classList.toggle("is-open", open);
+    const link = wrap.querySelector(".ws-header-order");
+    link?.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  function bindHeaderOrderPanel() {
+    document.querySelectorAll(".ws-header-order-wrap").forEach((wrap) => {
+      if (wrap.dataset.headerPanelBound === "1") return;
+      wrap.dataset.headerPanelBound = "1";
+
+      let closeTimer = null;
+      const trigger = wrap.querySelector(".ws-header-order");
+      const panel = wrap.querySelector(".ws-header-order-preview");
+
+      function openPanel() {
+        if (!readItems().length) return;
+        clearTimeout(closeTimer);
+        setHeaderOrderPanelOpen(wrap, true);
+      }
+
+      function scheduleClose() {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => setHeaderOrderPanelOpen(wrap, false), 320);
+      }
+
+      [wrap, panel].forEach((el) => {
+        if (!el) return;
+        el.addEventListener("mouseenter", openPanel);
+        el.addEventListener("mouseleave", scheduleClose);
+      });
+
+      trigger?.addEventListener("click", (e) => {
+        if (!readItems().length) return;
+        e.preventDefault();
+        openPanel();
+      });
+
+      wrap.addEventListener("click", (e) => {
+        const removeBtn = e.target.closest("[data-header-order-remove]");
+        if (removeBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          const index = Number.parseInt(removeBtn.getAttribute("data-header-order-remove"), 10);
+          if (!Number.isNaN(index)) {
+            removeItem(index);
+            if (!readItems().length) setHeaderOrderPanelOpen(wrap, false);
+          }
+          return;
+        }
+
+        const checkoutBtn = e.target.closest("[data-header-order-checkout]");
+        if (checkoutBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          setHeaderOrderPanelOpen(wrap, false);
+          openFulfillmentModal();
+        }
+      });
+
+      wrap.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") setHeaderOrderPanelOpen(wrap, false);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!wrap.contains(e.target)) setHeaderOrderPanelOpen(wrap, false);
+      });
+    });
+  }
+
+  function bindHeaderOrderShortcut() {
+    bindHeaderOrderPanel();
+    document.querySelectorAll(".ws-header-order").forEach((el) => {
+      if (el.dataset.orderShortcutBound === "1") return;
+      el.dataset.orderShortcutBound = "1";
+      el.setAttribute("aria-haspopup", "true");
+      el.setAttribute("aria-expanded", "false");
+    });
+    updateHeaderOrder();
+  }
+
+  function updateHeaderOrder() {
+    const items = readItems();
+    const count = items.length;
+    const label =
+      count === 0
+        ? null
+        : count === 1
+          ? "Checkout (1 item)"
+          : `Checkout (${count} items)`;
+    const { html: totalsHtml } = renderTotalsSummary(items, { compact: true });
+
+    document.querySelectorAll(".ws-header-order-wrap").forEach((wrap) => {
+      const link = wrap.querySelector(".ws-header-order");
+      const textEl = wrap.querySelector(".ws-header-order__text");
+      const preview = wrap.querySelector(".ws-header-order-preview");
+      const list = wrap.querySelector(".ws-header-order-preview__list");
+      const summary = wrap.querySelector(".ws-header-order-preview__summary");
+      const wasOpen = wrap.classList.contains("is-open");
+      if (!link || !textEl) return;
+
+      if (count > 0) {
+        wrap.classList.add("ws-header-order-wrap--active");
+        textEl.textContent = label;
+        link.setAttribute("title", label);
+        link.setAttribute("aria-label", `${label} — review your order`);
+        if (preview && list) {
+          preview.hidden = false;
+          preview.setAttribute("aria-hidden", "false");
+          list.innerHTML = items
+            .map((item, index) => {
+              const price = item.price
+                ? `<span class="ws-header-order-preview__price">${escapeHtml(item.price)}</span>`
+                : `<span class="ws-header-order-preview__price"></span>`;
+              return `<li>
+                <button type="button" class="ws-header-order-preview__remove" data-header-order-remove="${index}" aria-label="Remove ${escapeHtml(item.name)}">&times;</button>
+                <span class="ws-header-order-preview__name">${escapeHtml(item.name)}</span>
+                ${price}
+              </li>`;
+            })
+            .join("");
+          if (summary) summary.innerHTML = totalsHtml;
+        }
+        if (wasOpen) setHeaderOrderPanelOpen(wrap, true);
+        return;
+      }
+
+      wrap.classList.remove("ws-header-order-wrap--active", "is-open");
+      textEl.textContent = "Order Online";
+      link.setAttribute("title", "Order online — browse menu");
+      link.setAttribute("aria-label", "Order online — browse menu");
+      link.setAttribute("aria-expanded", "false");
+      if (preview) {
+        preview.hidden = true;
+        preview.setAttribute("aria-hidden", "true");
+        if (list) list.innerHTML = "";
+        if (summary) summary.innerHTML = "";
+      }
     });
   }
 
@@ -238,6 +461,7 @@ window.WSPickupOrder = (function () {
     const items = readItems();
     const count = items.length;
     let bar = document.getElementById("pickup-order-bar");
+    updateHeaderOrder();
     if (!count) {
       bar?.remove();
       return;
@@ -255,10 +479,10 @@ window.WSPickupOrder = (function () {
         <div class="pickup-order-bar-summary">${totalsHtml}</div>
         <div class="pickup-order-bar-actions">
           <a href="order.html#pickup-order" class="btn btn-outline pickup-order-bar-view">View order</a>
-          <button type="button" class="btn btn-primary pickup-order-bar-checkout" data-toast-handoff>Order online</button>
+          <button type="button" class="btn btn-primary pickup-order-bar-checkout" data-fulfillment-checkout>Checkout</button>
         </div>
       </div>`;
-    bindToastCheckout(bar.querySelector("[data-toast-handoff]"));
+    bindFulfillmentCheckout(bar.querySelector("[data-fulfillment-checkout]"));
   }
 
   function bindMenu(root) {
@@ -338,22 +562,24 @@ window.WSPickupOrder = (function () {
       })
       .join("");
 
-    document.querySelectorAll("[data-toast-handoff]").forEach(bindToastCheckout);
+    document.querySelectorAll("[data-fulfillment-checkout], [data-toast-handoff]").forEach(bindFulfillmentCheckout);
   }
 
   function initOrderPage() {
     bindOrderListActions();
     renderOrderPage();
     document.getElementById("pickup-order-clear")?.addEventListener("click", clearItems);
-    document.querySelectorAll("[data-toast-handoff]").forEach(bindToastCheckout);
+    document.querySelectorAll("[data-fulfillment-checkout], [data-toast-handoff]").forEach(bindFulfillmentCheckout);
   }
 
   window.addEventListener("ws-pickup-order-change", () => {
+    updateHeaderOrder();
     updateBar();
     renderOrderPage();
   });
   window.addEventListener("storage", (e) => {
     if (e.key === STORAGE_KEY) {
+      updateHeaderOrder();
       updateBar();
       renderOrderPage();
     }
@@ -363,7 +589,10 @@ window.WSPickupOrder = (function () {
     await loadSiteOrderingConfig();
     initOrderPage();
     updateBar();
+    bindHeaderOrderShortcut();
   }
+
+  document.addEventListener("partials-loaded", bindHeaderOrderShortcut);
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);
@@ -376,13 +605,14 @@ window.WSPickupOrder = (function () {
     getCount,
     bindMenu,
     updateBar,
-    getOrderUrl,
+    updateHeaderOrder,
+    getCheckoutUrl,
     loadSiteOrderingConfig,
     readItems,
     removeItem,
     clearItems,
     renderOrderPage,
-    openHandoffModal,
+    openFulfillmentModal,
     computeTotals,
   };
 })();

@@ -9,16 +9,17 @@ window.WSMenuRender = (function () {
   }
 
   function renderItem(item, index, options = {}) {
-    const { showOrderButton = false, initialVisible = false } = options;
+    const { showOrderButton = false, initialVisible = false, orderable = true } = options;
+    const canOrder = showOrderButton && orderable !== false && item.orderable !== false;
     const price = item.price
       ? `<span class="price">${escapeHtml(item.price)}</span>`
       : "";
     let orderBtn = "";
-    if (showOrderButton) {
+    if (canOrder) {
       if (item.toastOrderUrl) {
         orderBtn = `<a href="${escapeHtml(item.toastOrderUrl)}" class="btn btn-outline menu-item-order-btn menu-item-order-link" target="_blank" rel="noopener noreferrer">Order on Toast</a>`;
       } else {
-        orderBtn = `<button type="button" class="btn btn-outline menu-item-order-btn" data-pickup-add data-item-name="${escapeHtml(item.name)}" data-item-price="${escapeHtml(item.price || "")}">Add to order list</button>`;
+        orderBtn = `<button type="button" class="btn btn-outline menu-item-order-btn" data-pickup-add data-item-name="${escapeHtml(item.name)}" data-item-price="${escapeHtml(item.price || "")}">Add to order</button>`;
       }
     }
     const actions =
@@ -41,14 +42,20 @@ window.WSMenuRender = (function () {
   }
 
   function renderCategory(cat, menuId, options = {}) {
+    const categoryOrderable = options.orderable !== false && cat.orderable !== false;
     const note = cat.note
       ? `<p class="menu-cat-note">${escapeHtml(cat.note)}</p>`
       : "";
-    const items = (cat.items || []).map((item, i) => renderItem(item, i, options)).join("");
+    const orderNote =
+      options.showOrderButton && !categoryOrderable
+        ? `<p class="menu-cat-note menu-cat-order-note">${escapeHtml(cat.orderNote || options.orderNote || "Shown for dine-in service only.")}</p>`
+        : "";
+    const itemOptions = { ...options, orderable: categoryOrderable };
+    const items = (cat.items || []).map((item, i) => renderItem(item, i, itemOptions)).join("");
     return `
       <section class="menu-category-block" id="${menuId}-${cat.id}" data-category="${cat.id}">
         <h2 class="menu-category-title">${escapeHtml(cat.name)}</h2>
-        ${note}
+        ${note}${orderNote}
         <div class="menu-items">${items}</div>
       </section>`;
   }
@@ -79,7 +86,12 @@ window.WSMenuRender = (function () {
 
   function renderPanel(menu, activeMenuId, options = {}) {
     const isActive = menu.id === activeMenuId;
-    const categories = menu.categories.map((c) => renderCategory(c, menu.id, options)).join("");
+    const menuOptions = {
+      ...options,
+      orderable: options.orderable !== false && menu.orderable !== false,
+      orderNote: menu.orderNote || options.orderNote,
+    };
+    const categories = menu.categories.map((c) => renderCategory(c, menu.id, menuOptions)).join("");
     const image = menu.image
         ? `<div class="menu-panel-media reveal-right visible"><img src="${escapeHtml(menu.image)}" alt="${escapeHtml(menu.label)}" loading="lazy" /></div>`
       : menu.id === "main-menu"

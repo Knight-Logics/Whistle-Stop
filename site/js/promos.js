@@ -152,5 +152,15 @@
 
   document.addEventListener("ws-config-updated", render);
 
+  if (params.has("promoPreview")) {
+    window.addEventListener("storage", (e) => {
+      if (e.key === "ws-admin-preview-store") render();
+    });
+    window.addEventListener("message", (e) => {
+      if (e.origin !== window.location.origin) return;
+      if (e.data?.type === "ws-promo-preview-refresh") render();
+    });
+  }
+
 })();
 
