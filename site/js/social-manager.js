@@ -2,6 +2,11 @@
 window.WSSocial = (function () {
   const LOCAL_BRIDGE = "http://127.0.0.1:8787";
   const CLOUD_BRIDGE = "https://knightlogics.com/api/whistle-stop-social";
+  /** Main PC tunnel — browser reaches this directly when PC is on */
+  const TUNNEL_BRIDGE = "https://ws-social.knightlogics.com";
+  const LIVE_ADMIN_URL = "https://knight-logics.github.io/Whistle-Stop/admin.html";
+  /** Fallback only when cloud cannot host attachment (no blob / no tunnel) */
+  const GBP_DEMO_PHOTO_URL = "https://knightlogics.com/images/whistle-stop-pitch.jpg";
   const CLOUD_MEDIA_MAX_BYTES = 3.5 * 1024 * 1024;
   const LOCAL_MEDIA_MAX_BYTES = 12 * 1024 * 1024;
 
@@ -24,7 +29,15 @@ window.WSSocial = (function () {
       .replace(/"/g, "&quot;");
   }
 
+  /** When set, GitHub Pages admin talks directly to main-PC tunnel (full Playwright). */
+  let activeBridgeOverride = "";
+
+  function isTunnelBridge(base) {
+    return String(base || "").replace(/\/$/, "") === TUNNEL_BRIDGE;
+  }
+
   function bridgeUrl(config) {
+    if (activeBridgeOverride) return activeBridgeOverride;
     const fromConfig = String(config?.bridgeUrl || "").trim().replace(/\/$/, "");
     if (isHttpsAdmin()) {
       if (fromConfig && !isLocalBridge(fromConfig)) return fromConfig;
@@ -51,19 +64,23 @@ window.WSSocial = (function () {
 
   function bridgeRoutes(config) {
     const base = bridgeUrl(config);
-    if (!isLocalBridge(base)) {
+    if (isLocalBridge(base) || isTunnelBridge(base)) {
       return {
         health: `${base}/health`,
-        platforms: `${base}/platforms`,
-        post: `${base}/post`,
-        history: `${base}/history`,
+        platforms: `${base}/api/platforms`,
+        preflight: `${base}/api/preflight`,
+        logs: `${base}/api/logs`,
+        post: `${base}/api/post`,
+        history: `${base}/api/history`,
       };
     }
     return {
       health: `${base}/health`,
-      platforms: `${base}/api/platforms`,
-      post: `${base}/api/post`,
-      history: `${base}/api/history`,
+      platforms: `${base}/platforms`,
+      preflight: `${base}/preflight`,
+      logs: `${base}/logs`,
+      post: `${base}/post`,
+      history: `${base}/history`,
     };
   }
 
@@ -109,6 +126,17 @@ window.WSSocial = (function () {
 
   const LOCAL_ADMIN_URL = "http://127.0.0.1:8080/admin.html";
 
+  async function pingTunnelBridge() {
+    try {
+      const res = await fetch(`${TUNNEL_BRIDGE}/health`, { cache: "no-store" });
+      if (!res.ok) return { online: false };
+      const data = await res.json();
+      return { online: true, via: "tunnel", remoteBridge: true, ...data };
+    } catch {
+      return { online: false };
+    }
+  }
+
   async function pingBridge(config) {
     const base = bridgeUrl(config);
     if (isHttpsAdmin() && isLocalBridge(base)) {
@@ -128,6 +156,76 @@ window.WSSocial = (function () {
     const res = await fetch(bridgeRoutes(config).platforms, { cache: "no-store" });
     if (!res.ok) throw new Error("Could not load platforms from bridge");
     return res.json();
+  }
+
+  async function fetchPreflight(config) {
+    try {
+      const res = await fetch(bridgeRoutes(config).preflight, { cache: "no-store" });
+      if (!res.ok) return null;
+      return res.json();
+    } catch {
+      return null;
+    }
+  }
+
+  async function fetchBridgeLogs(config, tail = 60) {
+    try {
+      const res = await fetch(`${bridgeRoutes(config).logs}?tail=${tail}`, { cache: "no-store" });
+      if (!res.ok) return null;
+      return res.json();
+    } catch {
+      return null;
+    }
+  }
+
+  function renderPreflightHtml(preflight) {
+    if (!preflight) {
+      return `<p class="social-field-hint">Preflight unavailable — check bridge connection.</p>`;
+    }
+    const scopeOk = preflight.demoScope === "knight_logics_only";
+    const fbMode = preflight.facebookMode || "unknown";
+    const checks = preflight.checks || [];
+    const targets = preflight.targets || [];
+    const ready = preflight.readyForFullLiveTest ?? preflight.readyForLiveTest;
+    return `
+      <div class="social-preflight ${ready ? "is-ready" : "is-warn"}">
+        <p class="social-preflight-head">
+          <strong>${ready ? "Ready for live test" : "Not ready for full live test"}</strong>
+          <span class="social-access-state ${scopeOk ? "is-demo" : "is-warn"}">${scopeOk ? "Knight Logics only" : "Scope error"}</span>
+        </p>
+        <p class="social-field-hint">Facebook mode: <code>${esc(fbMode)}</code>${fbMode === "browser_groups" ? " — page + community groups via Playwright" : ""}</p>
+        <ul class="social-preflight-checks">
+          ${checks
+            .map(
+              (c) =>
+                `<li class="${c.ok ? "is-ok" : "is-warn"}"><span>${c.ok ? "✓" : "○"}</span> <strong>${esc(c.label)}</strong> — ${esc(c.detail || "")}</li>`
+            )
+            .join("")}
+        </ul>
+        ${
+          targets.length
+            ? `<p class="social-field-hint"><strong>Will post to:</strong> ${targets.map((t) => esc(t.label)).join(" · ")}</p>`
+            : ""
+        }
+        ${preflight.logPath ? `<p class="social-field-hint">Bridge log: <code>${esc(preflight.logPath)}</code></p>` : ""}
+      </div>`;
+  }
+
+  function confirmLivePost(selected, preflight) {
+    const names = (preflight?.targets || [])
+      .filter((t) => selected.includes(t.platform))
+      .map((t) => t.label);
+    const fbMode = preflight?.facebookMode || "";
+    const fbNote =
+      selected.includes("facebook") && String(fbMode).includes("browser_groups")
+        ? "\n\nFacebook will use Playwright to share to Knight Logics community groups (same as Knight Command Social Poster)."
+        : selected.includes("facebook")
+          ? "\n\nFacebook will post to the Knight Logics Page only (Graph API — no groups)."
+          : "";
+    const list = names.length ? names.join("\n• ", "• ") : selected.join(", ");
+    return window.confirm(
+      `LIVE POST — Knight Logics accounts ONLY:\n\n• ${list}${fbNote}\n\nNo Knight Group, Screen Team, or Faith Works accounts.\n\nContinue?`
+    );
   }
 
   async function postToBridge(config, payload) {
@@ -179,11 +277,11 @@ window.WSSocial = (function () {
 
   const DEFAULT_ACCESS_NOTES = {
     facebook: {
-      now: "Posts through Knight Logics Facebook Page (demo on this PC).",
+      now: "Live demo — posts to the Knight Logics Facebook Page only.",
       pending: "Whistle Stop Page authorization — then posts go to their Facebook Page.",
     },
     x: {
-      now: "Posts through @KnightLogics (demo on this PC).",
+      now: "Live demo — posts to @KnightLogics only.",
       pending: "Whistle Stop X account API keys — then posts go to their profile.",
     },
     instagram: {
@@ -191,29 +289,35 @@ window.WSSocial = (function () {
       pending: "Meta Business verification + Instagram linked to Whistle Stop Facebook Page.",
     },
     gbp: {
-      now: "Text + post type saved to a manual queue; paste into Google Business Profile.",
+      now: "Live demo — Knight Logics Google listing. Your attached photo is hosted publicly for Google's API.",
       pending:
-        "Google OAuth (business.manage) — updates, events & offers auto-publish with 1 still photo each. GIFs: static image only via API. Videos: dashboard only, not API.",
+        "Whistle Stop Google OAuth — updates auto-publish to their Google listing.",
     },
     linkedin: {
-      now: "Paused — not posting.",
+      now: "Playwright — Knight Logics company page when START-PRESENTATION.ps1 is running (same Social Poster engine).",
       pending: "LinkedIn company page access for Whistle Stop.",
     },
     tiktok: { now: "Not connected.", pending: "TikTok Business API authorization." },
     youtube: { now: "Not connected.", pending: "YouTube channel + Community tab API access." },
     nextdoor: {
-      now: "Not connected.",
-      pending: "Nextdoor Business account link (may stay manual — limited API).",
+      now: "Playwright — Knight Logics Nextdoor page when START-PRESENTATION.ps1 is running.",
+      pending: "Nextdoor Business account link for Whistle Stop.",
     },
   };
 
-  function accessState(connection) {
+  function accessState(connection, platformId) {
+    const playwright = platformId === "linkedin" || platformId === "nextdoor";
     const map = {
       demo_ready: { label: "Demo — works now", cls: "is-demo" },
       ready: { label: "Connected", cls: "is-live" },
       manual_queue: { label: "Manual queue", cls: "is-gbp" },
-      needs_login: { label: "Needs login", cls: "is-warn" },
+      needs_login: {
+        label: playwright ? "Needs Playwright session" : "Needs login",
+        cls: "is-warn",
+      },
       paused: { label: "Paused", cls: "is-warn" },
+      partial: { label: "Partially ready", cls: "is-warn" },
+      needs_bridge: { label: "Needs presentation bridge", cls: "is-warn" },
       not_wired: { label: "Not available", cls: "is-off" },
     };
     return map[connection] || { label: connection || "Unknown", cls: "is-off" };
@@ -222,13 +326,13 @@ window.WSSocial = (function () {
   function renderAccessNoticeHtml(platforms, accessNotes) {
     const notes = { ...DEFAULT_ACCESS_NOTES, ...(accessNotes || {}) };
     if (!platforms?.length) {
-      return `<p class="social-access-empty">Start the local bridge to see per-platform access status.</p>`;
+      return `<p class="social-access-empty">Log into admin — platform status loads from the cloud bridge.</p>`;
     }
     return `<ul class="social-access-list">
       ${platforms
         .map((p) => {
           const note = notes[p.id] || {};
-          const state = accessState(p.connection);
+          const state = accessState(p.connection, p.id);
           const now = note.now || p.limitation || "Status unknown.";
           const pending = note.pending || "";
           return `<li class="social-access-item">
@@ -244,13 +348,19 @@ window.WSSocial = (function () {
     </ul>`;
   }
 
-  function connectionBadge(connection) {
+  function connectionBadge(connection, platformId) {
+    const playwright = platformId === "linkedin" || platformId === "nextdoor";
     const map = {
       demo_ready: { label: "Demo ready", cls: "is-demo" },
       ready: { label: "Connected", cls: "is-live" },
-      needs_login: { label: "Needs login", cls: "is-warn" },
+      needs_login: {
+        label: playwright ? "Playwright session" : "Needs login",
+        cls: "is-warn",
+      },
       paused: { label: "Paused", cls: "is-warn" },
       manual_queue: { label: "Manual queue", cls: "is-gbp" },
+      partial: { label: "Partial", cls: "is-warn" },
+      needs_bridge: { label: "Needs bridge", cls: "is-warn" },
       not_wired: { label: "Not wired", cls: "is-off" },
     };
     const m = map[connection] || { label: connection || "Unknown", cls: "is-off" };
@@ -261,15 +371,20 @@ window.WSSocial = (function () {
     const icon = PLATFORM_ICONS[p.id] || "•";
     const limit = p.charLimit ? `${p.charLimit.toLocaleString()} char max` : "";
     const note = p.limitation ? `<p class="social-platform-note">${esc(p.limitation)}</p>` : "";
+    const accountCount =
+      p.demoAccountCount > 1
+        ? `<span class="social-platform-limit">${p.demoAccountsReady ?? 0}/${p.demoAccountCount} accounts ready</span>`
+        : "";
     const muted = p.connection === "not_wired";
     return `
       <label class="social-platform-card${checked ? " is-selected" : ""}${muted ? " is-muted" : ""}">
-        <input type="checkbox" name="social-platform" value="${esc(p.id)}" ${checked ? "checked" : ""} />
+        <input type="checkbox" name="social-platform" value="${esc(p.id)}" ${checked ? "checked" : ""} ${muted ? "disabled" : ""} />
         <span class="social-platform-icon" aria-hidden="true">${icon}</span>
         <span class="social-platform-body">
           <strong>${esc(p.label)}</strong>
-          ${connectionBadge(p.connection)}
+          ${connectionBadge(p.connection, p.id)}
           ${limit ? `<span class="social-platform-limit">${limit}</span>` : ""}
+          ${accountCount}
           ${note}
         </span>
       </label>`;
@@ -370,10 +485,17 @@ window.WSSocial = (function () {
           : status === "skipped" || status === "not_wired"
             ? "is-warn"
             : "is-error";
-    const detail = r.message || r.error || "";
+    const detail = [r.message || r.error, r.method ? `method: ${r.method}` : "", r.runId ? `run: ${r.runId}` : "", r.sharedGroups ? `groups: ${r.sharedGroups}` : ""]
+      .filter(Boolean)
+      .join(" · ");
+    const title = r.accountId && r.label ? r.label : r.label || r.platform;
+    const sub =
+      r.accountId && r.label && r.platform
+        ? `<span class="social-result-account">${esc(r.platform)} · ${esc(r.accountId)}</span>`
+        : "";
     return `
       <li class="social-result-row ${cls}">
-        <strong>${esc(r.label || r.platform)}</strong>
+        <strong>${esc(title)}</strong>${sub}
         <span>${esc(status.replace(/_/g, " "))}</span>
         ${detail ? `<p>${esc(detail)}</p>` : ""}
       </li>`;
@@ -387,20 +509,35 @@ window.WSSocial = (function () {
     let gbpLimits = null;
     let mediaDataUrl = "";
     let mediaFileType = "";
+    let preflightData = null;
+
+    const preflightEl = panel.querySelector("#social-preflight-body");
+    const logsEl = panel.querySelector("#social-bridge-logs");
 
     panel.innerHTML = `
       <p class="admin-note">
-        Compose once for <strong>Facebook, X, Google Business Profile, and more</strong>. Pick platforms on the right; expand <strong>Access &amp; limitations</strong> if you need platform authorization details.
-        On GitHub Pages / any device: posts go through the <strong>cloud bridge</strong> on knightlogics.com after you log in. Local bridge is only for demos on this PC.
+        Compose once for <strong>Facebook, X, LinkedIn, Nextdoor, and Google Business Profile</strong>.
+        <strong>Live presentation:</strong> open <a href="${LIVE_ADMIN_URL}" target="_blank" rel="noopener">${LIVE_ADMIN_URL}</a>,
+        log in, and post — the cloud bridge on knightlogics.com handles auth and posting.
+        Before the pitch, run <code>START-PRESENTATION.ps1</code> on your laptop (bridge + Cloudflare tunnel for LinkedIn/Nextdoor).
       </p>
       <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking cloud bridge…</div>
+      <details class="admin-details social-preflight-panel" id="social-preflight-panel" open>
+        <summary><strong>Live test preflight</strong> <span class="social-gbp-summary-hint">— run before posting</span></summary>
+        <div id="social-preflight-body" style="margin-top:0.75rem"><p class="social-field-hint">Loading…</p></div>
+        <div class="social-compose-actions" style="margin-top:0.5rem">
+          <button type="button" class="btn btn-outline admin-btn-sm" id="social-preflight-refresh">Re-run preflight</button>
+          <button type="button" class="btn btn-outline admin-btn-sm" id="social-view-logs">View bridge logs</button>
+        </div>
+        <pre id="social-bridge-logs" class="social-bridge-logs" hidden></pre>
+      </details>
       <details class="admin-details social-bridge-settings" id="social-bridge-settings">
         <summary><strong>Posting connection</strong> <span class="social-gbp-summary-hint">— optional; cloud works after admin login on any device</span></summary>
         <div class="admin-form-grid cols-2" style="margin-top:0.75rem">
           <div class="admin-field admin-field--full">
             <label>Bridge URL</label>
             <input type="url" id="social-bridge-url" value="${esc(bridgeUrl(config))}" placeholder="https://knightlogics.com/api/whistle-stop-social" />
-            <p class="social-field-hint">GitHub Pages admin: use Vercel URL above. Local demo: <code>http://127.0.0.1:8787</code></p>
+            <p class="social-field-hint">Live site uses <code>knightlogics.com/api/whistle-stop-social</code> automatically. Local-only: <code>http://127.0.0.1:8787</code></p>
           </div>
           <div class="admin-field admin-field--full">
             <label>API key (Vercel only)</label>
@@ -429,7 +566,7 @@ window.WSSocial = (function () {
               <div class="social-compose-media admin-field">
                 <label>Photo, GIF, or video (optional)</label>
                 <input type="file" id="social-post-media" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm,video/x-m4v" />
-                <p class="social-field-hint" id="social-media-hint">JPG, PNG, WebP, GIF, MP4, MOV, WebM. Cloud bridge: keep under ~3.5 MB. Facebook &amp; X accept all types; Google queue saves stills only (no video via API).</p>
+                <p class="social-field-hint" id="social-media-hint">JPG, PNG, WebP, GIF, MP4, MOV, WebM. Facebook, X, LinkedIn &amp; Nextdoor use your attachment. <strong>Google Business Profile</strong> uses a public JPG on knightlogics.com (Google cannot fetch local uploads).</p>
                 <div class="social-media-thumb" id="social-media-thumb" hidden>
                   <img id="social-media-thumb-img" alt="Attached media preview" hidden />
                   <video id="social-media-thumb-video" controls muted playsinline hidden></video>
@@ -476,6 +613,7 @@ window.WSSocial = (function () {
                 </aside>
               </details>
               <div class="social-compose-actions admin-social-actions">
+                <button type="button" class="btn btn-outline admin-btn-sm" id="social-load-demo">Load pitch demo</button>
                 <button type="button" class="btn btn-primary" id="social-post-btn">Post now</button>
                 <span class="social-char-count" id="social-char-count">0 characters</span>
               </div>
@@ -492,7 +630,7 @@ window.WSSocial = (function () {
         </div>
         <div class="admin-preview-col">
           <p class="admin-preview-label">Platforms</p>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 0.75rem">Select where this post should go. Status reflects the local posting bridge on your computer.</p>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0 0 0.75rem">Demo mode posts to <strong>Knight Logics only</strong> (one account per platform).</p>
           <div id="social-platform-grid" class="social-platform-grid">
             <p style="color:var(--text-muted)">Loading platforms…</p>
           </div>
@@ -557,13 +695,20 @@ window.WSSocial = (function () {
       }
     }
 
+    function defaultSelectedPlatforms() {
+      const ready = platforms.filter((p) =>
+        ["demo_ready", "ready", "partial"].includes(p.connection)
+      );
+      return new Set((ready.length ? ready : platforms.filter((p) => p.connection !== "not_wired")).map((p) => p.id));
+    }
+
     function renderPlatformGrid() {
       renderAccessNotice();
       if (!platforms.length) {
-        gridEl.innerHTML = `<p class="social-offline-msg">Bridge offline — start <code>run_bridge.ps1</code> to see live platform status. You can still compose; posts will be simulated locally.</p>`;
+        gridEl.innerHTML = `<p class="social-offline-msg">Bridge offline — run <code>START-DEMO.ps1</code> or <code>WhistleStop\\run_bridge.ps1</code> to see live platform status.</p>`;
         return;
       }
-      const defaults = new Set(["facebook", "x", "gbp"]);
+      const defaults = defaultSelectedPlatforms();
       gridEl.innerHTML = platforms.map((p) => platformCard(p, defaults.has(p.id))).join("");
       gridEl.querySelectorAll(".social-platform-card input").forEach((input) => {
         input.addEventListener("change", () => {
@@ -594,28 +739,74 @@ window.WSSocial = (function () {
         .join("");
     }
 
+    async function refreshPreflight() {
+      if (preflightEl) {
+        preflightEl.innerHTML = `<p class="social-field-hint">Running preflight…</p>`;
+        preflightData = await fetchPreflight(config);
+        preflightEl.innerHTML = renderPreflightHtml(preflightData);
+      }
+    }
+
+    panel.querySelector("#social-preflight-refresh")?.addEventListener("click", () => refreshPreflight());
+    panel.querySelector("#social-view-logs")?.addEventListener("click", async () => {
+      if (!logsEl) return;
+      logsEl.hidden = false;
+      logsEl.textContent = "Loading logs…";
+      const data = await fetchBridgeLogs(config, 80);
+      if (!data?.lines?.length) {
+        logsEl.textContent =
+          data?.note ||
+          "No log lines. Run START-PRESENTATION.ps1 — logs: E:\\KnightLogics-Growth-System\\Social\\WhistleStop\\logs\\bridge.log";
+      } else {
+        logsEl.textContent = data.lines.join("\n");
+      }
+    });
+
     async function refreshBridge() {
-      const health = await pingBridge(config);
+      activeBridgeOverride = "";
+      let health = { online: false };
+
+      if (isHttpsAdmin()) {
+        const tunnel = await pingTunnelBridge();
+        if (tunnel.online) {
+          activeBridgeOverride = TUNNEL_BRIDGE;
+          health = { ...tunnel, online: true };
+        }
+      }
+
+      if (!health.online) {
+        health = await pingBridge(config);
+      }
+
       bridgeOnline = health.online;
+      const viaTunnel = isTunnelBridge(activeBridgeOverride);
+      const remoteBridge = viaTunnel || Boolean(health.remoteBridge);
+      const fullBridge = remoteBridge || health.service === "whistle-stop-social-proxy";
       if (statusEl) {
         statusEl.className = `admin-social-bridge-status ${bridgeOnline ? "is-online" : "is-offline"}`;
         if (bridgeOnline) {
-          const isCloud = !isLocalBridge(bridgeUrl(config));
+          const isCloud = !isLocalBridge(bridgeUrl(config)) && !viaTunnel;
           const canPost = bridgeAuthReady(config);
           const keyNote =
-            isCloud && !canPost
-              ? ` Log into admin to post from this device (or save an optional API key under Posting connection).`
+            (isCloud || viaTunnel) && !canPost
+              ? ` Log into admin to post from this device.`
               : "";
-          statusEl.innerHTML = isCloud
-            ? `<strong>Cloud bridge online.</strong> Facebook &amp; X via Graph/X API on Vercel (demo Knight Logics accounts).${keyNote}`
-            : `<strong>Local bridge online.</strong> Facebook &amp; X post live (demo accounts). GBP saves to manual queue until Google is connected.`;
+          if (viaTunnel) {
+            statusEl.innerHTML = `<strong>Main PC bridge online (ws-social tunnel).</strong> Full poster — Knight Logics accounts only. Open admin from any device.${keyNote}`;
+          } else if (isCloud && fullBridge) {
+            statusEl.innerHTML = `<strong>Cloud bridge online — full poster active.</strong> Demo posts to Knight Logics accounts only (one per platform).${keyNote}`;
+          } else if (isCloud) {
+            statusEl.innerHTML = `<strong>Cloud bridge online.</strong> Facebook, X, and GBP post to Knight Logics only. LinkedIn/Nextdoor need main PC tunnel (<code>START-MAIN-PC-HOST.ps1</code>).${keyNote}`;
+          } else {
+            statusEl.innerHTML = `<strong>Local bridge online.</strong> Full Knight Logics poster on this PC.${keyNote}`;
+          }
         } else if (health.blocked && health.reason === "mixed_content") {
-          statusEl.innerHTML = `<strong>Local bridge blocked on HTTPS.</strong> GitHub Pages admin should use the Vercel cloud bridge (<code>bridgeUrl</code> in social settings). For Playwright demo, use <a href="${LOCAL_ADMIN_URL}" target="_blank" rel="noopener">${LOCAL_ADMIN_URL}</a> with <code>START-DEMO.ps1</code>.`;
+          statusEl.innerHTML = `<strong>Local bridge blocked on HTTPS.</strong> Use the live admin at <a href="${LIVE_ADMIN_URL}" target="_blank" rel="noopener">${LIVE_ADMIN_URL}</a> — cloud bridge handles posting.`;
         } else {
           const isCloud = !isLocalBridge(bridgeUrl(config));
           statusEl.innerHTML = isCloud
-            ? `<strong>Cloud bridge offline.</strong> Deploy <code>/api/whistle-stop-social</code> on Vercel and set env vars (see MainSite <code>api/whistle-stop-social.env.example</code>).`
-            : `<strong>Bridge offline.</strong> Run <code>START-DEMO.ps1</code> or <code>WhistleStop\\run_bridge.ps1</code> on this PC, or switch <code>bridgeUrl</code> to the Vercel API.`;
+            ? `<strong>Cloud bridge offline.</strong> Set Vercel env vars and deploy MainSite. See <code>api/whistle-stop-social.env.example</code>. For full demo run <code>START-PRESENTATION.ps1</code>.`
+            : `<strong>Bridge offline.</strong> Run <code>START-PRESENTATION.ps1</code> or <code>START-DEMO.ps1</code> on this PC.`;
         }
       }
 
@@ -625,34 +816,52 @@ window.WSSocial = (function () {
           platforms = data.platforms || [];
           gbpLimits = data.gbpLimitations;
           if (gbpNote && gbpLimits) {
-            gbpNote.textContent = `Until Google OAuth: queue only. After authorization: event/update/offer posts can include 1 still photo (JPG/PNG/WebP URL). GIFs won’t animate via API. Videos and multi-photo posts: use the Google Business Profile dashboard — not supported on local-post API.`;
+            gbpNote.textContent = `Google posts via OAuth API. Your attached photo is auto-hosted (tunnel or cloud) so GBP gets the same image as Facebook/X.`;
           }
           renderPlatformGrid();
           const hist = await fetchBridgeHistory(config);
           renderHistory(hist);
+          await refreshPreflight();
         } catch (e) {
           gridEl.innerHTML = `<p class="social-offline-msg">${esc(e.message)}</p>`;
         }
       } else {
         platforms = [
-          { id: "facebook", label: "Facebook", connection: "demo_ready", charLimit: 63206 },
+          { id: "facebook", label: "Facebook", connection: "demo_ready", charLimit: 63206, demoAccountCount: 1 },
           { id: "instagram", label: "Instagram", connection: "not_wired", limitation: "Meta API not wired" },
-          { id: "x", label: "X (Twitter)", connection: "demo_ready", charLimit: 280 },
-          { id: "linkedin", label: "LinkedIn", connection: "paused", charLimit: 3000 },
+          { id: "x", label: "X (Twitter)", connection: "demo_ready", charLimit: 280, demoAccountCount: 1 },
+          {
+            id: "linkedin",
+            label: "LinkedIn",
+            connection: "needs_bridge",
+            charLimit: 3000,
+            demoAccountCount: 1,
+            postingMethod: "playwright",
+            limitation: "Playwright — run START-PRESENTATION.ps1",
+          },
           {
             id: "gbp",
             label: "Google Business Profile",
-            connection: "manual_queue",
-            gbp: true,
+            connection: "demo_ready",
             charLimit: 1500,
-            limitation: "Queued for Google — paste or auto-post when OAuth is connected.",
+            demoAccountCount: 1,
+            limitation: "Knight Logics Google listing via GBP API.",
           },
           { id: "tiktok", label: "TikTok", connection: "not_wired" },
           { id: "youtube", label: "YouTube Community", connection: "not_wired" },
-          { id: "nextdoor", label: "Nextdoor", connection: "not_wired" },
+          {
+            id: "nextdoor",
+            label: "Nextdoor",
+            connection: "needs_bridge",
+            charLimit: 1000,
+            demoAccountCount: 1,
+            postingMethod: "playwright",
+            limitation: "Playwright — run START-PRESENTATION.ps1",
+          },
         ];
         renderPlatformGrid();
         renderHistory(config.postHistory || []);
+        await refreshPreflight();
       }
     }
 
@@ -690,16 +899,16 @@ window.WSSocial = (function () {
       if (mediaHint) {
         if (!url) {
           mediaHint.textContent =
-            "JPG, PNG, WebP, GIF, MP4, MOV, WebM. Cloud bridge: keep under ~3.5 MB. Facebook & X accept all types; Google queue saves stills only (no video via API).";
+            "JPG, PNG, WebP, GIF, MP4, MOV, WebM. Facebook/X/LinkedIn/Nextdoor use your file. Google auto-hosts your photo for the API.";
           mediaHint.classList.remove("is-warn");
         } else if (fileType?.startsWith("video/")) {
-          mediaHint.textContent = `${fileName || "Video"} attached — posts to Facebook/X. GBP: upload video manually in Google (API cannot).`;
+          mediaHint.textContent = `${fileName || "Video"} attached — Facebook/X/LinkedIn/Nextdoor. Google: text only (no video via API).`;
           mediaHint.classList.add("is-warn");
         } else if (fileType === "image/gif") {
-          mediaHint.textContent = `${fileName || "GIF"} attached — animates on Facebook/X; Google gets a still image only.`;
+          mediaHint.textContent = `${fileName || "GIF"} attached — animates on Facebook/X. Google gets a hosted JPG version.`;
           mediaHint.classList.remove("is-warn");
         } else {
-          mediaHint.textContent = `${fileName || "Photo"} attached — posts to Facebook/X; saved with GBP queue for Google.`;
+          mediaHint.textContent = `${fileName || "Photo"} attached — all platforms use this image (Google hosts it publicly for the API).`;
           mediaHint.classList.remove("is-warn");
         }
       }
@@ -742,6 +951,31 @@ window.WSSocial = (function () {
     updateCharCount();
     updatePreview();
 
+    async function loadPitchDemo() {
+      const demo = config.demo || {};
+      if (demo.pitchText && textEl) textEl.value = demo.pitchText;
+      updateCharCount();
+      updatePreview();
+      const demoImgUrl = demo.gbpMediaUrl || "";
+      if (demoImgUrl && !mediaDataUrl) {
+        try {
+          const res = await fetch(demoImgUrl, { cache: "no-store" });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const blob = await res.blob();
+          const reader = new FileReader();
+          reader.onload = () =>
+            setMediaPreview(String(reader.result || ""), "WSGoodTimes.webp", blob.type || "image/webp");
+          reader.readAsDataURL(blob);
+        } catch (err) {
+          console.warn("[WSSocial] demo image load failed", err);
+        }
+      }
+    }
+
+    panel.querySelector("#social-load-demo")?.addEventListener("click", () => {
+      loadPitchDemo();
+    });
+
     panel.querySelector("#social-post-btn")?.addEventListener("click", async () => {
       const text = textEl?.value?.trim() || "";
       const selected = [...panel.querySelectorAll('input[name="social-platform"]:checked')].map(
@@ -755,6 +989,7 @@ window.WSSocial = (function () {
         alert("Select at least one platform.");
         return;
       }
+      if (!confirmLivePost(selected, preflightData)) return;
       if (bridgeOnline && !isLocalBridge(bridgeUrl(config)) && !bridgeAuthReady(config)) {
         alert("Log into Whistle Stop admin to post from this device (cloud bridge uses your admin login).");
         return;
@@ -770,6 +1005,7 @@ window.WSSocial = (function () {
         text,
         platforms: selected,
         mediaBase64: mediaDataUrl || "",
+        gbpSourceUrl: "",
         gbp: {
           topicType: panel.querySelector("#social-gbp-topic")?.value || "STANDARD",
           callToAction: panel.querySelector("#social-gbp-cta")?.value || null,
@@ -792,8 +1028,8 @@ window.WSSocial = (function () {
               return {
                 platform: pid,
                 label: "Google Business Profile",
-                status: "queued_manual",
-                message: "Simulated — start bridge to save GBP queue file.",
+                status: "simulated",
+                message: "Simulated — start bridge for live GBP API posts.",
               };
             }
             if (p?.connection === "not_wired") {
@@ -864,7 +1100,11 @@ window.WSSocial = (function () {
     });
 
     setMediaPreview("");
-    refreshBridge();
+    refreshBridge().then(() => {
+      if (config.demoMode !== false && !(textEl?.value || "").trim()) {
+        loadPitchDemo();
+      }
+    });
   }
 
   return {

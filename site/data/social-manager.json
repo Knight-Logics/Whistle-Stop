@@ -3,12 +3,17 @@
   "bridgeUrl": "https://knightlogics.com/api/whistle-stop-social",
   "bridgeApiKey": "",
   "clientName": "Whistle Stop Grill & Bar",
+  "liveAdminUrl": "https://knight-logics.github.io/Whistle-Stop/admin.html",
   "gbp": {
     "businessName": "Whistle Stop Grill & Bar",
     "address": "915 Main Street, Safety Harbor, FL 34695",
     "dashboardUrl": "https://business.google.com/",
     "defaultTopicType": "STANDARD",
-    "mode": "manual_queue"
+    "mode": "api"
+  },
+  "demo": {
+    "gbpMediaUrl": "https://knightlogics.com/images/whistle-stop-pitch.jpg",
+    "pitchText": "🍔 Whistle Stop Grill & Bar — Safety Harbor's neighborhood spot for cold drinks, great food, and live music on the patio.\n\n915 Main Street · Open daily\n\n#WhistleStop #SafetyHarbor #LiveMusic #FloridaEats"
   },
   "socialLinks": {
     "facebook": "https://www.facebook.com/Whistlestopgrillandbar915",
@@ -17,24 +22,24 @@
   "postHistory": [],
   "accessNotes": {
     "facebook": {
-      "now": "Posts via Graph API (Knight Logics Page demo on Vercel/local bridge).",
+      "now": "Live demo — posts to the Knight Logics Facebook Page only.",
       "pending": "Whistle Stop Page authorization — then posts go to facebook.com/Whistlestopgrillandbar915."
     },
     "x": {
-      "now": "Posts via X API (@KnightLogics demo on Vercel/local bridge).",
-      "pending": "Whistle Stop X account API keys — then posts go to their profile."
+      "now": "Live demo — posts to @KnightLogics only.",
+      "pending": "Whistle Stop X account API keys."
     },
     "instagram": {
       "now": "Cannot post from here yet.",
       "pending": "Meta Business verification + Instagram linked to Whistle Stop Facebook Page."
     },
     "gbp": {
-      "now": "Text + post type saved to a manual queue; you paste into Google Business Profile.",
-      "pending": "Google OAuth (business.manage) — then updates, events, and offers auto-publish with up to 1 still photo each. GIFs: only as a static image via API. Videos: not via API — upload in the Google dashboard."
+      "now": "Live demo — Knight Logics Google listing. Your attached photo is auto-hosted for Google's API.",
+      "pending": "Whistle Stop GBP OAuth for their Google listing."
     },
     "linkedin": {
-      "now": "Paused — not posting.",
-      "pending": "LinkedIn company page access for Whistle Stop."
+      "now": "Playwright — Knight Logics company page when START-PRESENTATION.ps1 is running.",
+      "pending": "Whistle Stop LinkedIn company page access."
     },
     "tiktok": {
       "now": "Not connected.",
@@ -45,8 +50,8 @@
       "pending": "YouTube channel + Community tab API access."
     },
     "nextdoor": {
-      "now": "Not connected.",
-      "pending": "Nextdoor Business account link (no public API yet — may stay manual)."
+      "now": "Playwright — Knight Logics Nextdoor page when START-PRESENTATION.ps1 is running.",
+      "pending": "Nextdoor Business account link for Whistle Stop."
     }
   }
 }
