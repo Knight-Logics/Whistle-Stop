@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-07T19:36:20.237Z",
+  "updatedAt": "2026-07-07T19:37:26.946Z",
   "signups": [
     {
       "id": "su-demo-1",
@@ -102,6 +102,90 @@
       "organization": "Demo VIP segment",
       "status": "queued",
       "demo": true
+    },
+    {
+      "id": "lead-mrb1wa75-81a12f",
+      "campaignId": "dnd-game-night",
+      "leadType": "game_stores",
+      "name": "Critical Hit Games",
+      "email": "support@knightlogics.com",
+      "organization": "Clearwater · tabletop & RPG · Clearwater",
+      "locality": "Clearwater",
+      "status": "new",
+      "discoveredAt": "2026-07-07T19:37:26.945Z",
+      "searchQuery": "D&D tabletop game night Safety Harbor FL"
+    },
+    {
+      "id": "lead-mrb1wa75-6f6d57",
+      "campaignId": "dnd-game-night",
+      "leadType": "game_stores",
+      "name": "Emerald City Comics",
+      "email": "support@knightlogics.com",
+      "organization": "Largo / Clearwater comics & games · Clearwater",
+      "locality": "Clearwater",
+      "status": "new",
+      "discoveredAt": "2026-07-07T19:37:26.945Z",
+      "searchQuery": "D&D tabletop game night Safety Harbor FL"
+    },
+    {
+      "id": "lead-mrb1wa75-b3208f",
+      "campaignId": "dnd-game-night",
+      "leadType": "game_stores",
+      "name": "Gamers Asylum",
+      "email": "support@knightlogics.com",
+      "organization": "Pinellas Park hobby shop · Pinellas Park",
+      "locality": "Pinellas Park",
+      "status": "new",
+      "discoveredAt": "2026-07-07T19:37:26.946Z",
+      "searchQuery": "D&D tabletop game night Safety Harbor FL"
+    },
+    {
+      "id": "lead-mrb1wa76-0a6e69",
+      "campaignId": "dnd-game-night",
+      "leadType": "meetup_adjacent",
+      "name": "Tampa Bay Tabletop Meetup",
+      "email": "support@knightlogics.com",
+      "organization": "Meetup.com organizer · Tampa Bay",
+      "locality": "Tampa Bay",
+      "status": "new",
+      "discoveredAt": "2026-07-07T19:37:26.946Z",
+      "searchQuery": "D&D tabletop game night Safety Harbor FL"
+    },
+    {
+      "id": "lead-mrb1wa76-4d8cd6",
+      "campaignId": "dnd-game-night",
+      "leadType": "meetup_adjacent",
+      "name": "Adventurers League Tampa",
+      "email": "support@knightlogics.com",
+      "organization": "Organized play coordinator · Tampa",
+      "locality": "Tampa",
+      "status": "new",
+      "discoveredAt": "2026-07-07T19:37:26.946Z",
+      "searchQuery": "D&D tabletop game night Safety Harbor FL"
+    },
+    {
+      "id": "lead-mrb1wa76-0e2f40",
+      "campaignId": "dnd-game-night",
+      "leadType": "trivia_regulars",
+      "name": "Music Bingo regular (patio)",
+      "email": "support@knightlogics.com",
+      "organization": "Whistle Stop guest segment · Safety Harbor",
+      "locality": "Safety Harbor",
+      "status": "new",
+      "discoveredAt": "2026-07-07T19:37:26.946Z",
+      "searchQuery": "D&D tabletop game night Safety Harbor FL"
+    },
+    {
+      "id": "lead-mrb1wa76-1173f5",
+      "campaignId": "dnd-game-night",
+      "leadType": "trivia_regulars",
+      "name": "Cornhole league contact",
+      "email": "support@knightlogics.com",
+      "organization": "Patio league organizer · Safety Harbor",
+      "locality": "Safety Harbor",
+      "status": "new",
+      "discoveredAt": "2026-07-07T19:37:26.946Z",
+      "searchQuery": "D&D tabletop game night Safety Harbor FL"
     }
   ],
   "emailLog": [
