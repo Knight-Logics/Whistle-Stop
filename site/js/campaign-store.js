@@ -417,10 +417,13 @@
     };
 
     try {
-      return await apiRequest("outreach-demo", {
+      const data = await apiRequest("outreach-demo", {
         method: "POST",
         body: JSON.stringify(payload),
       });
+      const via = data.delivery?.via || data.sent?.[0]?.via || "api";
+      const localOnly = data.localOnly !== false && !data.delivered;
+      return { ...data, localOnly, via };
     } catch (err) {
       const buildMail = window.WSCampaignAudience?.buildOutreachEmail;
       if (!buildMail) throw new Error("Campaign audience module failed to load. Hard refresh and try again.");

@@ -3801,13 +3801,23 @@ body.admin-modal-open {
   color: var(--lime);
 }
 
-.ws-email-preview-frame {
+.ws-email-preview-note.is-warn {
+  color: var(--rust);
+}
+
+.ws-email-preview-html {
   width: 100%;
   min-height: 420px;
+  max-height: 52vh;
+  overflow: auto;
   flex: 1;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   background: #141414;
+}
+
+.ws-email-preview-html table {
+  max-width: 100%;
 }
 
 .ws-campaign-cards {

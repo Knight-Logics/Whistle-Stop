@@ -94,12 +94,12 @@ window.WSAdminCampaigns = (function () {
     );
   }
 
-  function openEmailPreviewModal({ subject, to, html, localOnly, apiError }) {
+  function openEmailPreviewModal({ subject, to, html, localOnly, via, apiError }) {
     const existing = document.getElementById("ws-outreach-email-preview");
     existing?.remove();
     const note = localOnly
-      ? `<p class="ws-email-preview-note">Logged on this device — inbox delivery needs the campaigns API on Vercel (with Resend). ${esc(apiError || "")}</p>`
-      : `<p class="ws-email-preview-note is-ok">Sent to ${esc(to)} — check your inbox (and spam).</p>`;
+      ? `<p class="ws-email-preview-note is-warn">Not delivered to inbox — logged in demo mode (${esc(via || "no mail provider")}). ${esc(apiError || "Add RESEND_API_KEY or Zoho credentials on Vercel.")}</p>`
+      : `<p class="ws-email-preview-note is-ok">Delivered to ${esc(to)} via ${esc(via || "email")} — check inbox and spam.</p>`;
     document.body.insertAdjacentHTML(
       "beforeend",
       `<div class="ws-campaign-modal-backdrop" id="ws-outreach-email-preview">
@@ -110,13 +110,13 @@ window.WSAdminCampaigns = (function () {
           </header>
           <p class="ws-email-preview-subject"><strong>Subject:</strong> ${esc(subject)}</p>
           ${note}
-          <iframe class="ws-email-preview-frame" title="Email HTML preview" sandbox=""></iframe>
+          <div class="ws-email-preview-frame ws-email-preview-html" role="document"></div>
         </div>
       </div>`
     );
     const modal = document.getElementById("ws-outreach-email-preview");
-    const frame = modal.querySelector(".ws-email-preview-frame");
-    frame.srcdoc = html;
+    const pane = modal.querySelector(".ws-email-preview-html");
+    pane.innerHTML = html || "<p><em>No HTML preview available.</em></p>";
     const close = () => modal.remove();
     modal.querySelector("#ws-email-preview-close")?.addEventListener("click", close);
     modal.addEventListener("click", (e) => {
@@ -663,10 +663,10 @@ window.WSAdminCampaigns = (function () {
           ...auth,
         });
         const msg = result.localOnly
-          ? `Logged HTML outreach to nickknight488@gmail.com (API offline — ${result.apiError || "demo mode"})`
-          : `Sent HTML outreach to ${result.mail?.to || "nickknight488@gmail.com"}`;
-        writeAudienceStatus(campaign.id, msg, "ws-send-status is-ok");
-        showToast(result.localOnly ? "Demo email logged — opening preview" : `Email sent to ${result.mail?.to || "nickknight488@gmail.com"}`);
+          ? `Demo only — not delivered to inbox (${result.via || "logged-demo"})`
+          : `Delivered to ${result.mail?.to || "nickknight488@gmail.com"} via ${result.via || "email"}`;
+        writeAudienceStatus(campaign.id, msg, result.localOnly ? "ws-send-status is-error" : "ws-send-status is-ok");
+        showToast(result.localOnly ? "Logged for demo — not sent to inbox" : `Email delivered to ${result.mail?.to || "nickknight488@gmail.com"}`);
         let previewHtml = result.mail?.html;
         let previewSubject = result.mail?.subject;
         if (!previewHtml && window.WSCampaignAudience?.buildOutreachEmail) {
@@ -684,6 +684,7 @@ window.WSAdminCampaigns = (function () {
             to: result.mail?.to || "nickknight488@gmail.com",
             html: previewHtml,
             localOnly: result.localOnly,
+            via: result.via,
             apiError: result.apiError,
           });
         }
