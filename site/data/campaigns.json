@@ -15,6 +15,8 @@
       "socialDraft": "🎲 Thinking about hosting Dungeons & Dragons at Whistle Stop in Safety Harbor — patio, cold drinks, good company. Interested? Scan the QR or sign up — we'll only schedule it if enough players raise their hand.",
       "emailSubject": "D&D at Whistle Stop? — quick interest check",
       "emailBody": "Hi {{name}},\n\nWhistle Stop Grill & Bar on Main Street in Safety Harbor is exploring a Dungeons & Dragons game night — but only if enough locals are interested first.\n\nIf you'd play or DM, take 30 seconds to join the interest list:\n{{signup_link}}\n\nNo date is set yet. If we hit {{goal}} signups, we'll pick a night and announce it.\n\n— Whistle Stop team",
+      "outreachImage": "assets/campaigns/dnd-whistle-stop.png",
+      "outreachImageAlt": "Dungeons & Dragons game night at Whistle Stop — Safety Harbor",
       "leadTypes": [
         {
           "id": "game_stores",

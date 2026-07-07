@@ -165,6 +165,24 @@
     }));
   }
 
+  const PUBLIC_SHARE_BASE = "https://knight-logics.github.io/Whistle-Stop/";
+
+  function resolveOutreachImageSrc(campaign, baseOverride) {
+    if (campaign?.outreachImageData) return campaign.outreachImageData;
+    const src = campaign?.outreachImage || campaign?.heroImage;
+    if (!src) return "";
+    if (/^(https?:|data:)/i.test(src)) return src;
+    const base = baseOverride || PUBLIC_SHARE_BASE;
+    return new URL(src.replace(/^\//, ""), base.endsWith("/") ? base : `${base}/`).href;
+  }
+
+  function outreachImageBlock(campaign, baseOverride) {
+    const src = resolveOutreachImageSrc(campaign, baseOverride);
+    if (!src) return "";
+    const alt = escapeHtml(campaign.outreachImageAlt || campaign.title || "Campaign flyer");
+    return `<p style="margin:0 0 20px;text-align:center;"><img src="${escapeHtml(src)}" alt="${alt}" width="512" style="max-width:100%;height:auto;border-radius:8px;border:1px solid #2a2a2a;display:block;margin:0 auto;" /></p>`;
+  }
+
   function buildOutreachEmail(campaign, lead, vars) {
     const name = lead.name || "there";
     const org = lead.organization || lead.name || "your organization";
@@ -200,6 +218,7 @@ Whistle Stop team
           <h1 style="margin:0;font-size:22px;line-height:1.25;color:#f4efe4;font-weight:700;">${escapeHtml(headline)}</h1>
         </td></tr>
         <tr><td style="padding:24px;color:#d9d2c4;font-size:15px;line-height:1.6;">
+          ${outreachImageBlock(campaign, vars.share_base)}
           <p style="margin:0 0 16px;">Hi ${escapeHtml(name)},</p>
           <p style="margin:0 0 16px;">We're reaching out to <strong style="color:#f4efe4;">${escapeHtml(org)}</strong> because you're a great fit for this local push on Main Street.</p>
           <p style="margin:0 0 16px;">${escapeHtml(campaign.description || "")}</p>
@@ -244,6 +263,8 @@ Whistle Stop team
     inferAudiencePreview,
     segmentsForCampaign,
     tailoredSearchQueries,
+    resolveOutreachImageSrc,
+    outreachImageBlock,
     leadsForSegment,
     buildOutreachEmail,
   };

@@ -611,6 +611,24 @@
     return campaign;
   }
 
+  async function patchCampaign(campaignId, patch) {
+    const { campaigns } = await getCampaigns();
+    const existing = campaigns.find((c) => c.id === campaignId);
+    if (!existing) throw new Error("Campaign not found.");
+    const custom = readLocalCampaigns();
+    const idx = custom.findIndex((c) => c.id === campaignId);
+    const merged = { ...existing, ...patch, id: campaignId, slug: existing.slug || campaignId };
+    if (idx >= 0) custom[idx] = { ...custom[idx], ...patch };
+    else custom.push({ ...merged, staffCreated: Boolean(existing.staffCreated) });
+    writeLocalCampaigns(custom);
+    invalidateCampaignsCache();
+    return merged;
+  }
+
+  function outreachImagePreviewSrc(campaign) {
+    return global.WSCampaignAudience?.resolveOutreachImageSrc?.(campaign) || campaign.outreachImageData || campaign.outreachImage || "";
+  }
+
   async function publishCampaigns(auth = {}) {
     const { campaigns } = await getCampaigns();
     try {
@@ -649,6 +667,8 @@
     onRuntimeChange,
     promoteToEventDraft,
     saveCampaign,
+    patchCampaign,
+    outreachImagePreviewSrc,
     publishCampaigns,
     hasUnpublishedCampaigns,
     slugify,

@@ -124,6 +124,15 @@ window.WSAdminCampaigns = (function () {
     });
   }
 
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(reader.error || new Error("Could not read image file."));
+      reader.readAsDataURL(file);
+    });
+  }
+
   function openTab(tabId) {
     document.querySelector(`.admin-nav button[data-tab="${tabId}"]`)?.click();
   }
@@ -283,6 +292,8 @@ window.WSAdminCampaigns = (function () {
     const defaultBody =
       campaign.emailBody ||
       "Hi {{name}},\n\nWe're gauging interest for an event at Whistle Stop.\n\nSign up: {{signup_link}}\n";
+    const outreachImgSrc = store().outreachImagePreviewSrc(campaign);
+    const hasOutreachImage = Boolean(outreachImgSrc);
 
     return `
       <div class="ws-campaign-detail-col">
@@ -310,6 +321,24 @@ window.WSAdminCampaigns = (function () {
         <section class="ws-campaign-section">
           <h3>Campaign link</h3>
           <code class="ws-campaign-link-code">${esc(signupLink)}</code>
+        </section>
+
+        <section class="ws-campaign-section ws-campaign-outreach-image">
+          <h3>Outreach flyer image</h3>
+          <p class="ws-field-hint">Shown in demo and lead emails for <strong>${esc(campaign.title)}</strong>. Upload a PNG or JPG for the presentation send.</p>
+          <div class="ws-outreach-image-toolbar">
+            <label class="btn btn-secondary btn-sm ws-outreach-image-upload">
+              Upload image
+              <input type="file" id="ws-campaign-outreach-image-file" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
+            </label>
+            ${hasOutreachImage ? `<button type="button" class="btn btn-secondary btn-sm" id="ws-campaign-outreach-image-clear">Remove image</button>` : ""}
+            <span id="ws-outreach-image-status" class="ws-send-status" role="status"></span>
+          </div>
+          ${
+            hasOutreachImage
+              ? `<figure class="ws-outreach-image-preview"><img src="${esc(outreachImgSrc)}" alt="${esc(campaign.outreachImageAlt || campaign.title)}" /><figcaption>${esc(campaign.outreachImageName || campaign.outreachImage || "Campaign flyer")}</figcaption></figure>`
+              : `<p class="ws-empty">No flyer yet — upload one before sending the demo email.</p>`
+          }
         </section>
 
         ${(campaign.type || "interest_check") === "interest_check" ? `
@@ -615,6 +644,52 @@ window.WSAdminCampaigns = (function () {
 
     if (!campaign) return;
 
+    document.getElementById("ws-campaign-outreach-image-file")?.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      const statusEl = document.getElementById("ws-outreach-image-status");
+      if (!file) return;
+      if (file.size > 3.5 * 1024 * 1024) {
+        if (statusEl) {
+          statusEl.textContent = "Image too large — use a file under 3.5 MB.";
+          statusEl.className = "ws-send-status is-error";
+        }
+        showToast("Image too large for email embed.");
+        e.target.value = "";
+        return;
+      }
+      try {
+        if (statusEl) statusEl.textContent = "Saving flyer…";
+        const dataUrl = await readFileAsDataUrl(file);
+        await store().patchCampaign(campaign.id, {
+          outreachImageData: dataUrl,
+          outreachImageName: file.name,
+          outreachImageAlt: campaign.outreachImageAlt || campaign.title,
+        });
+        if (statusEl) {
+          statusEl.textContent = "Flyer attached — included in demo & lead emails.";
+          statusEl.className = "ws-send-status is-ok";
+        }
+        showToast("Outreach flyer saved for this campaign.");
+        paint();
+      } catch (err) {
+        if (statusEl) {
+          statusEl.textContent = err.message || "Upload failed.";
+          statusEl.className = "ws-send-status is-error";
+        }
+      } finally {
+        e.target.value = "";
+      }
+    });
+
+    document.getElementById("ws-campaign-outreach-image-clear")?.addEventListener("click", async () => {
+      await store().patchCampaign(campaign.id, {
+        outreachImageData: "",
+        outreachImageName: "",
+      });
+      showToast("Uploaded flyer removed — using saved campaign image if set.");
+      paint();
+    });
+
     document.getElementById("ws-campaign-find-leads")?.addEventListener("click", async (e) => {
       const btn = e.currentTarget;
       const status = document.getElementById("ws-audience-status");
@@ -657,9 +732,11 @@ window.WSAdminCampaigns = (function () {
       writeAudienceStatus(campaign.id, sendingMsg, "ws-send-status");
 
       try {
+        const { campaigns } = await store().getCampaigns();
+        const liveCampaign = campaigns.find((c) => c.id === campaign.id) || campaign;
         const result = await store().sendDemoOutreachEmail({
-          campaignId: campaign.id,
-          campaign,
+          campaignId: liveCampaign.id,
+          campaign: liveCampaign,
           ...auth,
         });
         const msg = result.localOnly
@@ -671,9 +748,9 @@ window.WSAdminCampaigns = (function () {
         let previewSubject = result.mail?.subject;
         if (!previewHtml && window.WSCampaignAudience?.buildOutreachEmail) {
           const built = window.WSCampaignAudience.buildOutreachEmail(
-            campaign,
+            liveCampaign,
             { name: "Nicholas", email: result.mail?.to || "nickknight488@gmail.com", organization: "Demo test" },
-            { signup_link: store().shareableCampaignUrl(campaign), goal: campaign.signupGoal || 12 }
+            { signup_link: store().shareableCampaignUrl(liveCampaign), goal: liveCampaign.signupGoal || 12 }
           );
           previewHtml = built.html;
           previewSubject = previewSubject || built.subject;

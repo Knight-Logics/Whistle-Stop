@@ -3816,8 +3816,37 @@ body.admin-modal-open {
   background: #141414;
 }
 
-.ws-email-preview-html table {
-  max-width: 100%;
+.ws-outreach-image-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.ws-outreach-image-upload {
+  cursor: pointer;
+  margin: 0;
+}
+
+.ws-outreach-image-preview {
+  margin: 0;
+  max-width: 360px;
+}
+
+.ws-outreach-image-preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #141414;
+}
+
+.ws-outreach-image-preview figcaption {
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 
 .ws-campaign-cards {
