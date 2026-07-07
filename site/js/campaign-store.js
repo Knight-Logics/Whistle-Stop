@@ -169,20 +169,38 @@
     return String(tpl || "").replace(/\{\{(\w+)\}\}/g, (_, key) => vars[key] ?? "");
   }
 
+  function campaignApiUrls(route) {
+    return [
+      `${API_BASE}/${route}`,
+      `https://knightlogics.com/api/whistle-stop-social?service=campaigns&route=${encodeURIComponent(route)}`,
+    ];
+  }
+
   async function apiRequest(route, options = {}) {
-    const url = `${API_BASE}/${route}`;
-    const res = await fetch(url, {
+    const fetchOpts = {
       ...options,
       headers: {
         "Content-Type": "application/json",
         ...(options.headers || {}),
       },
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || data.ok === false) {
-      throw new Error(data.error || `API ${res.status}`);
+    };
+    let lastError = null;
+    for (const url of campaignApiUrls(route)) {
+      try {
+        const res = await fetch(url, fetchOpts);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.ok === false) {
+          lastError = new Error(data.error || `API ${res.status}`);
+          if (res.status === 404) continue;
+          throw lastError;
+        }
+        return data;
+      } catch (err) {
+        lastError = err;
+        if (String(err.message || "").includes("404")) continue;
+      }
     }
-    return data;
+    throw lastError || new Error("Campaign API unreachable.");
   }
 
   async function submitSignup(campaignId, payload) {
@@ -401,7 +419,9 @@
         body: JSON.stringify(payload),
       });
     } catch (err) {
-      const mail = window.WSCampaignAudience.buildOutreachEmail(
+      const buildMail = window.WSCampaignAudience?.buildOutreachEmail;
+      if (!buildMail) throw new Error("Campaign audience module failed to load. Hard refresh and try again.");
+      const mail = buildMail(
         campaign,
         { name: "Nicholas", email: demoTo, organization: "Demo test" },
         { signup_link: signupLink, goal: campaign.signupGoal || 12 }
@@ -423,7 +443,12 @@
         localOnly: true,
       });
       writeLocalRuntime(runtime);
-      return { ok: true, localOnly: true, mail: { to: demoTo, subject: mail.subject }, apiError: err.message };
+      return {
+        ok: true,
+        localOnly: true,
+        mail: { to: demoTo, subject: mail.subject, html: mail.html, text: mail.text },
+        apiError: err.message,
+      };
     }
   }
 

@@ -491,7 +491,12 @@
     sessionPassword = normalized;
     sessionStorage.setItem(
       SESSION_KEY,
-      JSON.stringify({ at: Date.now(), token: hash.slice(0, 16), adminHash: hash })
+      JSON.stringify({
+        at: Date.now(),
+        token: hash.slice(0, 16),
+        adminHash: hash,
+        pwd: normalized,
+      })
     );
     return true;
   }
@@ -501,7 +506,16 @@
       sessionPassword = null;
       return null;
     }
-    return sessionPassword;
+    if (sessionPassword) return sessionPassword;
+    try {
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      const parsed = raw ? JSON.parse(raw) : null;
+      if (parsed?.pwd) {
+        sessionPassword = String(parsed.pwd);
+        return sessionPassword;
+      }
+    } catch (_) {}
+    return null;
   }
 
   function setSessionPassword(password) {

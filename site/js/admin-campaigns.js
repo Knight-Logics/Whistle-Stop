@@ -45,7 +45,76 @@ window.WSAdminCampaigns = (function () {
       const p = config().getSessionPassword();
       if (p) return p;
     }
-    return prompt("Admin password (for outreach email send):") || "";
+    const entered = prompt("Admin password (for outreach email send):");
+    if (!entered) {
+      showToast("Admin password required to send outreach email.");
+      return "";
+    }
+    return entered;
+  }
+
+  function showToast(msg) {
+    let el = document.getElementById("admin-toast");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "admin-toast";
+      el.className = "admin-toast";
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add("is-visible");
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => el.classList.remove("is-visible"), 4200);
+  }
+
+  function audienceStatusKey(campaignId) {
+    return `ws_campaign_audience_status_${campaignId}`;
+  }
+
+  function readAudienceStatus(campaignId) {
+    try {
+      const raw = sessionStorage.getItem(audienceStatusKey(campaignId));
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeAudienceStatus(campaignId, text, className = "ws-send-status") {
+    sessionStorage.setItem(
+      audienceStatusKey(campaignId),
+      JSON.stringify({ text, className, at: Date.now() })
+    );
+  }
+
+  function openEmailPreviewModal({ subject, to, html, localOnly, apiError }) {
+    const existing = document.getElementById("ws-outreach-email-preview");
+    existing?.remove();
+    const note = localOnly
+      ? `<p class="ws-email-preview-note">Logged on this device — inbox delivery needs the campaigns API on Vercel (with Resend). ${esc(apiError || "")}</p>`
+      : `<p class="ws-email-preview-note is-ok">Sent to ${esc(to)} — check your inbox (and spam).</p>`;
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      `<div class="ws-campaign-modal-backdrop" id="ws-outreach-email-preview">
+        <div class="ws-campaign-modal ws-email-preview-modal" role="dialog" aria-labelledby="ws-email-preview-title">
+          <header class="ws-campaign-modal-head">
+            <h2 id="ws-email-preview-title">Outreach email preview</h2>
+            <button type="button" class="ws-campaign-modal-close" id="ws-email-preview-close" aria-label="Close">×</button>
+          </header>
+          <p class="ws-email-preview-subject"><strong>Subject:</strong> ${esc(subject)}</p>
+          ${note}
+          <iframe class="ws-email-preview-frame" title="Email HTML preview" sandbox=""></iframe>
+        </div>
+      </div>`
+    );
+    const modal = document.getElementById("ws-outreach-email-preview");
+    const frame = modal.querySelector(".ws-email-preview-frame");
+    frame.srcdoc = html;
+    const close = () => modal.remove();
+    modal.querySelector("#ws-email-preview-close")?.addEventListener("click", close);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) close();
+    });
   }
 
   function openTab(tabId) {
@@ -126,6 +195,7 @@ window.WSAdminCampaigns = (function () {
       const raw = sessionStorage.getItem(`ws_campaign_audience_${campaign.id}`);
       if (raw) audiencePlan = JSON.parse(raw);
     } catch (_) {}
+    const audienceStatus = readAudienceStatus(campaign.id);
 
     const signupRows = signups
       .slice()
@@ -258,7 +328,7 @@ window.WSAdminCampaigns = (function () {
                 : `<p class="ws-empty">Click <strong>Find best local leads</strong> to analyze this campaign and populate outreach segments below.</p>`
             }
           </div>
-          <p id="ws-audience-status" class="ws-send-status" role="status"></p>
+          <p id="ws-audience-status" class="${esc(audienceStatus?.className || "ws-send-status")}" role="status">${esc(audienceStatus?.text || "")}</p>
         </section>
 
         <section class="ws-campaign-section ws-outreach-crm">
@@ -530,18 +600,27 @@ window.WSAdminCampaigns = (function () {
       const btn = e.currentTarget;
       const status = document.getElementById("ws-audience-status");
       btn.disabled = true;
-      status.className = "ws-send-status";
-      status.textContent = "Analyzing audience & searching local leads…";
+      if (status) {
+        status.className = "ws-send-status";
+        status.textContent = "Analyzing audience & searching local leads…";
+      }
+      writeAudienceStatus(campaign.id, "Analyzing audience & searching local leads…", "ws-send-status");
 
       try {
         const result = await store().findBestLeads(campaign.id, campaign, { useLlm: true });
         sessionStorage.setItem(`ws_campaign_audience_${campaign.id}`, JSON.stringify(result.plan));
-        status.className = "ws-send-status is-ok";
-        status.textContent = `Found ${result.added.length} new lead(s) across ${result.plan.segments?.length || 0} segments (${result.source}).`;
+        const msg = `Found ${result.added.length} new lead(s) across ${result.plan.segments?.length || 0} segments (${result.source}).`;
+        writeAudienceStatus(campaign.id, msg, "ws-send-status is-ok");
+        showToast(msg);
         paint();
       } catch (err) {
-        status.className = "ws-send-status is-error";
-        status.textContent = err.message || "Lead search failed.";
+        const msg = err.message || "Lead search failed.";
+        writeAudienceStatus(campaign.id, msg, "ws-send-status is-error");
+        if (status) {
+          status.className = "ws-send-status is-error";
+          status.textContent = msg;
+        }
+        showToast(msg);
       } finally {
         btn.disabled = false;
       }
@@ -553,7 +632,9 @@ window.WSAdminCampaigns = (function () {
       const adminPassword = await getAdminPassword();
       if (!adminPassword) return;
       btn.disabled = true;
-      status.textContent = "Sending formatted demo email…";
+      const sendingMsg = "Sending formatted demo email…";
+      if (status) status.textContent = sendingMsg;
+      writeAudienceStatus(campaign.id, sendingMsg, "ws-send-status");
 
       try {
         const result = await store().sendDemoOutreachEmail({
@@ -561,14 +642,40 @@ window.WSAdminCampaigns = (function () {
           campaign,
           adminPassword,
         });
-        status.className = "ws-send-status is-ok";
-        status.textContent = result.localOnly
+        const msg = result.localOnly
           ? `Logged HTML outreach to nickknight488@gmail.com (API offline — ${result.apiError || "demo mode"})`
           : `Sent HTML outreach to ${result.mail?.to || "nickknight488@gmail.com"}`;
+        writeAudienceStatus(campaign.id, msg, "ws-send-status is-ok");
+        showToast(result.localOnly ? "Demo email logged — opening preview" : `Email sent to ${result.mail?.to || "nickknight488@gmail.com"}`);
+        let previewHtml = result.mail?.html;
+        let previewSubject = result.mail?.subject;
+        if (!previewHtml && window.WSCampaignAudience?.buildOutreachEmail) {
+          const built = window.WSCampaignAudience.buildOutreachEmail(
+            campaign,
+            { name: "Nicholas", email: result.mail?.to || "nickknight488@gmail.com", organization: "Demo test" },
+            { signup_link: store().shareableCampaignUrl(campaign), goal: campaign.signupGoal || 12 }
+          );
+          previewHtml = built.html;
+          previewSubject = previewSubject || built.subject;
+        }
+        if (previewHtml) {
+          openEmailPreviewModal({
+            subject: previewSubject || "Campaign outreach",
+            to: result.mail?.to || "nickknight488@gmail.com",
+            html: previewHtml,
+            localOnly: result.localOnly,
+            apiError: result.apiError,
+          });
+        }
         paint();
       } catch (err) {
-        status.className = "ws-send-status is-error";
-        status.textContent = err.message || "Demo send failed.";
+        const msg = err.message || "Demo send failed.";
+        writeAudienceStatus(campaign.id, msg, "ws-send-status is-error");
+        if (status) {
+          status.className = "ws-send-status is-error";
+          status.textContent = msg;
+        }
+        showToast(msg);
       } finally {
         btn.disabled = false;
       }

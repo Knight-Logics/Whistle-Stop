@@ -3759,6 +3759,38 @@ body.admin-modal-open {
   letter-spacing: 0.05em;
 }
 
+.ws-email-preview-modal {
+  width: min(720px, 96vw);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ws-email-preview-subject {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: var(--cream);
+}
+
+.ws-email-preview-note {
+  margin: 0 0 0.75rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.ws-email-preview-note.is-ok {
+  color: var(--lime);
+}
+
+.ws-email-preview-frame {
+  width: 100%;
+  min-height: 420px;
+  flex: 1;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: #141414;
+}
+
 .ws-campaign-cards {
   display: flex;
   flex-direction: column;
