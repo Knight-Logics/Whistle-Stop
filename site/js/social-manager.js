@@ -97,8 +97,16 @@ window.WSSocial = (function () {
 
   function bridgeAuthReady(config) {
     if (resolveBridgeApiKey(config)) return true;
-    if (window.WSConfig?.getSessionPassword?.()) return true;
+    if (window.WSConfig?.getAdminAuthPayload?.()) return true;
     return false;
+  }
+
+  function bridgeAuthKind(config) {
+    if (resolveBridgeApiKey(config)) return "api-key";
+    const auth = window.WSConfig?.getAdminAuthPayload?.();
+    if (auth?.adminPassword) return "admin-password";
+    if (auth?.adminSessionHash) return "admin-session";
+    return "none";
   }
 
   function bridgeHeaders(config, json = true) {
@@ -112,11 +120,8 @@ window.WSSocial = (function () {
   function withBridgeAuth(config, payload) {
     const out = { ...payload };
     if (resolveBridgeApiKey(config)) return out;
-    const password = window.WSConfig?.getSessionPassword?.();
-    if (password) {
-      out.adminPassword = password;
-      return out;
-    }
+    const auth = window.WSConfig?.getAdminAuthPayload?.();
+    if (auth) return { ...out, ...auth };
     return out;
   }
 
@@ -238,7 +243,7 @@ window.WSSocial = (function () {
       platforms: payload.platforms || [],
       mediaChars: payload.mediaBase64 ? String(payload.mediaBase64).length : 0,
       bodyBytes: body.length,
-      auth: resolveBridgeApiKey(config) ? "api-key" : window.WSConfig?.getSessionPassword?.() ? "admin-password" : "none",
+      auth: bridgeAuthKind(config),
     };
     console.info("[WSSocial] posting", debug);
 
