@@ -259,8 +259,8 @@
     }
   }
 
-  async function sendOutreachEmail({ campaignId, leadIds, subject, body, adminPassword }) {
-    const payload = { campaignId, leadIds, subject, body, adminPassword };
+  async function sendOutreachEmail({ campaignId, leadIds, subject, body, adminPassword, adminSessionHash }) {
+    const payload = { campaignId, leadIds, subject, body, adminPassword, adminSessionHash };
     try {
       const campaign = (await getCampaigns()).campaigns.find((c) => c.id === campaignId);
       payload.signupLink = campaign ? shareableCampaignUrl(campaign) : "";
@@ -403,7 +403,7 @@
     }
   }
 
-  async function sendDemoOutreachEmail({ campaignId, campaign, adminPassword }) {
+  async function sendDemoOutreachEmail({ campaignId, campaign, adminPassword, adminSessionHash }) {
     const signupLink = shareableCampaignUrl(campaign);
     const demoTo = window.WSCampaignAudience?.DEMO_TEST_EMAIL || "nickknight488@gmail.com";
     const payload = {
@@ -413,6 +413,7 @@
       demoTo,
       demoName: "Nicholas",
       adminPassword,
+      adminSessionHash,
     };
 
     try {
@@ -607,12 +608,12 @@
     return campaign;
   }
 
-  async function publishCampaigns(adminPassword) {
+  async function publishCampaigns(auth = {}) {
     const { campaigns } = await getCampaigns();
     try {
       const result = await apiRequest("publish", {
         method: "POST",
-        body: JSON.stringify({ campaigns, adminPassword }),
+        body: JSON.stringify({ campaigns, ...auth }),
       });
       writeLocalCampaigns([]);
       invalidateCampaignsCache();

@@ -40,17 +40,24 @@ window.WSAdminCampaigns = (function () {
     }
   }
 
-  async function getAdminPassword() {
-    if (config()?.getSessionPassword) {
-      const p = config().getSessionPassword();
-      if (p) return p;
+  async function ensureOutreachAuth() {
+    const auth = config()?.getAdminAuthPayload?.();
+    if (auth) return auth;
+    if (config()?.isAuthed?.()) {
+      showToast("Session expired — sign out and sign in again to send email.");
+      return null;
     }
-    const entered = prompt("Admin password (for outreach email send):");
+    const entered = prompt("Staff password (for outreach email send):");
     if (!entered) {
-      showToast("Admin password required to send outreach email.");
-      return "";
+      showToast("Sign in to the staff portal first.");
+      return null;
     }
-    return entered;
+    const ok = await config().login(entered);
+    if (!ok) {
+      showToast("Incorrect password.");
+      return null;
+    }
+    return config().getAdminAuthPayload?.() || null;
   }
 
   function showToast(msg) {
@@ -578,11 +585,11 @@ window.WSAdminCampaigns = (function () {
 
     document.getElementById("ws-campaign-publish")?.addEventListener("click", async (e) => {
       const btn = e.currentTarget;
-      const adminPassword = await getAdminPassword();
-      if (!adminPassword) return;
+      const auth = await ensureOutreachAuth();
+      if (!auth) return;
       btn.disabled = true;
       btn.textContent = "Publishing…";
-      const result = await store().publishCampaigns(adminPassword);
+      const result = await store().publishCampaigns(auth);
       if (result.ok) {
         alert(`Published ${result.count} campaign(s) to GitHub Pages. Guest links should work everywhere in 1–3 minutes.`);
       } else {
@@ -642,8 +649,8 @@ window.WSAdminCampaigns = (function () {
     document.getElementById("ws-campaign-demo-email")?.addEventListener("click", async (e) => {
       const btn = e.currentTarget;
       const status = document.getElementById("ws-audience-status");
-      const adminPassword = await getAdminPassword();
-      if (!adminPassword) return;
+      const auth = await ensureOutreachAuth();
+      if (!auth) return;
       btn.disabled = true;
       const sendingMsg = "Sending formatted demo email…";
       if (status) status.textContent = sendingMsg;
@@ -653,7 +660,7 @@ window.WSAdminCampaigns = (function () {
         const result = await store().sendDemoOutreachEmail({
           campaignId: campaign.id,
           campaign,
-          adminPassword,
+          ...auth,
         });
         const msg = result.localOnly
           ? `Logged HTML outreach to nickknight488@gmail.com (API offline — ${result.apiError || "demo mode"})`
@@ -734,7 +741,8 @@ window.WSAdminCampaigns = (function () {
       }
       const subject = document.getElementById("ws-outreach-subject")?.value || "";
       const body = document.getElementById("ws-outreach-body")?.value || "";
-      const adminPassword = await getAdminPassword();
+      const auth = await ensureOutreachAuth();
+      if (!auth) return;
       const sendBtn = document.getElementById("ws-outreach-send");
       sendBtn.disabled = true;
       statusEl.className = "ws-send-status";
@@ -746,7 +754,7 @@ window.WSAdminCampaigns = (function () {
           leadIds,
           subject,
           body,
-          adminPassword,
+          ...auth,
         });
         const count = result.sent?.length || leadIds.length;
         statusEl.textContent = result.localOnly

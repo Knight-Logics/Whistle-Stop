@@ -582,10 +582,16 @@
     return checkPublishStatus(versionId);
   }
 
-  async function publishContent({ adminPassword, sourceTab } = {}) {
+  async function publishContent({ adminPassword, adminSessionHash, sourceTab } = {}) {
     const password = String(adminPassword || getSessionPassword() || "").trim();
-    if (!password) {
-      throw new Error("Enter the admin password to publish live.");
+    const sessionHash = adminSessionHash || (!password ? getAdminAuthHash() : null);
+    const authBody = password
+      ? { adminPassword: password }
+      : sessionHash
+        ? { adminSessionHash: sessionHash }
+        : null;
+    if (!authBody) {
+      throw new Error("Sign in again to publish live.");
     }
     const bundle = await exportBundle();
     const result = await publishApiFetch("publish", {
@@ -593,11 +599,11 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         bundle,
-        adminPassword: password,
+        ...authBody,
         source: { tab: sourceTab || "" },
       }),
     });
-    setSessionPassword(password);
+    if (password) setSessionPassword(password);
     return result;
   }
 
@@ -623,6 +629,15 @@
     } catch {
       return null;
     }
+  }
+
+  /** Auth payload for publish/outreach APIs — uses live session when staff is logged in. */
+  function getAdminAuthPayload() {
+    const password = getSessionPassword();
+    if (password) return { adminPassword: password };
+    const adminSessionHash = getAdminAuthHash();
+    if (adminSessionHash && isAuthed()) return { adminSessionHash };
+    return null;
   }
 
   function logout() {
@@ -693,6 +708,7 @@
     logout,
     isAuthed,
     getAdminAuthHash,
+    getAdminAuthPayload,
     getSessionPassword,
     setSessionPassword,
     getPublishApiBase,
