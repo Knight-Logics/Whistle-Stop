@@ -6,6 +6,7 @@ window.WSAdminCampaigns = (function () {
   let panelEl = null;
   let selectedId = null;
   let refreshTimer = null;
+  let showingCreateModal = false;
 
   function esc(s) {
     return String(s ?? "")
@@ -67,22 +68,26 @@ window.WSAdminCampaigns = (function () {
   async function renderList() {
     const { campaigns } = await store().getCampaigns();
     const runtime = await store().getRuntime();
+    const unpublished = store().hasUnpublishedCampaigns();
     const rows = campaigns
       .map((c) => {
         const signups = store().getSignupsForCampaign(runtime, c.id);
+        const isInterest = (c.type || "interest_check") === "interest_check";
         const goal = c.signupGoal || 12;
-        const pct = Math.min(100, Math.round((signups.length / goal) * 100));
+        const pct = isInterest ? Math.min(100, Math.round((signups.length / goal) * 100)) : 0;
+        const stats = isInterest
+          ? `<span><strong>${signups.length}</strong> / ${goal} signups</span>
+             <span class="ws-campaign-mini-bar"><i style="width:${pct}%"></i></span>`
+          : `<span><strong>${signups.length}</strong> signups · ${esc(c.type || "campaign")}</span>`;
+        const draftTag = c.staffCreated ? `<span class="ws-campaign-draft-tag">Draft</span>` : "";
         return `
           <article class="ws-campaign-card ${selectedId === c.id ? "is-selected" : ""}" data-campaign-id="${esc(c.id)}">
             <div class="ws-campaign-card-head">
-              <h3>${esc(c.title)}</h3>
+              <h3>${esc(c.title)}${draftTag}</h3>
               ${statusPill(c.status)}
             </div>
-            <p class="ws-campaign-card-desc">${esc(c.description).slice(0, 140)}…</p>
-            <div class="ws-campaign-card-stats">
-              <span><strong>${signups.length}</strong> / ${goal} signups</span>
-              <span class="ws-campaign-mini-bar"><i style="width:${pct}%"></i></span>
-            </div>
+            <p class="ws-campaign-card-desc">${esc((c.description || "").slice(0, 140))}${(c.description || "").length > 140 ? "…" : ""}</p>
+            <div class="ws-campaign-card-stats">${stats}</div>
             <div class="ws-campaign-card-channels">
               ${(c.channels || []).map((ch) => `<span>${esc(ch)}</span>`).join("")}
             </div>
@@ -94,12 +99,17 @@ window.WSAdminCampaigns = (function () {
       <div class="ws-campaign-list-col">
         <div class="ws-campaign-list-header">
           <h3>Active campaigns</h3>
-          <button type="button" class="btn btn-secondary btn-sm" id="ws-campaign-sync">Sync signups</button>
+          <div class="ws-campaign-list-actions">
+            <button type="button" class="btn btn-primary btn-sm" id="ws-campaign-add">+ New campaign</button>
+            ${unpublished ? `<button type="button" class="btn btn-outline btn-sm" id="ws-campaign-publish">Publish campaigns live</button>` : ""}
+            <button type="button" class="btn btn-secondary btn-sm" id="ws-campaign-sync">Sync signups</button>
+          </div>
         </div>
-        <div class="ws-campaign-cards">${rows || "<p>No campaigns yet.</p>"}</div>
+        <div class="ws-campaign-cards">${rows || "<p>No campaigns yet — click <strong>+ New campaign</strong>.</p>"}</div>
+        ${unpublished ? `<p class="ws-campaign-unpublished-note" role="status"><strong>Unpublished drafts</strong> — visible here until you publish. Guest links on other devices need <em>Publish campaigns live</em>.</p>` : ""}
         <aside class="ws-campaign-compare-note" role="note">
-          <strong>Interest check vs. Events</strong>
-          <p>Campaigns like D&amp;D night collect signups <em>before</em> a date goes on the public calendar. Hit your goal → promote to Events.</p>
+          <strong>No website edits needed</strong>
+          <p>Each campaign gets its own page at <code>campaign.html?campaign=your-slug</code> — interest signup, info + image, or event promo.</p>
         </aside>
       </div>`;
   }
@@ -189,7 +199,7 @@ window.WSAdminCampaigns = (function () {
             ${statusPill(campaign.status)}
           </div>
           <div class="ws-campaign-detail-actions">
-            <a href="${esc(signupLink)}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">Open signup page</a>
+            <a href="${esc(signupLink)}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">Open campaign page</a>
             <button type="button" class="btn btn-secondary btn-sm" id="ws-campaign-copy-link">Copy link</button>
             <button type="button" class="btn btn-secondary btn-sm" id="ws-campaign-qr">Create QR</button>
             ${goalMet ? `<button type="button" class="btn btn-primary btn-sm" id="ws-campaign-promote">Promote to Events</button>` : ""}
@@ -204,10 +214,11 @@ window.WSAdminCampaigns = (function () {
         </div>
 
         <section class="ws-campaign-section">
-          <h3>Signup link</h3>
+          <h3>Campaign link</h3>
           <code class="ws-campaign-link-code">${esc(signupLink)}</code>
         </section>
 
+        ${(campaign.type || "interest_check") === "interest_check" ? `
         <section class="ws-campaign-section">
           <h3>Interest signups <span class="ws-count">${signups.length}</span></h3>
           <div class="ws-table-wrap">
@@ -216,7 +227,7 @@ window.WSAdminCampaigns = (function () {
               <tbody>${signupRows || `<tr><td colspan="6" class="ws-empty">No signups yet — share the link or QR</td></tr>`}</tbody>
             </table>
           </div>
-        </section>
+        </section>` : ""}
 
         <section class="ws-campaign-section ws-outreach-crm">
           <header class="ws-outreach-crm-head">
@@ -250,6 +261,184 @@ window.WSAdminCampaigns = (function () {
       </div>`;
   }
 
+  function renderCreateModal() {
+    return `
+      <div class="ws-campaign-modal-backdrop" id="ws-campaign-modal">
+        <div class="ws-campaign-modal" role="dialog" aria-labelledby="ws-campaign-modal-title">
+          <header class="ws-campaign-modal-head">
+            <h2 id="ws-campaign-modal-title">New campaign</h2>
+            <button type="button" class="ws-campaign-modal-close" id="ws-campaign-modal-close" aria-label="Close">×</button>
+          </header>
+          <form id="ws-campaign-create-form" class="ws-campaign-create-form">
+            <div class="admin-form-grid cols-2">
+              <div class="admin-field" style="grid-column:1/-1">
+                <label for="ws-new-title">Campaign name</label>
+                <input id="ws-new-title" type="text" required placeholder="Father's Day gift cards" />
+              </div>
+              <div class="admin-field">
+                <label for="ws-new-slug">URL slug</label>
+                <input id="ws-new-slug" type="text" placeholder="auto-from-name" />
+                <p class="ws-field-hint">→ campaign.html?campaign=<em>slug</em></p>
+              </div>
+              <div class="admin-field">
+                <label for="ws-new-type">Campaign type</label>
+                <select id="ws-new-type">
+                  <option value="interest_check">Interest check (signup form)</option>
+                  <option value="info">Info + image + link (no signup)</option>
+                  <option value="event_promo">Event promo (date/time + flyer)</option>
+                </select>
+              </div>
+              <div class="admin-field" style="grid-column:1/-1">
+                <label for="ws-new-headline">Headline on page</label>
+                <input id="ws-new-headline" type="text" placeholder="Same as name or a guest-facing hook" />
+              </div>
+              <div class="admin-field" style="grid-column:1/-1">
+                <label for="ws-new-description">Description</label>
+                <textarea id="ws-new-description" rows="3" required placeholder="What guests should know"></textarea>
+              </div>
+            </div>
+
+            <div id="ws-new-fields-interest" class="ws-campaign-type-fields">
+              <div class="admin-field">
+                <label for="ws-new-goal">Signup goal</label>
+                <input id="ws-new-goal" type="number" min="1" value="12" />
+              </div>
+            </div>
+
+            <div id="ws-new-fields-info" class="ws-campaign-type-fields" hidden>
+              <div class="admin-form-grid cols-2">
+                <div class="admin-field">
+                  <label for="ws-new-cta-label">Button label</label>
+                  <input id="ws-new-cta-label" type="text" placeholder="Buy gift cards" />
+                </div>
+                <div class="admin-field">
+                  <label for="ws-new-cta-url">Button link</label>
+                  <input id="ws-new-cta-url" type="text" placeholder="https://… or menu.html" />
+                </div>
+                <div class="admin-field" style="grid-column:1/-1">
+                  <label for="ws-new-hero">Hero image path (optional)</label>
+                  <input id="ws-new-hero" type="text" placeholder="assets/gallery/WSGoodTimes-768.webp" />
+                </div>
+                <div class="admin-field">
+                  <label class="admin-field--checkbox"><input type="checkbox" id="ws-new-info-signup" /> Also show signup form</label>
+                </div>
+              </div>
+            </div>
+
+            <div id="ws-new-fields-event" class="ws-campaign-type-fields" hidden>
+              <div class="admin-form-grid cols-2">
+                <div class="admin-field">
+                  <label for="ws-new-event-date">Date</label>
+                  <input id="ws-new-event-date" type="text" placeholder="Saturday, June 14" />
+                </div>
+                <div class="admin-field">
+                  <label for="ws-new-event-time">Time</label>
+                  <input id="ws-new-event-time" type="text" placeholder="6:00 PM" />
+                </div>
+                <div class="admin-field" style="grid-column:1/-1">
+                  <label for="ws-new-location">Location</label>
+                  <input id="ws-new-location" type="text" value="Patio · Whistle Stop Grill &amp; Bar" />
+                </div>
+                <div class="admin-field" style="grid-column:1/-1">
+                  <label for="ws-new-event-hero">Flyer / hero image (optional)</label>
+                  <input id="ws-new-event-hero" type="text" placeholder="assets/gallery/WSSunset-768.webp" />
+                </div>
+              </div>
+            </div>
+
+            <p id="ws-campaign-create-status" class="ws-send-status" role="status"></p>
+            <footer class="ws-campaign-modal-foot">
+              <button type="button" class="btn btn-secondary" id="ws-campaign-modal-cancel">Cancel</button>
+              <button type="submit" class="btn btn-primary">Create campaign</button>
+            </footer>
+          </form>
+        </div>
+      </div>`;
+  }
+
+  function setCreateTypeFields(type) {
+    const panel = document.getElementById("ws-campaign-modal");
+    if (!panel) return;
+    panel.querySelector("#ws-new-fields-interest").hidden = type !== "interest_check";
+    panel.querySelector("#ws-new-fields-info").hidden = type !== "info";
+    panel.querySelector("#ws-new-fields-event").hidden = type !== "event_promo";
+  }
+
+  function wireCreateModal() {
+    const modal = document.getElementById("ws-campaign-modal");
+    if (!modal) return;
+
+    const close = () => {
+      showingCreateModal = false;
+      modal.remove();
+      startAutoRefresh();
+    };
+
+    modal.querySelector("#ws-campaign-modal-close")?.addEventListener("click", close);
+    modal.querySelector("#ws-campaign-modal-cancel")?.addEventListener("click", close);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) close();
+    });
+
+    const titleInput = modal.querySelector("#ws-new-title");
+    const slugInput = modal.querySelector("#ws-new-slug");
+    titleInput?.addEventListener("input", () => {
+      if (!slugInput.dataset.touched) {
+        slugInput.value = store().slugify(titleInput.value);
+      }
+    });
+    slugInput?.addEventListener("input", () => {
+      slugInput.dataset.touched = slugInput.value ? "1" : "";
+    });
+
+    modal.querySelector("#ws-new-type")?.addEventListener("change", (e) => {
+      setCreateTypeFields(e.target.value);
+    });
+
+    modal.querySelector("#ws-campaign-create-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = modal.querySelector("#ws-campaign-create-status");
+      const type = modal.querySelector("#ws-new-type").value;
+      const form = {
+        type,
+        title: titleInput.value,
+        slug: slugInput.value,
+        headline: modal.querySelector("#ws-new-headline").value,
+        description: modal.querySelector("#ws-new-description").value,
+        signupGoal: modal.querySelector("#ws-new-goal")?.value,
+        ctaLabel: modal.querySelector("#ws-new-cta-label")?.value,
+        ctaUrl: modal.querySelector("#ws-new-cta-url")?.value,
+        heroImage: modal.querySelector("#ws-new-hero")?.value || modal.querySelector("#ws-new-event-hero")?.value,
+        showSignup: modal.querySelector("#ws-new-info-signup")?.checked,
+        eventDate: modal.querySelector("#ws-new-event-date")?.value,
+        eventTime: modal.querySelector("#ws-new-event-time")?.value,
+        location: modal.querySelector("#ws-new-location")?.value,
+      };
+
+      try {
+        const created = await store().saveCampaign(form);
+        selectedId = created.id;
+        status.className = "ws-send-status is-ok";
+        status.textContent = "Campaign created — click Publish campaigns live so guests on other devices can open it.";
+        setTimeout(() => close(), 800);
+        store().invalidateCampaignsCache();
+        paint();
+      } catch (err) {
+        status.className = "ws-send-status is-error";
+        status.textContent = err.message || "Could not create campaign.";
+      }
+    });
+
+    setCreateTypeFields(modal.querySelector("#ws-new-type").value);
+  }
+
+  function openCreateModal() {
+    showingCreateModal = true;
+    stopAutoRefresh();
+    document.body.insertAdjacentHTML("beforeend", renderCreateModal());
+    wireCreateModal();
+  }
+
   async function paint() {
     if (!panelEl) return;
     const { campaigns } = await store().getCampaigns();
@@ -276,6 +465,25 @@ window.WSAdminCampaigns = (function () {
       });
     });
 
+    document.getElementById("ws-campaign-add")?.addEventListener("click", () => openCreateModal());
+
+    document.getElementById("ws-campaign-publish")?.addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      const adminPassword = await getAdminPassword();
+      if (!adminPassword) return;
+      btn.disabled = true;
+      btn.textContent = "Publishing…";
+      const result = await store().publishCampaigns(adminPassword);
+      if (result.ok) {
+        alert(`Published ${result.count} campaign(s) to GitHub Pages. Guest links should work everywhere in 1–3 minutes.`);
+      } else {
+        alert(result.error || "Publish failed. Campaigns are saved on this device — try again when the API is online.");
+      }
+      btn.disabled = false;
+      btn.textContent = "Publish campaigns live";
+      paint();
+    });
+
     document.getElementById("ws-campaign-sync")?.addEventListener("click", async (e) => {
       const btn = e.currentTarget;
       btn.disabled = true;
@@ -288,6 +496,8 @@ window.WSAdminCampaigns = (function () {
       }, 2000);
       paint();
     });
+
+    if (!campaign) return;
 
     document.getElementById("ws-campaign-copy-link")?.addEventListener("click", () => {
       const link = store().signupUrl(campaign);
@@ -360,8 +570,12 @@ window.WSAdminCampaigns = (function () {
 
   function startAutoRefresh() {
     stopAutoRefresh();
-    refreshTimer = setInterval(() => paint(), 8000);
-    store().onRuntimeChange(() => paint());
+    refreshTimer = setInterval(() => {
+      if (!showingCreateModal) paint();
+    }, 8000);
+    store().onRuntimeChange(() => {
+      if (!showingCreateModal) paint();
+    });
   }
 
   function stopAutoRefresh() {

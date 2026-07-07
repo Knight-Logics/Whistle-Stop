@@ -3,6 +3,7 @@
   const CAMPAIGNS_FILE = "data/campaigns.json";
   const RUNTIME_FILE = "data/campaign-runtime.json";
   const LOCAL_RUNTIME_KEY = "ws_campaign_runtime_v1";
+  const LOCAL_CAMPAIGNS_KEY = "ws_campaign_custom_v1";
   const API_BASE = "https://knightlogics.com/api/whistle-stop-campaigns";
   const LIVE_RUNTIME_URL =
     "https://knight-logics.github.io/Whistle-Stop/data/campaign-runtime.json";
@@ -10,6 +11,44 @@
   let campaignsCache = null;
   let runtimeCache = null;
   let listeners = new Set();
+
+  function slugify(text) {
+    return String(text || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 48);
+  }
+
+  function readLocalCampaigns() {
+    try {
+      const raw = localStorage.getItem(LOCAL_CAMPAIGNS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function writeLocalCampaigns(list) {
+    localStorage.setItem(LOCAL_CAMPAIGNS_KEY, JSON.stringify(list));
+    campaignsCache = null;
+  }
+
+  function mergeCampaignLists(baseList, customList) {
+    const byId = new Map();
+    (baseList || []).forEach((c) => byId.set(c.id, c));
+    (customList || []).forEach((c) => byId.set(c.id, c));
+    return [...byId.values()].sort((a, b) => {
+      const ta = a.createdAt || "";
+      const tb = b.createdAt || "";
+      return tb.localeCompare(ta);
+    });
+  }
+
+  function invalidateCampaignsCache() {
+    campaignsCache = null;
+  }
 
   function uid(prefix) {
     return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -69,8 +108,9 @@
   async function getCampaigns() {
     if (campaignsCache) return structuredClone(campaignsCache);
     const data = await fetchJson(CAMPAIGNS_FILE);
-    campaignsCache = data;
-    return structuredClone(data);
+    const merged = mergeCampaignLists(data.campaigns, readLocalCampaigns());
+    campaignsCache = { campaigns: merged };
+    return structuredClone(campaignsCache);
   }
 
   async function getCampaignBySlug(slug) {
@@ -317,6 +357,110 @@
     };
   }
 
+  const DEFAULT_LEAD_TYPES = [
+    {
+      id: "vip_list",
+      label: "Email list & regulars",
+      description: "Past guests and locals on the email list",
+    },
+    {
+      id: "community_boards",
+      label: "Community boards",
+      description: "Library, marina, and local bulletin boards",
+    },
+    {
+      id: "trivia_regulars",
+      label: "Event regulars",
+      description: "Guests who already come for trivia, bingo, cornhole, etc.",
+    },
+  ];
+
+  function buildCampaignFromForm(form) {
+    const type = form.type || "interest_check";
+    const title = String(form.title || "").trim();
+    const slug = slugify(form.slug || title);
+    if (!title) throw new Error("Campaign title is required.");
+    if (!slug) throw new Error("Campaign slug is required.");
+
+    const campaign = {
+      id: slug,
+      slug,
+      type,
+      status: type === "interest_check" ? "interest_check" : "active",
+      title,
+      headline: String(form.headline || title).trim(),
+      description: String(form.description || "").trim(),
+      channels: form.channels?.length ? form.channels : ["email", "social"],
+      landingPath: "campaign.html",
+      leadTypes: DEFAULT_LEAD_TYPES,
+      emailSubject: String(form.emailSubject || `${title} — Whistle Stop`).trim(),
+      emailBody:
+        String(form.emailBody || "").trim() ||
+        `Hi {{name}},\n\nWe're sharing something new at Whistle Stop.\n\nDetails & link:\n{{signup_link}}\n\n— Whistle Stop team`,
+      socialDraft: String(form.socialDraft || "").trim() || `${title} at Whistle Stop — details:`,
+      createdAt: new Date().toISOString(),
+      staffCreated: true,
+    };
+
+    if (type === "interest_check") {
+      campaign.signupGoal = Math.max(1, Number(form.signupGoal) || 12);
+      campaign.preferredWindows = [];
+    }
+
+    if (type === "info") {
+      campaign.showSignup = Boolean(form.showSignup);
+      campaign.eyebrow = String(form.eyebrow || "Special offer").trim();
+      const ctaLabel = String(form.ctaLabel || "").trim();
+      const ctaUrl = String(form.ctaUrl || "").trim();
+      if (ctaLabel && ctaUrl) {
+        campaign.ctas = [{ label: ctaLabel, url: ctaUrl, external: /^https?:\/\//i.test(ctaUrl) }];
+      }
+      if (form.heroImage) campaign.heroImage = form.heroImage.trim();
+    }
+
+    if (type === "event_promo") {
+      campaign.showSignup = Boolean(form.showSignup);
+      campaign.eyebrow = String(form.eyebrow || "Save the date").trim();
+      campaign.eventDate = String(form.eventDate || "").trim();
+      campaign.eventTime = String(form.eventTime || "").trim();
+      campaign.location = String(form.location || "Patio · Whistle Stop Grill & Bar").trim();
+      if (form.heroImage) campaign.heroImage = form.heroImage.trim();
+      campaign.ctas = [{ label: "Full events calendar", url: "events.html" }];
+    }
+
+    return campaign;
+  }
+
+  async function saveCampaign(form) {
+    const campaign = buildCampaignFromForm(form);
+    const custom = readLocalCampaigns();
+    const idx = custom.findIndex((c) => c.id === campaign.id);
+    if (idx >= 0) custom[idx] = campaign;
+    else custom.unshift(campaign);
+    writeLocalCampaigns(custom);
+    invalidateCampaignsCache();
+    return campaign;
+  }
+
+  async function publishCampaigns(adminPassword) {
+    const { campaigns } = await getCampaigns();
+    try {
+      const result = await apiRequest("publish", {
+        method: "POST",
+        body: JSON.stringify({ campaigns, adminPassword }),
+      });
+      writeLocalCampaigns([]);
+      invalidateCampaignsCache();
+      return result;
+    } catch (err) {
+      return { ok: false, error: err.message, localOnly: true, campaigns };
+    }
+  }
+
+  function hasUnpublishedCampaigns() {
+    return readLocalCampaigns().length > 0;
+  }
+
   global.WSCampaignStore = {
     getCampaigns,
     getCampaignBySlug,
@@ -332,6 +476,11 @@
     discoverLeads,
     onRuntimeChange,
     promoteToEventDraft,
+    saveCampaign,
+    publishCampaigns,
+    hasUnpublishedCampaigns,
+    slugify,
+    invalidateCampaignsCache,
     API_BASE,
   };
 })(typeof window !== "undefined" ? window : globalThis);
