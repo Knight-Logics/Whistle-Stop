@@ -233,8 +233,14 @@ window.WSSocial = (function () {
     );
   }
 
-  async function postToBridge(config, payload) {
-    const url = bridgeRoutes(config, { forPost: true }).post;
+  function platformNeedsTunnel(platformId, preflight) {
+    if (platformId === "linkedin" || platformId === "nextdoor") return true;
+    const fbMode = String(preflight?.facebookMode || "").toLowerCase();
+    if (platformId === "facebook" && fbMode === "browser_groups") return true;
+    return false;
+  }
+
+  async function fetchPostUrl(url, config, payload) {
     const authPayload = withBridgeAuth(config, payload);
     const body = JSON.stringify(authPayload);
     const debug = {
@@ -267,6 +273,57 @@ window.WSSocial = (function () {
     }
     console.info("[WSSocial] post ok", { results: data.results });
     return data;
+  }
+
+  async function postToBridge(config, payload, { tunnelOnline = false, preflight = null, platformCatalog = [] } = {}) {
+    const selected = payload.platforms || [];
+    const tunnelPlatforms = selected.filter((pid) => platformNeedsTunnel(pid, preflight));
+    const cloudPlatforms = selected.filter((pid) => !platformNeedsTunnel(pid, preflight));
+    const tunnelOfflineMsg =
+      "Playwright host offline on the main PC. Run START-PRESENTATION.ps1 (or the always-on host script) there — you can trigger LinkedIn/Nextdoor from this browser once the tunnel status above is green.";
+
+    const allResults = [];
+    let entry = null;
+
+    if (cloudPlatforms.length) {
+      const data = await fetchPostUrl(`${CLOUD_BRIDGE}/post`, config, { ...payload, platforms: cloudPlatforms });
+      allResults.push(...(data.results || []));
+      entry = data.entry;
+    }
+
+    if (tunnelPlatforms.length) {
+      if (!tunnelOnline) {
+        tunnelPlatforms.forEach((pid) => {
+          const plat = platformCatalog.find((x) => x.id === pid);
+          allResults.push({
+            platform: pid,
+            label: plat?.label || pid,
+            status: "error",
+            error: tunnelOfflineMsg,
+          });
+        });
+      } else {
+        const data = await fetchPostUrl(`${TUNNEL_BRIDGE}/api/post`, config, {
+          ...payload,
+          platforms: tunnelPlatforms,
+        });
+        allResults.push(...(data.results || []));
+        if (!entry) entry = data.entry;
+      }
+    }
+
+    return {
+      ok: true,
+      entry:
+        entry || {
+          id: `post_${Date.now()}`,
+          createdAt: new Date().toISOString(),
+          text: String(payload.text || "").slice(0, 500),
+          platforms: selected,
+          results: allResults,
+        },
+      results: allResults,
+    };
   }
 
   async function fetchBridgeHistory(config) {
@@ -511,6 +568,7 @@ window.WSSocial = (function () {
     const links = { ...(site?.social || {}), ...(config?.socialLinks || {}) };
     let platforms = [];
     let bridgeOnline = false;
+    let tunnelOnline = false;
     let gbpLimits = null;
     let mediaDataUrl = "";
     let mediaFileType = "";
@@ -522,9 +580,9 @@ window.WSSocial = (function () {
     panel.innerHTML = `
       <p class="admin-note">
         Compose once for <strong>Facebook, X, LinkedIn, Nextdoor, and Google Business Profile</strong>.
-        <strong>Live presentation:</strong> open <a href="${LIVE_ADMIN_URL}" target="_blank" rel="noopener">${LIVE_ADMIN_URL}</a>,
-        log in, and post — the cloud bridge on knightlogics.com handles auth and posting.
-        Before the pitch, run <code>START-PRESENTATION.ps1</code> on your laptop (bridge + Cloudflare tunnel for LinkedIn/Nextdoor).
+        <strong>Live presentation:</strong> open <a href="${LIVE_ADMIN_URL}" target="_blank" rel="noopener">${LIVE_ADMIN_URL}</a>
+        on any laptop, log in, and post. Facebook / X / GBP use the cloud bridge; LinkedIn / Nextdoor use Playwright on the
+        <strong>main PC</strong> via the tunnel — run <code>START-PRESENTATION.ps1</code> on the host PC before the pitch.
       </p>
       <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking cloud bridge…</div>
       <details class="admin-details social-preflight-panel" id="social-preflight-panel" open>
@@ -769,12 +827,14 @@ window.WSSocial = (function () {
 
     async function refreshBridge() {
       activeBridgeOverride = "";
+      tunnelOnline = false;
       let health = { online: false };
 
       if (isHttpsAdmin()) {
         const tunnel = await pingTunnelBridge();
         if (tunnel.online) {
           activeBridgeOverride = TUNNEL_BRIDGE;
+          tunnelOnline = true;
           health = { ...tunnel, online: true };
         }
       }
@@ -797,11 +857,11 @@ window.WSSocial = (function () {
               ? ` Log into admin to post from this device.`
               : "";
           if (viaTunnel) {
-            statusEl.innerHTML = `<strong>Main PC bridge online (ws-social tunnel).</strong> LinkedIn/Nextdoor and Facebook groups use the tunnel; Facebook Page, X, and GBP post through the cloud bridge from any device.${keyNote}`;
+            statusEl.innerHTML = `<strong>Playwright host online (tunnel).</strong> Post LinkedIn/Nextdoor from this browser — Playwright runs on the main PC. FB / X / GBP still use the cloud bridge.${keyNote}`;
           } else if (isCloud && fullBridge) {
             statusEl.innerHTML = `<strong>Cloud bridge online — full poster active.</strong> Demo posts to Knight Logics accounts only (one per platform).${keyNote}`;
           } else if (isCloud) {
-            statusEl.innerHTML = `<strong>Cloud bridge online.</strong> Facebook, X, and GBP post to Knight Logics only. LinkedIn/Nextdoor need main PC tunnel (<code>START-MAIN-PC-HOST.ps1</code>).${keyNote}`;
+            statusEl.innerHTML = `<strong>Cloud bridge online.</strong> Facebook, X, and GBP work from this device. LinkedIn/Nextdoor need the main PC tunnel — run <code>START-PRESENTATION.ps1</code> on the host PC.${keyNote}`;
           } else {
             statusEl.innerHTML = `<strong>Local bridge online.</strong> Full Knight Logics poster on this PC.${keyNote}`;
           }
@@ -1021,7 +1081,11 @@ window.WSSocial = (function () {
       try {
         let results;
         if (bridgeOnline) {
-          const data = await postToBridge(config, payload);
+          const data = await postToBridge(config, payload, {
+            tunnelOnline,
+            preflight: preflightData,
+            platformCatalog: platforms,
+          });
           results = data.results || [];
           config.postHistory = [data.entry, ...(config.postHistory || [])].slice(0, 50);
           if (window.WSConfig) WSConfig.save("socialManager", config);
