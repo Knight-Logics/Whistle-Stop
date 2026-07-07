@@ -195,7 +195,15 @@ window.WSAdminCampaigns = (function () {
       const raw = sessionStorage.getItem(`ws_campaign_audience_${campaign.id}`);
       if (raw) audiencePlan = JSON.parse(raw);
     } catch (_) {}
+    if (!audiencePlan && window.WSCampaignAudience?.inferAudiencePreview) {
+      audiencePlan = window.WSCampaignAudience.inferAudiencePreview(campaign);
+    }
     const audienceStatus = readAudienceStatus(campaign.id);
+    const leadSegments =
+      window.WSCampaignAudience?.segmentsForCampaign?.(campaign, audiencePlan) ||
+      audiencePlan?.segments ||
+      campaign.leadTypes ||
+      [];
 
     const signupRows = signups
       .slice()
@@ -213,9 +221,12 @@ window.WSAdminCampaigns = (function () {
       )
       .join("");
 
-    const leadTypeSections = (campaign.leadTypes || [])
+    const leadTypeSections = leadSegments
       .map((lt) => {
         const leads = store().getLeadsForCampaign(runtime, campaign.id, lt.id);
+        const queryHint = (lt.searchQueries || [])[0]
+          ? `<p class="ws-segment-query">Search: ${esc((lt.searchQueries || []).join(" · "))}</p>`
+          : "";
         const leadRows = leads
           .map(
             (l) => `
@@ -234,12 +245,13 @@ window.WSAdminCampaigns = (function () {
               <div>
                 <h4>${esc(lt.label)}</h4>
                 <p>${esc(lt.description)}</p>
+                ${queryHint}
               </div>
               <button type="button" class="btn btn-secondary btn-sm ws-discover-leads" data-lead-type="${esc(lt.id)}">Find leads</button>
             </header>
             <table class="ws-outreach-table">
               <thead><tr><th></th><th>Name</th><th>Organization</th><th>Email</th><th>Status</th></tr></thead>
-              <tbody>${leadRows || `<tr><td colspan="5" class="ws-empty">No leads yet — click Find leads</td></tr>`}</tbody>
+              <tbody>${leadRows || `<tr><td colspan="5" class="ws-empty">No leads yet — click Find best local leads above</td></tr>`}</tbody>
             </table>
           </section>`;
       })
@@ -304,14 +316,14 @@ window.WSAdminCampaigns = (function () {
           </div>
         </section>` : ""}
 
-        <section class="ws-campaign-section ws-audience-plan">
+        <section class="ws-campaign-section ws-audience-plan" data-campaign-id="${esc(campaign.id)}">
           <header class="ws-outreach-crm-head">
             <div>
-              <h3>Target audience &amp; lead search</h3>
-              <p>Infers the best <strong>localized</strong> segments for this campaign (Safety Harbor / Tampa Bay), then searches for matching leads — like Knight Command outreach.</p>
+              <h3>Target audience for <em>${esc(campaign.title)}</em></h3>
+              <p>Infers the best <strong>localized</strong> segments for this campaign only (Safety Harbor / Tampa Bay), then searches for matching leads.</p>
             </div>
             <div class="ws-campaign-audience-actions">
-              <button type="button" class="btn btn-primary btn-sm" id="ws-campaign-find-leads">Find best local leads</button>
+              <button type="button" class="btn btn-primary btn-sm" id="ws-campaign-find-leads">Find leads for this campaign</button>
               <button type="button" class="btn btn-secondary btn-sm" id="ws-campaign-demo-email">Send demo email (nickknight488@gmail.com)</button>
             </div>
           </header>
@@ -322,17 +334,17 @@ window.WSAdminCampaigns = (function () {
                    <ul class="ws-audience-segment-list">${(audiencePlan.segments || [])
                      .map(
                        (s) =>
-                         `<li><strong>${esc(s.label)}</strong> — ${esc(s.description)}<br /><em class="ws-audience-query">Search: ${esc((s.searchQueries || []).join(" · "))}</em></li>`
+                         `<li><strong>${esc(s.label)}</strong> — ${esc(s.description)}<br /><em class="ws-audience-query">Search: ${esc((s.searchQueries || []).join(" · "))}</em>${s.rationale ? `<br /><span class="ws-audience-rationale">${esc(s.rationale)}</span>` : ""}</li>`
                      )
                      .join("")}</ul>`
-                : `<p class="ws-empty">Click <strong>Find best local leads</strong> to analyze this campaign and populate outreach segments below.</p>`
+                : `<p class="ws-empty">Audience plan loads from campaign title &amp; description.</p>`
             }
           </div>
           <p id="ws-audience-status" class="${esc(audienceStatus?.className || "ws-send-status")}" role="status">${esc(audienceStatus?.text || "")}</p>
         </section>
 
         <section class="ws-campaign-section ws-outreach-crm">
-          <h3>Outreach leads by segment</h3>
+          <h3>Outreach leads for <em>${esc(campaign.title)}</em></h3>
           ${leadTypeSections}
           <div class="ws-outreach-compose">
             <h4>Compose outreach</h4>
@@ -608,7 +620,8 @@ window.WSAdminCampaigns = (function () {
 
       try {
         const result = await store().findBestLeads(campaign.id, campaign, { useLlm: true });
-        sessionStorage.setItem(`ws_campaign_audience_${campaign.id}`, JSON.stringify(result.plan));
+        const plan = { ...result.plan, campaignId: campaign.id, campaignTitle: campaign.title };
+        sessionStorage.setItem(`ws_campaign_audience_${campaign.id}`, JSON.stringify(plan));
         const msg = `Found ${result.added.length} new lead(s) across ${result.plan.segments?.length || 0} segments (${result.source}).`;
         writeAudienceStatus(campaign.id, msg, "ws-send-status is-ok");
         showToast(msg);

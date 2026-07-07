@@ -75,6 +75,36 @@
 
   const DEMO_TEST_EMAIL = "nickknight488@gmail.com";
 
+  function extractCampaignTopic(campaign) {
+    const title = String(campaign.title || "").trim();
+    const text = `${title} ${campaign.headline || ""} ${campaign.description || ""}`.toLowerCase();
+    if (/\bd&d\b|\bdnd\b|dungeons/.test(text)) return "D&D tabletop game night";
+    if (/cornhole/.test(text)) return "cornhole league";
+    if (/trivia|bingo/.test(text)) return "trivia and game night";
+    if (/gift|father|mother/.test(text)) return "gift cards and seasonal promo";
+    if (/live music|band|acoustic/.test(text)) return "live music patio";
+    if (/private event|party|rent/.test(text)) return "private events patio";
+    return title || "local event";
+  }
+
+  function tailoredSearchQueries(campaign, segment) {
+    const topic = extractCampaignTopic(campaign);
+    const locality = "Safety Harbor FL";
+    const bay = "Tampa Bay";
+    const custom = [
+      `${topic} ${locality}`,
+      `${topic} ${bay}`,
+      `${campaign.title || topic} outreach ${locality}`,
+    ];
+    const base = segment.searchQueries || [];
+    return [...new Set([...custom, ...base].map((q) => String(q).trim()).filter(Boolean))].slice(0, 4);
+  }
+
+  function tailoredRationale(campaign, segment) {
+    const topic = extractCampaignTopic(campaign);
+    return `“${campaign.title || campaign.slug}” → ${segment.label.toLowerCase()} near Safety Harbor (${topic}).`;
+  }
+
   function scoreSegment(segment, text) {
     let score = 0;
     segment.keywords.forEach((kw) => {
@@ -112,14 +142,16 @@
       id: seg.id,
       label: seg.label,
       description: seg.description,
-      searchQueries: seg.searchQueries,
-      rationale: `Matched for ${campaign.title || "this campaign"} near Safety Harbor / Tampa Bay.`,
+      searchQueries: tailoredSearchQueries(campaign, seg),
+      rationale: tailoredRationale(campaign, seg),
     }));
 
     return {
       source: "rules",
+      campaignId: campaign.id,
+      campaignTitle: campaign.title || campaign.slug,
       locality: "Safety Harbor, FL · Tampa Bay area",
-      summary: `Target ${segments.length} local segments for “${campaign.title || campaign.slug}”.`,
+      summary: `For “${campaign.title || campaign.slug}”: ${segments.length} localized lead segments (${extractCampaignTopic(campaign)}).`,
       segments,
     };
   }
@@ -193,11 +225,25 @@ Whistle Stop team
       .replace(/"/g, "&quot;");
   }
 
+  function inferAudiencePreview(campaign) {
+    return inferAudience(campaign);
+  }
+
+  function segmentsForCampaign(campaign, savedPlan) {
+    if (savedPlan?.segments?.length && (!savedPlan.campaignId || savedPlan.campaignId === campaign.id)) {
+      return savedPlan.segments;
+    }
+    return inferAudience(campaign).segments;
+  }
+
   global.WSCampaignAudience = {
     SEGMENT_CATALOG,
     LOCALIZED_LEAD_POOL,
     DEMO_TEST_EMAIL,
     inferAudience,
+    inferAudiencePreview,
+    segmentsForCampaign,
+    tailoredSearchQueries,
     leadsForSegment,
     buildOutreachEmail,
   };

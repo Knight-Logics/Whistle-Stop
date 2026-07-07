@@ -364,6 +364,8 @@
       return { ok: true, plan, added, source: plan?.source || "api" };
     } catch (err) {
       plan = audienceFn()?.inferAudience(campaign) || { segments: [], summary: "" };
+      plan.campaignId = campaignId;
+      plan.campaignTitle = campaign.title;
       const localAdded = [];
       const rt = await getRuntime();
       const existing = new Set(
@@ -528,17 +530,34 @@
     if (!title) throw new Error("Campaign title is required.");
     if (!slug) throw new Error("Campaign slug is required.");
 
+    const draftForAudience = {
+      id: slug,
+      slug,
+      type,
+      title,
+      headline: String(form.headline || title).trim(),
+      description: String(form.description || "").trim(),
+    };
+    const inferred =
+      global.WSCampaignAudience?.inferAudience
+        ? global.WSCampaignAudience.inferAudience(draftForAudience)
+        : null;
+
     const campaign = {
       id: slug,
       slug,
       type,
       status: type === "interest_check" ? "interest_check" : "active",
       title,
-      headline: String(form.headline || title).trim(),
-      description: String(form.description || "").trim(),
+      headline: draftForAudience.headline,
+      description: draftForAudience.description,
       channels: form.channels?.length ? form.channels : ["email", "social"],
       landingPath: "campaign.html",
-      leadTypes: DEFAULT_LEAD_TYPES,
+      leadTypes: (inferred?.segments || DEFAULT_LEAD_TYPES).map((seg) => ({
+        id: seg.id,
+        label: seg.label,
+        description: seg.description,
+      })),
       emailSubject: String(form.emailSubject || `${title} — Whistle Stop`).trim(),
       emailBody:
         String(form.emailBody || "").trim() ||

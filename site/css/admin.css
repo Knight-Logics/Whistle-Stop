@@ -3752,11 +3752,30 @@ body.admin-modal-open {
   color: var(--text-muted);
 }
 
+.ws-audience-rationale {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
 .ws-audience-source {
   font-size: 0.75rem;
   color: var(--lime);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.ws-segment-query {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  color: var(--lime);
+  font-style: italic;
+}
+
+.ws-audience-plan h3 em,
+.ws-outreach-crm h3 em {
+  color: var(--lime);
+  font-style: normal;
+  font-weight: 600;
 }
 
 .ws-email-preview-modal {
