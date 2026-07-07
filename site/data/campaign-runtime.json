@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-07T17:54:58.090Z",
+  "updatedAt": "2026-07-07T18:01:16.554Z",
   "signups": [
     {
       "id": "su-demo-1",
@@ -130,6 +130,20 @@
       "demo": true,
       "html": true,
       "providerId": null
+    },
+    {
+      "id": "em-mrayglqi-ea313b",
+      "campaignId": "dnd-game-night",
+      "leadId": "demo-test",
+      "to": "nickknight488@gmail.com",
+      "subject": "D&D at Whistle Stop? — quick interest check",
+      "bodyPreview": "Hi Nicholas,\n\nWhistle Stop Grill & Bar on Main Street in Safety Harbor is running a local campaign: Interested in a D&D Night at Whistle Stop?.\n\nWe're gauging interest before we schedule a recurring tabletop night on the patio. Tell us if you'd play, DM, or bring friends — no commitment until we hit",
+      "status": "sent",
+      "sentAt": "2026-07-07T18:01:16.554Z",
+      "via": "zoho",
+      "demo": true,
+      "html": true,
+      "providerId": "1783447276392138300"
     }
   ]
 }
