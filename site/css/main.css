@@ -4356,27 +4356,109 @@ html.ws-js [data-ws-enter].is-visible {
   }
 }
 
-/* ——— Campaign interest-check signup ——— */
+/* ——— Campaign landing pages (signup, info, event promo) ——— */
 .campaign-signup-body {
-  background: var(--ink);
+  background: var(--chalk);
   color: var(--cream);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 }
 
 .campaign-signup-header {
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  z-index: 10;
+  padding: 0;
+  border-bottom: 1px solid rgba(184, 224, 74, 0.12);
+  background: rgba(20, 20, 20, 0.95);
+}
+
+.campaign-signup-header .header-inner {
+  height: var(--header-bar-h);
 }
 
 .campaign-signup-main {
   flex: 1;
-  padding: 2rem 0 3rem;
+  padding: calc(var(--header-bar-h) + 2rem) 0 3rem;
 }
 
 .campaign-signup-wrap {
-  max-width: 640px;
+  max-width: 680px;
+}
+
+.campaign-loading {
+  color: var(--cream-dim);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.campaign-hero-img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin: 0 0 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow);
+}
+
+.campaign-media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.65rem;
+  margin: 0 0 1.25rem;
+}
+
+.campaign-media-grid img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.campaign-event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--chalk-mid);
+  border-radius: 10px;
+  border: 1px solid rgba(184, 224, 74, 0.15);
+  font-size: 0.92rem;
+  color: var(--cream);
+}
+
+.campaign-event-meta strong {
+  color: var(--lime);
+  font-weight: 600;
+}
+
+.campaign-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: 0 0 1.25rem;
+}
+
+.campaign-info-card {
+  background: var(--chalk-mid);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.campaign-info-card p {
+  margin: 0;
+  color: var(--cream-dim);
+  line-height: 1.6;
+}
+
+.campaign-info-card p + p {
+  margin-top: 0.75rem;
 }
 
 .campaign-eyebrow {
@@ -4403,10 +4485,19 @@ html.ws-js [data-ws-enter].is-visible {
 }
 
 .campaign-signup-form {
-  background: var(--chalk);
+  background: var(--chalk-mid);
   padding: 1.25rem 1.35rem;
   border-radius: 12px;
   margin-bottom: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.campaign-form-title {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  color: var(--cream);
 }
 
 .campaign-form-grid {
@@ -4494,9 +4585,9 @@ html.ws-js [data-ws-enter].is-visible {
 
 .campaign-progress {
   padding: 0.85rem 1rem;
-  background: rgba(184, 224, 74, 0.08);
+  background: var(--chalk-mid);
   border-radius: 10px;
-  border: 1px solid rgba(184, 224, 74, 0.2);
+  border: 1px solid rgba(184, 224, 74, 0.25);
 }
 
 .campaign-progress-label {
@@ -4540,10 +4631,15 @@ html.ws-js [data-ws-enter].is-visible {
 
 .campaign-signup-footer {
   padding: 1rem 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(184, 224, 74, 0.12);
   text-align: center;
   font-size: 0.85rem;
   color: var(--text-muted);
+  background: rgba(20, 20, 20, 0.6);
+}
+
+.campaign-signup-footer a {
+  color: var(--lime);
 }
 
 .campaign-not-found {
