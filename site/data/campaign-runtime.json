@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-07T18:16:23.408Z",
+  "updatedAt": "2026-07-07T19:36:20.237Z",
   "signups": [
     {
       "id": "su-demo-1",
@@ -25,6 +25,19 @@
       "source": "email",
       "createdAt": "2026-07-05T19:10:00.000Z",
       "demo": true
+    },
+    {
+      "id": "su-mrb1uukk-0zonhx",
+      "campaignId": "dnd-game-night",
+      "name": "Nicholas",
+      "email": "nickknight488@gmail.com",
+      "phone": "",
+      "role": "player",
+      "preferredNight": "",
+      "experience": "new",
+      "source": "web",
+      "notes": "",
+      "createdAt": "2026-07-07T19:36:20.036Z"
     }
   ],
   "outreachLeads": [
