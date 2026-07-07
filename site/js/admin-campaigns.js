@@ -118,9 +118,14 @@ window.WSAdminCampaigns = (function () {
     const runtime = await store().getRuntime();
     const signups = store().getSignupsForCampaign(runtime, campaign.id);
     const emailLog = store().getEmailLogForCampaign(runtime, campaign.id);
-    const signupLink = store().signupUrl(campaign);
+    const signupLink = store().shareableCampaignUrl(campaign);
     const goal = campaign.signupGoal || 12;
     const goalMet = signups.length >= goal;
+    let audiencePlan = null;
+    try {
+      const raw = sessionStorage.getItem(`ws_campaign_audience_${campaign.id}`);
+      if (raw) audiencePlan = JSON.parse(raw);
+    } catch (_) {}
 
     const signupRows = signups
       .slice()
@@ -229,13 +234,35 @@ window.WSAdminCampaigns = (function () {
           </div>
         </section>` : ""}
 
-        <section class="ws-campaign-section ws-outreach-crm">
+        <section class="ws-campaign-section ws-audience-plan">
           <header class="ws-outreach-crm-head">
             <div>
-              <h3>Outreach CRM</h3>
-              <p>Find leads by segment, compose outreach, and send — demo uses Knight Logics test inboxes.</p>
+              <h3>Target audience &amp; lead search</h3>
+              <p>Infers the best <strong>localized</strong> segments for this campaign (Safety Harbor / Tampa Bay), then searches for matching leads — like Knight Command outreach.</p>
+            </div>
+            <div class="ws-campaign-audience-actions">
+              <button type="button" class="btn btn-primary btn-sm" id="ws-campaign-find-leads">Find best local leads</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="ws-campaign-demo-email">Send demo email (nickknight488@gmail.com)</button>
             </div>
           </header>
+          <div id="ws-audience-plan-body" class="ws-audience-plan-body">
+            ${
+              audiencePlan
+                ? `<p class="ws-audience-summary"><strong>${esc(audiencePlan.summary)}</strong> <span class="ws-audience-source">via ${esc(audiencePlan.source || "rules")}</span></p>
+                   <ul class="ws-audience-segment-list">${(audiencePlan.segments || [])
+                     .map(
+                       (s) =>
+                         `<li><strong>${esc(s.label)}</strong> — ${esc(s.description)}<br /><em class="ws-audience-query">Search: ${esc((s.searchQueries || []).join(" · "))}</em></li>`
+                     )
+                     .join("")}</ul>`
+                : `<p class="ws-empty">Click <strong>Find best local leads</strong> to analyze this campaign and populate outreach segments below.</p>`
+            }
+          </div>
+          <p id="ws-audience-status" class="ws-send-status" role="status"></p>
+        </section>
+
+        <section class="ws-campaign-section ws-outreach-crm">
+          <h3>Outreach leads by segment</h3>
           ${leadTypeSections}
           <div class="ws-outreach-compose">
             <h4>Compose outreach</h4>
@@ -499,8 +526,56 @@ window.WSAdminCampaigns = (function () {
 
     if (!campaign) return;
 
+    document.getElementById("ws-campaign-find-leads")?.addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      const status = document.getElementById("ws-audience-status");
+      btn.disabled = true;
+      status.className = "ws-send-status";
+      status.textContent = "Analyzing audience & searching local leads…";
+
+      try {
+        const result = await store().findBestLeads(campaign.id, campaign, { useLlm: true });
+        sessionStorage.setItem(`ws_campaign_audience_${campaign.id}`, JSON.stringify(result.plan));
+        status.className = "ws-send-status is-ok";
+        status.textContent = `Found ${result.added.length} new lead(s) across ${result.plan.segments?.length || 0} segments (${result.source}).`;
+        paint();
+      } catch (err) {
+        status.className = "ws-send-status is-error";
+        status.textContent = err.message || "Lead search failed.";
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById("ws-campaign-demo-email")?.addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      const status = document.getElementById("ws-audience-status");
+      const adminPassword = await getAdminPassword();
+      if (!adminPassword) return;
+      btn.disabled = true;
+      status.textContent = "Sending formatted demo email…";
+
+      try {
+        const result = await store().sendDemoOutreachEmail({
+          campaignId: campaign.id,
+          campaign,
+          adminPassword,
+        });
+        status.className = "ws-send-status is-ok";
+        status.textContent = result.localOnly
+          ? `Logged HTML outreach to nickknight488@gmail.com (API offline — ${result.apiError || "demo mode"})`
+          : `Sent HTML outreach to ${result.mail?.to || "nickknight488@gmail.com"}`;
+        paint();
+      } catch (err) {
+        status.className = "ws-send-status is-error";
+        status.textContent = err.message || "Demo send failed.";
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
     document.getElementById("ws-campaign-copy-link")?.addEventListener("click", () => {
-      const link = store().signupUrl(campaign);
+      const link = store().shareableCampaignUrl(campaign);
       navigator.clipboard?.writeText(link);
       const btn = document.getElementById("ws-campaign-copy-link");
       if (btn) btn.textContent = "Copied!";

@@ -4526,9 +4526,15 @@ html.ws-js [data-ws-enter].is-visible {
   padding: 0.55rem 0.65rem;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--chalk-light);
   color: var(--cream);
   font: inherit;
+  color-scheme: dark;
+}
+
+.campaign-field select option {
+  background: #1f1f1f;
+  color: var(--cream);
 }
 
 .campaign-fieldset {

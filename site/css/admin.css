@@ -3723,6 +3723,42 @@ body.admin-modal-open {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.ws-audience-plan {
+  background: rgba(184, 224, 74, 0.04);
+  border: 1px solid rgba(184, 224, 74, 0.15);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.ws-campaign-audience-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ws-audience-segment-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--cream-dim);
+  font-size: 0.85rem;
+}
+
+.ws-audience-segment-list li + li {
+  margin-top: 0.45rem;
+}
+
+.ws-audience-query {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.ws-audience-source {
+  font-size: 0.75rem;
+  color: var(--lime);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .ws-campaign-cards {
   display: flex;
   flex-direction: column;

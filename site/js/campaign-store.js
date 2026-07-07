@@ -7,6 +7,7 @@
   const API_BASE = "https://knightlogics.com/api/whistle-stop-campaigns";
   const LIVE_RUNTIME_URL =
     "https://knight-logics.github.io/Whistle-Stop/data/campaign-runtime.json";
+  const PUBLIC_SHARE_BASE = "https://knight-logics.github.io/Whistle-Stop/";
 
   let campaignsCache = null;
   let runtimeCache = null;
@@ -146,13 +147,22 @@
   }
 
   function signupUrl(campaign, baseOverride) {
+    const host = typeof location !== "undefined" ? location.hostname : "";
     const base =
       baseOverride ||
-      (typeof location !== "undefined" ? location.origin + location.pathname.replace(/[^/]+$/, "") : "");
+      (host === "127.0.0.1" || host === "localhost"
+        ? PUBLIC_SHARE_BASE
+        : typeof location !== "undefined"
+          ? location.origin + location.pathname.replace(/[^/]+$/, "")
+          : PUBLIC_SHARE_BASE);
     const file = campaign.landingPath || "campaign.html";
     const url = new URL(file, base.endsWith("/") ? base : base + "/");
     url.searchParams.set("campaign", campaign.slug || campaign.id);
     return url.href;
+  }
+
+  function shareableCampaignUrl(campaign) {
+    return signupUrl(campaign, PUBLIC_SHARE_BASE);
   }
 
   function renderTemplate(tpl, vars) {
@@ -235,8 +245,9 @@
     const payload = { campaignId, leadIds, subject, body, adminPassword };
     try {
       const campaign = (await getCampaigns()).campaigns.find((c) => c.id === campaignId);
-      payload.signupLink = campaign ? signupUrl(campaign) : "";
+      payload.signupLink = campaign ? shareableCampaignUrl(campaign) : "";
       payload.goal = campaign?.signupGoal || 12;
+      payload.campaign = campaign;
       const result = await apiRequest("outreach-send", {
         method: "POST",
         body: JSON.stringify(payload),
@@ -284,13 +295,14 @@
 
   const DISCOVER_LEADS = {
     game_stores: [
-      { name: "Critical Hit Games", organization: "Clearwater hobby shop", email: "support@knightlogics.com" },
-      { name: "Emerald City Comics", organization: "Largo / Clearwater", email: "nknig@knightlogics.com" },
-      { name: "Gamers Cave (demo)", organization: "Safety Harbor area", email: "support@knightlogics.com" },
+      { name: "Critical Hit Games", organization: "Clearwater · tabletop & RPG", email: "support@knightlogics.com" },
+      { name: "Emerald City Comics", organization: "Largo / Clearwater", email: "support@knightlogics.com" },
+      { name: "Gamers Asylum", organization: "Pinellas Park hobby shop", email: "support@knightlogics.com" },
     ],
     community_boards: [
-      { name: "Safety Harbor Public Library", organization: "Events bulletin", email: "support@knightlogics.com" },
-      { name: "Marina bulletin board", organization: "Safety Harbor Marina", email: "nknig@knightlogics.com" },
+      { name: "Safety Harbor Public Library", organization: "Library events board", email: "support@knightlogics.com" },
+      { name: "Safety Harbor Marina", organization: "Marina bulletin board", email: "nknig@knightlogics.com" },
+      { name: "Safety Harbor Community Center", organization: "Rec center events", email: "support@knightlogics.com" },
     ],
     trivia_regulars: [
       { name: "Music Bingo regular", organization: "Whistle Stop guest", email: "nknig@knightlogics.com" },
@@ -301,10 +313,119 @@
       { name: "D&D Adventurers League (demo)", organization: "Organizer contact", email: "nknig@knightlogics.com" },
     ],
     vip_list: [
-      { name: "Knight Logics VIP test", organization: "Demo segment", email: "support@knightlogics.com" },
+      { name: "Knight Logics VIP test", organization: "Demo VIP segment", email: "support@knightlogics.com" },
       { name: "Email list sample", organization: "Past event guests", email: "nknig@knightlogics.com" },
     ],
+    local_press: [
+      { name: "Safety Harbor Chamber", organization: "Main Street network", email: "support@knightlogics.com" },
+      { name: "Old City Hall events", organization: "Downtown calendar", email: "nknig@knightlogics.com" },
+    ],
   };
+
+  async function findBestLeads(campaignId, campaign, options = {}) {
+    const audienceFn = () => window.WSCampaignAudience;
+    let plan;
+    let added = [];
+    let runtime;
+
+    try {
+      const result = await apiRequest("find-leads", {
+        method: "POST",
+        body: JSON.stringify({
+          campaignId,
+          campaign,
+          useLlm: Boolean(options.useLlm),
+        }),
+      });
+      plan = result.audience;
+      added = result.added || [];
+      if (result.runtime) {
+        runtimeCache = result.runtime;
+        writeLocalRuntime(result.runtime);
+      }
+      return { ok: true, plan, added, source: plan?.source || "api" };
+    } catch (err) {
+      plan = audienceFn()?.inferAudience(campaign) || { segments: [], summary: "" };
+      const localAdded = [];
+      const rt = await getRuntime();
+      const existing = new Set(
+        (rt.outreachLeads || [])
+          .filter((l) => l.campaignId === campaignId)
+          .map((l) => `${l.email}|${l.name}|${l.leadType}`)
+      );
+
+      (plan.segments || []).forEach((seg) => {
+        const pool = audienceFn()?.leadsForSegment(seg.id, "support@knightlogics.com") || DISCOVER_LEADS[seg.id] || [];
+        pool.forEach((row) => {
+          const key = `${row.email}|${row.name}|${seg.id}`;
+          if (existing.has(key)) return;
+          const lead = {
+            id: uid("lead"),
+            campaignId,
+            leadType: seg.id,
+            name: row.name,
+            email: row.email,
+            organization: row.organization,
+            locality: row.locality || "Safety Harbor area",
+            status: "new",
+            discoveredAt: new Date().toISOString(),
+            searchQuery: seg.searchQueries?.[0] || "",
+          };
+          rt.outreachLeads = rt.outreachLeads || [];
+          rt.outreachLeads.push(lead);
+          localAdded.push(lead);
+          existing.add(key);
+        });
+      });
+      rt.updatedAt = new Date().toISOString();
+      writeLocalRuntime(rt);
+      return { ok: true, plan, added: localAdded, source: "local", apiError: err.message };
+    }
+  }
+
+  async function sendDemoOutreachEmail({ campaignId, campaign, adminPassword }) {
+    const signupLink = shareableCampaignUrl(campaign);
+    const demoTo = window.WSCampaignAudience?.DEMO_TEST_EMAIL || "nickknight488@gmail.com";
+    const payload = {
+      campaignId,
+      campaign,
+      signupLink,
+      demoTo,
+      demoName: "Nicholas",
+      adminPassword,
+    };
+
+    try {
+      return await apiRequest("outreach-demo", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      const mail = window.WSCampaignAudience.buildOutreachEmail(
+        campaign,
+        { name: "Nicholas", email: demoTo, organization: "Demo test" },
+        { signup_link: signupLink, goal: campaign.signupGoal || 12 }
+      );
+      const runtime = await getRuntime();
+      runtime.emailLog = runtime.emailLog || [];
+      runtime.emailLog.push({
+        id: uid("em"),
+        campaignId,
+        leadId: "demo-test",
+        to: demoTo,
+        subject: mail.subject,
+        bodyPreview: mail.text.slice(0, 280),
+        status: "sent",
+        sentAt: new Date().toISOString(),
+        via: "local-demo-html",
+        demo: true,
+        html: true,
+        localOnly: true,
+      });
+      writeLocalRuntime(runtime);
+      return { ok: true, localOnly: true, mail: { to: demoTo, subject: mail.subject }, apiError: err.message };
+    }
+  }
 
   async function discoverLeads(campaignId, leadType) {
     const pool = DISCOVER_LEADS[leadType] || [];
@@ -469,11 +590,14 @@
     getLeadsForCampaign,
     getEmailLogForCampaign,
     signupUrl,
+    shareableCampaignUrl,
     renderTemplate,
     submitSignup,
     syncRuntimeFromCloud,
     sendOutreachEmail,
     discoverLeads,
+    findBestLeads,
+    sendDemoOutreachEmail,
     onRuntimeChange,
     promoteToEventDraft,
     saveCampaign,
