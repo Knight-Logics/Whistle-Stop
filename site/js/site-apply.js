@@ -1,7 +1,20 @@
 /* Apply site.json to [data-site] bindings, theme, and heroes */
 (function () {
-  if (new URLSearchParams(window.location.search).has("heroPreview")) {
+  (function loadOfferBanner() {
+    if (document.querySelector("script[data-ws-qr-offer]")) return;
+    const s = document.createElement("script");
+    s.src = "js/qr-offer-banner.js?v=2";
+    s.defer = true;
+    s.dataset.wsQrOffer = "1";
+    document.head.appendChild(s);
+  })();
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.has("heroPreview")) {
     document.documentElement.classList.add("ws-hero-preview-embed");
+  }
+  if (params.has("homepagePreview")) {
+    document.documentElement.classList.add("ws-homepage-preview-embed");
   }
   function setText(el, value) {
     if (value == null || el == null) return;
@@ -145,6 +158,36 @@
     await Promise.all(keys.map((key) => applyHero(key, site.heroes?.[key])));
   }
 
+  async function applyEventsPage(site) {
+    const page = site.pages?.events;
+    if (!page) return;
+
+    const recurringTitle = document.querySelector("[data-events-recurring-title]");
+    const recurringLead = document.querySelector("[data-events-recurring-lead]");
+    if (recurringTitle && page.recurringSection?.title) recurringTitle.textContent = page.recurringSection.title;
+    if (recurringLead && page.recurringSection?.lead) recurringLead.textContent = page.recurringSection.lead;
+
+    const oneOffTitle = document.querySelector("[data-events-one-off-title]");
+    const oneOffLead = document.querySelector("[data-events-one-off-lead]");
+    if (oneOffTitle && page.oneOffSection?.title) oneOffTitle.textContent = page.oneOffSection.title;
+    if (oneOffLead && page.oneOffSection?.lead) oneOffLead.textContent = page.oneOffSection.lead;
+
+    const galleryRoot = document.getElementById("events-page-gallery");
+    if (galleryRoot && page.gallery?.length) {
+      const parts = await Promise.all(
+        page.gallery.map(async (g, i) => {
+          const src = window.WSConfig?.resolveMediaSrc
+            ? await WSConfig.resolveMediaSrc(g.image)
+            : g.image;
+          const wide = i === 0 ? " photo-wide" : "";
+          return `<figure class="reveal-photo visible${wide}"><img src="${src}" alt="${g.alt || ""}" loading="lazy" /><figcaption>${g.caption || ""}</figcaption></figure>`;
+        })
+      );
+      galleryRoot.innerHTML = parts.join("");
+      galleryRoot.classList.add("visible");
+    }
+  }
+
   function applyStats(stats) {
     const bar = document.getElementById("home-stats");
     if (!bar || !stats?.length) return;
@@ -159,13 +202,60 @@
       .join("");
   }
 
+  function pageIdFromPath() {
+    const path = location.pathname.replace(/\.html$/i, "").replace(/\/$/, "") || "/";
+    if (path === "/" || path.endsWith("/index")) return "index";
+    if (path.endsWith("/order")) return "order";
+    if (path.endsWith("/happy-hour")) return "happyHour";
+    if (path.endsWith("/about")) return "about";
+    if (path.endsWith("/contact")) return "contact";
+    if (path.endsWith("/private-events")) return "privateEvents";
+    return null;
+  }
+
+  function applyPageHeroes(site) {
+    const pageId = pageIdFromPath();
+    if (!pageId || pageId === "index") return;
+    const hero = site.pages?.[pageId]?.hero;
+    if (!hero) return;
+    const root =
+      document.querySelector(`[data-page-hero="${pageId}"]`) ||
+      document.querySelector("main .page-hero:not([data-hero])");
+    if (!root) return;
+    const eyebrow = root.querySelector("[data-page-hero-eyebrow]");
+    const title = root.querySelector("[data-page-hero-title]");
+    const lead = root.querySelector("[data-page-hero-lead]");
+    if (eyebrow && hero.eyebrow) eyebrow.textContent = hero.eyebrow;
+    if (title && hero.title) title.textContent = hero.title;
+    if (lead && hero.lead) lead.textContent = hero.lead;
+  }
+
+  function applyPageSections(site) {
+    const pageId = pageIdFromPath();
+    if (!pageId || pageId === "index") return;
+    const blocks = site.pages?.[pageId]?.blocks;
+    if (blocks && window.WSPageBlocks) {
+      WSPageBlocks.applyAll(blocks);
+    }
+  }
+
   async function apply() {
     try {
-      const site = await WSConfig.get("site");
+      const usePreview =
+        (params.has("heroPreview") ||
+          params.has("homepagePreview") ||
+          params.has("preview") ||
+          params.has("pagePreview") ||
+          params.has("pageEditPreview")) &&
+        window.WSConfig?.getForPreview;
+      const site = usePreview ? await WSConfig.getForPreview("site") : await WSConfig.get("site");
       applyTheme(site.theme);
       applyBindings(site);
       await applyAllHeroes(site);
+      await applyEventsPage(site);
       applyStats(site.stats);
+      applyPageHeroes(site);
+      applyPageSections(site);
       document.dispatchEvent(new CustomEvent("ws-site-applied", { detail: { site } }));
     } catch (e) {
       console.warn("site-apply:", e);

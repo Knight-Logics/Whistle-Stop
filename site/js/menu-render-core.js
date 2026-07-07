@@ -30,14 +30,17 @@ window.WSMenuRender = (function () {
     if (item.link) {
       desc = `<p><a href="${escapeHtml(item.link)}">See happy hour →</a></p>`;
     }
+    const thumb = item.image
+      ? `<div class="menu-item-thumb"><img src="${escapeHtml(item.image)}" alt="" loading="lazy" decoding="async" /></div>`
+      : "";
     const visibleClass = initialVisible ? " visible" : "";
     return `
-      <article class="menu-item menu-item--animate${visibleClass}" style="--item-i: ${index}">
+      <article class="menu-item menu-item--animate${item.image ? " menu-item--has-thumb" : ""}${visibleClass}" style="--item-i: ${index}">
         <div class="menu-item-body">
           <h3>${escapeHtml(item.name)}</h3>
           ${desc}
         </div>
-        ${actions}
+        ${actions}${thumb}
       </article>`;
   }
 

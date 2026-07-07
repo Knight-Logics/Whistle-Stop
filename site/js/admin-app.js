@@ -13,20 +13,18 @@
     socialManager: null,
   };
 
-  /* Operational tabs — unchanged behavior. Mock tabs are preview-only GUIs. */
+  /* Operational tabs save real content. Mock tabs are preview-only modules. */
   const NAV_SECTIONS = [
     {
-      title: "Draft Website Manager",
+      title: "Website",
       tabs: [
-        { id: "events", label: "Events", hint: "Guest-facing dates & times" },
+        { id: "events", label: "Events", hint: "Calendar, music & promos" },
         { id: "menus", label: "Menus", hint: "Food & drink menus" },
-        { id: "promos", label: "Events Promos", hint: "Photo cards on the site" },
-        { id: "homepage", label: "Homepage", hint: "Homepage content" },
-        { id: "heroes", label: "Hero Images", hint: "Top banner photos" },
+        { id: "pages", label: "Other pages", hint: "Home, order, visit & more" },
       ],
     },
     {
-      title: "Marketing Manager",
+      title: "Marketing",
       tabs: [
         { id: "social", label: "Social Poster", hint: "Cross-post incl. GBP" },
         { id: "gbp", label: "Google Business Profile", hint: "Event dates & queue", mock: true },
@@ -34,10 +32,9 @@
         {
           id: "campaign-calendar",
           label: "Campaign Calendar",
-          hint: "When to promote what (staff only)",
-          mock: true,
+          hint: "Interest checks + outreach CRM",
         },
-        { id: "qr-codes", label: "QR Codes", hint: "Trackable print codes", mock: true },
+        { id: "qr-codes", label: "QR Codes", hint: "Trackable print codes" },
       ],
     },
     {
@@ -63,7 +60,7 @@
 
   const TABS = NAV_SECTIONS.flatMap((s) => s.tabs);
   const MOCK_TABS = new Set(TABS.filter((t) => t.mock).map((t) => t.id));
-  const DRAFT_MANAGER_TABS = new Set(["events", "menus", "promos", "homepage", "heroes"]);
+  const DRAFT_MANAGER_TABS = new Set(["events", "menus", "pages"]);
 
   function escHtml(s) {
     return String(s ?? "")
@@ -202,7 +199,7 @@
         <aside class="admin-sidebar">
           <div class="admin-sidebar-brand">
             <strong>Whistle Stop</strong>
-            <span>Draft content editor</span>
+            <span>Staff portal</span>
           </div>
           <nav class="admin-nav" id="admin-nav"></nav>
           <div style="padding:1rem 1.25rem 0">
@@ -242,6 +239,10 @@
     await renderTab();
   }
 
+  window.addEventListener("ws-admin-switch-tab", (e) => {
+    if (e.detail?.tab) switchTab(e.detail.tab);
+  });
+
   const PREVIEW_SECTIONS = {
     events: "events",
     menus: "menus",
@@ -251,6 +252,9 @@
 
   async function switchTab(id) {
     if (state.tab && state.tab !== id) {
+      if (state.tab === "campaign-calendar") {
+        window.WSAdminCampaigns?.destroy();
+      }
       const section = PREVIEW_SECTIONS[state.tab];
       if (section) WSConfig.clearPreview(section);
       if (state.tab === "homepage") WSConfig.clearPreview("promos");
@@ -267,7 +271,8 @@
     const main = $("#admin-main");
     const isMockTab = MOCK_TABS.has(state.tab);
     const isSocialTab = state.tab === "social";
-    const isWideTab = ["heroes", "events", "menus", "promos", "homepage", "social"].includes(state.tab) || isMockTab;
+    const isCampaignTab = state.tab === "campaign-calendar";
+    const isWideTab = ["heroes", "events", "menus", "pages", "social", "qr-codes", "campaign-calendar"].includes(state.tab) || isMockTab;
     main.classList.toggle("admin-main--wide", isWideTab);
     main.classList.toggle("admin-main--draft-manager", DRAFT_MANAGER_TABS.has(state.tab));
     main.innerHTML = `
@@ -277,7 +282,9 @@
           ${
             isSocialTab
               ? `<span class="admin-social-top-hint">Posts publish via the local bridge — no save button needed.</span>`
-              : isMockTab
+              : isCampaignTab
+                ? `<span class="admin-social-top-hint">Interest-check signups + outreach CRM — syncs via knightlogics.com API when live.</span>`
+                : isMockTab
                 ? `<span class="admin-social-top-hint">Preview module — not connected to live data yet.</span>`
                 : `<span class="admin-draft-state">Draft preview mode</span><button type="button" class="btn btn-outline" id="admin-save-tab">Save draft</button><button type="button" class="btn btn-primary" id="admin-publish-live">Publish live</button>`
           }
@@ -291,24 +298,22 @@
     try {
       switch (state.tab) {
         case "events":
-          g.renderEvents(panel, state.events, state.images);
+          WSConfig.invalidateCache("events");
+          WSConfig.invalidateCache("promos");
+          state.events = await WSConfig.get("events");
+          state.promos = await WSConfig.get("promos");
+          g.renderEvents(panel, state.events, state.images, state.promos, state.site);
           break;
         case "menus":
           WSConfig.invalidateCache("menus");
           state.menus = await WSConfig.get("menus");
-          g.renderMenus(panel, state.menus);
+          g.renderMenus(panel, state.menus, state.images);
           break;
-        case "promos":
-          g.renderPromos(panel, state.promos || { homepageFeatured: [], eventsPageFeatured: [] }, state.images);
-          break;
-        case "homepage":
-          g.renderHomepage(panel, state.site, state.images, state.promos);
+        case "pages":
+          g.renderPages(panel, state.site, state.images, state.promos);
           break;
         case "social":
           g.renderSocial(panel, state.socialManager, state.site);
-          break;
-        case "heroes":
-          g.renderHeroes(panel, state.site, state.images);
           break;
         case "gbp":
           window.WSAdminMockups?.renderGbp(panel);
@@ -317,10 +322,14 @@
           window.WSAdminMockups?.renderReviews(panel);
           break;
         case "campaign-calendar":
-          window.WSAdminMockups?.renderCampaignCalendar(panel);
+          await window.WSAdminCampaigns?.render(panel);
           break;
         case "qr-codes":
-          window.WSAdminMockups?.renderQrCodes(panel);
+          if (!state.events) {
+            WSConfig.invalidateCache("events");
+            state.events = await WSConfig.get("events");
+          }
+          window.WSAdminQRCodes?.render(panel, { events: state.events });
           break;
         case "ordering-hub":
           window.WSAdminMockups?.renderOrderingHub(panel);
@@ -435,28 +444,27 @@
         case "events":
           state.events = g.collectEvents(panel, state.events);
           WSConfig.save("events", state.events);
+          if (panel._getPromos) {
+            state.promos = panel._getPromos(state.promos);
+            WSConfig.save("promos", state.promos);
+          }
+          if (panel._collectEventsSite) {
+            state.site = panel._collectEventsSite(state.site);
+            WSConfig.save("site", state.site);
+          }
           break;
         case "menus":
           state.menus = panel._getMenus ? panel._getMenus() : g.collectMenus(panel, state.menus);
           WSConfig.save("menus", state.menus);
           break;
-        case "promos":
-          state.promos = g.collectPromos(panel, state.promos);
-          WSConfig.save("promos", state.promos);
-          break;
-        case "homepage":
-          state.site = g.collectHomepage(panel, state.site);
-          WSConfig.save("site", state.site);
-          if (panel._getHomepagePromos) {
-            state.promos = panel._getHomepagePromos(state.promos);
+        case "pages":
+          if (panel._collectPagesDraft) {
+            const draft = panel._collectPagesDraft({ site: state.site, promos: state.promos });
+            state.site = draft.site;
+            state.promos = draft.promos;
+            WSConfig.save("site", state.site);
             WSConfig.save("promos", state.promos);
           }
-          break;
-        case "heroes":
-          state.site = panel._collectHeroes
-            ? panel._collectHeroes(state.site)
-            : g.collectHeroes(panel, state.site);
-          WSConfig.save("site", state.site);
           break;
         case "social":
           return true;

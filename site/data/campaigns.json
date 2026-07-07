@@ -1,0 +1,48 @@
+{
+  "campaigns": [
+    {
+      "id": "dnd-game-night",
+      "slug": "dnd-game-night",
+      "type": "interest_check",
+      "status": "interest_check",
+      "title": "Dungeons & Dragons Game Night",
+      "headline": "Interested in a D&D Night at Whistle Stop?",
+      "description": "We're gauging interest before we schedule a recurring tabletop night on the patio. Tell us if you'd play, DM, or bring friends — no commitment until we hit our signup goal.",
+      "signupGoal": 12,
+      "preferredWindows": ["Wednesday evenings", "Sunday afternoons"],
+      "channels": ["qr", "email", "social", "flyer"],
+      "landingPath": "campaign.html",
+      "socialDraft": "🎲 Thinking about hosting Dungeons & Dragons at Whistle Stop in Safety Harbor — patio, cold drinks, good company. Interested? Scan the QR or sign up — we'll only schedule it if enough players raise their hand.",
+      "emailSubject": "D&D at Whistle Stop? — quick interest check",
+      "emailBody": "Hi {{name}},\n\nWhistle Stop Grill & Bar on Main Street in Safety Harbor is exploring a Dungeons & Dragons game night — but only if enough locals are interested first.\n\nIf you'd play or DM, take 30 seconds to join the interest list:\n{{signup_link}}\n\nNo date is set yet. If we hit {{goal}} signups, we'll pick a night and announce it.\n\n— Whistle Stop team",
+      "leadTypes": [
+        {
+          "id": "game_stores",
+          "label": "Local game & hobby shops",
+          "description": "Tabletop retailers, comic shops, game cafes near Safety Harbor / Clearwater"
+        },
+        {
+          "id": "community_boards",
+          "label": "Community & library boards",
+          "description": "Safety Harbor library, rec centers, marina bulletin boards"
+        },
+        {
+          "id": "trivia_regulars",
+          "label": "Trivia & game-night regulars",
+          "description": "Guests who already come for bingo, trivia, cornhole"
+        },
+        {
+          "id": "meetup_adjacent",
+          "label": "Meetup / tabletop groups",
+          "description": "Local D&D, board game, and RPG meetup organizers"
+        },
+        {
+          "id": "vip_list",
+          "label": "VIP & email list",
+          "description": "Past guests who opted in for events (demo: Knight Logics test list)"
+        }
+      ],
+      "createdAt": "2026-07-01T12:00:00.000Z"
+    }
+  ]
+}

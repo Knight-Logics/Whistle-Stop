@@ -1,5 +1,8 @@
 /* Homepage gallery, signature cards, FAQ from site.json */
 (function () {
+  const params = new URLSearchParams(window.location.search);
+  const isHomepagePreview = params.has("homepagePreview");
+
   function escapeHtml(s) {
     return String(s)
       .replace(/&/g, "&amp;")
@@ -8,9 +11,16 @@
       .replace(/"/g, "&quot;");
   }
 
+  async function loadSite() {
+    if (isHomepagePreview && window.WSConfig?.getForPreview) {
+      return WSConfig.getForPreview("site");
+    }
+    return WSConfig.get("site");
+  }
+
   async function render() {
     try {
-      const site = await WSConfig.get("site");
+      const site = await loadSite();
       const hp = site.homepage || {};
 
       const gallery = document.getElementById("home-gallery");
@@ -68,5 +78,9 @@
   }
 
   document.addEventListener("DOMContentLoaded", render);
-  document.addEventListener("ws-config-updated", render);
+  document.addEventListener("ws-config-updated", (e) => {
+    const section = e.detail?.section;
+    if (section && section !== "site" && section !== "all") return;
+    render();
+  });
 })();

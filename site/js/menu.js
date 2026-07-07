@@ -131,6 +131,18 @@
       </div>`;
   }
 
+  async function resolveMenuThumbs() {
+    if (!window.WSConfig?.resolveMediaSrc) return;
+    await Promise.all(
+      [...root.querySelectorAll(".menu-item-thumb img")].map(async (img) => {
+        const src = img.getAttribute("src");
+        if (!src) return;
+        const resolved = await WSConfig.resolveMediaSrc(src);
+        if (resolved) img.src = resolved;
+      })
+    );
+  }
+
   function render() {
     const toolbarSlot = document.getElementById("menu-toolbar-slot");
     const toolbarHtml = `
@@ -156,6 +168,7 @@
 
     bindEvents();
     window.WSUI?.refreshScrollReveal?.();
+    resolveMenuThumbs();
     if (window.WSPickupOrder) {
       window.WSPickupOrder.bindMenu(root);
       window.WSPickupOrder.updateBar();

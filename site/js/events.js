@@ -10,11 +10,13 @@
 
   const upcomingEls = document.querySelectorAll("#upcoming-events, #home-upcoming");
 
-  const lineupEls = document.querySelectorAll("#live-music-lineup");
-
   const calendarEl = document.getElementById("event-calendar");
 
-  if (!upcomingEls.length && !lineupEls.length && !calendarEl) return;
+  const recurringCardsEl = document.getElementById("promo-cards-events");
+
+  const oneOffEl = document.getElementById("events-one-off");
+
+  if (!upcomingEls.length && !calendarEl && !recurringCardsEl && !oneOffEl) return;
 
 
 
@@ -89,6 +91,35 @@
 
   }
 
+  async function resolveImg(src) {
+    if (!src) return "";
+    return window.WSConfig?.resolveMediaSrc ? await WSConfig.resolveMediaSrc(src) : src;
+  }
+
+  function eventImage(e) {
+    if (e.image) return e.image;
+    if (e.category === "live-music") return "assets/live-music.webp";
+    return "assets/gallery/WSGoodTimes.webp";
+  }
+
+  const DOWS_FULL = [
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+  ];
+
+  function formatRecurringTag(ev) {
+    const days = ev.dayOfWeek || [];
+    if (days.length === 7) return "Every day";
+    if (days.length === 1) return `Every ${DOWS_FULL[days[0]]}`;
+    if (days.length === 2 && days.includes(5) && days.includes(6)) return "Fri & Sat";
+    return days.map((d) => DOWS_SHORT[d]).join(" · ");
+  }
+
+  function formatOneOffTag(e) {
+    const datePart = `${DOWS_SHORT[e.date.getDay()]}, ${MONTHS_SHORT[e.date.getMonth()]} ${e.date.getDate()}`;
+    const timeStr = eventTimeLabel(e);
+    return timeStr ? `${datePart} · ${timeStr}` : datePart;
+  }
+
 
 
   function eventTimeLabel(e) {
@@ -103,6 +134,11 @@
 
 
 
+  function adminEventAttrs(e) {
+    if (!isPreview) return "";
+    return ` data-admin-event-id="${esc(e.id || "")}" data-admin-event-date="${esc(formatISODate(e.date))}" data-admin-event-title="${esc(e.title)}" data-admin-event-start="${esc(e.startTime || "")}" data-admin-event-recurring="${e.recurring ? "1" : "0"}" tabindex="0" role="button"`;
+  }
+
   function renderCalEventChip(e) {
 
     const timeStr = eventTimeLabel(e);
@@ -113,9 +149,7 @@
 
     const timeHtml = timeStr ? `<span class="ev-time">${esc(timeStr)}</span>` : "";
 
-    const adminAttrs = isPreview
-      ? ` data-admin-event-id="${esc(e.id || "")}" data-admin-event-date="${esc(formatISODate(e.date))}" data-admin-event-title="${esc(e.title)}" data-admin-event-start="${esc(e.startTime || "")}" data-admin-event-recurring="${e.recurring ? "1" : "0"}"`
-      : "";
+    const adminAttrs = adminEventAttrs(e);
 
     return `<span class="${chipClass}" title="${esc(tip)}"${adminAttrs}>${timeHtml}<span class="ev-title">${esc(e.title)}</span></span>`;
 
@@ -145,32 +179,76 @@
   }
 
   function bindAdminCalendarClicks() {
-    if (!isPreview || !calendarEl || calendarEl.dataset.adminClickBound) return;
-    calendarEl.dataset.adminClickBound = "1";
-    calendarEl.addEventListener("click", (event) => {
-      const chip = event.target.closest("[data-admin-event-id]");
-      if (chip) {
-        event.preventDefault();
-        event.stopPropagation();
-        postAdminCalendarMessage({
-          type: "event",
-          id: chip.dataset.adminEventId,
-          date: chip.dataset.adminEventDate,
-          title: chip.dataset.adminEventTitle,
-          startTime: chip.dataset.adminEventStart,
-          recurring: chip.dataset.adminEventRecurring === "1",
-        });
-        return;
-      }
+    if (!isPreview || calendarEl?.dataset.adminClickBound) return;
+    if (calendarEl) {
+      calendarEl.dataset.adminClickBound = "1";
+      calendarEl.addEventListener("click", onAdminPreviewClick);
+    }
+  }
 
-      const day = event.target.closest("[data-admin-date]");
-      if (!day) return;
+  function onAdminPreviewClick(event) {
+    const chip = event.target.closest("[data-admin-event-date]");
+    if (chip) {
       event.preventDefault();
+      event.stopPropagation();
       postAdminCalendarMessage({
-        type: "day",
-        date: day.dataset.adminDate,
+        type: "event",
+        id: chip.dataset.adminEventId,
+        date: chip.dataset.adminEventDate,
+        title: chip.dataset.adminEventTitle,
+        startTime: chip.dataset.adminEventStart,
+        recurring: chip.dataset.adminEventRecurring === "1",
+      });
+      return;
+    }
+
+    const day = event.target.closest("[data-admin-date]");
+    if (!day) return;
+    event.preventDefault();
+    postAdminCalendarMessage({
+      type: "day",
+      date: day.dataset.adminDate,
+    });
+  }
+
+  function bindAdminPreviewClicks() {
+    if (!isPreview) return;
+    ["upcoming-events", "events-one-off"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el || el.dataset.adminClickBound) return;
+      el.dataset.adminClickBound = "1";
+      el.addEventListener("click", onAdminPreviewClick);
+      el.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        const chip = event.target.closest("[data-admin-event-date]");
+        if (!chip) return;
+        event.preventDefault();
+        onAdminPreviewClick(event);
       });
     });
+    bindAdminSectionClicks();
+  }
+
+  function bindAdminSectionClicks() {
+    if (!isPreview || document.body.dataset.adminSectionsBound) return;
+    document.body.dataset.adminSectionsBound = "1";
+    document.querySelectorAll("[data-admin-section]").forEach((el) => {
+      el.classList.add("admin-preview-clickable");
+      el.setAttribute("title", "Click to edit this section");
+    });
+    document.addEventListener(
+      "click",
+      (event) => {
+        if (!isPreview) return;
+        if (event.target.closest("[data-admin-event-date], [data-admin-date], [data-admin-promo-id], [data-admin-recurring-id]")) return;
+        const section = event.target.closest("[data-admin-section]");
+        if (!section) return;
+        event.preventDefault();
+        event.stopPropagation();
+        postAdminCalendarMessage({ type: "section", section: section.dataset.adminSection });
+      },
+      true
+    );
   }
 
 
@@ -210,6 +288,8 @@
           startTime: ev.startTime,
 
           endTime: ev.endTime,
+
+          image: ev.image || "",
 
           recurring: true,
 
@@ -253,9 +333,11 @@
 
           endTime: p.endTime,
 
+          image: p.image || "",
+
           recurring: false,
 
-          id: p.date + "-" + p.title,
+          id: p.id || p.date + "-" + p.title,
 
         });
 
@@ -273,9 +355,83 @@
 
 
 
-  /** Home + highlights: skip noise and duplicate live-music rows */
+  /** Calendar: show everything except generic “Live Music” when a named act exists that day */
 
-  function filterForHome(events) {
+  function filterCalendarEvents(events) {
+
+    const byDay = new Map();
+
+    events.forEach((e) => {
+
+      const key = e.date.toDateString();
+
+      if (!byDay.has(key)) byDay.set(key, []);
+
+      byDay.get(key).push(e);
+
+    });
+
+
+
+    const out = [];
+
+    byDay.forEach((dayEvents) => {
+
+      const namedActs = dayEvents.filter(
+
+        (e) =>
+
+          e.category === "live-music" &&
+
+          !e.recurring &&
+
+          e.title !== "Live Music" &&
+
+          e.title !== "Open Mic Night"
+
+      );
+
+      const hasNamedAct = namedActs.length > 0;
+
+
+
+      dayEvents.forEach((e) => {
+
+        if (hasNamedAct && e.title === "Live Music") return;
+
+        out.push(e);
+
+      });
+
+    });
+
+
+
+    const seen = new Set();
+
+    return out
+
+      .sort((a, b) => a.date - b.date || (a.startTime || "").localeCompare(b.startTime || ""))
+
+      .filter((e) => {
+
+        const key = `${e.date.toDateString()}|${e.title}|${e.startTime || ""}`;
+
+        if (seen.has(key)) return false;
+
+        seen.add(key);
+
+        return true;
+
+      });
+
+  }
+
+
+
+  /** Home + lineup highlights: skip noise and duplicate live-music rows */
+
+  function filterDisplayEvents(events) {
 
     const byDay = new Map();
 
@@ -369,21 +525,21 @@
           : "";
     const tagClass = e.category === "live-music" ? "music" : "";
     const tagLabel =
-      e.category === "live-music" && !e.recurring
+      e.category === "live-music"
         ? "Featured act"
-        : e.recurring
-          ? "Weekly"
+        : e.category === "specials"
+          ? "Special"
           : "This date";
 
     return `
-      <article class="upcoming-card reveal">
+      <article class="upcoming-card reveal${isPreview ? " admin-preview-clickable" : ""}"${adminEventAttrs(e)}>
         <div class="upcoming-card-date">
           <span class="day">${e.date.getDate()}</span>
           <span class="month">${MONTHS_SHORT[e.date.getMonth()]}</span>
         </div>
-        <h3>${e.title}</h3>
-        ${timeStr ? `<div class="time">${timeStr}</div>` : ""}
-        ${e.summary ? `<p class="upcoming-card-summary">${e.summary}</p>` : ""}
+        <h3>${esc(e.title)}</h3>
+        ${timeStr ? `<div class="time">${esc(timeStr)}</div>` : ""}
+        ${e.summary ? `<p class="upcoming-card-summary">${esc(e.summary)}</p>` : ""}
         <span class="tag ${tagClass}">${tagLabel}</span>
       </article>`;
   }
@@ -566,7 +722,7 @@
 
 
 
-  function renderUpcoming(container, limit = 8) {
+  async function renderUpcoming(container, limit = 8) {
 
     const isHome = container.id === "home-upcoming";
 
@@ -582,7 +738,7 @@
 
     let events = getEventsInRange(today, end).filter((e) => e.date >= today);
 
-    if (isHome) events = filterForHome(events);
+    if (isHome) events = filterDisplayEvents(events);
 
 
 
@@ -608,10 +764,8 @@
 
 
 
-    events = filterForHome(events);
+    events = filterDisplayEvents(events);
     events = events.slice(0, limit);
-
-
 
     container.innerHTML = `<div class="upcoming-grid" role="list">${events
 
@@ -669,7 +823,7 @@
 
 
 
-    const events = getEventsInRange(startPad, endPad);
+    const events = filterCalendarEvents(getEventsInRange(startPad, endPad));
 
     const byDay = {};
 
@@ -785,106 +939,135 @@
 
 
 
-  function renderLineup(container, limit = 10) {
+  async function renderOneOffEvents() {
+    const root = oneOffEl;
+    if (!root) return;
 
     const today = new Date();
-
     today.setHours(0, 0, 0, 0);
-
     const end = new Date(today);
+    end.setDate(end.getDate() + 60);
 
-    end.setDate(end.getDate() + 35);
-
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-
-
-    const events = filterForHome(
-
-      getEventsInRange(today, end).filter(
-
-        (e) => e.date >= today && e.category === "live-music"
-
-      )
-
-    ).slice(0, limit);
-
-
+    const events = getEventsInRange(today, end)
+      .filter((e) => e.date >= today && !e.recurring)
+      .slice(0, 24);
 
     if (!events.length) {
-
-      container.innerHTML =
-
-        '<h2>Upcoming acts</h2><p style="color:var(--text-muted);margin:0">Check the <a href="events.html">events calendar</a> for the latest lineup.</p>';
-
+      root.innerHTML =
+        '<p style="color:var(--text-muted);margin:0">No special one-time events on the calendar yet — check back or browse the month above.</p>';
       return;
-
     }
 
+    root.innerHTML = `<div class="card-grid cols-2">${(
+      await Promise.all(
+        events.map(async (e) => {
+          const src = await resolveImg(eventImage(e));
+          const tagClass =
+            e.category === "live-music" ? " music" : e.category === "specials" ? " specials" : "";
+          return `
+      <article class="card reveal visible${isPreview ? " admin-preview-clickable" : ""}"${adminEventAttrs(e)}>
+        <div class="card-img card-img--media"><img src="${esc(src)}" alt="${esc(e.title)}" loading="lazy" decoding="async" /></div>
+        <div class="card-body">
+          <h3>${esc(e.title)}</h3>
+          <p>${esc(e.summary || "")}</p>
+          <div class="card-meta"><span class="tag${tagClass}">${esc(formatOneOffTag(e))}</span></div>
+        </div>
+      </article>`;
+        })
+      )
+    ).join("")}</div>`;
 
-
-    container.innerHTML = `<h2>Upcoming acts</h2>${events
-
-      .map((e) => {
-
-        const timeStr =
-
-          e.startTime && e.endTime
-
-            ? `${formatTime(e.startTime)} – ${formatTime(e.endTime)}`
-
-            : e.startTime
-
-              ? formatTime(e.startTime)
-
-              : "";
-
-        return `
-
-        <div class="lineup-row">
-
-          <div>
-
-            <div class="lineup-date">${days[e.date.getDay()]}, ${months[e.date.getMonth()]} ${e.date.getDate()}</div>
-
-            ${timeStr ? `<div class="lineup-time">${timeStr}</div>` : ""}
-
-          </div>
-
-          <div class="lineup-act">${e.title}</div>
-
-        </div>`;
-
-      })
-
-      .join("")}`;
-
+    window.WSUI?.refreshScrollReveal?.();
   }
 
 
 
-  function renderAll() {
+  async function renderRecurringFavorites() {
+    const root = recurringCardsEl;
+    if (!root || !data.recurring?.length) return;
 
-    upcomingEls.forEach((el) => renderUpcoming(el, el.id === "home-upcoming" ? 6 : 24));
+    const cards = data.recurring.filter((ev) => ev.title);
 
-    lineupEls.forEach((el) => renderLineup(el, 10));
+    if (!cards.length) {
+      root.innerHTML = "";
+      return;
+    }
+
+    root.innerHTML = (
+      await Promise.all(
+        cards.map(async (ev) => {
+          const src = await resolveImg(eventImage(ev));
+          const tagClass = ev.category === "live-music" ? " music" : "";
+          const clickAttrs = isPreview
+            ? ` data-admin-recurring-id="${esc(ev.id)}" tabindex="0" role="button"`
+            : "";
+          return `
+      <article class="card reveal visible${isPreview ? " admin-preview-clickable" : ""}"${clickAttrs}>
+        <div class="card-img card-img--media"><img src="${esc(src)}" alt="${esc(ev.title)}" loading="lazy" decoding="async" /></div>
+        <div class="card-body">
+          <h3>${esc(ev.title)}</h3>
+          <p>${esc(ev.summary || "")}</p>
+          <div class="card-meta"><span class="tag${tagClass}">${esc(formatRecurringTag(ev))}</span></div>
+        </div>
+      </article>`;
+        })
+      )
+    ).join("");
+
+    window.WSUI?.refreshScrollReveal?.();
+  }
+
+
+
+  function bindAdminRecurringClicks() {
+    if (!isPreview || !recurringCardsEl || recurringCardsEl.dataset.adminRecurringBound) return;
+    recurringCardsEl.dataset.adminRecurringBound = "1";
+    const send = (card) => {
+      postAdminCalendarMessage({ type: "recurring", id: card.dataset.adminRecurringId });
+    };
+    recurringCardsEl.addEventListener("click", (event) => {
+      const card = event.target.closest("[data-admin-recurring-id]");
+      if (!card) return;
+      event.preventDefault();
+      event.stopPropagation();
+      send(card);
+    });
+    recurringCardsEl.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const card = event.target.closest("[data-admin-recurring-id]");
+      if (!card) return;
+      event.preventDefault();
+      send(card);
+    });
+  }
+
+
+
+  async function renderAll() {
+
+    await Promise.all([
+      ...Array.from(upcomingEls).map((el) => renderUpcoming(el, el.id === "home-upcoming" ? 6 : 24)),
+      renderRecurringFavorites(),
+      renderOneOffEvents(),
+    ]);
 
     renderCalendar();
 
+    bindAdminPreviewClicks();
+    bindAdminRecurringClicks();
   }
 
   renderAll();
 
   document.addEventListener("ws-config-updated", async (e) => {
-
     const section = e.detail?.section;
-
-    if (section && section !== "events" && section !== "all") return;
-
+    if (section === "site" || section === "all") bindAdminSectionClicks();
+    if (section && section !== "events" && section !== "site" && section !== "all") return;
     if (await loadData()) renderAll();
+  });
 
+  document.addEventListener("ws-site-applied", () => {
+    bindAdminSectionClicks();
   });
 
 })();

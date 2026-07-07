@@ -2,13 +2,38 @@
 
 (function () {
   const params = new URLSearchParams(window.location.search);
+
+  function isEventsPagePath() {
+    const path = location.pathname.replace(/\/$/, "") || "/";
+    return path.endsWith("/events") || /events\.html$/i.test(path);
+  }
+
+  function isHomePagePath() {
+    const path = location.pathname.replace(/\/$/, "") || "/";
+    return path === "/" || path.endsWith("/index") || /index\.html$/i.test(path);
+  }
+
+  const isFullEventsAdminPreview =
+    params.has("preview") && params.has("promoPreview") && isEventsPagePath();
+
+  const isHomepagePageEdit =
+    params.has("pageEditPreview") && params.has("homepagePreview") && isHomePagePath();
+
   if (params.has("promoPreview")) {
     document.documentElement.classList.add("ws-promo-preview-embed");
-    if (location.pathname.includes("events.html")) {
+    if (isFullEventsAdminPreview || isHomepagePageEdit) {
+      /* Full page admin preview — no crop classes */
+    } else if (isEventsPagePath()) {
       document.documentElement.classList.add("ws-promo-preview-events");
-    } else {
+    } else if (!params.has("homepagePreview")) {
       document.documentElement.classList.add("ws-promo-preview-home");
     }
+  }
+  if (params.has("homepagePreview")) {
+    document.documentElement.classList.add("ws-homepage-preview-embed");
+  }
+  if (params.has("pagePreview") || params.has("pageEditPreview")) {
+    document.documentElement.classList.add("ws-page-preview-embed");
   }
 
   function escapeHtml(s) {
@@ -73,9 +98,13 @@
 
     const alt = p.alt || p.title;
 
+    const clickAttrs = isFullEventsAdminPreview || isHomepagePageEdit
+      ? ` data-admin-promo-id="${escapeHtml(p.id || "")}" tabindex="0" role="button"`
+      : "";
+
     return `
 
-      <article class="card reveal visible${layoutClass} ${stagger || ""}">
+      <article class="card reveal visible${layoutClass}${isFullEventsAdminPreview || isHomepagePageEdit ? " admin-preview-clickable" : ""} ${stagger || ""}"${clickAttrs}>
 
         <div class="card-img card-img--media">${mediaHtml(src || fallback, mediaType, alt)}</div>
 
@@ -126,17 +155,11 @@
 
       const events = document.getElementById("promo-cards-events");
 
-      if (events && promos.eventsPageFeatured?.length) {
-
-        events.innerHTML = (
-
-          await Promise.all(promos.eventsPageFeatured.map((p) => cardHtml(p)))
-
-        ).join("");
-
-      }
+      /* Recurring favorites on the events page are rendered from events.json by events.js */
 
       window.WSUI?.refreshScrollReveal?.();
+
+      bindPromoAdminClicks();
 
     } catch (e) {
 
@@ -144,6 +167,37 @@
 
     }
 
+  }
+
+
+
+  function bindPromoAdminClicks() {
+    if (!isFullEventsAdminPreview && !isHomepagePageEdit) return;
+    const bindings = [
+      isHomepagePageEdit ? { root: document.getElementById("promo-cards-home"), source: "ws-page-preview" } : null,
+    ].filter((b) => b?.root);
+
+    bindings.forEach(({ root, source }) => {
+      if (root.dataset.adminClickBound) return;
+      root.dataset.adminClickBound = "1";
+      const send = (card) => {
+        window.parent.postMessage({ source, type: "promo", id: card.dataset.adminPromoId }, window.location.origin);
+      };
+      root.addEventListener("click", (event) => {
+        const card = event.target.closest("[data-admin-promo-id]");
+        if (!card) return;
+        event.preventDefault();
+        event.stopPropagation();
+        send(card);
+      });
+      root.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        const card = event.target.closest("[data-admin-promo-id]");
+        if (!card) return;
+        event.preventDefault();
+        send(card);
+      });
+    });
   }
 
 

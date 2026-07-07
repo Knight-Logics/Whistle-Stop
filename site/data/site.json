@@ -150,6 +150,9 @@
       ]
     },
     "events": {
+      "eyebrow": "What's happening",
+      "titleLine1": "Whistle Stop Events & Live Music",
+      "lead": "One calendar for everything — update performers in one place instead of redesigning graphics every month.",
       "panels": [
         "assets/gallery/WSGirls.webp",
         "assets/gallery/WSCornHole.webp",
@@ -166,6 +169,9 @@
       ]
     },
     "contact": {
+      "eyebrow": "915 Main Street · Safety Harbor, FL",
+      "titleLine1": "Visit Whistle Stop",
+      "lead": "Downtown Safety Harbor — steps from the marina, Philippe Park, and the resort spa district.",
       "panels": [
         "assets/gallery/safety-harbor-resort-spa.webp",
         "assets/gallery/spa-marina-statue-mini-mall-safety-harbor.webp",
@@ -174,6 +180,9 @@
       ]
     },
     "happyHour": {
+      "eyebrow": "915 Main Street · Safety Harbor",
+      "titleLine1": "Safety Harbor Happy Hour",
+      "lead": "Downtown's favorite patio pour — craft cocktails, Hip Sips, and 18 taps under the oaks.",
       "panels": [
         "assets/gallery/WSBar.webp",
         "assets/gallery/WSDrinks.webp",
@@ -265,6 +274,75 @@
         "a": "View the main menu, seasonal menu, and bar menu on our menu page before you visit or order online."
       }
     ]
+  },
+  "pages": {
+    "events": {
+      "recurringSection": {
+        "title": "Recurring favorites",
+        "lead": "Weekly and monthly happenings that keep Main Street buzzing."
+      },
+      "oneOffSection": {
+        "title": "Coming up",
+        "lead": "Special dates, featured acts, and one-time happenings."
+      },
+      "liveMusicSidebar": {
+        "image": "assets/gallery/WSRocker.webp",
+        "imageAlt": "Live music on the patio",
+        "title": "On stage this week",
+        "body": "Open mic Tuesdays, featured artists Friday & Saturday, and acoustic Sundays — all pulled from the same schedule below. Staff updates one file; no monthly poster redesign.",
+        "bullets": [
+          { "label": "Tuesday", "text": "Open Mic Night" },
+          { "label": "Friday", "text": "Featured acts & Music Bingo" },
+          { "label": "Saturday", "text": "Headliner locals" },
+          { "label": "Sunday", "text": "Acoustic favorites" }
+        ]
+      },
+      "gallery": [
+        {
+          "image": "assets/gallery/WSAprilEvents.webp",
+          "caption": "Community nights",
+          "alt": "April events at Whistle Stop"
+        },
+        {
+          "image": "assets/gallery/WSMayEvents.webp",
+          "caption": "On the patio",
+          "alt": "May events"
+        },
+        {
+          "image": "assets/gallery/WSCornHole.webp",
+          "caption": "Cornhole",
+          "alt": "Cornhole league"
+        }
+      ]
+    },
+    "order": {
+      "hero": {
+        "eyebrow": "915 Main Street · Safety Harbor",
+        "title": "Order Whistle Stop Grill & Bar",
+        "lead": "Pickup from the kitchen on Main Street, or get delivery through our Uber Eats, DoorDash, and Grubhub partners."
+      }
+    },
+    "about": {
+      "hero": {
+        "eyebrow": "Open Since 1995",
+        "title": "About Whistle Stop Grill & Bar",
+        "lead": "Old Florida / New Vibe"
+      }
+    },
+    "happyHour": {
+      "sections": [
+        {
+          "title": "Main Street happy hour",
+          "body": "Whistle Stop Grill & Bar has been Safety Harbor's open-air hangout since 1995. When the afternoon light hits the patio, locals and visitors settle in for discounted drinks, bar bites, and the kind of easy conversation you only get on Main Street."
+        }
+      ]
+    },
+    "privateEvents": {
+      "hero": {
+        "title": "Private Events at Whistle Stop Grill & Bar",
+        "lead": "Birthdays, reunions, team dinners — open-air Safety Harbor atmosphere with room for 100+ guests."
+      }
+    }
   },
   "seo": {
     "priceRange": "$$",

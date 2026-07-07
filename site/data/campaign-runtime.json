@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-06T22:00:00.000Z",
+  "signups": [
+    {
+      "id": "su-demo-1",
+      "campaignId": "dnd-game-night",
+      "name": "Alex Rivera",
+      "email": "support@knightlogics.com",
+      "role": "player",
+      "preferredNight": "Wednesday",
+      "experience": "intermediate",
+      "source": "qr",
+      "createdAt": "2026-07-05T18:22:00.000Z",
+      "demo": true
+    },
+    {
+      "id": "su-demo-2",
+      "campaignId": "dnd-game-night",
+      "name": "Jordan Kim",
+      "email": "nknig@knightlogics.com",
+      "role": "dm",
+      "preferredNight": "Sunday",
+      "experience": "experienced",
+      "source": "email",
+      "createdAt": "2026-07-05T19:10:00.000Z",
+      "demo": true
+    }
+  ],
+  "outreachLeads": [
+    {
+      "id": "lead-1",
+      "campaignId": "dnd-game-night",
+      "leadType": "game_stores",
+      "name": "Critical Hit Games (demo)",
+      "email": "support@knightlogics.com",
+      "organization": "Critical Hit Games — Clearwater",
+      "status": "contacted",
+      "notes": "Knight Logics demo contact — replace with real shop email at launch",
+      "demo": true
+    },
+    {
+      "id": "lead-2",
+      "campaignId": "dnd-game-night",
+      "leadType": "game_stores",
+      "name": "Emerald City Comics (demo)",
+      "email": "nknig@knightlogics.com",
+      "organization": "Emerald City Comics",
+      "status": "new",
+      "notes": "Demo lead for pitch",
+      "demo": true
+    },
+    {
+      "id": "lead-3",
+      "campaignId": "dnd-game-night",
+      "leadType": "community_boards",
+      "name": "Safety Harbor Public Library",
+      "email": "support@knightlogics.com",
+      "organization": "Library events board",
+      "status": "new",
+      "demo": true
+    },
+    {
+      "id": "lead-4",
+      "campaignId": "dnd-game-night",
+      "leadType": "trivia_regulars",
+      "name": "Music Bingo Regular (demo)",
+      "email": "nknig@knightlogics.com",
+      "organization": "Whistle Stop guest",
+      "status": "interested",
+      "demo": true
+    },
+    {
+      "id": "lead-5",
+      "campaignId": "dnd-game-night",
+      "leadType": "meetup_adjacent",
+      "name": "Tampa Bay Tabletop Meetup (demo)",
+      "email": "support@knightlogics.com",
+      "organization": "Meetup organizer",
+      "status": "new",
+      "demo": true
+    },
+    {
+      "id": "lead-6",
+      "campaignId": "dnd-game-night",
+      "leadType": "vip_list",
+      "name": "Knight Logics VIP test",
+      "email": "support@knightlogics.com",
+      "organization": "Demo VIP segment",
+      "status": "queued",
+      "demo": true
+    }
+  ],
+  "emailLog": [
+    {
+      "id": "em-demo-1",
+      "campaignId": "dnd-game-night",
+      "leadId": "lead-1",
+      "to": "support@knightlogics.com",
+      "subject": "D&D at Whistle Stop? — quick interest check",
+      "status": "sent",
+      "sentAt": "2026-07-05T20:00:00.000Z",
+      "demo": true,
+      "via": "knight-logics-demo"
+    }
+  ]
+}

@@ -42,8 +42,78 @@ window.WSAdminMockups = (function () {
       soldout: "is-rust",
       live: "is-ok",
       paused: "is-muted",
+      phase1: "is-ok",
+      phase2: "is-pending",
+      disconnected: "is-muted",
     };
-    return `<span class="admin-mock-pill ${map[status] || ""}">${esc(status)}</span>`;
+    const labels = {
+      phase1: "Phase 1",
+      phase2: "Phase 2",
+      disconnected: "Not connected",
+    };
+    return `<span class="admin-mock-pill ${map[status] || ""}">${esc(labels[status] || status)}</span>`;
+  }
+
+  function phaseBanner(phase, title, blurb) {
+    const isP1 = phase === 1;
+    return `
+      <div class="admin-phase-banner admin-phase-banner--${phase}">
+        <span class="admin-phase-badge admin-phase-badge--${phase}">Phase ${phase}</span>
+        <div>
+          <strong>${esc(title)}</strong>
+          <p>${esc(blurb)}</p>
+        </div>
+      </div>`;
+  }
+
+  function renderOverview(panel) {
+    panel.innerHTML = `
+      ${phaseBanner(
+        1,
+        "Website, visibility &amp; staff tools — live in this demo",
+        "Replace the broken Wix site, fix search visibility, and give staff one place to update events, menus, promos, and homepage content — then publish without a developer."
+      )}
+      <div class="admin-roadmap-grid">
+        <div class="admin-mock-card admin-roadmap-card">
+          <h3>Phase 1 — what you get now</h3>
+          <ul class="admin-roadmap-list">
+            <li><strong>Fast, accessible website</strong> — menus, events, hours, photos, and local SEO structure.</li>
+            <li><strong>Staff admin (this portal)</strong> — edit events, menu copy &amp; prices, promo cards, homepage, hero images.</li>
+            <li><strong>Publish workflow</strong> — save drafts on device, publish live when ready.</li>
+            <li><strong>Social &amp; GBP hooks</strong> — cross-post events; deeper GBP automation in marketing previews.</li>
+            <li><strong>Order buttons today</strong> — guests pick pickup or delivery; site sends them to Toast / Uber / DoorDash / Grubhub (links, not a shared cart).</li>
+          </ul>
+          <p class="admin-roadmap-foot">Menus are editable here for launch. That gets you live quickly — but prices would be maintained in two places until Phase 2.</p>
+        </div>
+        <div class="admin-mock-card admin-roadmap-card admin-roadmap-card--phase2">
+          <h3>Phase 2 — after Toast API access</h3>
+          <ul class="admin-roadmap-list">
+            <li><strong>Toast menu sync</strong> — website pulls published menus &amp; pickup prices from Toast (Menus API). Staff change prices once in Toast Web.</li>
+            <li><strong>Toast pickup ordering</strong> — embed or deep-link Toast Online Ordering so checkout stays in Toast, not Wix.</li>
+            <li><strong>Order Out hub</strong> — one admin screen for pickup vs delivery paths, featured partners, and click tracking.</li>
+            <li><strong>Delivery app menus</strong> — Uber / DoorDash / Grubhub menus &amp; markup % sync <em>Toast → apps</em> (already how Toast integrations work; website does not push to apps).</li>
+            <li><strong>Smarter menu UX</strong> — optional pickup vs delivery price estimates so guests know app prices differ before they leave the site.</li>
+          </ul>
+          <p class="admin-roadmap-foot">Requires Toast partner/API credentials (<code>menus:read</code> at minimum). Toast approval is usually the longest step — not the website build.</p>
+        </div>
+      </div>
+      <div class="admin-mock-card admin-roadmap-timeline">
+        <h3>How long Phase 2 takes (typical)</h3>
+        <table class="admin-mock-table admin-mock-table--compact">
+          <thead><tr><th>Step</th><th>Who</th><th>Timing</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Toast API / partner access</strong></td><td>Whistle Stop + Toast</td><td>~1–3 weeks (varies)</td></tr>
+            <tr><td><strong>Pull menus to website</strong></td><td>Knight Logics</td><td>~3–5 days after credentials</td></tr>
+            <tr><td><strong>Order Out links + copy</strong></td><td>Knight Logics</td><td>Can ship in Phase 1; hub UI is Phase 2</td></tr>
+            <tr><td><strong>Embedded Toast checkout</strong></td><td>Toast product + site</td><td>~1 week after menu sync</td></tr>
+            <tr><td><strong>3PD delivery menu markup</strong></td><td>Toast config</td><td>Already Toast-side; not a website API job</td></tr>
+          </tbody>
+        </table>
+        <p class="admin-roadmap-foot">Menu sync and delivery integration are related but not the same pipeline: the Menus API feeds the <em>website</em>; delivery apps read from Toast's marketplace integrations separately.</p>
+      </div>
+      <div class="admin-roadmap-cta">
+        <p>Explore <strong>Menus</strong> in the sidebar for Phase 1 editing, or open <strong>Toast menu sync</strong> to see the Phase 2 upgrade path.</p>
+      </div>`;
   }
 
   function renderGbp(panel) {
@@ -450,58 +520,46 @@ window.WSAdminMockups = (function () {
       </div>`;
   }
 
-  function renderQrCodes(panel) {
-    panel.innerHTML = `
-      ${previewBanner(
-        "QR Code Manager",
-        "Create trackable QR codes for menus, reviews, gift cards, online ordering, events, and private parties."
-      )}
-      <div class="admin-mock-qr-grid">
-        ${[
-          ["Menu QR", "142 scans", "Table tents"],
-          ["Order pickup QR", "89 scans", "Bar & counter"],
-          ["Review QR", "56 scans", "Receipts"],
-          ["Gift card QR", "31 scans", "Host stand"],
-          ["Events QR", "24 scans", "Cornhole board"],
-          ["Private party QR", "12 scans", "Events page"],
-        ]
-          .map(
-            ([title, scans, place]) => `
-          <div class="admin-mock-card admin-qr-card">
-            <div class="admin-qr-box" aria-hidden="true"></div>
-            <strong>${esc(title)}</strong>
-            <span>${esc(scans)} · ${esc(place)}</span>
-            <button type="button" class="btn btn-outline admin-btn-sm" disabled>Preview tent</button>
-          </div>`
-          )
-          .join("")}
-      </div>`;
-  }
-
   function renderOrderingHub(panel) {
     panel.innerHTML = `
-      ${previewBanner(
-        "Ordering Hub",
-        "Manage every order path from one screen: direct pickup, delivery apps, gift cards, and call-in guidance."
+      ${phaseBanner(
+        2,
+        "Order Out hub",
+        "One screen to manage pickup (Toast), delivery partners, gift cards, and call-in — plus click stats. Ships after Toast ordering paths are wired."
       )}
       <div class="admin-mock-stats-row">
-        ${statCard("Pickup clicks", "318", "last 7 days")}
+        ${statCard("Pickup clicks", "318", "last 7 days · preview")}
+        ${statCard("Delivery clicks", "401", "Uber + DoorDash + Grubhub")}
         ${statCard("Gift card clicks", "47", "last 7 days")}
-        ${statCard("Call-in taps", "92", "last 7 days")}
       </div>
       <div class="admin-mock-card">
         <h3>Order paths</h3>
+        <p class="admin-mock-subnote">Phase 1 already sends guests to the right app or Toast URL. Phase 2 adds toggles, featured partner order, busy-night messaging, and unified reporting.</p>
         <table class="admin-mock-table">
-          <thead><tr><th>Channel</th><th>Status</th><th>Clicks</th><th>Featured</th></tr></thead>
+          <thead><tr><th>Channel</th><th>Phase</th><th>Status</th><th>Clicks</th><th>Featured</th></tr></thead>
           <tbody>
-            <tr><td><strong>Direct pickup (Toast)</strong></td><td>${statusPill("live")}</td><td>318</td><td><input type="checkbox" checked disabled /></td></tr>
-            <tr><td>DoorDash</td><td>${statusPill("live")}</td><td>204</td><td><input type="checkbox" checked disabled /></td></tr>
-            <tr><td>Uber Eats</td><td>${statusPill("live")}</td><td>156</td><td><input type="checkbox" disabled /></td></tr>
-            <tr><td>Grubhub</td><td>${statusPill("paused")}</td><td>41</td><td><input type="checkbox" disabled /></td></tr>
-            <tr><td>Gift cards</td><td>${statusPill("live")}</td><td>47</td><td><input type="checkbox" checked disabled /></td></tr>
+            <tr><td><strong>Direct pickup (Toast)</strong></td><td>${statusPill("phase1")}</td><td>${statusPill("live")}</td><td>318</td><td><input type="checkbox" checked disabled /></td></tr>
+            <tr><td>DoorDash</td><td>${statusPill("phase1")}</td><td>${statusPill("live")}</td><td>204</td><td><input type="checkbox" checked disabled /></td></tr>
+            <tr><td>Uber Eats</td><td>${statusPill("phase1")}</td><td>${statusPill("live")}</td><td>156</td><td><input type="checkbox" disabled /></td></tr>
+            <tr><td>Grubhub</td><td>${statusPill("phase1")}</td><td>${statusPill("paused")}</td><td>41</td><td><input type="checkbox" disabled /></td></tr>
+            <tr><td>Dual price hints on menu</td><td>${statusPill("phase2")}</td><td>${statusPill("queued")}</td><td>—</td><td><input type="checkbox" disabled /></td></tr>
+            <tr><td>Gift cards</td><td>${statusPill("phase1")}</td><td>${statusPill("live")}</td><td>47</td><td><input type="checkbox" checked disabled /></td></tr>
           </tbody>
         </table>
-        <label class="admin-mock-toggle"><input type="checkbox" disabled /> Show busy-night message on order page</label>
+        <label class="admin-mock-toggle"><input type="checkbox" disabled /> Show busy-night message on order page (Phase 2)</label>
+      </div>
+      <div class="admin-mock-card">
+        <h3>What guests experience today vs Phase 2</h3>
+        <div class="admin-roadmap-grid admin-roadmap-grid--split">
+          <div>
+            <strong>Phase 1 (links)</strong>
+            <p class="admin-mock-subnote">Menu → “Pickup or delivery” → opens Toast or the delivery app. Carts do not sync; app menus may show different prices than the website.</p>
+          </div>
+          <div>
+            <strong>Phase 2 (hub + sync)</strong>
+            <p class="admin-mock-subnote">Toast prices on the website stay current automatically. Optional pickup vs delivery estimates before guests leave. Admin controls which partner is featured.</p>
+          </div>
+        </div>
       </div>`;
   }
 
@@ -684,15 +742,52 @@ window.WSAdminMockups = (function () {
   }
 
   function renderIntegrations(panel) {
-    renderComingSoon(panel, "Integrations", [
-      ["Toast", "Pickup, curbside, and scheduled orders flow into POS.", ["POS", "Pickup", "Scheduled orders"]],
-      ["DoorDash", "Delivery status and featured link toggles.", ["Delivery"]],
-      ["Uber Eats", "Menu sync and order path visibility.", ["Delivery"]],
-      ["Grubhub", "Channel on/off and click tracking.", ["Delivery"]],
-      ["Google", "Business Profile posts, insights, and review sync.", ["GBP", "Maps"]],
-      ["Meta", "Facebook & Instagram publishing when credentials are connected.", ["Facebook", "Instagram"]],
-      ["TikTok", "Short-form promo drafts and scheduling.", ["Video"]],
-    ]);
+    panel.innerHTML = `
+      ${phaseBanner(
+        2,
+        "Toast menu sync",
+        "Pull published menus and pickup prices from Toast into the website — one source of truth. Staff keep editing menus in Toast Web; the site updates on a schedule or on demand."
+      )}
+      <div class="admin-mock-layout">
+        <div class="admin-mock-card">
+          <h3>Toast connection</h3>
+          <div class="admin-toast-sync-status">
+            <span class="admin-mock-pill is-muted">Not connected</span>
+            <p>Requires Toast partner API credentials (<code>menus:read</code>) for Whistle Stop's restaurant GUID.</p>
+          </div>
+          <div class="admin-form-grid cols-2" style="margin-top:1rem">
+            <label class="admin-mock-field"><span>Restaurant GUID</span><input type="text" value="" placeholder="From Toast Web" disabled /></label>
+            <label class="admin-mock-field"><span>Last menu sync</span><input type="text" value="Never — manual menus in Phase 1" disabled /></label>
+          </div>
+          <div class="admin-mock-actions">
+            <button type="button" class="btn btn-primary" disabled>Connect Toast API</button>
+            <button type="button" class="btn btn-outline" disabled>Sync menus now</button>
+          </div>
+          <p class="admin-mock-subnote is-warn">The Menus API is read-only: price changes happen in Toast, then sync to the website. This is the upgrade that removes double entry.</p>
+        </div>
+        <div class="admin-mock-card">
+          <h3>Why sync instead of typing prices twice?</h3>
+          <ul class="admin-roadmap-list">
+            <li>Toast is already the POS source of truth for in-store and pickup.</li>
+            <li>Website prices today are a separate copy — easy to drift (e.g. wings $9.90 on site vs $18.60 on Uber).</li>
+            <li>After sync, a price change in Toast can refresh the public menu automatically.</li>
+            <li>Delivery app menus still flow <strong>Toast → DoorDash / Uber / Grubhub</strong> with markup % — not from this admin screen.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="admin-mock-card" style="margin-top:1rem">
+        <h3>Integration map</h3>
+        <table class="admin-mock-table">
+          <thead><tr><th>System</th><th>Phase</th><th>What it does</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Toast Menus API</strong></td><td>${statusPill("phase2")}</td><td>Website menu &amp; pickup prices</td><td>${statusPill("disconnected")}</td></tr>
+            <tr><td><strong>Toast Online Ordering</strong></td><td>${statusPill("phase2")}</td><td>Pickup checkout (embed or deep link)</td><td>${statusPill("disconnected")}</td></tr>
+            <tr><td>DoorDash / Uber / Grubhub</td><td>${statusPill("phase1")}</td><td>Outbound links from website; menus via Toast</td><td>${statusPill("live")}</td></tr>
+            <tr><td>Google Business Profile</td><td>${statusPill("phase1")}</td><td>Events &amp; posts (Social Poster / GBP preview)</td><td>${statusPill("live")}</td></tr>
+            <tr><td>Meta / TikTok</td><td>${statusPill("phase2")}</td><td>Scheduled promo publishing</td><td>${statusPill("queued")}</td></tr>
+          </tbody>
+        </table>
+      </div>`;
   }
 
   function renderLiveMusic(panel) {
@@ -768,10 +863,10 @@ window.WSAdminMockups = (function () {
   }
 
   return {
+    renderOverview,
     renderGbp,
     renderReviews,
     renderCampaignCalendar,
-    renderQrCodes,
     renderOrderingHub,
     renderPrivateEvents,
     renderReports,

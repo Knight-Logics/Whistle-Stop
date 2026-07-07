@@ -92,8 +92,9 @@ window.WSAdminGUI = (function () {
     return `${base || "event"}-${Date.now().toString(36)}`;
   }
 
-  function addEventPanelHtml(dateStr) {
+  function addEventPanelHtml(dateStr, images) {
     const dow = dayOfWeekFromDate(dateStr);
+    const defaultImage = "assets/live-music.webp";
     return `
       <div id="modal-add-event-panel" class="admin-modal-add-panel" hidden>
         <div class="admin-modal-add-panel-inner">
@@ -118,6 +119,15 @@ window.WSAdminGUI = (function () {
               ${field("End time", `<input type="time" data-add-oneoff-field="endTime" value="21:30" />`)}
               ${field("Note (optional)", `<input data-add-oneoff-field="note" placeholder="e.g. Friday bandingo" />`)}
             </div>
+            ${photoGroupHtml({
+              groupId: "add-oneoff-image",
+              fieldName: "add.oneoff.image",
+              groupData: { image: defaultImage },
+              imagesData: images,
+              tags: ["events", "music", "gallery", "live-music"],
+              label: "Event photo",
+              skipAlt: true,
+            })}
           </div>
           <div id="modal-add-weekly-fields" hidden>
             <div class="admin-form-grid cols-2">
@@ -130,6 +140,15 @@ window.WSAdminGUI = (function () {
               ${weekOfMonthField("weekOfMonth", "", "data-add-weekly-field")}
             </div>
             <p class="admin-modal-add-hint">Check the days this repeats (e.g. Mon for every Monday). Use week of month only for events like “3rd Monday book club.”</p>
+            ${photoGroupHtml({
+              groupId: "add-weekly-image",
+              fieldName: "add.weekly.image",
+              groupData: { image: defaultImage },
+              imagesData: images,
+              tags: ["events", "music", "gallery", "community", "specials"],
+              label: "Event photo",
+              skipAlt: true,
+            })}
           </div>
           <button type="button" class="btn btn-primary admin-btn-sm" id="modal-add-event-submit">Add to calendar</button>
         </div>
@@ -160,8 +179,299 @@ window.WSAdminGUI = (function () {
       <input type="hidden" data-field="${esc(name)}" value="${esc(value || "")}" />`;
   }
 
+  function normalizePhotoGroup(data) {
+    const alt = data?.alt || data?.imageAlt || "";
+    const excluded = Array.isArray(data?.excluded)
+      ? [...data.excluded]
+      : Array.isArray(data?.excludedPaths)
+        ? [...data.excludedPaths]
+        : [];
+    if (data?.paths?.length) {
+      return { paths: [...data.paths], active: data.active || data.src || data.image || data.paths[0] || "", alt, excluded };
+    }
+    const src = data?.src || data?.image || "";
+    return { paths: src ? [src] : [], active: src, alt, excluded };
+  }
+
+  function getPhotoGroupVisiblePaths(paths, excluded, catalog) {
+    const hidden = new Set(excluded || []);
+    const custom = (paths || []).filter((p) => p && !hidden.has(p));
+    const fromCatalog = catalog.map((c) => c.path).filter((p) => p && !hidden.has(p));
+    return [...new Set([...custom, ...fromCatalog])];
+  }
+
+  function writePhotoGroupState(group, { paths, active, alt, excluded }) {
+    group.querySelector("[data-photo-paths]").value = JSON.stringify(paths || []);
+    group.querySelector("[data-photo-active]").value = active || "";
+    const excludedEl = group.querySelector("[data-photo-excluded]");
+    if (excludedEl) excludedEl.value = JSON.stringify(excluded || []);
+    const altInput = group.querySelector('input[data-block-field$=".alt"], input[data-field$=".alt"]');
+    if (altInput && alt !== undefined) altInput.value = alt;
+  }
+
+  async function resolvePhotoGroupImages(group) {
+    if (!group || !window.WSConfig?.resolveMediaSrc) return;
+    await Promise.all(
+      [...group.querySelectorAll(".admin-img-option img")].map(async (img) => {
+        const btn = img.closest(".admin-img-option");
+        const resolved = await WSConfig.resolveMediaSrc(btn?.dataset.path);
+        if (resolved) img.src = resolved;
+      })
+    );
+  }
+
+  function photoGroupHtml(opts) {
+    const {
+      groupId,
+      fieldName,
+      groupData,
+      imagesData,
+      tags,
+      label = "Photo",
+      skipAlt = false,
+      altBlockField,
+      altDataField,
+    } = opts;
+    const g = normalizePhotoGroup(groupData);
+    const catalog = getCatalog(imagesData).filter(
+      (img) => !tags?.length || tags.some((t) => img.tags?.includes(t))
+    );
+    const paths = getPhotoGroupVisiblePaths(g.paths, g.excluded, catalog);
+    const pickerButtons = paths
+      .map((path) => {
+        const cat = catalog.find((c) => c.path === path);
+        const selected = path === g.active ? " is-selected" : "";
+        return `
+          <button type="button" class="admin-img-option${selected}" data-path="${esc(path)}" title="${esc(cat?.label || path)}">
+            <img src="${esc(path)}" alt="" loading="lazy" draggable="false" />
+          </button>`;
+      })
+      .join("");
+    const altFieldHtml = skipAlt
+      ? ""
+      : altBlockField
+        ? field("Alt text", `<input data-block-field="${esc(altBlockField)}" value="${esc(g.alt)}" />`)
+        : altDataField
+          ? field("Alt text", `<input data-field="${esc(altDataField)}" value="${esc(g.alt)}" />`)
+          : field("Alt text", `<input data-block-field="${esc(fieldName)}.alt" value="${esc(g.alt)}" />`);
+    return `
+      <div class="admin-photo-group" data-photo-group="${esc(groupId)}" data-photo-field="${esc(fieldName)}" data-photo-tags="${esc(JSON.stringify(tags || []))}">
+        <div class="admin-list-item-head">
+          <strong class="admin-photo-label">${esc(label)}</strong>
+          <label class="admin-photo-remove-pick">
+            <input type="checkbox" class="admin-photo-group-remove-arm" />
+            <span>Select to remove</span>
+          </label>
+        </div>
+        <div class="admin-photo-group-actions">
+          <label class="btn btn-outline admin-btn-sm admin-photo-upload-label">
+            Upload image(s)
+            <input type="file" class="admin-photo-upload-input" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden />
+          </label>
+          <button type="button" class="btn btn-primary admin-btn-sm admin-photo-group-remove-confirm is-hidden" disabled>
+            OK — remove selected
+          </button>
+        </div>
+        <div class="admin-img-picker" data-picker="${esc(fieldName)}">${pickerButtons}</div>
+        <input type="hidden" data-photo-active data-field="${esc(fieldName)}" value="${esc(g.active)}" />
+        <input type="hidden" data-photo-paths value="${esc(JSON.stringify(g.paths))}" />
+        <input type="hidden" data-photo-excluded value="${esc(JSON.stringify(g.excluded))}" />
+        ${altFieldHtml}
+      </div>`;
+  }
+
+  function resolvePhotoGroupMount(el) {
+    if (!el) return el;
+    if (el.classList?.contains("admin-modal__body")) return el;
+    return el.querySelector?.(".admin-modal__body") || el;
+  }
+
+  function readPhotoGroup(groupEl) {
+    if (!groupEl) return { paths: [], active: "", alt: "", excluded: [] };
+    const paths = JSON.parse(groupEl.querySelector("[data-photo-paths]")?.value || "[]");
+    const excluded = JSON.parse(groupEl.querySelector("[data-photo-excluded]")?.value || "[]");
+    const active = groupEl.querySelector("[data-photo-active]")?.value.trim() || paths[0] || "";
+    const alt =
+      groupEl.querySelector('input[data-block-field$=".alt"], input[data-field$=".alt"]')?.value.trim() || "";
+    return { paths, active, alt, excluded };
+  }
+
+  function updatePhotoGroupRemoveUI(group) {
+    if (!group) return;
+    const armed = group.querySelector(".admin-photo-group-remove-arm")?.checked;
+    const confirmBtn = group.querySelector(".admin-photo-group-remove-confirm");
+    const { active } = readPhotoGroup(group);
+    group.classList.toggle("is-remove-mode", !!armed);
+    group.querySelectorAll(".admin-img-option.is-marked-remove").forEach((btn) => {
+      if (active && btn.dataset.path === active) btn.classList.remove("is-marked-remove");
+    });
+    group.querySelectorAll(".admin-img-option").forEach((btn) => {
+      const isActive = !!active && btn.dataset.path === active;
+      btn.classList.toggle("is-active-locked", !!armed && isActive);
+      if (armed && isActive) {
+        btn.setAttribute("aria-disabled", "true");
+        btn.title = "Currently selected for this slot — choose a different image first";
+      } else if (btn.dataset.path) {
+        btn.removeAttribute("aria-disabled");
+      }
+    });
+    const marked = [...group.querySelectorAll(".admin-img-option.is-marked-remove")].filter(
+      (btn) => btn.dataset.path !== active
+    );
+    const canRemove = !!armed && marked.length > 0;
+    if (confirmBtn) {
+      confirmBtn.classList.toggle("is-hidden", !canRemove);
+      confirmBtn.disabled = !canRemove;
+      confirmBtn.setAttribute("aria-hidden", canRemove ? "false" : "true");
+    }
+  }
+
+  function refreshPhotoGroupPicker(group, imagesData, tags) {
+    const { paths, active, excluded } = readPhotoGroup(group);
+    const catalog = getCatalog(imagesData).filter(
+      (img) => !tags?.length || tags.some((t) => img.tags?.includes(t))
+    );
+    const allPaths = getPhotoGroupVisiblePaths(paths, excluded, catalog);
+    const picker = group.querySelector(".admin-img-picker");
+    if (!picker) return;
+    const marked = new Set(
+      [...picker.querySelectorAll(".admin-img-option.is-marked-remove")].map((b) => b.dataset.path)
+    );
+    picker.innerHTML = allPaths
+      .map((path) => {
+        const cat = catalog.find((c) => c.path === path);
+        let cls = "";
+        if (path === active) cls += " is-selected";
+        if (marked.has(path)) cls += " is-marked-remove";
+        return `
+          <button type="button" class="admin-img-option${cls}" data-path="${esc(path)}" title="${esc(cat?.label || path)}">
+            <img src="${esc(path)}" alt="" loading="lazy" draggable="false" />
+          </button>`;
+      })
+      .join("");
+    updatePhotoGroupRemoveUI(group);
+    resolvePhotoGroupImages(group);
+  }
+
+  function bindPhotoGroups(mountEl, imagesData, onChange, defaultTags = ["gallery", "food", "hero"]) {
+    const root = resolvePhotoGroupMount(mountEl);
+    if (!root || root.dataset.photoGroupsBound) return;
+    root.dataset.photoGroupsBound = "1";
+
+    root.addEventListener("change", (e) => {
+      if (e.target.classList.contains("admin-photo-group-remove-arm")) {
+        const group = e.target.closest("[data-photo-group]");
+        if (!e.target.checked) {
+          group?.querySelectorAll(".admin-img-option.is-marked-remove").forEach((btn) => {
+            btn.classList.remove("is-marked-remove");
+          });
+        }
+        updatePhotoGroupRemoveUI(group);
+      }
+    });
+
+    root.addEventListener("click", async (e) => {
+      const group = e.target.closest("[data-photo-group]");
+      if (!group) return;
+
+      if (e.target.closest(".admin-photo-group-remove-confirm")) {
+        e.preventDefault();
+        let { paths, active, alt, excluded } = readPhotoGroup(group);
+        const marked = [...group.querySelectorAll(".admin-img-option.is-marked-remove")].filter(
+          (btn) => btn.dataset.path !== active
+        );
+        if (!marked.length) return;
+        const count = marked.length;
+        const msg =
+          count === 1
+            ? "Remove 1 selected image from this photo group only? Other photo groups on this page will not be changed."
+            : `Remove ${count} selected images from this photo group only? Other photo groups on this page will not be changed.`;
+        if (!window.confirm(msg)) return;
+
+        const removePaths = new Set(marked.map((b) => b.dataset.path));
+        excluded = [...new Set([...(excluded || []), ...removePaths])];
+        paths = paths.filter((p) => !removePaths.has(p));
+        const tags = group.dataset.photoTags ? JSON.parse(group.dataset.photoTags) : defaultTags;
+        const catalog = getCatalog(imagesData).filter(
+          (img) => !tags?.length || tags.some((t) => img.tags?.includes(t))
+        );
+        const visible = getPhotoGroupVisiblePaths(paths, excluded, catalog);
+        if (!visible.includes(active)) active = visible[0] || "";
+        writePhotoGroupState(group, { paths, active, alt, excluded });
+        group.querySelector(".admin-photo-group-remove-arm").checked = false;
+        refreshPhotoGroupPicker(group, imagesData, tags);
+        onChange?.();
+        return;
+      }
+
+      const imgBtn = e.target.closest(".admin-img-option");
+      if (!imgBtn || !group.contains(imgBtn)) return;
+
+      const armed = group.querySelector(".admin-photo-group-remove-arm")?.checked;
+      if (armed) {
+        e.preventDefault();
+        e.stopPropagation();
+        const active = readPhotoGroup(group).active;
+        if (active && imgBtn.dataset.path === active) return;
+        imgBtn.classList.toggle("is-marked-remove");
+        updatePhotoGroupRemoveUI(group);
+        return;
+      }
+
+      e.preventDefault();
+      group.querySelectorAll(".admin-img-option").forEach((b) => {
+        b.classList.remove("is-selected", "is-marked-remove");
+      });
+      imgBtn.classList.add("is-selected");
+      group.querySelector("[data-photo-active]").value = imgBtn.dataset.path;
+      let { paths } = readPhotoGroup(group);
+      if (!paths.includes(imgBtn.dataset.path)) {
+        paths.push(imgBtn.dataset.path);
+        group.querySelector("[data-photo-paths]").value = JSON.stringify(paths);
+      }
+      onChange?.();
+    });
+
+    root.addEventListener("change", async (e) => {
+      if (!e.target.classList.contains("admin-photo-upload-input")) return;
+      const group = e.target.closest("[data-photo-group]");
+      if (!group || !e.target.files?.length) return;
+      const tags = group.dataset.photoTags ? JSON.parse(group.dataset.photoTags) : defaultTags;
+      let { paths, active, excluded } = readPhotoGroup(group);
+      for (const file of e.target.files) {
+        try {
+          const uploaded = window.WSConfig ? await WSConfig.saveUpload(file) : null;
+          const path = uploaded?.ref || URL.createObjectURL(file);
+          if (uploaded && imagesData && !Array.isArray(imagesData)) {
+            imagesData.catalog = imagesData.catalog || [];
+            imagesData.catalog.push({
+              path,
+              label: file.name,
+              tags: [...tags, "upload"],
+            });
+          }
+          excluded = (excluded || []).filter((p) => p !== path);
+          if (!paths.includes(path)) paths.push(path);
+          active = path;
+        } catch (err) {
+          window.alert(err.message || "Upload failed.");
+        }
+      }
+      writePhotoGroupState(group, { paths, active, excluded });
+      refreshPhotoGroupPicker(group, imagesData, tags);
+      e.target.value = "";
+      onChange?.();
+    });
+
+    root.querySelectorAll("[data-photo-group]").forEach((group) => {
+      const tags = group.dataset.photoTags ? JSON.parse(group.dataset.photoTags) : defaultTags;
+      refreshPhotoGroupPicker(group, imagesData, tags);
+    });
+  }
+
   function bindImagePickers(root, onChange) {
     root.querySelectorAll("[data-picker]").forEach((picker) => {
+      if (picker.closest("[data-photo-group]")) return;
       const hidden = picker.parentElement.querySelector('input[type="hidden"]');
       picker.querySelectorAll(".admin-img-option").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -174,6 +484,75 @@ window.WSAdminGUI = (function () {
     });
   }
 
+  function sectionAddPhotoToolbarHtml(addId) {
+    return `
+      <div class="admin-photo-toolbar">
+        <button type="button" class="btn btn-outline admin-btn-sm" id="${addId}">+ Add photo</button>
+      </div>`;
+  }
+
+  function splitPhotoRow(img, i, images, tags = ["gallery", "food", "hero"]) {
+    return `
+      <div class="admin-list-item" data-block-split-photo="${i}">
+        ${photoGroupHtml({
+          groupId: `split-${i}`,
+          fieldName: `splitImage.${i}`,
+          groupData: img,
+          imagesData: images,
+          tags,
+          label: `Photo ${Number(i) + 1}`,
+          altBlockField: `images.${i}.alt`,
+        })}
+      </div>`;
+  }
+
+  function collectSplitPhotosFromRoot(root) {
+    return [...root.querySelectorAll("[data-block-split-photo]")].map((row) => {
+      const group = row.querySelector("[data-photo-group]");
+      const { paths, active, alt, excluded } = readPhotoGroup(group);
+      return { src: active, alt, paths, excludedPaths: excluded, active };
+    });
+  }
+
+  function collectGalleryBlockPhotosFromRoot(root, prefix) {
+    return [...root.querySelectorAll("[data-block-gallery]")].map((row, i) => {
+      const group = row.querySelector("[data-photo-group]");
+      const { active, alt, paths, excluded } = readPhotoGroup(group);
+      return {
+        caption: row.querySelector(`[data-block-field="${prefix}.items.${i}.caption"]`)?.value.trim() || "",
+        alt,
+        image: active,
+        paths,
+        excludedPaths: excluded,
+      };
+    });
+  }
+
+  function bindPhotoSectionAdd(root, opts) {
+    const { rowsEl, addBtnId, renderRow, defaultRow, imagesData, onChanged } = opts;
+    root.querySelector(`#${addBtnId}`)?.addEventListener("click", () => {
+      const count = rowsEl.querySelectorAll("[data-block-split-photo], [data-block-gallery]").length;
+      rowsEl.insertAdjacentHTML("beforeend", renderRow(defaultRow(), count));
+      const newGroup = rowsEl.lastElementChild?.querySelector("[data-photo-group]");
+      if (newGroup) {
+        const tags = newGroup.dataset.photoTags ? JSON.parse(newGroup.dataset.photoTags) : ["gallery", "food", "hero"];
+        refreshPhotoGroupPicker(newGroup, imagesData, tags);
+        if (window.WSConfig?.resolveMediaSrc) {
+          newGroup.querySelectorAll(".admin-img-option img").forEach(async (img) => {
+            const btn = img.closest(".admin-img-option");
+            const resolved = await WSConfig.resolveMediaSrc(btn.dataset.path);
+            if (resolved) img.src = resolved;
+          });
+        }
+      }
+      onChanged?.();
+    });
+  }
+
+  function bindPhotoSectionToolbar(root, opts) {
+    bindPhotoSectionAdd(root, opts);
+  }
+
   const PROMO_PLACEMENTS = {
     homepage: {
       key: "homepageFeatured",
@@ -183,20 +562,26 @@ window.WSAdminGUI = (function () {
     },
     events: {
       key: "eventsPageFeatured",
-      label: "Events page",
-      hint: "Shows in the “Recurring favorites” grid on the events calendar page.",
+      label: "Events page (legacy)",
+      hint: "Legacy — recurring favorites on the events page now come from Weekly recurring nights in events.json.",
       previewPage: "events.html",
     },
   };
 
   function readPromoRow(row) {
+    const group = row.querySelector('[data-photo-group="promo-image"]');
+    const img = group
+      ? readPhotoGroup(group)
+      : { active: rowVal(row, "image"), paths: [], excluded: [] };
     return {
       title: rowVal(row, "title"),
       summary: rowVal(row, "summary"),
       tag: rowVal(row, "tag"),
       tagClass: rowVal(row, "tagClass"),
       layout: rowVal(row, "layout") || "standard",
-      image: rowVal(row, "image"),
+      image: img.active || rowVal(row, "image"),
+      imagePaths: img.paths,
+      excludedPaths: img.excluded,
       mediaType: rowVal(row, "mediaType"),
       alt: rowVal(row, "alt") || rowVal(row, "title"),
     };
@@ -300,12 +685,29 @@ window.WSAdminGUI = (function () {
   }
 
   /* ——— Events ——— */
-  function renderEvents(panel, data, images) {
+  function renderEvents(panel, data, images, promos, site) {
     let eventsData = JSON.parse(JSON.stringify(data || { performances: [], recurring: [] }));
+    let promosData = JSON.parse(JSON.stringify(promos || { homepageFeatured: [], eventsPageFeatured: [] }));
+    let siteData = JSON.parse(JSON.stringify(site || {}));
+    siteData.pages = siteData.pages || {};
+    siteData.pages.events = siteData.pages.events || {
+      recurringSection: { title: "Recurring favorites", lead: "" },
+      liveMusicSidebar: { image: "", imageAlt: "", title: "", body: "", bullets: [] },
+      gallery: [],
+    };
+    siteData.heroes = siteData.heroes || {};
+    siteData.heroes.events = siteData.heroes.events || { panels: ["", "", "", ""] };
+    const baseSite = JSON.parse(JSON.stringify(siteData));
     eventsData.performances = eventsData.performances || [];
     eventsData.recurring = eventsData.recurring || [];
     let previewTimer = null;
     let nextPerfId = 1;
+
+    let campaignDraft = null;
+    try {
+      const raw = sessionStorage.getItem("ws_event_draft_from_campaign");
+      if (raw) campaignDraft = JSON.parse(raw);
+    } catch (_) {}
 
     eventsData.performances.forEach((p) => {
       if (!p.__adminId) p.__adminId = `perf-${nextPerfId++}`;
@@ -320,6 +722,9 @@ window.WSAdminGUI = (function () {
         category: p.category || "live-music",
       };
       if (p.note) item.note = p.note;
+      if (p.image) item.image = p.image;
+      if (p.imagePaths?.length) item.imagePaths = p.imagePaths;
+      if (p.excludedPaths?.length) item.excludedPaths = p.excludedPaths;
       return item;
     }
 
@@ -349,6 +754,8 @@ window.WSAdminGUI = (function () {
 
     function collectFromPanel() {
       syncRecurringFromPanel();
+      const modalRoot = document.getElementById("admin-modal-root");
+      if (modalRoot) syncEventPhotosFromRoot(modalRoot);
       const out = { ...eventsData, performances: [], recurring: eventsData.recurring || [] };
       out.performances = sortedPerformances()
         .map(cleanPerformance)
@@ -360,17 +767,197 @@ window.WSAdminGUI = (function () {
     function refreshEventsPreview() {
       const iframe = panel.querySelector("#events-page-iframe");
       if (!iframe) return;
-      iframe.src = `events.html?preview=1&_=${Date.now()}#events-calendar-section`;
+      if (window.WSAdminPreviewFrame) {
+        WSAdminPreviewFrame.setSrc(iframe, "events.html", "preview=1&promoPreview=1");
+      } else {
+        iframe.src = `${window.WSAdminPreviewFrame?.normalizePreviewUrl("events.html") || "events"}?preview=1&promoPreview=1&adminFrame=events-page-iframe&_=${Date.now()}`;
+      }
     }
 
     function pushEventsDraft(reloadFrame) {
-      if (window.WSConfig) WSConfig.savePreview("events", collectFromPanel());
+      if (window.WSConfig) {
+        WSConfig.savePreview("events", collectFromPanel());
+        WSConfig.savePreview("promos", promosData);
+        WSConfig.savePreview("site", collectEventsSite());
+      }
       if (reloadFrame) refreshEventsPreview();
     }
 
     function scheduleEventsPreview() {
       clearTimeout(previewTimer);
       previewTimer = setTimeout(() => pushEventsDraft(true), 300);
+    }
+
+    const eventsPageModalMap = {
+      "hero-text": { title: "Events hero text", id: "events-hero-text-editor" },
+      "hero-photos": { title: "Events hero photos", id: "events-hero-photos-editor" },
+      recurring: { title: "Recurring favorites", id: "events-recurring-editor" },
+      "one-off": { title: "Coming up — section intro", id: "events-one-off-editor" },
+      gallery: { title: "Events photo gallery", id: "events-gallery-editor" },
+    };
+
+    function eventsBulletRow(b, i) {
+      return `
+        <div class="admin-list-item" data-events-bullet="${i}">
+          <div class="admin-form-grid cols-2">
+            ${field("Day label", `<input data-field="evBullet.${i}.label" value="${esc(b.label)}" />`)}
+            ${field("Description", `<input data-field="evBullet.${i}.text" value="${esc(b.text)}" />`)}
+          </div>
+          <button type="button" class="btn btn-outline admin-btn-sm" data-remove-events-bullet style="margin-top:0.5rem">Remove</button>
+        </div>`;
+    }
+
+    function syncEventsPageFromScope(scope = panel) {
+      const ep = siteData.pages.events;
+      ep.recurringSection = ep.recurringSection || {};
+      ep.recurringSection.title =
+        scope.querySelector('[data-field="events.recurring.title"]')?.value.trim() ||
+        ep.recurringSection.title ||
+        "";
+      ep.recurringSection.lead =
+        scope.querySelector('[data-field="events.recurring.lead"]')?.value.trim() ||
+        ep.recurringSection.lead ||
+        "";
+
+      ep.oneOffSection = ep.oneOffSection || {};
+      ep.oneOffSection.title =
+        scope.querySelector('[data-field="events.oneOff.title"]')?.value.trim() ||
+        ep.oneOffSection.title ||
+        "";
+      ep.oneOffSection.lead =
+        scope.querySelector('[data-field="events.oneOff.lead"]')?.value.trim() ||
+        ep.oneOffSection.lead ||
+        "";
+
+      const gallery = [];
+      scope.querySelectorAll("[data-events-gallery]").forEach((row) => {
+        const i = row.dataset.eventsGallery;
+        const group = row.querySelector("[data-photo-group]");
+        const caption = row.querySelector(`[data-field="evGal.${i}.caption"]`)?.value.trim() || "";
+        const alt = row.querySelector(`[data-field="evGal.${i}.alt"]`)?.value.trim() || "";
+        if (group) {
+          const g = readPhotoGroup(group);
+          gallery.push({
+            caption,
+            alt,
+            image: g.active,
+            paths: g.paths,
+            excludedPaths: g.excluded,
+          });
+        } else {
+          gallery.push({
+            caption,
+            alt,
+            image: row.querySelector(`[data-field="evGal.${i}.image"]`)?.value.trim() || "",
+          });
+        }
+      });
+      if (gallery.length) ep.gallery = gallery.filter((g) => g.image);
+
+      siteData.heroes.events = siteData.heroes.events || { panels: ["", "", "", ""] };
+      siteData.heroes.events.eyebrow =
+        scope.querySelector('[data-field="heroes.events.eyebrow"]')?.value.trim() ||
+        siteData.heroes.events.eyebrow ||
+        "";
+      siteData.heroes.events.titleLine1 =
+        scope.querySelector('[data-field="heroes.events.titleLine1"]')?.value.trim() ||
+        siteData.heroes.events.titleLine1 ||
+        "";
+      siteData.heroes.events.lead =
+        scope.querySelector('[data-field="heroes.events.lead"]')?.value.trim() || siteData.heroes.events.lead || "";
+      siteData.heroes.events.panels = [0, 1, 2, 3].map((i) => readHeroPanelValue(scope, "events", i));
+      syncHeroPhotoMeta("events", scope, siteData.heroes.events);
+    }
+
+    function collectEventsSite() {
+      syncEventsPageFromScope();
+      const out = JSON.parse(JSON.stringify(baseSite));
+      out.pages = siteData.pages;
+      out.heroes = { ...out.heroes, events: siteData.heroes.events };
+      return out;
+    }
+
+    function eventsGalleryRow(g, i, imgs) {
+      return `
+        <div class="admin-list-item" data-events-gallery="${i}">
+          <div class="admin-list-item-head">
+            <strong>Gallery photo ${Number(i) + 1}</strong>
+            <button type="button" class="btn btn-outline admin-btn-sm" data-remove-events-gallery>Remove</button>
+          </div>
+          <div class="admin-form-grid cols-2">
+            ${field("Caption", `<input data-field="evGal.${i}.caption" value="${esc(g.caption)}" />`)}
+            ${field("Alt text", `<input data-field="evGal.${i}.alt" value="${esc(g.alt)}" />`)}
+          </div>
+          ${photoGroupHtml({
+            groupId: `ev-gal-${i}`,
+            fieldName: `evGal.${i}.image`,
+            groupData: { image: g.image, paths: g.paths, excludedPaths: g.excludedPaths },
+            imagesData: imgs,
+            tags: ["gallery", "events"],
+            label: "Photo",
+            skipAlt: true,
+          })}
+        </div>`;
+    }
+
+    function openEventsPageModal(sectionKey) {
+      const cfg = eventsPageModalMap[sectionKey];
+      if (!cfg) return;
+      const block = panel.querySelector(`#${cfg.id}`);
+      if (!block) return;
+      openAdminModal({
+        title: cfg.title,
+        wide: true,
+        bodyHtml: block.innerHTML,
+        footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => {
+          bindPhotoGroups(root, images, () => scheduleEventsPreview());
+          bindImagePickers(root, () => scheduleEventsPreview());
+          bindRemove(root);
+          root.querySelectorAll("[data-remove-events-bullet]").forEach((btn) => {
+            btn.onclick = () => {
+              btn.closest("[data-events-bullet]")?.remove();
+              scheduleEventsPreview();
+            };
+          });
+          root.querySelectorAll("[data-remove-events-gallery]").forEach((btn) => {
+            btn.onclick = () => {
+              btn.closest("[data-events-gallery]")?.remove();
+              scheduleEventsPreview();
+            };
+          });
+          root.addEventListener("input", (e) => {
+            if (e.target.matches("[data-field]")) scheduleEventsPreview();
+          });
+          root.querySelector("#add-events-bullet")?.addEventListener("click", () => {
+            const rows = root.querySelector("#events-bullet-rows");
+            const i = rows.children.length;
+            rows.insertAdjacentHTML("beforeend", eventsBulletRow({ label: "", text: "" }, i));
+          });
+          root.querySelector("#add-events-gallery")?.addEventListener("click", () => {
+            const rows = root.querySelector("#events-gallery-rows");
+            const i = rows.children.length;
+            rows.insertAdjacentHTML(
+              "beforeend",
+              eventsGalleryRow({ caption: "", alt: "", image: "assets/gallery/WSGoodTimes.webp" }, i, images)
+            );
+            const newGroup = rows.lastElementChild?.querySelector("[data-photo-group]");
+            if (newGroup) {
+              const tags = newGroup.dataset.photoTags ? JSON.parse(newGroup.dataset.photoTags) : ["gallery", "events"];
+              refreshPhotoGroupPicker(newGroup, images, tags);
+            }
+            bindRemove(root);
+          });
+        },
+        onClose: () => {
+          const modalRoot = document.getElementById("admin-modal-root");
+          const body = modalRoot?.querySelector(".admin-modal__body");
+          if (body) block.innerHTML = body.innerHTML;
+          bindImagePickers(panel);
+          syncEventsPageFromScope();
+          pushEventsDraft(true);
+        },
+      });
     }
 
     function highlightPreviewDate(date) {
@@ -404,7 +991,7 @@ window.WSAdminGUI = (function () {
         });
     }
 
-    function recurringEditorFieldsHtml(ev) {
+    function recurringEditorFieldsHtml(ev, index) {
       return `
         <div class="admin-form-grid cols-2">
           ${field("Event name", `<input data-recurring-field="title" value="${esc(ev.title || "")}" />`)}
@@ -414,7 +1001,55 @@ window.WSAdminGUI = (function () {
           ${field("Start time", `<input type="time" data-recurring-field="startTime" value="${esc(ev.startTime || "")}" />`)}
           ${field("End time (optional)", `<input type="time" data-recurring-field="endTime" value="${esc(ev.endTime || "")}" />`)}
           ${weekOfMonthField("weekOfMonth", ev.weekOfMonth || "", "data-recurring-field")}
-        </div>`;
+        </div>
+        ${photoGroupHtml({
+          groupId: `recurring-${index}`,
+          fieldName: `recurring.${index}.image`,
+          groupData: { image: ev.image, paths: ev.imagePaths, excludedPaths: ev.excludedPaths },
+          imagesData: images,
+          tags: ["events", "music", "gallery", "community"],
+          label: "Event photo",
+          skipAlt: true,
+        })}`;
+    }
+
+    function syncRecurringPhotosFromRoot(root) {
+      root.querySelectorAll("[data-modal-recurring]").forEach((block) => {
+        const index = Number(block.dataset.modalRecurring);
+        const ev = eventsData.recurring?.[index];
+        if (!ev) return;
+        const group = block.querySelector("[data-photo-group]");
+        if (!group) return;
+        const g = readPhotoGroup(group);
+        ev.image = g.active;
+        ev.imagePaths = g.paths;
+        ev.excludedPaths = g.excluded;
+      });
+    }
+
+    function syncPerformancePhotosFromRoot(root) {
+      root.querySelectorAll("[data-modal-perf]").forEach((block) => {
+        const perf = performanceById(block.dataset.modalPerf);
+        if (!perf) return;
+        const group = block.querySelector("[data-photo-group]");
+        if (!group) return;
+        const g = readPhotoGroup(group);
+        perf.image = g.active;
+        perf.imagePaths = g.paths;
+        perf.excludedPaths = g.excluded;
+      });
+    }
+
+    function syncEventPhotosFromRoot(root) {
+      syncRecurringPhotosFromRoot(root);
+      syncPerformancePhotosFromRoot(root);
+    }
+
+    function readAddPanelImage(root, type) {
+      const group = root.querySelector(
+        `[data-photo-group="${type === "weekly" ? "add-weekly-image" : "add-oneoff-image"}"]`
+      );
+      return group ? readPhotoGroup(group).active : "assets/live-music.webp";
     }
 
     function bindRecurringEditor(root, index, { onRemove } = {}) {
@@ -462,7 +1097,16 @@ window.WSAdminGUI = (function () {
           ${field("Start time", `<input type="time" data-field="startTime" data-focus-field="startTime" value="${esc(perf.startTime || "18:30")}" />`)}
           ${field("End time", `<input type="time" data-field="endTime" data-focus-field="endTime" value="${esc(perf.endTime || "21:30")}" />`)}
           ${field("Note (optional)", `<input data-field="note" data-focus-field="note" value="${esc(perf.note || "")}" placeholder="e.g. Friday bandingo" />`)}
-        </div>`;
+        </div>
+        ${photoGroupHtml({
+          groupId: `perf-${perf.__adminId || "new"}`,
+          fieldName: `perf.${perf.__adminId || "new"}.image`,
+          groupData: { image: perf.image, paths: perf.imagePaths, excludedPaths: perf.excludedPaths },
+          imagesData: images,
+          tags: ["events", "music", "gallery", "live-music"],
+          label: "Event photo",
+          skipAlt: true,
+        })}`;
     }
 
     function bindPerfEditor(root, perf, { onChange, onRemove, onDuplicate } = {}) {
@@ -531,6 +1175,7 @@ window.WSAdminGUI = (function () {
           const startTime = root.querySelector('[data-add-oneoff-field="startTime"]')?.value.trim() || "18:30";
           const endTime = root.querySelector('[data-add-oneoff-field="endTime"]')?.value.trim() || "21:30";
           const note = root.querySelector('[data-add-oneoff-field="note"]')?.value.trim() || "";
+          const image = readAddPanelImage(root, "one-off");
           if (!title) {
             alert("Add an event name.");
             return;
@@ -543,6 +1188,7 @@ window.WSAdminGUI = (function () {
             startTime,
             endTime,
             note,
+            image,
           };
           eventsData.performances.push(newPerf);
           scheduleEventsPreview();
@@ -573,7 +1219,7 @@ window.WSAdminGUI = (function () {
           summary,
           dayOfWeek: days,
           startTime,
-          image: "assets/live-music.webp",
+          image: readAddPanelImage(root, "weekly"),
         };
         if (endTime) newRecurring.endTime = endTime;
         if (weekRaw) newRecurring.weekOfMonth = Number(weekRaw);
@@ -610,7 +1256,7 @@ window.WSAdminGUI = (function () {
                     </div>
                     <button type="button" class="btn btn-outline admin-btn-sm" data-remove-recurring>Remove</button>
                   </div>
-                  ${recurringEditorFieldsHtml(ev)}
+                  ${recurringEditorFieldsHtml(ev, index)}
                 </div>`;
             })
             .join("")
@@ -618,7 +1264,7 @@ window.WSAdminGUI = (function () {
 
       const recurringHtml = `<div class="admin-modal-day-section">
             ${modalSectionHead("Weekly events on this day", { btnId: "modal-toggle-add-event", btnLabel: "+ Add event" })}
-            ${addEventPanelHtml(editingDate)}
+            ${addEventPanelHtml(editingDate, images)}
             <div class="admin-modal-day-events">${recurringListHtml}</div>
           </div>`;
 
@@ -659,6 +1305,11 @@ window.WSAdminGUI = (function () {
         onClose: () => highlightPreviewDate(""),
         onMount: (root) => {
           bindAddEventPanel(root, { expandAdd, addType });
+          bindPhotoGroups(root, images, () => {
+            syncEventPhotosFromRoot(root);
+            scheduleEventsPreview();
+            panel._markUnsaved?.();
+          });
 
           root.querySelectorAll("[data-modal-recurring]").forEach((block) => {
             const index = Number(block.dataset.modalRecurring);
@@ -779,6 +1430,8 @@ window.WSAdminGUI = (function () {
       if (reopen && editingDate) openEventsDayModal(editingDate);
     }
 
+    let promoWorkflow = null;
+
     function findPerformanceFromPreview(payload) {
       return eventsData.performances.find(
         (p) =>
@@ -806,36 +1459,138 @@ window.WSAdminGUI = (function () {
         }
         const perf = findPerformanceFromPreview(payload);
         if (perf) openEventsDayModal(payload.date, { focusId: perf.__adminId });
-        else
-          openEventsDayModal(payload.date, {
-            focusId: null,
-          });
+        else openEventsDayModal(payload.date, { focusId: null });
+        return;
+      }
+      if (payload.type === "recurring") {
+        const ev = (eventsData.recurring || []).find((r) => r.id === payload.id);
+        if (ev) {
+          const today = new Date();
+          let dateStr = today.toISOString().slice(0, 10);
+          for (let i = 0; i < 7; i++) {
+            const d = new Date(today);
+            d.setDate(d.getDate() + i);
+            if ((ev.dayOfWeek || []).includes(d.getDay())) {
+              dateStr = d.toISOString().slice(0, 10);
+              break;
+            }
+          }
+          openEventsDayModal(dateStr, { recurringPayload: { id: ev.id, recurring: true } });
+        }
+        return;
+      }
+      if (payload.type === "promo" && promoWorkflow) {
+        promoWorkflow.openEditor(payload.id || null);
+        return;
+      }
+      if (payload.type === "section" && payload.section) {
+        openEventsPageModal(payload.section);
       }
     }
 
+    const ep = siteData.pages.events;
+    const evHero = siteData.heroes.events || {};
+
     panel.innerHTML = `
-      <p class="admin-note">This is a <strong>draft preview</strong>. Click any calendar date to add or edit everything on that day — weekly events and one-off performances (highlighted in red). Today stays green. <em>Save changes</em> keeps the draft on this device; public files stay unchanged until export/publish.</p>
+      ${campaignDraft ? `<div class="admin-campaign-promote-banner" role="note"><strong>From Campaign Calendar:</strong> “${esc(campaignDraft.title)}” is ready to schedule. <button type="button" class="btn btn-primary btn-sm" id="apply-campaign-draft">Add as performance</button><button type="button" class="btn btn-secondary btn-sm" id="dismiss-campaign-draft">Dismiss</button></div>` : ""}
+      <p class="admin-note">Click anything in the preview to edit it. <strong>Month at a glance</strong> is the full calendar. <strong>Recurring favorites</strong> and <strong>Coming up</strong> are photo cards from weekly nights and one-off performances. <em>Save draft</em> then <em>Publish live</em> when ready.</p>
       <div class="admin-draft-full">
         <div class="admin-draft-full__toolbar">
           <div>
-            <p class="admin-preview-label">Draft preview — events calendar</p>
-            <p>Click a date or event chip in the calendar below. Edits open in a popup.</p>
+            <p class="admin-preview-label">Events page draft</p>
           </div>
           <div class="admin-draft-full__toolbar-actions">
-            <button type="button" class="btn btn-outline admin-btn-sm" id="events-manage-all">Manage all events</button>
             <button type="button" class="btn btn-primary admin-btn-sm" id="add-perf">+ Add performance</button>
+            <button type="button" class="btn btn-primary admin-btn-sm" id="events-add-weekly">+ Add weekly event</button>
           </div>
         </div>
-        <iframe id="events-page-iframe" class="admin-preview-frame admin-events-preview-frame" title="Draft events calendar preview" src="events.html?preview=1#events-calendar-section"></iframe>
+        <iframe id="events-page-iframe" class="admin-preview-frame admin-events-preview-frame" title="Events page draft preview" src="about:blank"></iframe>
+      </div>
+      <div id="events-hidden-editors" hidden>
+        <div id="events-hero-text-editor">
+          <div class="admin-form-grid">
+            ${field("Eyebrow", `<input data-field="heroes.events.eyebrow" value="${esc(evHero.eyebrow)}" />`)}
+            ${field("Headline", `<input data-field="heroes.events.titleLine1" value="${esc(evHero.titleLine1)}" />`)}
+            ${field("Intro", `<textarea data-field="heroes.events.lead" rows="3">${esc(evHero.lead)}</textarea>`)}
+          </div>
+        </div>
+        <div id="events-hero-photos-editor">
+          ${heroPanelsEditorHtml("events", { events: evHero }, images, ["hero", "gallery", "events"])}
+        </div>
+        <div id="events-recurring-editor">
+          <div class="admin-form-grid">
+            ${field("Section title", `<input data-field="events.recurring.title" value="${esc(ep.recurringSection?.title)}" />`)}
+            ${field("Section intro", `<textarea data-field="events.recurring.lead" rows="2">${esc(ep.recurringSection?.lead)}</textarea>`)}
+          </div>
+          <p class="admin-note" style="margin-top:0.75rem">Photo cards below are built from <strong>Weekly recurring</strong> nights — click a card in the preview to edit that event, or use <em>+ Add weekly event</em>.</p>
+        </div>
+        <div id="events-one-off-editor">
+          <div class="admin-form-grid">
+            ${field("Section title", `<input data-field="events.oneOff.title" value="${esc(ep.oneOffSection?.title || "Coming up")}" />`)}
+            ${field("Section intro", `<textarea data-field="events.oneOff.lead" rows="2">${esc(ep.oneOffSection?.lead || "Special dates, featured acts, and one-time happenings.")}</textarea>`)}
+          </div>
+          <p class="admin-note" style="margin-top:0.75rem">Photo cards are built from one-off performances — click a card in the preview to edit, or use <em>+ Add performance</em>.</p>
+        </div>
+        <div id="events-gallery-editor">
+          <div id="events-gallery-rows">${(ep.gallery || []).map((g, i) => eventsGalleryRow(g, i, images)).join("")}</div>
+          <button type="button" class="btn btn-outline admin-btn-sm" id="add-events-gallery" style="margin-top:0.75rem">+ Add gallery photo</button>
+        </div>
       </div>`;
+
+    panel.querySelectorAll("[data-events-modal]").forEach((btn) => {
+      btn.addEventListener("click", () => openEventsPageModal(btn.dataset.eventsModal));
+    });
 
     panel.querySelector("#add-perf")?.addEventListener("click", () =>
       openEventsDayModal(new Date().toISOString().slice(0, 10), { expandAdd: true, addType: "one-off" })
     );
-    panel.querySelector("#events-manage-all")?.addEventListener("click", () => openEventsBulkModal("performances"));
+    panel.querySelector("#events-add-weekly")?.addEventListener("click", () =>
+      openEventsDayModal(new Date().toISOString().slice(0, 10), { expandAdd: true, addType: "weekly" })
+    );
+
+    panel.querySelector("#apply-campaign-draft")?.addEventListener("click", () => {
+      if (!campaignDraft) return;
+      const perf = {
+        __adminId: `perf-${nextPerfId++}`,
+        date: "",
+        title: campaignDraft.title || "Campaign event",
+        startTime: campaignDraft.time?.replace(/\s*(AM|PM)/i, "") ? "18:00" : "18:30",
+        endTime: "21:30",
+        category: campaignDraft.category || "special",
+        note: campaignDraft.description || "",
+      };
+      eventsData.performances.push(perf);
+      sessionStorage.removeItem("ws_event_draft_from_campaign");
+      campaignDraft = null;
+      panel.querySelector(".admin-campaign-promote-banner")?.remove();
+      panel._markUnsaved?.();
+      openEventsDayModal(new Date().toISOString().slice(0, 10), { expandAdd: true, addType: "one-off" });
+      pushEventsDraft();
+    });
+
+    panel.querySelector("#dismiss-campaign-draft")?.addEventListener("click", () => {
+      sessionStorage.removeItem("ws_event_draft_from_campaign");
+      campaignDraft = null;
+      panel.querySelector(".admin-campaign-promote-banner")?.remove();
+    });
+
     panel._getEvents = collectFromPanel;
+    panel._getPromos = (base) => {
+      const out = JSON.parse(JSON.stringify(base || promosData));
+      out.eventsPageFeatured = promosData.eventsPageFeatured || [];
+      if (base?.homepageFeatured) out.homepageFeatured = base.homepageFeatured;
+      return out;
+    };
+    panel._collectEventsSite = (siteBase) => {
+      syncEventsPageFromScope();
+      const out = JSON.parse(JSON.stringify(siteBase || baseSite));
+      out.pages = siteData.pages;
+      out.heroes = { ...out.heroes, events: siteData.heroes.events };
+      return out;
+    };
     panel._refreshPagePreview = refreshEventsPreview;
     window.addEventListener("message", handlePreviewMessage);
+    if (window.WSAdminPreviewFrame) WSAdminPreviewFrame.bind(panel.querySelector("#events-page-iframe"));
     pushEventsDraft(true);
   }
 
@@ -942,7 +1697,7 @@ window.WSAdminGUI = (function () {
   }
 
   /* ——— Menus ——— */
-  function renderMenus(panel, data) {
+  function renderMenus(panel, data, images) {
     panel.dataset.menuEditorReady = "";
     let menusData = JSON.parse(JSON.stringify(data));
     let menus = menusData.menus || [];
@@ -969,8 +1724,11 @@ window.WSAdminGUI = (function () {
       const menuIdx = Number(panel.dataset.syncedMenuIdx ?? menuSelect.value ?? 0);
       const catIdx = Number(panel.dataset.syncedCatIdx ?? catSelect.value ?? 0);
       const modalRoot = document.getElementById("admin-modal-root");
-      const scope = modalRoot?.querySelector("#menu-items") ? modalRoot : panel;
-      if (!scope.querySelector("#menu-items")) return;
+      const scope =
+        modalRoot?.querySelector("#menu-items") || modalRoot?.querySelector("[data-photo-group^='menu-panel-']")
+          ? modalRoot
+          : panel;
+      if (!scope.querySelector("#menu-items") && !scope.querySelector("[data-photo-group^='menu-panel-']")) return;
       menusData = syncMenuSection(scope, menusData, menuIdx, catIdx);
       menus = menusData.menus;
     }
@@ -998,15 +1756,28 @@ window.WSAdminGUI = (function () {
 
       openAdminModal({
         title: `${menu?.label || "Menu"} — ${cat.name}`,
-        subtitle: "Edit items in this section. The draft preview updates as you type.",
+        subtitle: "Edit section photo and menu items. The draft preview updates as you type.",
         wide: true,
-        bodyHtml: `<div id="menu-items"></div>`,
+        bodyHtml: `
+          ${photoGroupHtml({
+            groupId: `menu-panel-${menuIdx}`,
+            fieldName: `menu.${menuIdx}.image`,
+            groupData: { image: menu.image, paths: menu.imagePaths, excludedPaths: menu.excludedPaths },
+            imagesData: images,
+            tags: ["food", "menu", "gallery", "drinks", "bar"],
+            label: "Menu section photo",
+            skipAlt: true,
+          })}
+          <div id="menu-items"></div>`,
         footerHtml: `
           <button type="button" class="btn btn-outline admin-btn-sm" id="modal-add-menu-item">+ Add item</button>
           <button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
         onMount: (root) => {
+          bindPhotoGroups(root, images, scheduleMenuPreview);
           const container = root.querySelector("#menu-items");
-          container.innerHTML = (cat.items || []).map((item) => menuItemRow(item)).join("");
+          container.innerHTML = (cat.items || []).map((item, i) =>
+            menuItemRow({ ...item, __rowKey: item.__rowKey || `ex-${i}` }, images)
+          ).join("");
           bindRemove(root);
           root.querySelectorAll("[data-remove-item]").forEach((btn) => {
             btn.onclick = () => {
@@ -1022,7 +1793,10 @@ window.WSAdminGUI = (function () {
           }
           bindMenuPreviewInputs(root, scheduleMenuPreview);
           root.querySelector("#modal-add-menu-item")?.addEventListener("click", () => {
-            container.insertAdjacentHTML("beforeend", menuItemRow({ name: "", desc: "", price: "" }));
+            container.insertAdjacentHTML(
+              "afterbegin",
+              menuItemRow({ name: "", desc: "", price: "", __rowKey: `new-${Date.now()}` }, images)
+            );
             bindRemove(root);
             root.querySelectorAll("[data-remove-item]").forEach((btn) => {
               btn.onclick = () => {
@@ -1031,6 +1805,9 @@ window.WSAdminGUI = (function () {
                 panel._markUnsaved?.();
               };
             });
+            const row = container.firstElementChild;
+            row?.querySelector('[data-field="name"]')?.focus();
+            row?.scrollIntoView({ block: "nearest", behavior: "smooth" });
             renderMenuDraftPreview();
           });
           panel.dataset.syncedMenuIdx = String(menuIdx);
@@ -1038,21 +1815,19 @@ window.WSAdminGUI = (function () {
         },
         onClose: () => {
           const modalRoot = document.getElementById("admin-modal-root");
+          const modalBody = modalRoot?.querySelector(".admin-modal__body");
+          if (modalBody) {
+            menusData = syncMenuSection(modalBody, menusData, menuIdx, catIdx);
+            menus = menusData.menus;
+          }
           const modalItems = modalRoot?.querySelector("#menu-items");
           if (modalItems) {
-            const { menuIdx, catIdx } = getSelection();
             const cat = menus[menuIdx]?.categories?.[catIdx];
             if (cat) {
               const items = [];
               modalItems.querySelectorAll("[data-menu-item]").forEach((row) => {
-                const name = rowVal(row, "name");
-                if (!name) return;
-                const item = { name };
-                const desc = rowVal(row, "desc");
-                const price = rowVal(row, "price");
-                if (desc) item.desc = desc;
-                if (price) item.price = price;
-                items.push(item);
+                const item = readMenuItemFromRow(row);
+                if (item) items.push(item);
               });
               cat.items = items;
               menusData.menus = menus;
@@ -1064,7 +1839,7 @@ window.WSAdminGUI = (function () {
     }
 
     panel.innerHTML = `
-      <p class="admin-note">Update item names, descriptions, and prices. Click a menu item in the preview to edit it, or use Edit section. <em>Save changes</em> keeps the draft on this device; public files stay unchanged until export/publish.</p>
+      <p class="admin-note">Update item names, descriptions, and prices. Click a menu item in the preview to edit it, or use Edit section. <em>Save changes</em> keeps the draft on this device; <em>Publish live</em> updates the public site.</p>
       <div class="admin-draft-full">
         <div class="admin-draft-full__toolbar">
           <div class="admin-form-grid cols-2" style="margin:0;flex:1;min-width:min(100%,520px)">
@@ -1144,9 +1919,25 @@ window.WSAdminGUI = (function () {
     });
   }
 
-  function menuItemRow(item) {
+  function menuItemRow(item, images) {
+    const rowKey = item.__rowKey || `row-${Math.random().toString(36).slice(2, 9)}`;
+    const photoHtml = images
+      ? photoGroupHtml({
+          groupId: `menu-item-${rowKey}`,
+          fieldName: `menuItem.${rowKey}.image`,
+          groupData: {
+            image: item.image,
+            paths: item.imagePaths,
+            excludedPaths: item.excludedPaths,
+          },
+          imagesData: images,
+          tags: ["food", "menu", "gallery", "drinks", "bar"],
+          label: "Thumbnail (optional)",
+          skipAlt: true,
+        })
+      : "";
     return `
-      <div class="admin-list-item" data-menu-item>
+      <div class="admin-list-item admin-menu-item-row" data-menu-item>
         <div class="admin-list-item-head">
           <strong>${esc(item.name || "New item")}</strong>
           <button type="button" class="btn btn-outline admin-btn-sm" data-remove-item>Remove</button>
@@ -1156,27 +1947,47 @@ window.WSAdminGUI = (function () {
           ${field("Price", `<input data-field="price" value="${esc(item.price || "")}" placeholder="$9.90" />`)}
           ${field("Description", `<textarea data-field="desc" rows="2">${esc(item.desc || "")}</textarea>`)}
         </div>
+        ${photoHtml}
       </div>`;
+  }
+
+  function readMenuItemFromRow(row) {
+    const name = rowVal(row, "name");
+    if (!name) return null;
+    const item = { name };
+    const desc = rowVal(row, "desc");
+    const price = rowVal(row, "price");
+    if (desc) item.desc = desc;
+    if (price) item.price = price;
+    const group = row.querySelector("[data-photo-group]");
+    if (group) {
+      const g = readPhotoGroup(group);
+      if (g.active) item.image = g.active;
+      if (g.paths?.length) item.imagePaths = g.paths;
+      if (g.excluded?.length) item.excludedPaths = g.excluded;
+    }
+    return item;
   }
 
   function syncMenuSection(scope, menus, menuIdx, catIdx) {
     const out = JSON.parse(JSON.stringify(menus));
-    if (!scope?.querySelector("#menu-items")) return out;
+    if (!scope?.querySelector("#menu-items") && !scope?.querySelector("[data-photo-group^='menu-panel-']")) return out;
     const mIdx = menuIdx ?? Number(scope.querySelector("#menu-select")?.value || 0);
     const cIdx = catIdx ?? Number(scope.querySelector("#cat-select")?.value || 0);
+    const menuPanelGroup = scope.querySelector(`[data-photo-group="menu-panel-${mIdx}"]`);
+    if (menuPanelGroup && out.menus?.[mIdx]) {
+      const g = readPhotoGroup(menuPanelGroup);
+      out.menus[mIdx].image = g.active;
+      out.menus[mIdx].imagePaths = g.paths;
+      out.menus[mIdx].excludedPaths = g.excluded;
+    }
     const cat = out.menus?.[mIdx]?.categories?.[cIdx];
-    if (!cat) return out;
+    if (!cat || !scope.querySelector("#menu-items")) return out;
 
     const items = [];
     scope.querySelectorAll("#menu-items [data-menu-item]").forEach((row) => {
-      const name = rowVal(row, "name");
-      if (!name) return;
-      const item = { name };
-      const desc = rowVal(row, "desc");
-      const price = rowVal(row, "price");
-      if (desc) item.desc = desc;
-      if (price) item.price = price;
-      items.push(item);
+      const item = readMenuItemFromRow(row);
+      if (item) items.push(item);
     });
     cat.items = items;
     return out;
@@ -1319,11 +2130,16 @@ window.WSAdminGUI = (function () {
         ${field("Tag line", `<input data-field="tag" value="${esc(p.tag)}" placeholder="Every Monday" />`)}
         ${field("Description", `<textarea data-field="summary" rows="3">${esc(p.summary)}</textarea>`)}
         ${field("Image alt text", `<input data-field="alt" value="${esc(p.alt || p.title)}" />`)}
-        <div class="admin-field admin-field--full admin-field--promo-photo">
-          <label>Photo</label>
-          ${imagePicker("image", p.image || "", imagesData, PROMO_IMAGE_TAGS)}
-          <input type="hidden" data-field="mediaType" value="${esc(p.mediaType || "image")}" />
-        </div>
+        ${photoGroupHtml({
+          groupId: "promo-image",
+          fieldName: "image",
+          groupData: { image: p.image, paths: p.imagePaths, excludedPaths: p.excludedPaths },
+          imagesData: imagesData,
+          tags: PROMO_IMAGE_TAGS,
+          label: "Photo",
+          skipAlt: true,
+        })}
+        <input type="hidden" data-field="mediaType" value="${esc(p.mediaType || "image")}" />
       </div>`;
   }
 
@@ -1401,6 +2217,8 @@ window.WSAdminGUI = (function () {
       tag: draft.tag,
       tagClass: draft.tagClass,
       image,
+      imagePaths: draft.imagePaths || orig.imagePaths,
+      excludedPaths: draft.excludedPaths || orig.excludedPaths,
       mediaType:
         draft.mediaType ||
         orig.mediaType ||
@@ -1462,7 +2280,7 @@ window.WSAdminGUI = (function () {
           </div>`,
         footerHtml: `<button type="button" class="btn btn-outline admin-btn-sm" data-promo-editor-cancel>Cancel</button>`,
         onMount: (root) => {
-          bindImagePickers(root, onChange);
+          bindPhotoGroups(root, images, onChange);
           root.querySelector("[data-promo-editor-cancel]")?.addEventListener("click", closeEditor);
           root.querySelector("[data-promo-editor-save]")?.addEventListener("click", () => saveEditor(root));
         },
@@ -1526,24 +2344,24 @@ window.WSAdminGUI = (function () {
       const iframe = panel.querySelector("#promo-page-iframe");
       if (!iframe || !reload) return;
       notifyPromoPreviewFrame(iframe);
-      iframe.src = `events.html?promoPreview=1#promo-recurring&_=${Date.now()}`;
+      iframe.src = `events.html?promoPreview=1&_=${Date.now()}`;
     }
 
     panel.innerHTML = `
-      <p class="admin-note"><strong>Featured promo cards</strong> on the events page — photo tiles for weekly/monthly happenings. Click <em>Manage promo cards</em> to add or edit. <em>Save changes</em> when done.</p>
+      <p class="admin-note"><strong>Featured promo cards</strong> on the events page — photo tiles for weekly/monthly happenings. The preview shows the full events page; scroll to recurring favorites or use <em>Manage promo cards</em> to edit.</p>
       <p style="color:var(--text-muted);font-size:0.9rem;margin:0.75rem 0 1rem">${esc(PROMO_PLACEMENTS.events.hint)}</p>
       <div class="admin-draft-full">
         <div class="admin-draft-full__toolbar">
           <div>
-            <p class="admin-preview-label">Draft preview — events promos</p>
-            <p>Full-width preview. Use Manage promo cards to edit the recurring favorites grid.</p>
+            <p class="admin-preview-label">Events page preview</p>
+            <p>Promo cards appear in Recurring favorites — same page as the calendar.</p>
           </div>
           <div class="admin-draft-full__toolbar-actions">
             <button type="button" class="btn btn-outline admin-btn-sm" id="manage-promos">Manage promo cards</button>
             <button type="button" class="btn btn-primary admin-btn-sm" id="add-promo">+ Add promo card</button>
           </div>
         </div>
-        <iframe id="promo-page-iframe" class="admin-preview-frame" title="Events promo preview" src="events.html?promoPreview=1#promo-recurring"></iframe>
+        <iframe id="promo-page-iframe" class="admin-preview-frame" title="Events page preview" src="events.html?promoPreview=1"></iframe>
       </div>
       <div id="promo-editor" hidden></div>
       <div id="promo-list" hidden></div>`;
@@ -1612,8 +2430,34 @@ window.WSAdminGUI = (function () {
   /* ——— Homepage ——— */
   function renderHomepage(panel, site, images, promos) {
     const hp = site.homepage || {};
+    const siteBase = JSON.parse(JSON.stringify(site));
     let promosData = JSON.parse(JSON.stringify(promos || { homepageFeatured: [], eventsPageFeatured: [] }));
     let previewTimer = null;
+
+    const homepageModalMap = {
+      welcome: { title: "Homepage welcome text", id: "homepage-welcome-editor" },
+      promos: { title: "Weekly & monthly happenings", id: "homepage-promos-editor" },
+      gallery: { title: "Main Street vibes — gallery", id: "homepage-gallery-editor" },
+      signatures: { title: "Signature favorites", id: "homepage-signatures-editor" },
+      faq: { title: "Good to know — FAQ", id: "homepage-faq-editor" },
+    };
+
+    function syncOpenHomepageModalToPanel() {
+      const modalBody = document.getElementById("admin-modal-root")?.querySelector(".admin-modal__body");
+      if (!modalBody) return;
+      for (const cfg of Object.values(homepageModalMap)) {
+        const block = panel.querySelector(`#${cfg.id}`);
+        if (!block) continue;
+        const isOpen =
+          cfg.id === "homepage-welcome-editor"
+            ? modalBody.querySelector('[data-field="heroes.index.eyebrow"]')
+            : modalBody.querySelector("#gallery-rows, #sig-rows, #faq-rows, #homepage-promo-list, #homepage-promo-editor");
+        if (isOpen) {
+          block.innerHTML = modalBody.innerHTML;
+          break;
+        }
+      }
+    }
 
     function notifyHomepagePromoFrame(iframe) {
       if (!iframe?.contentWindow) return false;
@@ -1625,30 +2469,36 @@ window.WSAdminGUI = (function () {
       }
     }
 
-    function pushHomepagePromoPreview(reloadFrame) {
-      if (window.WSConfig) WSConfig.savePreview("promos", promosData);
+    function pushHomepagePreview(reloadFrame) {
+      syncOpenHomepageModalToPanel();
+      const draft = collectHomepage(panel, siteBase);
+      if (window.WSConfig) {
+        WSConfig.savePreview("site", draft);
+        WSConfig.savePreview("promos", promosData);
+      }
       const iframe = panel.querySelector("#homepage-preview-iframe");
       if (!iframe || !reloadFrame) return;
       notifyHomepagePromoFrame(iframe);
-      iframe.src = `index.html?promoPreview=1#promo-happenings&_=${Date.now()}`;
+      if (window.WSAdminPreviewFrame) WSAdminPreviewFrame.setSrc(iframe, "index.html", "homepagePreview=1&promoPreview=1");
+      else iframe.src = `${window.WSAdminPreviewFrame?.normalizePreviewUrl("index.html") || "/"}?homepagePreview=1&promoPreview=1&adminFrame=homepage-preview-iframe&_=${Date.now()}`;
     }
 
-    function scheduleHomepagePromoPreview(immediate) {
+    function scheduleHomepagePreview(immediate) {
       clearTimeout(previewTimer);
       if (immediate) {
-        pushHomepagePromoPreview(true);
+        pushHomepagePreview(true);
         return;
       }
-      previewTimer = setTimeout(() => pushHomepagePromoPreview(true), 300);
+      previewTimer = setTimeout(() => pushHomepagePreview(true), 300);
     }
 
     panel.innerHTML = `
-      <p class="admin-note">Edit homepage sections from the toolbar — the full-width preview updates as you work. Click <em>Save changes</em> when done.</p>
+      <p class="admin-note">Edit homepage sections from the toolbar — the full-page preview below updates as you work. <em>Save changes</em> keeps the draft on this device; <em>Publish live</em> updates the public site.</p>
       <div class="admin-draft-full">
         <div class="admin-draft-full__toolbar">
           <div>
-            <p class="admin-preview-label">Draft preview — homepage</p>
-            <p>Use the buttons to edit welcome text, promos, gallery, signatures, and FAQ.</p>
+            <p class="admin-preview-label">Homepage preview</p>
+            <p>Scroll the full page while you edit welcome text, happenings, gallery, signatures, and FAQ.</p>
           </div>
           <div class="admin-draft-full__toolbar-actions">
             <button type="button" class="btn btn-outline admin-btn-sm" data-homepage-modal="welcome">Welcome text</button>
@@ -1658,7 +2508,7 @@ window.WSAdminGUI = (function () {
             <button type="button" class="btn btn-outline admin-btn-sm" data-homepage-modal="faq">FAQ</button>
           </div>
         </div>
-        <iframe id="homepage-preview-iframe" class="admin-preview-frame" title="Homepage preview" src="index.html?promoPreview=1#promo-happenings"></iframe>
+        <iframe id="homepage-preview-iframe" class="admin-preview-frame" title="Homepage preview" src="about:blank"></iframe>
       </div>
       <div id="homepage-hidden-editors" hidden>
           <div id="homepage-welcome-editor">
@@ -1689,14 +2539,6 @@ window.WSAdminGUI = (function () {
           </div>
       </div>`;
 
-    const homepageModalMap = {
-      welcome: { title: "Homepage welcome text", id: "homepage-welcome-editor" },
-      promos: { title: "Weekly & monthly happenings", id: "homepage-promos-editor" },
-      gallery: { title: "Main Street vibes — gallery", id: "homepage-gallery-editor" },
-      signatures: { title: "Signature favorites", id: "homepage-signatures-editor" },
-      faq: { title: "Good to know — FAQ", id: "homepage-faq-editor" },
-    };
-
     const homepagePromoWorkflow = mountPromoEditorWorkflow(
       panel,
       promosData,
@@ -1705,7 +2547,7 @@ window.WSAdminGUI = (function () {
       "homepage-promo-list",
       "homepage-promo-editor",
       "add-homepage-promo",
-      scheduleHomepagePromoPreview
+      scheduleHomepagePreview
     );
 
     panel.querySelectorAll("[data-homepage-modal]").forEach((btn) => {
@@ -1719,15 +2561,26 @@ window.WSAdminGUI = (function () {
           bodyHtml: block.innerHTML,
           footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
           onMount: (root) => {
-            bindImagePickers(root);
+            bindPhotoGroups(root, images, () => scheduleHomepagePreview(false));
+            bindImagePickers(root, () => scheduleHomepagePreview(false));
             bindRemove(root);
+            root.addEventListener("input", (e) => {
+              if (e.target.matches("[data-field]")) scheduleHomepagePreview(false);
+            });
+            root.addEventListener("change", (e) => {
+              if (e.target.matches("[data-field]")) scheduleHomepagePreview(false);
+            });
             root.querySelector("#add-gallery")?.addEventListener("click", () => {
               const rows = root.querySelector("#gallery-rows");
               rows.insertAdjacentHTML(
                 "beforeend",
                 galleryRow({ caption: "", alt: "", image: "assets/gallery/WSGoodTimes.webp" }, rows.children.length, images)
               );
-              bindImagePickers(root);
+              const newGroup = rows.lastElementChild?.querySelector("[data-photo-group]");
+              if (newGroup) {
+                const tags = newGroup.dataset.photoTags ? JSON.parse(newGroup.dataset.photoTags) : ["gallery", "food", "drinks", "music", "ambiance"];
+                refreshPhotoGroupPicker(newGroup, images, tags);
+              }
               bindRemove(root);
             });
             root.querySelector("#add-sig")?.addEventListener("click", () => {
@@ -1736,7 +2589,11 @@ window.WSAdminGUI = (function () {
                 "beforeend",
                 sigRow({ title: "", summary: "", image: "assets/gallery/WSFood.webp", ctaLabel: "View menu", ctaHref: "menu.html" }, rows.children.length, images)
               );
-              bindImagePickers(root);
+              const newGroup = rows.lastElementChild?.querySelector("[data-photo-group]");
+              if (newGroup) {
+                const tags = newGroup.dataset.photoTags ? JSON.parse(newGroup.dataset.photoTags) : ["food", "gallery", "menu", "signature"];
+                refreshPhotoGroupPicker(newGroup, images, tags);
+              }
               bindRemove(root);
             });
             root.querySelector("#add-faq")?.addEventListener("click", () => {
@@ -1749,14 +2606,16 @@ window.WSAdminGUI = (function () {
             const modalRoot = document.getElementById("admin-modal-root");
             const body = modalRoot?.querySelector(".admin-modal__body");
             if (body) block.innerHTML = body.innerHTML;
+            bindPhotoGroups(panel, images, () => scheduleHomepagePreview(false));
             bindImagePickers(panel);
             bindRemove(panel);
-            scheduleHomepagePromoPreview(true);
+            scheduleHomepagePreview(true);
           },
         });
       });
     });
 
+    bindPhotoGroups(panel, images, () => scheduleHomepagePreview(false));
     bindImagePickers(panel);
     bindRemove(panel);
     panel._getHomepagePromos = (base) => {
@@ -1764,22 +2623,26 @@ window.WSAdminGUI = (function () {
       out.homepageFeatured = promosData.homepageFeatured || [];
       return out;
     };
-    panel._refreshPagePreview = () => pushHomepagePromoPreview(true);
-    pushHomepagePromoPreview(true);
+    panel._refreshPagePreview = () => pushHomepagePreview(true);
+    if (window.WSAdminPreviewFrame) WSAdminPreviewFrame.bind(panel.querySelector("#homepage-preview-iframe"));
+    pushHomepagePreview(true);
   }
 
   function galleryRow(g, i, images) {
     return `
       <div class="admin-list-item" data-gallery="${i}">
-        <div class="admin-list-item-head">
-          <strong>Gallery photo ${Number(i) + 1}</strong>
-          <button type="button" class="btn btn-outline admin-btn-sm" data-remove-gallery>Remove</button>
-        </div>
         <div class="admin-form-grid cols-2">
           ${field("Caption", `<input data-field="gal.${i}.caption" value="${esc(g.caption)}" />`)}
-          ${field("Alt text", `<input data-field="gal.${i}.alt" value="${esc(g.alt)}" />`)}
         </div>
-        ${imagePicker(`gal.${i}.image`, g.image, images, ["gallery", "food", "drinks", "music", "ambiance"])}
+        ${photoGroupHtml({
+          groupId: `hp-gal-${i}`,
+          fieldName: `gal.${i}.image`,
+          groupData: { image: g.image, alt: g.alt, paths: g.paths, excludedPaths: g.excludedPaths },
+          imagesData: images,
+          tags: ["gallery", "food", "drinks", "music", "ambiance"],
+          label: `Gallery photo ${Number(i) + 1}`,
+          altDataField: `gal.${i}.alt`,
+        })}
       </div>`;
   }
 
@@ -1796,7 +2659,24 @@ window.WSAdminGUI = (function () {
           ${field("Description", `<textarea data-field="sig.${i}.summary" rows="2">${esc(c.summary)}</textarea>`)}
           ${field("Button link", `<input data-field="sig.${i}.ctaHref" value="${esc(c.ctaHref)}" />`)}
         </div>
-        ${imagePicker(`sig.${i}.image`, c.image, images, ["food", "gallery", "menu", "signature"])}
+        ${photoGroupHtml({
+          groupId: `hp-sig-${i}`,
+          fieldName: `sig.${i}.image`,
+          groupData: { image: c.image, alt: c.title, paths: c.imagePaths, excludedPaths: c.excludedPaths },
+          imagesData: images,
+          tags: ["food", "gallery", "menu", "signature"],
+          label: "Photo",
+          altDataField: `sig.${i}.alt`,
+        })}
+      </div>`;
+  }
+
+  function statsRow(s, i) {
+    return `
+      <div class="admin-list-item" data-stat="${i}">
+        <div class="admin-list-item-head"><strong>Stat ${Number(i) + 1}</strong></div>
+        ${field("Value", `<input data-field="stats.${i}.value" value="${esc(s.value)}" />`)}
+        ${field("Label", `<input data-field="stats.${i}.label" value="${esc(s.label)}" />`)}
       </div>`;
   }
 
@@ -1817,16 +2697,46 @@ window.WSAdminGUI = (function () {
     out.heroes = out.heroes || {};
     out.heroes.index = out.heroes.index || {};
     out.heroes.index.eyebrow = val(panel, "heroes.index.eyebrow");
+    out.heroes.index.titleLine1 = val(panel, "heroes.index.titleLine1");
+    out.heroes.index.titleLine2 = val(panel, "heroes.index.titleLine2");
+    out.heroes.index.tagline = val(panel, "heroes.index.tagline");
     out.heroes.index.lead = val(panel, "heroes.index.lead");
+    ["happyHour", "contact"].forEach((key) => {
+      out.heroes[key] = out.heroes[key] || {};
+      ["eyebrow", "titleLine1", "lead"].forEach((field) => {
+        const el = panel.querySelector(`[data-field="heroes.${key}.${field}"]`);
+        if (el) out.heroes[key][field] = el.value.trim();
+      });
+    });
     out.homepage = out.homepage || {};
+
+    out.stats = [];
+    panel.querySelectorAll("[data-stat]").forEach((row) => {
+      const i = row.dataset.stat;
+      const base = (site.stats || [])[i] || {};
+      out.stats.push({
+        id: base.id || `stat-${i}`,
+        value: val(panel, `stats.${i}.value`),
+        label: val(panel, `stats.${i}.label`),
+      });
+    });
+    if (!out.stats.length && site.stats?.length) out.stats = JSON.parse(JSON.stringify(site.stats));
+
+    if (site.pages) {
+      out.pages = JSON.parse(JSON.stringify({ ...(out.pages || {}), ...site.pages }));
+    }
 
     out.homepage.gallery = [];
     panel.querySelectorAll("[data-gallery]").forEach((row) => {
       const i = row.dataset.gallery;
       const caption = val(panel, `gal.${i}.caption`);
       if (!caption) return;
+      const group = row.querySelector("[data-photo-group]");
+      const g = group ? readPhotoGroup(group) : { active: val(panel, `gal.${i}.image`), paths: [], excluded: [] };
       out.homepage.gallery.push({
-        image: val(panel, `gal.${i}.image`),
+        image: g.active,
+        paths: g.paths,
+        excludedPaths: g.excluded,
         caption,
         alt: val(panel, `gal.${i}.alt`) || caption,
       });
@@ -1837,10 +2747,14 @@ window.WSAdminGUI = (function () {
       const i = row.dataset.sig;
       const title = val(panel, `sig.${i}.title`);
       if (!title) return;
+      const group = row.querySelector("[data-photo-group]");
+      const g = group ? readPhotoGroup(group) : { active: val(panel, `sig.${i}.image`), paths: [], excluded: [] };
       out.homepage.signatureCards.push({
         title,
         summary: val(panel, `sig.${i}.summary`),
-        image: val(panel, `sig.${i}.image`),
+        image: g.active,
+        imagePaths: g.paths,
+        excludedPaths: g.excluded,
         alt: title,
         ctaLabel: val(panel, `sig.${i}.ctaLabel`) || "View menu",
         ctaHref: val(panel, `sig.${i}.ctaHref`) || "menu.html",
@@ -1875,11 +2789,12 @@ window.WSAdminGUI = (function () {
     function syncActivePage() {
       heroesData[activePage] = heroesData[activePage] || { panels: ["", "", "", ""] };
       const modalRoot = document.getElementById("admin-modal-root");
-      const scope = modalRoot?.querySelector(`[data-field="hero.${activePage}.0"]`) ? modalRoot : panel;
-      heroesData[activePage].panels = [0, 1, 2, 3].map((i) => {
-        const v = scope.querySelector(`[data-field="hero.${activePage}.${i}"]`);
-        return v ? v.value.trim() : heroesData[activePage].panels[i] || "";
-      });
+      const inModal =
+        modalRoot?.querySelector(`[data-photo-group="hero-${activePage}-0"]`) ||
+        modalRoot?.querySelector(`[data-field="hero.${activePage}.0"]`);
+      const scope = inModal ? modalRoot : panel;
+      heroesData[activePage].panels = [0, 1, 2, 3].map((i) => readHeroPanelValue(scope, activePage, i));
+      syncHeroPhotoMeta(activePage, scope, heroesData[activePage]);
     }
 
     function pushHeroPreview() {
@@ -1898,31 +2813,22 @@ window.WSAdminGUI = (function () {
       const openLink = panel.querySelector("#hero-open-page");
       const pl = HERO_PAGES.find((p) => p.key === activePage);
       if (!pl || !iframe) return;
-      const base = `${pl.url}?heroPreview=1`;
+      const pageUrl = window.WSAdminPreviewFrame?.normalizePreviewUrl(pl.url) || pl.url;
+      const base = `${pageUrl}?heroPreview=1`;
       if (openLink) openLink.href = pl.url;
       if (reload) iframe.src = `${base}&_=${Date.now()}`;
     }
 
     function openHeroEditorModal() {
       const pl = HERO_PAGES.find((p) => p.key === activePage);
-      const panels = heroesData[activePage]?.panels || ["", "", "", ""];
       openAdminModal({
         title: `${pl?.label || "Page"} hero photos`,
         subtitle: "Pick four rotating hero images for this page",
         wide: true,
-        bodyHtml: `
-          ${[0, 1, 2, 3]
-            .map(
-              (i) => `
-            <div class="admin-hero-photo-row">
-              <label>Photo ${i + 1}</label>
-              ${imagePicker(`hero.${activePage}.${i}`, panels[i] || "", images, ["hero", "gallery"])}
-            </div>`
-            )
-            .join("")}`,
+        bodyHtml: heroPanelsEditorHtml(activePage, heroesData, images),
         footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
         onMount: (root) => {
-          bindImagePickers(root, scheduleHeroPreview);
+          bindPhotoGroups(root, images, scheduleHeroPreview);
         },
         onClose: () => {
           syncActivePage();
@@ -1993,9 +2899,721 @@ window.WSAdminGUI = (function () {
     out.heroes = out.heroes || {};
     ["index", "events", "menu", "contact", "happyHour"].forEach((key) => {
       out.heroes[key] = out.heroes[key] || {};
-      out.heroes[key].panels = [0, 1, 2, 3].map((i) => val(panel, `hero.${key}.${i}`));
+      out.heroes[key].panels = [0, 1, 2, 3].map((i) => readHeroPanelValue(panel, key, i));
+      syncHeroPhotoMeta(key, panel, out.heroes[key]);
     });
     return out;
+  }
+
+  /* ——— Other pages (click-to-edit draft preview) ——— */
+  const EDIT_PAGES = [
+    { id: "index", label: "Homepage", url: "index.html", query: "pageEditPreview=1&homepagePreview=1&promoPreview=1" },
+    { id: "order", label: "Order", url: "order.html", query: "pageEditPreview=1" },
+    { id: "happyHour", label: "Happy Hour", url: "happy-hour.html", query: "pageEditPreview=1", heroKey: "happyHour" },
+    { id: "about", label: "Our Story", url: "about.html", query: "pageEditPreview=1" },
+    { id: "contact", label: "Visit / Contact", url: "contact.html", query: "pageEditPreview=1", heroKey: "contact" },
+    { id: "menu", label: "Menu page", url: "menu.html", query: "pageEditPreview=1", heroKey: "menu" },
+    { id: "privateEvents", label: "Private Events", url: "private-events.html", query: "pageEditPreview=1" },
+  ];
+
+  function heroTextEditorHtml(heroKey, hero) {
+    return `
+      <div class="admin-form-grid">
+        ${field("Eyebrow", `<input data-field="heroes.${heroKey}.eyebrow" value="${esc(hero?.eyebrow || "")}" />`)}
+        ${field("Headline", `<input data-field="heroes.${heroKey}.titleLine1" value="${esc(hero?.titleLine1 || "")}" />`)}
+        ${field("Intro", `<textarea data-field="heroes.${heroKey}.lead" rows="3">${esc(hero?.lead || "")}</textarea>`)}
+      </div>`;
+  }
+
+  const PAGE_SECTION_MODALS = {
+    "hero-text": { title: "Welcome text", blockId: "pages-welcome-editor" },
+    stats: { title: "Homepage stats bar", blockId: "pages-stats-editor" },
+    promos: { title: "Weekly & monthly happenings", blockId: "pages-promos-editor" },
+    gallery: { title: "Main Street vibes — gallery", blockId: "pages-gallery-editor" },
+    signatures: { title: "Signature favorites", blockId: "pages-signatures-editor" },
+    faq: { title: "Good to know — FAQ", blockId: "pages-faq-editor" },
+  };
+
+  function heroPhotoGroupHtml(heroKey, index, src, images, tags = ["hero", "gallery"], heroEntry = {}) {
+    const panelPaths = heroEntry.panelPaths?.[index];
+    const panelExcluded = heroEntry.panelExcluded?.[index];
+    return photoGroupHtml({
+      groupId: `hero-${heroKey}-${index}`,
+      fieldName: `hero.${heroKey}.${index}`,
+      groupData: {
+        src: src || "",
+        paths: panelPaths?.length ? panelPaths : src ? [src] : [],
+        excluded: panelExcluded || [],
+      },
+      imagesData: images,
+      tags,
+      label: `Photo ${Number(index) + 1}`,
+      skipAlt: true,
+    });
+  }
+
+  function heroPanelsEditorHtml(heroKey, heroes, images, tags = ["hero", "gallery"]) {
+    const entry = heroes[heroKey] || {};
+    const panels = entry.panels || ["", "", "", ""];
+    return [0, 1, 2, 3].map((i) => heroPhotoGroupHtml(heroKey, i, panels[i] || "", images, tags, entry)).join("");
+  }
+
+  function readHeroPhotoGroup(scope, heroKey, index) {
+    const group = scope.querySelector(`[data-photo-group="hero-${heroKey}-${index}"]`);
+    if (group) return readPhotoGroup(group);
+    return {
+      active: scope.querySelector(`[data-field="hero.${heroKey}.${index}"]`)?.value.trim() || "",
+      paths: [],
+      excluded: [],
+      alt: "",
+    };
+  }
+
+  function readHeroPanelValue(scope, heroKey, index) {
+    return readHeroPhotoGroup(scope, heroKey, index).active;
+  }
+
+  function syncHeroPhotoMeta(heroKey, scope, target) {
+    target.panelPaths = [0, 1, 2, 3].map((i) => readHeroPhotoGroup(scope, heroKey, i).paths);
+    target.panelExcluded = [0, 1, 2, 3].map((i) => readHeroPhotoGroup(scope, heroKey, i).excluded);
+  }
+
+  function renderPages(panel, site, images, promos) {
+    const activePageId = panel.dataset.activePageId || "index";
+    const siteBase = JSON.parse(JSON.stringify(site));
+    let siteData = JSON.parse(JSON.stringify(site));
+    siteData.pages = siteData.pages || {};
+    let promosData = JSON.parse(JSON.stringify(promos || { homepageFeatured: [], eventsPageFeatured: [] }));
+    let previewTimer = null;
+    let pagesPromoWorkflow = null;
+    const hp = siteData.homepage || {};
+    const heroes = siteData.heroes || {};
+
+    function syncHeroKey(heroKey, scope = panel) {
+      if (!heroKey) return;
+      siteData.heroes = siteData.heroes || {};
+      siteData.heroes[heroKey] = siteData.heroes[heroKey] || { panels: ["", "", "", ""] };
+      siteData.heroes[heroKey].panels = [0, 1, 2, 3].map((i) => readHeroPanelValue(scope, heroKey, i));
+      syncHeroPhotoMeta(heroKey, scope, siteData.heroes[heroKey]);
+    }
+
+    function syncAllHeroes(scope = panel) {
+      ["index", "happyHour", "contact", "menu"].forEach((key) => syncHeroKey(key, scope));
+    }
+
+    function pushPagePreview(reloadFrame) {
+      syncAllHeroes();
+      const draftSite = collectHomepage(panel, {
+        ...siteBase,
+        heroes: siteData.heroes,
+        pages: siteData.pages,
+        stats: siteData.stats || siteBase.stats,
+      });
+      if (window.WSConfig) {
+        WSConfig.savePreview("site", draftSite);
+        WSConfig.savePreview("promos", promosData);
+      }
+      const iframe = panel.querySelector("#other-page-iframe");
+      if (!iframe || !reloadFrame) return;
+      try {
+        iframe.contentWindow?.postMessage({ type: "ws-promo-preview-refresh" }, window.location.origin);
+      } catch {
+        /* ignore */
+      }
+      const cfg = EDIT_PAGES.find((p) => p.id === (panel.dataset.activePageId || "index")) || EDIT_PAGES[0];
+      if (window.WSAdminPreviewFrame) WSAdminPreviewFrame.setSrc(iframe, cfg.url, cfg.query);
+    }
+
+    function schedulePagePreview(immediate) {
+      clearTimeout(previewTimer);
+      if (immediate) pushPagePreview(true);
+      else previewTimer = setTimeout(() => pushPagePreview(true), 300);
+    }
+
+    function openHomepageBlock(blockId, title, onMountExtra) {
+      const block = panel.querySelector(`#${blockId}`);
+      if (!block) return;
+      openAdminModal({
+        title,
+        wide: true,
+        bodyHtml: block.innerHTML,
+        footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => {
+          bindPhotoGroups(root, images, () => schedulePagePreview(false));
+          bindImagePickers(root, () => schedulePagePreview(false));
+          bindRemove(root);
+          root.addEventListener("input", (e) => {
+            if (e.target.matches("[data-field]")) schedulePagePreview(false);
+          });
+          onMountExtra?.(root);
+        },
+        onClose: () => {
+          const body = document.getElementById("admin-modal-root")?.querySelector(".admin-modal__body");
+          if (body) block.innerHTML = body.innerHTML;
+          bindPhotoGroups(panel, images, () => schedulePagePreview(false));
+          bindImagePickers(panel);
+          bindRemove(panel);
+          schedulePagePreview(true);
+        },
+      });
+    }
+
+    function openHeroPhotosModal(heroKey, label) {
+      const block = panel.querySelector(`#pages-hero-editor-${heroKey}`);
+      if (!block) return;
+      openAdminModal({
+        title: `${label} — hero photos`,
+        subtitle: "Pick four rotating hero images",
+        wide: true,
+        bodyHtml: block.innerHTML,
+        footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => bindPhotoGroups(root, images, () => schedulePagePreview(false)),
+        onClose: () => {
+          const body = document.getElementById("admin-modal-root")?.querySelector(".admin-modal__body");
+          if (body) block.innerHTML = body.innerHTML;
+          syncHeroKey(heroKey);
+          schedulePagePreview(true);
+        },
+      });
+    }
+
+    function openPageHeroModal(pageId, label) {
+      const hero = siteData.pages[pageId]?.hero || siteBase.pages?.[pageId]?.hero || {};
+      openAdminModal({
+        title: `${label} — page hero`,
+        bodyHtml: `
+          ${field("Eyebrow (optional)", `<input data-field="pages.${pageId}.hero.eyebrow" value="${esc(hero.eyebrow || "")}" />`)}
+          ${field("Title", `<input data-field="pages.${pageId}.hero.title" value="${esc(hero.title || "")}" />`)}
+          ${field("Intro", `<textarea data-field="pages.${pageId}.hero.lead" rows="3">${esc(hero.lead || "")}</textarea>`)}`,
+        footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => {
+          root.addEventListener("input", (e) => {
+            if (!e.target.matches("[data-field]")) return;
+            siteData.pages[pageId] = siteData.pages[pageId] || {};
+            siteData.pages[pageId].hero = siteData.pages[pageId].hero || {};
+            const field = e.target.dataset.field.split(".").pop();
+            siteData.pages[pageId].hero[field] = e.target.value.trim();
+            schedulePagePreview(false);
+          });
+        },
+        onClose: () => schedulePagePreview(true),
+      });
+    }
+
+    function getBlockData(pageId, blockId) {
+      siteData.pages[pageId] = siteData.pages[pageId] || {};
+      siteData.pages[pageId].blocks = siteData.pages[pageId].blocks || {};
+      if (siteData.pages[pageId].blocks[blockId]) {
+        return JSON.parse(JSON.stringify(siteData.pages[pageId].blocks[blockId]));
+      }
+      const iframe = panel.querySelector("#other-page-iframe");
+      try {
+        const el = iframe?.contentDocument?.querySelector(`[data-admin-block="${blockId}"]`);
+        const scraped = el && iframe.contentWindow.WSPageBlocks?.scrapeBlock(el, blockId);
+        if (scraped) {
+          siteData.pages[pageId].blocks[blockId] = scraped;
+          return JSON.parse(JSON.stringify(scraped));
+        }
+      } catch {
+        /* iframe not ready */
+      }
+      return {};
+    }
+
+    function saveBlockData(pageId, blockId, data) {
+      siteData.pages[pageId] = siteData.pages[pageId] || {};
+      siteData.pages[pageId].blocks = siteData.pages[pageId].blocks || {};
+      siteData.pages[pageId].blocks[blockId] = data;
+    }
+
+    const BLOCK_LABELS = {
+      intro: "Section heading",
+      stats: "Stats row",
+      feature: "Feature block",
+      card: "Card",
+      orderCard: "Partner card",
+      split: "Text & photos",
+      gallery: "Photo gallery",
+      detail: "Info block",
+      fine: "Note text",
+      cta: "Call to action",
+      section: "Section",
+    };
+
+    function pageBlockStatsEditor(data, prefix) {
+      const items = data.items || [{ value: "", label: "" }];
+      return items
+        .map(
+          (s, i) => `
+        <div class="admin-list-item" data-block-stat="${i}">
+          ${field("Value", `<input data-block-field="${prefix}.items.${i}.value" value="${esc(s.value || "")}" />`)}
+          ${field("Label", `<input data-block-field="${prefix}.items.${i}.label" value="${esc(s.label || "")}" />`)}
+        </div>`
+        )
+        .join("");
+    }
+
+    function galleryRowWithPrefix(g, i, images, prefix) {
+      return `
+      <div class="admin-list-item" data-block-gallery="${i}">
+        ${field("Caption", `<input data-block-field="${prefix}.items.${i}.caption" value="${esc(g.caption || "")}" />`)}
+        ${photoGroupHtml({
+          groupId: `gallery-${i}`,
+          fieldName: `${prefix}.items.${i}.image`,
+          groupData: { image: g.image, alt: g.alt, paths: g.paths, excludedPaths: g.excludedPaths },
+          imagesData: images,
+          tags: ["gallery", "food", "hero"],
+          label: `Photo ${Number(i) + 1}`,
+          altBlockField: `${prefix}.items.${i}.alt`,
+        })}
+      </div>`;
+    }
+
+    function openPageBlockModal(pageId, blockId, blockType) {
+      const cfg = EDIT_PAGES.find((p) => p.id === pageId) || EDIT_PAGES[0];
+      const type = blockType || "section";
+      const data = getBlockData(pageId, blockId);
+      const label = BLOCK_LABELS[type] || "Section";
+      let bodyHtml = "";
+
+      if (type === "intro" || type === "cta" || type === "section") {
+        bodyHtml = `
+          ${field("Heading", `<input data-block-field="title" value="${esc(data.title || "")}" />`)}
+          ${field("Body", `<textarea data-block-field="body" rows="4">${esc(data.body || "")}</textarea>`)}`;
+      } else if (type === "stats") {
+        bodyHtml = `<div id="block-stats-rows">${pageBlockStatsEditor(data, "stats")}</div>`;
+      } else if (type === "feature") {
+        bodyHtml = `
+          ${field("Tag", `<input data-block-field="tag" value="${esc(data.tag || "")}" />`)}
+          ${field("Title", `<input data-block-field="title" value="${esc(data.title || "")}" />`)}
+          ${field("Body", `<textarea data-block-field="body" rows="3">${esc(data.body || "")}</textarea>`)}
+          ${field("Bullet points (one per line)", `<textarea data-block-field="bulletsText" rows="4">${esc((data.bullets || []).join("\n"))}</textarea>`)}
+          ${photoGroupHtml({
+            groupId: "feature",
+            fieldName: "featureImage",
+            groupData: { src: data.image, alt: data.imageAlt, paths: data.imagePaths, excludedPaths: data.excludedPaths },
+            imagesData: images,
+            tags: ["food", "gallery", "hero"],
+            label: "Photo",
+            altBlockField: "imageAlt",
+          })}
+          ${field("Button label", `<input data-block-field="ctaLabel" value="${esc(data.ctaLabel || "")}" />`)}
+          ${field("Button link", `<input data-block-field="ctaHref" value="${esc(data.ctaHref || "")}" />`)}`;
+      } else if (type === "card") {
+        bodyHtml = `
+          ${field("Title", `<input data-block-field="title" value="${esc(data.title || "")}" />`)}
+          ${field("Body", `<textarea data-block-field="body" rows="3">${esc(data.body || "")}</textarea>`)}
+          ${photoGroupHtml({
+            groupId: "card",
+            fieldName: "cardImage",
+            groupData: { src: data.image, alt: data.imageAlt, paths: data.imagePaths, excludedPaths: data.excludedPaths },
+            imagesData: images,
+            tags: ["gallery", "food", "hero"],
+            label: "Photo",
+            altBlockField: "imageAlt",
+          })}
+          ${field("Button label", `<input data-block-field="ctaLabel" value="${esc(data.ctaLabel || "")}" />`)}
+          ${field("Button link", `<input data-block-field="ctaHref" value="${esc(data.ctaHref || "")}" />`)}
+          ${field("Tags (comma separated)", `<input data-block-field="tagsText" value="${esc((data.tags || []).join(", "))}" />`)}`;
+      } else if (type === "orderCard") {
+        bodyHtml = `
+          ${field("Label", `<input data-block-field="label" value="${esc(data.label || "")}" />`)}
+          ${field("Title", `<input data-block-field="title" value="${esc(data.title || "")}" />`)}
+          ${field("Body", `<textarea data-block-field="body" rows="2">${esc(data.body || "")}</textarea>`)}
+          ${field("Link URL", `<input data-block-field="href" value="${esc(data.href || "")}" />`)}
+          ${field("Link text", `<input data-block-field="cta" value="${esc(data.cta || "")}" />`)}`;
+      } else if (type === "split") {
+        const imgs = data.images?.length ? data.images : [{ src: "", alt: "" }];
+        bodyHtml = `
+          ${field("Heading", `<input data-block-field="title" value="${esc(data.title || "")}" />`)}
+          ${field("Body paragraphs (blank line between)", `<textarea data-block-field="body" rows="5">${esc(data.body || "")}</textarea>`)}
+          ${field("Bullet points (one per line)", `<textarea data-block-field="bulletsText" rows="4">${esc((data.bullets || []).join("\n"))}</textarea>`)}
+          <div id="block-split-photo-rows">${imgs.map((img, i) => splitPhotoRow(img, i, images)).join("")}</div>
+          ${sectionAddPhotoToolbarHtml("block-add-split-photo")}`;
+      } else if (type === "gallery") {
+        bodyHtml = `
+          <div id="block-gallery-rows">${(data.items || []).map((g, i) => galleryRowWithPrefix(g, i, images, "gallery")).join("")}</div>
+          ${sectionAddPhotoToolbarHtml("block-add-gallery")}`;
+      } else if (type === "detail") {
+        bodyHtml = `
+          ${field("Heading", `<input data-block-field="title" value="${esc(data.title || "")}" />`)}
+          ${field("Body", `<textarea data-block-field="body" rows="4">${esc(data.body || "")}</textarea>`)}`;
+      } else if (type === "fine") {
+        bodyHtml = field("Text (HTML allowed)", `<textarea data-block-field="body" rows="3">${esc(data.body || "")}</textarea>`);
+      }
+
+      function collectBlockFromForm(root, bType, base) {
+        const out = { ...base };
+        root.querySelectorAll("[data-block-field]").forEach((input) => {
+          const key = input.dataset.blockField;
+          if (key === "title") out.title = input.value.trim();
+          else if (key === "body") out.body = input.value.trim();
+          else if (key === "tag") out.tag = input.value.trim();
+          else if (key === "imageAlt") out.imageAlt = input.value.trim();
+          else if (key === "ctaLabel") out.ctaLabel = input.value.trim();
+          else if (key === "ctaHref") out.ctaHref = input.value.trim();
+          else if (key === "label") out.label = input.value.trim();
+          else if (key === "href") out.href = input.value.trim();
+          else if (key === "cta") out.cta = input.value.trim();
+          else if (key === "bulletsText") out.bullets = input.value.split("\n").map((s) => s.trim()).filter(Boolean);
+          else if (key === "tagsText") out.tags = input.value.split(",").map((s) => s.trim()).filter(Boolean);
+          else if (key.startsWith("stats.items.")) {
+            out.items = out.items || [];
+            const m = key.match(/stats\.items\.(\d+)\.(\w+)/);
+            if (m) {
+              out.items[Number(m[1])] = out.items[Number(m[1])] || {};
+              out.items[Number(m[1])][m[2]] = input.value.trim();
+            }
+          } else if (key.startsWith("gallery.items.")) {
+            out.items = out.items || [];
+            const m = key.match(/gallery\.items\.(\d+)\.(\w+)/);
+            if (m) {
+              out.items[Number(m[1])] = out.items[Number(m[1])] || {};
+              out.items[Number(m[1])][m[2]] = input.value.trim();
+            }
+          } else if (key.startsWith("images.")) {
+            out.images = out.images || [];
+            const m = key.match(/images\.(\d+)\.(\w+)/);
+            if (m) {
+              out.images[Number(m[1])] = out.images[Number(m[1])] || {};
+              out.images[Number(m[1])][m[2]] = input.value.trim();
+            }
+          }
+        });
+        const featureGroup = root.querySelector('[data-photo-group="feature"]');
+        if (featureGroup) {
+          const fg = readPhotoGroup(featureGroup);
+          out.image = fg.active;
+          out.imageAlt = fg.alt;
+          out.imagePaths = fg.paths;
+          out.excludedPaths = fg.excluded;
+        }
+        const cardGroup = root.querySelector('[data-photo-group="card"]');
+        if (cardGroup) {
+          const cg = readPhotoGroup(cardGroup);
+          out.image = cg.active;
+          out.imageAlt = cg.alt;
+          out.imagePaths = cg.paths;
+          out.excludedPaths = cg.excluded;
+        }
+        if (bType === "split") {
+          out.images = collectSplitPhotosFromRoot(root).map(({ src, alt, paths, excludedPaths }) => ({
+            src,
+            alt,
+            paths,
+            excludedPaths,
+          }));
+        }
+        if (bType === "gallery") {
+          out.items = collectGalleryBlockPhotosFromRoot(root, "gallery");
+        }
+        if (bType === "stats") {
+          out.items = out.items || [];
+        }
+        return out;
+      }
+
+      openAdminModal({
+        title: `${cfg.label} — ${label}`,
+        wide: type === "gallery" || type === "split" || type === "feature" || type === "card",
+        bodyHtml,
+        footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => {
+          const syncBlock = () => {
+            saveBlockData(pageId, blockId, collectBlockFromForm(root, type, data));
+            schedulePagePreview(false);
+          };
+          bindPhotoGroups(root, images, syncBlock);
+          bindImagePickers(root, syncBlock);
+          bindRemove(root);
+          root.addEventListener("input", (e) => {
+            if (!e.target.matches("[data-block-field], [data-field]")) return;
+            syncBlock();
+          });
+          if (type === "split") {
+            bindPhotoSectionToolbar(root, {
+              rowsEl: root.querySelector("#block-split-photo-rows"),
+              addBtnId: "block-add-split-photo",
+              renderRow: (row, i) => splitPhotoRow(row, i, images),
+              defaultRow: () => ({ src: "", alt: "", paths: [] }),
+              imagesData: images,
+              onChanged: syncBlock,
+            });
+          }
+          if (type === "gallery") {
+            bindPhotoSectionToolbar(root, {
+              rowsEl: root.querySelector("#block-gallery-rows"),
+              addBtnId: "block-add-gallery",
+              renderRow: (row, i) => galleryRowWithPrefix(row, i, images, "gallery"),
+              defaultRow: () => ({ caption: "", alt: "", image: "", paths: [] }),
+              imagesData: images,
+              onChanged: syncBlock,
+            });
+          }
+        },
+        onClose: () => {
+          const root = document.getElementById("admin-modal-root")?.querySelector(".admin-modal__body");
+          if (root) {
+            saveBlockData(pageId, blockId, collectBlockFromForm(root, type, getBlockData(pageId, blockId)));
+          }
+          schedulePagePreview(true);
+        },
+      });
+    }
+
+    function openPageSectionContentModal(pageId, sectionIndex) {
+      const cfg = EDIT_PAGES.find((p) => p.id === pageId) || EDIT_PAGES[0];
+      siteData.pages[pageId] = siteData.pages[pageId] || {};
+      siteData.pages[pageId].sections = siteData.pages[pageId].sections || [];
+      const sec = siteData.pages[pageId].sections[sectionIndex] || { title: "", body: "" };
+      openAdminModal({
+        title: `${cfg.label} — section ${sectionIndex + 1}`,
+        bodyHtml: `
+          ${field("Heading", `<input data-field="pages.${pageId}.sections.${sectionIndex}.title" value="${esc(sec.title || "")}" />`)}
+          ${field("Body", `<textarea data-field="pages.${pageId}.sections.${sectionIndex}.body" rows="5">${esc(sec.body || "")}</textarea>`)}`,
+        footerHtml: `<button type="button" class="btn btn-primary admin-btn-sm" data-admin-modal-close>Done</button>`,
+        onMount: (root) => {
+          root.addEventListener("input", (e) => {
+            if (!e.target.matches("[data-field]")) return;
+            siteData.pages[pageId].sections[sectionIndex] = siteData.pages[pageId].sections[sectionIndex] || {};
+            const field = e.target.dataset.field.endsWith(".title") ? "title" : "body";
+            siteData.pages[pageId].sections[sectionIndex][field] = e.target.value.trim();
+            schedulePagePreview(false);
+          });
+        },
+        onClose: () => schedulePagePreview(true),
+      });
+    }
+
+    function openPageSectionModal(section, pageId) {
+      const cfg = EDIT_PAGES.find((p) => p.id === pageId) || EDIT_PAGES[0];
+      if (section === "hero-photos") {
+        const heroKey = cfg.heroKey || (pageId === "index" ? "index" : null);
+        if (heroKey) openHeroPhotosModal(heroKey, cfg.label);
+        return;
+      }
+      if (section === "hero-text") {
+        const heroKey = cfg.heroKey || (pageId === "index" ? "index" : null);
+        if (!heroKey) return;
+        if (heroKey === "index") {
+          openHomepageBlock("pages-welcome-editor", "Welcome text");
+        } else {
+          openHomepageBlock(`pages-hero-text-${heroKey}`, `${cfg.label} — hero text`);
+        }
+        return;
+      }
+      if (section === "page-hero") {
+        openPageHeroModal(pageId, cfg.label);
+        return;
+      }
+      const secMatch = section.match(/^page-section-(\d+)$/);
+      if (secMatch) {
+        openPageSectionContentModal(pageId, Number(secMatch[1]));
+        return;
+      }
+      const modalCfg = PAGE_SECTION_MODALS[section];
+      if (!modalCfg) return;
+      openHomepageBlock(modalCfg.blockId, modalCfg.title, (root) => {
+        if (section === "promos") {
+          root.querySelector("#pages-add-promo")?.addEventListener("click", () => pagesPromoWorkflow.openEditor(null));
+        }
+        if (section === "gallery") {
+          root.querySelector("#pages-add-gallery")?.addEventListener("click", () => {
+            const rows = root.querySelector("#pages-gallery-rows");
+            rows.insertAdjacentHTML(
+              "beforeend",
+              galleryRow({ caption: "", alt: "", image: "assets/gallery/WSGoodTimes.webp" }, rows.children.length, images)
+            );
+            const newGroup = rows.lastElementChild?.querySelector("[data-photo-group]");
+            if (newGroup) {
+              const tags = newGroup.dataset.photoTags ? JSON.parse(newGroup.dataset.photoTags) : ["gallery", "food", "drinks", "music", "ambiance"];
+              refreshPhotoGroupPicker(newGroup, images, tags);
+            }
+            bindRemove(root);
+          });
+        }
+        if (section === "signatures") {
+          root.querySelector("#pages-add-sig")?.addEventListener("click", () => {
+            const rows = root.querySelector("#pages-sig-rows");
+            rows.insertAdjacentHTML(
+              "beforeend",
+              sigRow({ title: "", summary: "", image: "assets/gallery/WSFood.webp", ctaLabel: "View menu", ctaHref: "menu.html" }, rows.children.length, images)
+            );
+            const newGroup = rows.lastElementChild?.querySelector("[data-photo-group]");
+            if (newGroup) {
+              const tags = newGroup.dataset.photoTags ? JSON.parse(newGroup.dataset.photoTags) : ["food", "gallery", "menu", "signature"];
+              refreshPhotoGroupPicker(newGroup, images, tags);
+            }
+            bindRemove(root);
+          });
+        }
+        if (section === "faq") {
+          root.querySelector("#pages-add-faq")?.addEventListener("click", () => {
+            root.querySelector("#pages-faq-rows")?.insertAdjacentHTML("beforeend", faqRow({ q: "", a: "" }));
+            bindRemove(root);
+          });
+        }
+      });
+    }
+
+    function handlePagePreviewMessage(event) {
+      if (!panel.isConnected) {
+        window.removeEventListener("message", handlePagePreviewMessage);
+        return;
+      }
+      if (event.origin !== window.location.origin || event.data?.source !== "ws-page-preview") return;
+      const payload = event.data;
+      if (payload.type === "recover-preview") {
+        pushPagePreview(true);
+        return;
+      }
+      if (payload.type === "admin-nav" && payload.target) {
+        window.dispatchEvent(new CustomEvent("ws-admin-switch-tab", { detail: { tab: payload.target } }));
+        return;
+      }
+      if (payload.type === "switch-page" && payload.pageId) {
+        panel.dataset.activePageId = payload.pageId;
+        const pageSelect = panel.querySelector("#edit-page-select");
+        if (pageSelect) pageSelect.value = payload.pageId;
+        pushPagePreview(true);
+        return;
+      }
+      if (payload.type === "promo" && pagesPromoWorkflow) {
+        pagesPromoWorkflow.openEditor(payload.id || null);
+        return;
+      }
+      if (payload.type === "block" && payload.blockId) {
+        openPageBlockModal(
+          payload.pageId || panel.dataset.activePageId || "index",
+          payload.blockId,
+          payload.blockType
+        );
+        return;
+      }
+      if (payload.type === "section") {
+        openPageSectionModal(payload.section, payload.pageId || panel.dataset.activePageId || "index");
+      }
+    }
+
+    panel.innerHTML = `
+      <p class="admin-note">Click anything in the preview to edit it. Use the site menu at the top of the preview to jump between pages — header and footer aren't editable here. <em>Save draft</em> then <em>Publish live</em>.</p>
+      <div class="admin-field admin-page-picker" style="margin-bottom:1rem">
+        <label for="edit-page-select">Page</label>
+        <select id="edit-page-select">
+          ${EDIT_PAGES.map(
+            (p) => `<option value="${esc(p.id)}"${p.id === activePageId ? " selected" : ""}>${esc(p.label)}</option>`
+          ).join("")}
+        </select>
+      </div>
+      <div class="admin-draft-full">
+        <iframe id="other-page-iframe" class="admin-preview-frame" title="Page draft preview" src="about:blank"></iframe>
+      </div>
+      <div id="pages-hidden-editors" hidden>
+        <div id="pages-welcome-editor">
+          <div class="admin-form-grid">
+            ${field("Location line", `<input data-field="heroes.index.eyebrow" value="${esc(heroes.index?.eyebrow)}" />`)}
+            ${field("Title line 1", `<input data-field="heroes.index.titleLine1" value="${esc(heroes.index?.titleLine1)}" />`)}
+            ${field("Title line 2", `<input data-field="heroes.index.titleLine2" value="${esc(heroes.index?.titleLine2)}" />`)}
+            ${field("Tagline", `<input data-field="heroes.index.tagline" value="${esc(heroes.index?.tagline)}" />`)}
+            ${field("Intro paragraph", `<textarea data-field="heroes.index.lead" rows="3">${esc(heroes.index?.lead)}</textarea>`)}
+          </div>
+        </div>
+        ${["index", "happyHour", "contact", "menu"]
+          .map(
+            (key) => `
+        <div id="pages-hero-editor-${key}">${heroPanelsEditorHtml(key, heroes, images)}</div>`
+          )
+          .join("")}
+        ${["happyHour", "contact"]
+          .map(
+            (key) => `
+        <div id="pages-hero-text-${key}">${heroTextEditorHtml(key, heroes[key])}</div>`
+          )
+          .join("")}
+        <div id="pages-stats-editor">
+          <div id="pages-stats-rows">${(siteData.stats || site.stats || []).map((s, i) => statsRow(s, i)).join("")}</div>
+        </div>
+        <div id="pages-promos-editor">
+          <p style="color:var(--text-muted);font-size:0.88rem;margin:0 0 1rem">${esc(PROMO_PLACEMENTS.homepage.hint)}</p>
+          <button type="button" class="btn btn-outline admin-btn-sm" id="pages-add-promo">+ Add promo card</button>
+          <div id="pages-promo-editor" hidden></div>
+          <div id="pages-promo-list"></div>
+        </div>
+        <div id="pages-gallery-editor">
+          <div id="pages-gallery-rows">${(hp.gallery || []).map((g, i) => galleryRow(g, i, images)).join("")}</div>
+          <button type="button" class="btn btn-outline admin-btn-sm" id="pages-add-gallery" style="margin-top:0.75rem">+ Add gallery photo</button>
+        </div>
+        <div id="pages-signatures-editor">
+          <div id="pages-sig-rows">${(hp.signatureCards || []).map((c, i) => sigRow(c, i, images)).join("")}</div>
+          <button type="button" class="btn btn-outline admin-btn-sm" id="pages-add-sig" style="margin-top:0.75rem">+ Add signature card</button>
+        </div>
+        <div id="pages-faq-editor">
+          <div id="pages-faq-rows">${(hp.faq || []).map((f, i) => faqRow(f, i)).join("")}</div>
+          <button type="button" class="btn btn-outline admin-btn-sm" id="pages-add-faq" style="margin-top:0.75rem">+ Add FAQ</button>
+        </div>
+      </div>`;
+
+    const select = panel.querySelector("#edit-page-select");
+    select.addEventListener("change", () => {
+      panel.dataset.activePageId = select.value;
+      pushPagePreview(true);
+    });
+
+    pagesPromoWorkflow = mountPromoEditorWorkflow(
+      panel,
+      promosData,
+      "homepage",
+      images,
+      "pages-promo-list",
+      "pages-promo-editor",
+      "pages-add-promo",
+      schedulePagePreview
+    );
+
+    panel._getHomepagePromos = (base) => {
+      const out = JSON.parse(JSON.stringify(base || promosData));
+      out.homepageFeatured = promosData.homepageFeatured || [];
+      return out;
+    };
+    panel._refreshPagePreview = () => pushPagePreview(true);
+    panel._collectPagesDraft = (stateBase) => {
+      syncAllHeroes();
+      return {
+        site: collectHomepage(panel, {
+          ...(stateBase.site || siteBase),
+          heroes: siteData.heroes,
+          pages: siteData.pages,
+          stats: siteData.stats || siteBase.stats,
+        }),
+        promos: panel._getHomepagePromos(stateBase.promos || promos),
+      };
+    };
+
+    bindPhotoGroups(panel, images, () => schedulePagePreview(false));
+    bindImagePickers(panel);
+    bindRemove(panel);
+    if (panel._pagePreviewMessageHandler) {
+      window.removeEventListener("message", panel._pagePreviewMessageHandler);
+    }
+    panel._pagePreviewMessageHandler = handlePagePreviewMessage;
+    window.addEventListener("message", panel._pagePreviewMessageHandler);
+    const iframe = panel.querySelector("#other-page-iframe");
+    if (window.WSAdminPreviewFrame) WSAdminPreviewFrame.bind(iframe);
+    if (iframe && !iframe.dataset.pageEditGuard) {
+      iframe.dataset.pageEditGuard = "1";
+      iframe.addEventListener("load", () => {
+        try {
+          const qs = new URLSearchParams(iframe.contentWindow.location.search);
+          if (!qs.has("pageEditPreview")) pushPagePreview(true);
+        } catch {
+          /* ignore */
+        }
+      });
+    }
+
+    const cfg = EDIT_PAGES.find((p) => p.id === select.value) || EDIT_PAGES[0];
+    panel.dataset.activePageId = cfg.id;
+    pushPagePreview(true);
   }
 
   function bindRemove(panel) {
@@ -2034,6 +3652,7 @@ window.WSAdminGUI = (function () {
     renderPromos,
     collectPromos,
     renderHomepage,
+    renderPages,
     collectHomepage,
     renderHeroes,
     collectHeroes,
