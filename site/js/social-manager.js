@@ -62,8 +62,8 @@ window.WSSocial = (function () {
     return /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(base);
   }
 
-  function bridgeRoutes(config) {
-    const base = bridgeUrl(config);
+  function bridgeRoutes(config, { forPost = false } = {}) {
+    const base = forPost && isHttpsAdmin() ? CLOUD_BRIDGE : bridgeUrl(config);
     if (isLocalBridge(base) || isTunnelBridge(base)) {
       return {
         health: `${base}/health`,
@@ -234,7 +234,7 @@ window.WSSocial = (function () {
   }
 
   async function postToBridge(config, payload) {
-    const url = bridgeRoutes(config).post;
+    const url = bridgeRoutes(config, { forPost: true }).post;
     const authPayload = withBridgeAuth(config, payload);
     const body = JSON.stringify(authPayload);
     const debug = {
@@ -797,7 +797,7 @@ window.WSSocial = (function () {
               ? ` Log into admin to post from this device.`
               : "";
           if (viaTunnel) {
-            statusEl.innerHTML = `<strong>Main PC bridge online (ws-social tunnel).</strong> Full poster — Knight Logics accounts only. Open admin from any device.${keyNote}`;
+            statusEl.innerHTML = `<strong>Main PC bridge online (ws-social tunnel).</strong> LinkedIn/Nextdoor and Facebook groups use the tunnel; Facebook Page, X, and GBP post through the cloud bridge from any device.${keyNote}`;
           } else if (isCloud && fullBridge) {
             statusEl.innerHTML = `<strong>Cloud bridge online — full poster active.</strong> Demo posts to Knight Logics accounts only (one per platform).${keyNote}`;
           } else if (isCloud) {
