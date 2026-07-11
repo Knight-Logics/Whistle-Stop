@@ -275,12 +275,47 @@ window.WSSocial = (function () {
     return data;
   }
 
-  async function postToBridge(config, payload, { tunnelOnline = false, preflight = null, platformCatalog = [] } = {}) {
+  async function postToBridge(config, payload, { tunnelOnline = false, preflight = null, platformCatalog = [], cloudRemoteBridge = false } = {}) {
     const selected = payload.platforms || [];
     const tunnelPlatforms = selected.filter((pid) => platformNeedsTunnel(pid, preflight));
     const cloudPlatforms = selected.filter((pid) => !platformNeedsTunnel(pid, preflight));
+    const hostGuideUrl = "downloads/social-host.html";
     const tunnelOfflineMsg =
-      "Playwright host offline on the main PC. Run START-PRESENTATION.ps1 (or the always-on host script) there — you can trigger LinkedIn/Nextdoor from this browser once the tunnel status above is green.";
+      `Playwright host offline. Graph platforms (Facebook Page / X / GBP) still work via cloud. For LinkedIn, Nextdoor, and Facebook groups: run the Social Host on any PC — see ${hostGuideUrl} (or START-HOST.ps1).`;
+
+    // When Vercel can reach the host, send everything through cloud (best for guest WiFi).
+    if (isHttpsAdmin() && cloudRemoteBridge) {
+      const data = await fetchPostUrl(`${CLOUD_BRIDGE}/post`, config, payload);
+      return {
+        ok: true,
+        entry:
+          data.entry || {
+            id: `post_${Date.now()}`,
+            createdAt: new Date().toISOString(),
+            text: String(payload.text || "").slice(0, 500),
+            platforms: selected,
+            results: data.results || [],
+          },
+        results: data.results || [],
+      };
+    }
+
+    // Graph-only via cloud when no Playwright platforms selected
+    if (isHttpsAdmin() && !tunnelPlatforms.length) {
+      const data = await fetchPostUrl(`${CLOUD_BRIDGE}/post`, config, payload);
+      return {
+        ok: true,
+        entry:
+          data.entry || {
+            id: `post_${Date.now()}`,
+            createdAt: new Date().toISOString(),
+            text: String(payload.text || "").slice(0, 500),
+            platforms: selected,
+            results: data.results || [],
+          },
+        results: data.results || [],
+      };
+    }
 
     const allResults = [];
     let entry = null;
@@ -569,20 +604,75 @@ window.WSSocial = (function () {
     let platforms = [];
     let bridgeOnline = false;
     let tunnelOnline = false;
+    let cloudRemoteBridge = false;
     let gbpLimits = null;
     let mediaDataUrl = "";
     let mediaFileType = "";
     let preflightData = null;
 
-    const preflightEl = panel.querySelector("#social-preflight-body");
-    const logsEl = panel.querySelector("#social-bridge-logs");
+    const HOST_MODAL_KEY = "ws-social-host-modal-dismissed";
+
+    function maybeShowHostModal(force = false) {
+      if (!window.WSConfig?.canSocialPost?.()) return;
+      if (!force) {
+        try {
+          if (sessionStorage.getItem(HOST_MODAL_KEY) === "1") return;
+        } catch (_) {}
+      }
+      if (document.getElementById("ws-social-host-modal")) return;
+
+      const overlay = document.createElement("div");
+      overlay.id = "ws-social-host-modal";
+      overlay.className = "admin-modal-overlay is-open";
+      overlay.innerHTML = `
+        <div class="admin-modal" role="dialog" aria-labelledby="ws-host-modal-title" style="max-width:32rem">
+          <header class="admin-modal-header">
+            <h2 id="ws-host-modal-title">Social Host not detected</h2>
+            <button type="button" class="admin-modal-close" data-host-dismiss aria-label="Close">×</button>
+          </header>
+          <div class="admin-modal-body">
+            <p><strong>Works now (no host):</strong> Facebook Page, X (Twitter), Google Business Profile — via cloud from any device.</p>
+            <p><strong>Needs Social Host:</strong> LinkedIn, Nextdoor, and Facebook community groups (Playwright on a Windows PC).</p>
+            <p>Download the host package, run it on <em>any</em> PC that stays awake (home PC or this laptop), keep the windows open, then refresh here. Knight Logics demo accounts only.</p>
+            <p style="font-size:0.85rem;color:var(--text-muted)">Browsers cannot install this automatically — you run the script once on the host machine.</p>
+          </div>
+          <footer class="admin-modal-footer">
+            <button type="button" class="btn btn-outline admin-btn-sm" data-host-dismiss>Not now — Graph only</button>
+            <button type="button" class="btn btn-outline admin-btn-sm" data-host-refresh>Already running? Refresh</button>
+            <a class="btn btn-primary admin-btn-sm" href="downloads/social-host.html" target="_blank" rel="noopener">Open host guide</a>
+          </footer>
+        </div>`;
+      document.body.appendChild(overlay);
+
+      const dismiss = () => {
+        try {
+          sessionStorage.setItem(HOST_MODAL_KEY, "1");
+        } catch (_) {}
+        overlay.remove();
+      };
+      overlay.querySelectorAll("[data-host-dismiss]").forEach((el) => el.addEventListener("click", dismiss));
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) dismiss();
+      });
+      overlay.querySelector("[data-host-refresh]")?.addEventListener("click", async () => {
+        overlay.remove();
+        await refreshBridge();
+      });
+    }
+
+    if (!window.WSConfig?.canSocialPost?.()) {
+      panel.innerHTML = `
+        <p class="admin-note">Your account (<strong>${esc(window.WSConfig?.getSessionUser?.()?.username || "staff")}</strong>) can edit site content but cannot post to social. Ask an owner or editor.</p>`;
+      return;
+    }
 
     panel.innerHTML = `
       <p class="admin-note">
         Compose once for <strong>Facebook, X, LinkedIn, Nextdoor, and Google Business Profile</strong>.
-        <strong>Live presentation:</strong> open <a href="${LIVE_ADMIN_URL}" target="_blank" rel="noopener">${LIVE_ADMIN_URL}</a>
-        on any laptop, log in, and post. Facebook / X / GBP use the cloud bridge; LinkedIn / Nextdoor use Playwright on the
-        <strong>main PC</strong> via the tunnel — run <code>START-PRESENTATION.ps1</code> on the host PC before the pitch.
+        <strong>Live admin:</strong> <a href="${LIVE_ADMIN_URL}" target="_blank" rel="noopener">${LIVE_ADMIN_URL}</a>
+        — Facebook Page / X / GBP work from any WiFi via cloud.
+        LinkedIn / Nextdoor need a <a href="downloads/social-host.html" target="_blank" rel="noopener">Social Host</a>
+        running on any PC (main PC or this laptop). Bookmark: <code>…/Whistle-Stop/admin.html</code> (not <code>/admin/</code>).
       </p>
       <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking cloud bridge…</div>
       <details class="admin-details social-preflight-panel" id="social-preflight-panel" open>
@@ -718,6 +808,8 @@ window.WSSocial = (function () {
     const gbpNote = panel.querySelector("#social-gbp-limit-note");
     const accessListEl = panel.querySelector("#social-access-list");
     const previewEl = panel.querySelector("#social-post-preview");
+    const preflightEl = panel.querySelector("#social-preflight-body");
+    const logsEl = panel.querySelector("#social-bridge-logs");
     const businessName = config.clientName || site?.business?.name || "Whistle Stop Grill & Bar";
 
     function getSelectedPlatforms() {
@@ -828,24 +920,36 @@ window.WSSocial = (function () {
     async function refreshBridge() {
       activeBridgeOverride = "";
       tunnelOnline = false;
+      cloudRemoteBridge = false;
       let health = { online: false };
+      let browserTunnel = { online: false };
 
       if (isHttpsAdmin()) {
-        const tunnel = await pingTunnelBridge();
-        if (tunnel.online) {
+        health = await pingBridge(config);
+        cloudRemoteBridge = Boolean(health.remoteBridge);
+        browserTunnel = await pingTunnelBridge();
+        tunnelOnline = cloudRemoteBridge || browserTunnel.online;
+        bridgeOnline = health.online;
+        if (browserTunnel.online && !cloudRemoteBridge) {
+          // Browser can reach host even when Vercel cannot — use for Playwright posts.
+          activeBridgeOverride = "";
+        }
+      } else {
+        browserTunnel = await pingTunnelBridge();
+        if (browserTunnel.online) {
           activeBridgeOverride = TUNNEL_BRIDGE;
           tunnelOnline = true;
-          health = { ...tunnel, online: true };
+          health = { ...browserTunnel, online: true };
         }
+        if (!health.online) {
+          health = await pingBridge(config);
+        }
+        bridgeOnline = health.online;
+        cloudRemoteBridge = Boolean(health.remoteBridge);
       }
 
-      if (!health.online) {
-        health = await pingBridge(config);
-      }
-
-      bridgeOnline = health.online;
       const viaTunnel = isTunnelBridge(activeBridgeOverride);
-      const remoteBridge = viaTunnel || Boolean(health.remoteBridge);
+      const remoteBridge = tunnelOnline || cloudRemoteBridge;
       const fullBridge = remoteBridge || health.service === "whistle-stop-social-proxy";
       if (statusEl) {
         statusEl.className = `admin-social-bridge-status ${bridgeOnline ? "is-online" : "is-offline"}`;
@@ -856,12 +960,16 @@ window.WSSocial = (function () {
             (isCloud || viaTunnel) && !canPost
               ? ` Log into admin to post from this device.`
               : "";
+          const graphNote = " Facebook Page, X, and GBP work from any WiFi via cloud.";
           if (viaTunnel) {
-            statusEl.innerHTML = `<strong>Playwright host online (tunnel).</strong> Post LinkedIn/Nextdoor from this browser — Playwright runs on the main PC. FB / X / GBP still use the cloud bridge.${keyNote}`;
-          } else if (isCloud && fullBridge) {
-            statusEl.innerHTML = `<strong>Cloud bridge online — full poster active.</strong> Demo posts to Knight Logics accounts only (one per platform).${keyNote}`;
+            statusEl.innerHTML = `<strong>Playwright host online (direct tunnel).</strong> LinkedIn/Nextdoor use this PC's tunnel.${graphNote}${keyNote}`;
+          } else if (isCloud && cloudRemoteBridge) {
+            statusEl.innerHTML = `<strong>Cloud bridge online — full poster active.</strong> Main PC reachable via Vercel (guest WiFi OK).${keyNote}`;
+          } else if (isCloud && browserTunnel.online) {
+            statusEl.innerHTML = `<strong>Cloud + Playwright host online.</strong> Graph via cloud; LinkedIn/Nextdoor via tunnel from this browser.${keyNote}`;
           } else if (isCloud) {
-            statusEl.innerHTML = `<strong>Cloud bridge online.</strong> Facebook, X, and GBP work from this device. LinkedIn/Nextdoor need the main PC tunnel — run <code>START-PRESENTATION.ps1</code> on the host PC.${keyNote}`;
+            statusEl.innerHTML = `<strong>Cloud bridge online — Graph ready.</strong>${graphNote} LinkedIn/Nextdoor need a Social Host — <a href="downloads/social-host.html" target="_blank" rel="noopener">download &amp; run</a> or start the main PC host.${keyNote}`;
+            maybeShowHostModal();
           } else {
             statusEl.innerHTML = `<strong>Local bridge online.</strong> Full Knight Logics poster on this PC.${keyNote}`;
           }
@@ -870,8 +978,8 @@ window.WSSocial = (function () {
         } else {
           const isCloud = !isLocalBridge(bridgeUrl(config));
           statusEl.innerHTML = isCloud
-            ? `<strong>Cloud bridge offline.</strong> Set Vercel env vars and deploy MainSite. See <code>api/whistle-stop-social.env.example</code>. For full demo run <code>START-PRESENTATION.ps1</code>.`
-            : `<strong>Bridge offline.</strong> Run <code>START-PRESENTATION.ps1</code> or <code>START-DEMO.ps1</code> on this PC.`;
+            ? `<strong>Cloud bridge offline.</strong> Check Vercel, then <a href="downloads/social-host.html" target="_blank" rel="noopener">Social Host guide</a>.`
+            : `<strong>Bridge offline.</strong> Run <code>START-HOST.ps1</code> or <code>START-DEMO.ps1</code> on this PC.`;
         }
       }
 
@@ -1083,6 +1191,7 @@ window.WSSocial = (function () {
         if (bridgeOnline) {
           const data = await postToBridge(config, payload, {
             tunnelOnline,
+            cloudRemoteBridge,
             preflight: preflightData,
             platformCatalog: platforms,
           });
@@ -1176,9 +1285,37 @@ window.WSSocial = (function () {
     });
   }
 
+  async function checkHostAndPrompt() {
+    if (!window.WSConfig?.canSocialPost?.()) return { tunnelOnline: false, cloudRemoteBridge: false };
+    let cloudRemoteBridge = false;
+    let tunnelOnline = false;
+    try {
+      const cloud = await pingBridge({ bridgeUrl: CLOUD_BRIDGE });
+      cloudRemoteBridge = Boolean(cloud.remoteBridge);
+    } catch (_) {}
+    try {
+      const tunnel = await pingTunnelBridge();
+      tunnelOnline = tunnel.online;
+    } catch (_) {}
+    if (!cloudRemoteBridge && !tunnelOnline) {
+      // Defer modal until Social tab if possible; still expose for post-login
+      try {
+        if (sessionStorage.getItem("ws-social-host-modal-dismissed") !== "1") {
+          const evt = new CustomEvent("ws-social-host-needed", {
+            detail: { cloudRemoteBridge, tunnelOnline },
+          });
+          document.dispatchEvent(evt);
+        }
+      } catch (_) {}
+    }
+    return { tunnelOnline: tunnelOnline || cloudRemoteBridge, cloudRemoteBridge };
+  }
+
   return {
     renderAdmin,
     pingBridge,
+    pingTunnelBridge,
+    checkHostAndPrompt,
     bridgeUrl,
   };
 })();

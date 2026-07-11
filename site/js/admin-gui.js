@@ -1839,7 +1839,7 @@ window.WSAdminGUI = (function () {
     }
 
     panel.innerHTML = `
-      <p class="admin-note">Update item names, descriptions, and prices. Click a menu item in the preview to edit it, or use Edit section. <em>Save changes</em> keeps the draft on this device; <em>Publish live</em> updates the public site.</p>
+      <p class="admin-note">Update item names, descriptions, and prices. <strong>Legacy editor</strong> — Toast will sync menu prices later. Click a menu item in the preview to edit it. <em>Save changes</em> keeps the draft on this device; <em>Publish live</em> updates the public site.</p>
       <div class="admin-draft-full">
         <div class="admin-draft-full__toolbar">
           <div class="admin-form-grid cols-2" style="margin:0;flex:1;min-width:min(100%,520px)">
@@ -2480,7 +2480,7 @@ window.WSAdminGUI = (function () {
       if (!iframe || !reloadFrame) return;
       notifyHomepagePromoFrame(iframe);
       if (window.WSAdminPreviewFrame) WSAdminPreviewFrame.setSrc(iframe, "index.html", "homepagePreview=1&promoPreview=1");
-      else iframe.src = `${window.WSAdminPreviewFrame?.normalizePreviewUrl("index.html") || "/"}?homepagePreview=1&promoPreview=1&adminFrame=homepage-preview-iframe&_=${Date.now()}`;
+      else iframe.src = `${window.WSAdminPreviewFrame?.normalizePreviewUrl("index.html") || "index.html"}?homepagePreview=1&promoPreview=1&adminFrame=homepage-preview-iframe&_=${Date.now()}`;
     }
 
     function scheduleHomepagePreview(immediate) {

@@ -19,7 +19,7 @@
       title: "Website",
       tabs: [
         { id: "events", label: "Events", hint: "Calendar, music & promos" },
-        { id: "menus", label: "Menus", hint: "Food & drink menus" },
+        { id: "menus", label: "Menus", hint: "Legacy editor · Toast sync coming" },
         { id: "pages", label: "Other pages", hint: "Home, order, visit & more" },
       ],
     },
@@ -163,8 +163,12 @@
       <div class="admin-login">
         <div class="admin-login-card">
           <h1>Staff Portal</h1>
-          <p>Update the event calendar, menus, promo cards, and hero photos — no code required.</p>
+          <p>Update events, pages, campaigns, and social — no code required. Live URL: <code>…/Whistle-Stop/admin.html</code></p>
           <form id="admin-login-form">
+            <div class="admin-field">
+              <label>Username</label>
+              <input type="text" name="username" required autocomplete="username" placeholder="owner, editor, or staff" />
+            </div>
             <div class="admin-field">
               <label>Password</label>
               <input type="password" name="password" required autocomplete="current-password" />
@@ -180,10 +184,12 @@
 
     $("#admin-login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const ok = await WSConfig.login(e.target.password.value);
+      const username = e.target.username.value;
+      const password = e.target.password.value;
+      const ok = await WSConfig.login(username, password);
       if (!ok) {
         const err = $("#login-error");
-        err.textContent = "Incorrect password.";
+        err.textContent = "Incorrect username or password.";
         err.style.display = "block";
         return;
       }
@@ -193,13 +199,14 @@
 
   async function initApp() {
     await loadAll();
+    const user = WSConfig.getSessionUser?.() || { username: "staff", role: "staff", displayName: "Staff" };
     document.body.className = "admin-body";
     document.body.innerHTML = `
       <div class="admin-shell is-active">
         <aside class="admin-sidebar">
           <div class="admin-sidebar-brand">
             <strong>Whistle Stop</strong>
-            <span>Staff portal</span>
+            <span>Staff portal · ${escHtml(user.displayName || user.username)} (${escHtml(user.role)})</span>
           </div>
           <nav class="admin-nav" id="admin-nav"></nav>
           <div style="padding:1rem 1.25rem 0">
@@ -236,7 +243,17 @@
       renderLogin();
     });
 
+    document.addEventListener("ws-social-host-needed", () => {
+      if (window.WSSocial?.checkHostAndPrompt) {
+        /* modal is shown from Social tab; toast here for post-login awareness */
+        toast("Social Host offline — Graph posts still work. Open Social Poster for host download.");
+      }
+    });
+
     await renderTab();
+    try {
+      await window.WSSocial?.checkHostAndPrompt?.();
+    } catch (_) {}
   }
 
   window.addEventListener("ws-admin-switch-tab", (e) => {
@@ -286,7 +303,11 @@
                 ? `<span class="admin-social-top-hint">Interest-check signups + outreach CRM — syncs via knightlogics.com API when live.</span>`
                 : isMockTab
                 ? `<span class="admin-social-top-hint">Preview module — not connected to live data yet.</span>`
-                : `<span class="admin-draft-state">Draft preview mode</span><button type="button" class="btn btn-outline" id="admin-save-tab">Save draft</button><button type="button" class="btn btn-primary" id="admin-publish-live">Publish live</button>`
+                : `<span class="admin-draft-state">Draft preview mode</span><button type="button" class="btn btn-outline" id="admin-save-tab">Save draft</button>${
+                    WSConfig.canPublish?.()
+                      ? `<button type="button" class="btn btn-primary" id="admin-publish-live">Publish live</button>`
+                      : `<span class="admin-social-top-hint">Publish live requires owner/editor role</span>`
+                  }`
           }
         </div>
       </div>
@@ -365,6 +386,10 @@
   }
 
   function openPublishLiveModal(tab) {
+    if (!WSConfig.canPublish?.()) {
+      toast("Your role cannot publish live. Sign in as owner or editor.");
+      return;
+    }
     const g = GUI();
     if (!g?.openAdminModal) {
       toast("Publish UI failed to load. Hard refresh and try again.");

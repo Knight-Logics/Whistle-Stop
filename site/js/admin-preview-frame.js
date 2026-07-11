@@ -2,11 +2,32 @@
 window.WSAdminPreviewFrame = (function () {
   const bound = new WeakSet();
 
+  /** Project-site base (e.g. /Whistle-Stop/) — never rewrite homepage to origin root /. */
+  function siteBasePath() {
+    try {
+      const path = String(window.location.pathname || "/");
+      if (path.endsWith(".html")) {
+        const dir = path.slice(0, path.lastIndexOf("/") + 1);
+        return dir || "./";
+      }
+      return path.endsWith("/") ? path : `${path}/`;
+    } catch {
+      return "./";
+    }
+  }
+
   function normalizePreviewUrl(baseUrl) {
     if (!baseUrl) return baseUrl;
-    if (baseUrl === "index.html" || baseUrl === "/index.html") return "/";
-    // Keep .html so python -m http.server and other static hosts resolve the file.
-    return baseUrl;
+    const raw = String(baseUrl).trim();
+    // Keep .html so python -m http.server and GitHub project pages resolve the file.
+    // Never map index.html → "/" (that 404s on github.io/Whistle-Stop/).
+    if (raw === "index.html" || raw === "./index.html" || raw === "/index.html") {
+      return `${siteBasePath()}index.html`;
+    }
+    if (raw === "/" || raw === "./") {
+      return `${siteBasePath()}index.html`;
+    }
+    return raw;
   }
 
   function bind(iframe) {

@@ -1,6 +1,26 @@
 {
   "admin": {
-    "passwordHash": "400c226817e7e87a668c1988b211de97430bf1560be7e57a5c0577a6c76c5065"
+    "passwordHash": "400c226817e7e87a668c1988b211de97430bf1560be7e57a5c0577a6c76c5065",
+    "users": [
+      {
+        "username": "owner",
+        "displayName": "Owner",
+        "role": "owner",
+        "passwordHash": "400c226817e7e87a668c1988b211de97430bf1560be7e57a5c0577a6c76c5065"
+      },
+      {
+        "username": "editor",
+        "displayName": "Editor",
+        "role": "editor",
+        "passwordHash": "400c226817e7e87a668c1988b211de97430bf1560be7e57a5c0577a6c76c5065"
+      },
+      {
+        "username": "staff",
+        "displayName": "Staff",
+        "role": "staff",
+        "passwordHash": "400c226817e7e87a668c1988b211de97430bf1560be7e57a5c0577a6c76c5065"
+      }
+    ]
   },
   "business": {
     "name": "Whistle Stop Grill & Bar",

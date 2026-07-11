@@ -482,23 +482,93 @@
     );
   }
 
-  async function login(password) {
-    const normalized = String(password || "").trim();
+  async function login(usernameOrPassword, passwordMaybe) {
     const site = await fetchFile("site");
-    const hash = await sha256(normalized);
-    const stored = readOverlay().passwordHash || site.admin?.passwordHash;
-    if (hash !== stored) return false;
-    sessionPassword = normalized;
+    let username = "";
+    let password = "";
+    if (passwordMaybe === undefined) {
+      // Legacy: login(password) only
+      password = String(usernameOrPassword || "").trim();
+    } else {
+      username = String(usernameOrPassword || "").trim().toLowerCase();
+      password = String(passwordMaybe || "").trim();
+    }
+    if (!password) return false;
+
+    const hash = await sha256(password);
+    const users = Array.isArray(site.admin?.users) ? site.admin.users : [];
+    let matched = null;
+
+    if (username) {
+      matched = users.find(
+        (u) => String(u.username || "").toLowerCase() === username && u.passwordHash === hash
+      );
+    } else {
+      // Password-only: match legacy admin hash or any user with that password (prefer owner)
+      const legacy = site.admin?.passwordHash || readOverlay().passwordHash;
+      if (hash === legacy || hash === readOverlay().passwordHash) {
+        matched = users.find((u) => u.role === "owner") || {
+          username: "owner",
+          role: "owner",
+          displayName: "Owner",
+          passwordHash: hash,
+        };
+      } else {
+        matched = users.find((u) => u.passwordHash === hash) || null;
+      }
+    }
+
+    if (!matched) return false;
+
+    const role = matched.role || "staff";
+    sessionPassword = password;
     sessionStorage.setItem(
       SESSION_KEY,
       JSON.stringify({
         at: Date.now(),
         token: hash.slice(0, 16),
         adminHash: hash,
-        pwd: normalized,
+        pwd: password,
+        username: matched.username || username || "owner",
+        displayName: matched.displayName || matched.username || "Staff",
+        role,
       })
     );
     return true;
+  }
+
+  function getSessionUser() {
+    if (!isAuthed()) return null;
+    try {
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      const parsed = raw ? JSON.parse(raw) : null;
+      if (!parsed) return null;
+      return {
+        username: parsed.username || "owner",
+        displayName: parsed.displayName || parsed.username || "Staff",
+        role: parsed.role || "owner",
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  function getSessionRole() {
+    return getSessionUser()?.role || null;
+  }
+
+  function canPublish() {
+    const role = getSessionRole();
+    return role === "owner" || role === "editor";
+  }
+
+  function canSocialPost() {
+    const role = getSessionRole();
+    return role === "owner" || role === "editor";
+  }
+
+  function canManageUsers() {
+    return getSessionRole() === "owner";
   }
 
   function getSessionPassword() {
@@ -707,6 +777,11 @@
     login,
     logout,
     isAuthed,
+    getSessionUser,
+    getSessionRole,
+    canPublish,
+    canSocialPost,
+    canManageUsers,
     getAdminAuthHash,
     getAdminAuthPayload,
     getSessionPassword,
