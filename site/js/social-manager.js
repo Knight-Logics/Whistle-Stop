@@ -613,50 +613,11 @@ window.WSSocial = (function () {
     const HOST_MODAL_KEY = "ws-social-host-modal-dismissed";
 
     function maybeShowHostModal(force = false) {
-      if (!window.WSConfig?.canSocialPost?.()) return;
-      if (!force) {
-        try {
-          if (sessionStorage.getItem(HOST_MODAL_KEY) === "1") return;
-        } catch (_) {}
-      }
-      if (document.getElementById("ws-social-host-modal")) return;
-
-      const overlay = document.createElement("div");
-      overlay.id = "ws-social-host-modal";
-      overlay.className = "admin-modal-overlay is-open";
-      overlay.innerHTML = `
-        <div class="admin-modal" role="dialog" aria-labelledby="ws-host-modal-title" style="max-width:32rem">
-          <header class="admin-modal-header">
-            <h2 id="ws-host-modal-title">Social Host not detected</h2>
-            <button type="button" class="admin-modal-close" data-host-dismiss aria-label="Close">×</button>
-          </header>
-          <div class="admin-modal-body">
-            <p><strong>Works now (no host):</strong> Facebook Page, X (Twitter), Google Business Profile — via cloud from any device.</p>
-            <p><strong>Needs Social Host:</strong> LinkedIn, Nextdoor, and Facebook community groups (Playwright on a Windows PC).</p>
-            <p>Download the host package, run it on <em>any</em> PC that stays awake (home PC or this laptop), keep the windows open, then refresh here. Knight Logics demo accounts only.</p>
-            <p style="font-size:0.85rem;color:var(--text-muted)">Browsers cannot install this automatically — you run the script once on the host machine.</p>
-          </div>
-          <footer class="admin-modal-footer">
-            <button type="button" class="btn btn-outline admin-btn-sm" data-host-dismiss>Not now — Graph only</button>
-            <button type="button" class="btn btn-outline admin-btn-sm" data-host-refresh>Already running? Refresh</button>
-            <a class="btn btn-primary admin-btn-sm" href="downloads/social-host.html" target="_blank" rel="noopener">Open host guide</a>
-          </footer>
-        </div>`;
-      document.body.appendChild(overlay);
-
-      const dismiss = () => {
-        try {
-          sessionStorage.setItem(HOST_MODAL_KEY, "1");
-        } catch (_) {}
-        overlay.remove();
-      };
-      overlay.querySelectorAll("[data-host-dismiss]").forEach((el) => el.addEventListener("click", dismiss));
-      overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) dismiss();
-      });
-      overlay.querySelector("[data-host-refresh]")?.addEventListener("click", async () => {
-        overlay.remove();
-        await refreshBridge();
+      showSocialHostPackageModal({
+        force,
+        onRefresh: async () => {
+          await refreshBridge();
+        },
       });
     }
 
@@ -1285,8 +1246,84 @@ window.WSSocial = (function () {
     });
   }
 
-  async function checkHostAndPrompt() {
-    if (!window.WSConfig?.canSocialPost?.()) return { tunnelOnline: false, cloudRemoteBridge: false };
+  const HOST_PACKAGE_URL = "downloads/whistle-stop-social-host.zip";
+  const HOST_GUIDE_URL = "downloads/social-host.html";
+  const HOST_MODAL_KEY = "ws-social-host-modal-dismissed";
+  const HOST_DOWNLOADED_KEY = "ws-social-host-package-downloaded";
+
+  function showSocialHostPackageModal({ force = false, onRefresh = null } = {}) {
+    if (!window.WSConfig?.canSocialPost?.()) return false;
+    if (!force) {
+      try {
+        if (sessionStorage.getItem(HOST_MODAL_KEY) === "1") return false;
+      } catch (_) {}
+    }
+    if (document.getElementById("ws-social-host-modal")) return true;
+
+    const overlay = document.createElement("div");
+    overlay.id = "ws-social-host-modal";
+    overlay.className = "admin-modal-backdrop";
+    overlay.setAttribute("data-admin-modal-backdrop", "");
+    overlay.innerHTML = `
+      <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="ws-host-modal-title">
+        <div class="admin-modal__header">
+          <div>
+            <h3 id="ws-host-modal-title">Download Social Host package</h3>
+            <p class="admin-modal__subtitle">Required for LinkedIn / Nextdoor / Facebook groups</p>
+          </div>
+          <button type="button" class="admin-modal__close" data-host-dismiss aria-label="Close">&times;</button>
+        </div>
+        <div class="admin-modal__body">
+          <p>Your account can post to social, but a <strong>Playwright host</strong> is not running right now.</p>
+          <p><strong>Works now without the package:</strong> Facebook Page, X, Google Business Profile (cloud).</p>
+          <p><strong>This package unlocks:</strong> LinkedIn, Nextdoor, Facebook community groups.</p>
+          <ol style="margin:0.75rem 0 0;padding-left:1.25rem;line-height:1.5">
+            <li>Download the zip (included for owner/editor accounts)</li>
+            <li>Unzip on any Windows PC that stays awake</li>
+            <li>Run <code>START-HOST.ps1</code> and keep the windows open</li>
+            <li>Return here and click Refresh — then post from any device</li>
+          </ol>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.75rem">Browsers cannot install software for you. This download is the host starter package for your role.</p>
+        </div>
+        <div class="admin-modal__footer">
+          <button type="button" class="btn btn-outline admin-btn-sm" data-host-dismiss>Not now — Graph only</button>
+          <button type="button" class="btn btn-outline admin-btn-sm" data-host-refresh>Already running? Refresh</button>
+          <a class="btn btn-outline admin-btn-sm" href="${HOST_GUIDE_URL}" target="_blank" rel="noopener">Guide</a>
+          <a class="btn btn-primary admin-btn-sm" id="ws-host-download-pkg" href="${HOST_PACKAGE_URL}" download="whistle-stop-social-host.zip">Download package (.zip)</a>
+        </div>
+      </div>`;
+    document.body.classList.add("admin-modal-open");
+    document.body.appendChild(overlay);
+
+    const dismiss = () => {
+      try {
+        sessionStorage.setItem(HOST_MODAL_KEY, "1");
+      } catch (_) {}
+      document.body.classList.remove("admin-modal-open");
+      overlay.remove();
+    };
+    overlay.querySelectorAll("[data-host-dismiss]").forEach((el) => el.addEventListener("click", dismiss));
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) dismiss();
+    });
+    overlay.querySelector("#ws-host-download-pkg")?.addEventListener("click", () => {
+      try {
+        sessionStorage.setItem(HOST_DOWNLOADED_KEY, "1");
+      } catch (_) {}
+    });
+    overlay.querySelector("[data-host-refresh]")?.addEventListener("click", async () => {
+      document.body.classList.remove("admin-modal-open");
+      overlay.remove();
+      if (typeof onRefresh === "function") await onRefresh();
+      else await checkHostAndPrompt({ forceModal: true });
+    });
+    return true;
+  }
+
+  async function checkHostAndPrompt({ forceModal = false } = {}) {
+    if (!window.WSConfig?.canSocialPost?.()) {
+      return { tunnelOnline: false, cloudRemoteBridge: false, needsPackage: false };
+    }
     let cloudRemoteBridge = false;
     let tunnelOnline = false;
     try {
@@ -1297,18 +1334,26 @@ window.WSSocial = (function () {
       const tunnel = await pingTunnelBridge();
       tunnelOnline = tunnel.online;
     } catch (_) {}
-    if (!cloudRemoteBridge && !tunnelOnline) {
-      // Defer modal until Social tab if possible; still expose for post-login
+
+    const hostUp = cloudRemoteBridge || tunnelOnline;
+    const needsPackage = !hostUp;
+
+    if (needsPackage) {
+      showSocialHostPackageModal({ force: forceModal });
       try {
-        if (sessionStorage.getItem("ws-social-host-modal-dismissed") !== "1") {
-          const evt = new CustomEvent("ws-social-host-needed", {
-            detail: { cloudRemoteBridge, tunnelOnline },
-          });
-          document.dispatchEvent(evt);
-        }
+        document.dispatchEvent(
+          new CustomEvent("ws-social-host-needed", {
+            detail: { cloudRemoteBridge, tunnelOnline, needsPackage: true },
+          })
+        );
       } catch (_) {}
     }
-    return { tunnelOnline: tunnelOnline || cloudRemoteBridge, cloudRemoteBridge };
+
+    return {
+      tunnelOnline: hostUp,
+      cloudRemoteBridge,
+      needsPackage,
+    };
   }
 
   return {
@@ -1316,6 +1361,9 @@ window.WSSocial = (function () {
     pingBridge,
     pingTunnelBridge,
     checkHostAndPrompt,
+    showSocialHostPackageModal,
     bridgeUrl,
+    HOST_PACKAGE_URL,
+    HOST_GUIDE_URL,
   };
 })();

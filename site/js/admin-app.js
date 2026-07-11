@@ -243,16 +243,17 @@
       renderLogin();
     });
 
-    document.addEventListener("ws-social-host-needed", () => {
-      if (window.WSSocial?.checkHostAndPrompt) {
-        /* modal is shown from Social tab; toast here for post-login awareness */
-        toast("Social Host offline — Graph posts still work. Open Social Poster for host download.");
+    document.addEventListener("ws-social-host-needed", (e) => {
+      if (e.detail?.needsPackage) {
+        toast("Social Host package required for LinkedIn/Nextdoor — download prompted.");
       }
     });
 
     await renderTab();
     try {
-      await window.WSSocial?.checkHostAndPrompt?.();
+      if (WSConfig.canSocialPost?.()) {
+        await window.WSSocial?.checkHostAndPrompt?.({ forceModal: false });
+      }
     } catch (_) {}
   }
 
