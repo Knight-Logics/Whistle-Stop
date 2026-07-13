@@ -5,7 +5,7 @@ Knight Logics prospect demo. **Not production** — preview for client pitch.
 ## Run locally
 
 ```bash
-cd "E:\Website Audit\High Prospective Clients\Whistle-Stop\site"
+cd "E:\High Prospective Clients\Whistle-Stop\site"
 npx --yes serve -l 3456
 ```
 
@@ -26,7 +26,7 @@ Preview password: `whistlestop2026`
 | Promo Cards | Photo tiles on homepage & events page (with live preview) |
 | Hero Images | Per-page hero photo grids |
 
-Saves apply in-browser until you **Export** → replace `data/*.json` → run `python generate-schema.py` → push to GitHub.
+Saves apply in-browser until you **Export** → replace `data/*.json` → run `python ..\generate-schema.py` from this folder → push to GitHub.
 
 ## Update events (manual)
 

@@ -85,7 +85,7 @@ async function assertDataAssetRefsExist() {
 }
 
 async function assertVerifiedSocialHostPackage() {
-  const packageName = "whistle-stop-social-host-2026-07-13.zip";
+  const packageName = "whistle-stop-social-host-2026-07-13-v2.zip";
   const packagePath = join(SITE_ROOT, "downloads", packageName);
   if (!existsSync(packagePath)) throw new Error(`Missing verified Social Host package: ${packageName}`);
 
@@ -95,6 +95,13 @@ async function assertVerifiedSocialHostPackage() {
   ]);
   if (!manager.includes(packageName) || !guide.includes(packageName)) {
     throw new Error("Admin or Social Host guide still points to an unverified package");
+  }
+  if (
+    !manager.includes("Do not install this on every device") ||
+    !manager.includes("Any-device posting ready") ||
+    !guide.includes("one-time shared-host setup")
+  ) {
+    throw new Error("Social Host copy does not explain the install-once, post-from-any-device architecture");
   }
 }
 
@@ -170,6 +177,31 @@ async function assertAdminAndSocial(page) {
   }
 
   await clickAdminTab(page, "events");
+  await page.waitForSelector("#events-page-iframe");
+  const eventFrameMetrics = await page.locator("#events-page-iframe").evaluate((el) => ({
+    height: el.getBoundingClientRect().height,
+    scrolling: el.getAttribute("scrolling"),
+    inlineHeight: el.style.height,
+  }));
+  if (
+    eventFrameMetrics.height < 560 ||
+    eventFrameMetrics.height > 980 ||
+    eventFrameMetrics.scrolling !== "yes" ||
+    eventFrameMetrics.inlineHeight
+  ) {
+    throw new Error(`Events preview is not stable: ${JSON.stringify(eventFrameMetrics)}`);
+  }
+  const eventFrame = page.frames().find((frame) => frame.url().includes("/events.html?"));
+  if (!eventFrame) throw new Error("Events preview frame did not load");
+  const calendarDays = eventFrame.locator("[data-admin-date]");
+  const calendarDayCount = await calendarDays.count();
+  if (!calendarDayCount) throw new Error("Events calendar has no editable day cells");
+  await calendarDays.nth(Math.min(15, calendarDayCount - 1)).click();
+  await page.waitForSelector("#admin-modal-root .admin-modal", { timeout: 10000 });
+  let closeButtons = page.locator("#admin-modal-root [data-admin-modal-close]");
+  let closeButtonCount = await closeButtons.count();
+  await closeButtons.nth(closeButtonCount - 1).click();
+
   await page.locator("#add-perf").click();
   const addTitle = page.locator('#admin-modal-root [data-add-oneoff-field="title"]');
   await addTitle.waitFor({ timeout: 10000 });
@@ -189,6 +221,99 @@ async function assertAdminAndSocial(page) {
   await page.waitForSelector("#menu-draft-preview >> text=Presentation Test Burger", { timeout: 10000 });
   await page.locator("#admin-modal-root [data-admin-modal-close]").last().click();
 
+  await clickAdminTab(page, "pages");
+  await page.waitForSelector("#other-page-iframe");
+  const pageSelect = page.locator("#edit-page-select");
+  const editablePages = [
+    ["index", "/index.html?"],
+    ["order", "/order.html?"],
+    ["happyHour", "/happy-hour.html?"],
+    ["about", "/about.html?"],
+    ["contact", "/contact.html?"],
+    ["menu", "/menu.html?"],
+    ["privateEvents", "/private-events.html?"],
+  ];
+  for (const [pageId, pathPart] of editablePages) {
+    await pageSelect.selectOption(pageId);
+    await page.waitForFunction(
+      ({ pathPart }) => {
+        const iframe = document.querySelector("#other-page-iframe");
+        try {
+          return Boolean(
+            iframe?.contentWindow?.location.href.includes(pathPart) &&
+            iframe.contentDocument?.querySelector("[data-admin-section], [data-admin-block]")
+          );
+        } catch {
+          return false;
+        }
+      },
+      { pathPart },
+      { timeout: 10000 }
+    );
+    const previewFrame = page.frameLocator("#other-page-iframe");
+    const editableCount = await previewFrame.locator("[data-admin-section], [data-admin-block]").count();
+    if (!editableCount) throw new Error(`${pageId} preview exposes no editable sections`);
+  }
+
+  const pageFrameMetrics = await page.locator("#other-page-iframe").evaluate((el) => ({
+    height: el.getBoundingClientRect().height,
+    scrolling: el.getAttribute("scrolling"),
+    inlineHeight: el.style.height,
+  }));
+  if (
+    pageFrameMetrics.height < 560 ||
+    pageFrameMetrics.height > 980 ||
+    pageFrameMetrics.scrolling !== "yes" ||
+    pageFrameMetrics.inlineHeight
+  ) {
+    throw new Error(`Page preview is not stable: ${JSON.stringify(pageFrameMetrics)}`);
+  }
+
+  await pageSelect.selectOption("order");
+  await page.waitForFunction(
+    () => {
+      const iframe = document.querySelector("#other-page-iframe");
+      try {
+        return Boolean(
+          iframe?.contentWindow?.location.href.includes("/order.html?") &&
+          iframe.contentDocument?.querySelector("[data-admin-block]")
+        );
+      } catch {
+        return false;
+      }
+    },
+    null,
+    { timeout: 10000 }
+  );
+  const orderBlocks = page.frameLocator("#other-page-iframe").locator("[data-admin-block]");
+  const orderBlockCount = await orderBlocks.count();
+  if (!orderBlockCount) throw new Error("Order page exposes no editable content blocks");
+  await orderBlocks.nth(0).click();
+  await page.waitForSelector("#admin-modal-root .admin-modal", { timeout: 10000 });
+  closeButtons = page.locator("#admin-modal-root [data-admin-modal-close]");
+  closeButtonCount = await closeButtons.count();
+  await closeButtons.nth(closeButtonCount - 1).click();
+
+  const previewSrcBeforeSync = await page.locator("#other-page-iframe").getAttribute("src");
+  await page.evaluate(async () => {
+    const site = await window.WSConfig.get("site");
+    window.WSConfig.savePreview("site", site);
+  });
+  await page.waitForTimeout(250);
+  const previewSrcAfterSync = await page.locator("#other-page-iframe").getAttribute("src");
+  if (previewSrcBeforeSync !== previewSrcAfterSync) {
+    throw new Error("Draft sync reloaded the page preview instead of updating it in place");
+  }
+  await page.evaluate(() => window.WSConfig.clearPreview("site"));
+
+  await page.locator("#admin-publish-live").click();
+  await page.waitForSelector("#admin-publish-confirm", { timeout: 10000 });
+  const publishPasswordReady = await page.locator("#admin-publish-password").inputValue();
+  if (!publishPasswordReady) throw new Error("Publish modal did not retain the authenticated session password");
+  closeButtons = page.locator("#admin-modal-root [data-admin-modal-close]");
+  closeButtonCount = await closeButtons.count();
+  await closeButtons.nth(closeButtonCount - 1).click();
+
   await page.evaluate(async () => {
     window.WSConfig.save("promos", { homepageFeatured: [], eventsPageFeatured: [] });
     const promos = await window.WSConfig.get("promos");
@@ -202,7 +327,15 @@ async function assertAdminAndSocial(page) {
   await page.waitForSelector("#social-post-preview", { timeout: 10000 });
   await page.waitForSelector('input[name="social-platform"]', { timeout: 10000 });
   const selected = await page.locator('input[name="social-platform"]:checked').count();
-  if (selected < 2) throw new Error("Social poster did not select demo-ready platforms");
+  if (selected !== 5) throw new Error(`Social poster selected ${selected}/5 demo-ready platforms`);
+
+  await page.locator("#social-test-routing").click();
+  await page.getByText("All five routes passed — nothing was posted", { exact: true }).waitFor({
+    state: "visible",
+    timeout: 45000,
+  });
+  const readyRoutes = await page.locator("#social-post-results .social-result-row.is-ok").count();
+  if (readyRoutes !== 5) throw new Error(`Social routing dry run passed ${readyRoutes}/5 platforms`);
 }
 
 async function main() {
@@ -255,8 +388,12 @@ async function main() {
     console.log("  Menu/order flow: OK");
     console.log("  Alcohol sections excluded from cart: OK");
     console.log("  Admin tabs + draft preview: OK");
+    console.log("  Events calendar click-to-edit: OK");
+    console.log("  Seven-page section editor + stable live previews: OK");
+    console.log("  Publish modal/session handoff: OK");
     console.log("  Browser-local empty-array saves: OK");
     console.log("  Social poster demo state: OK");
+    console.log("  Five-platform no-post routing test: OK");
     console.log("  Mobile order bar: OK");
     console.log("  Mobile staff campaigns + social: OK");
   } finally {

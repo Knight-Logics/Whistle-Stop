@@ -9,6 +9,7 @@ window.WSSocial = (function () {
   const GBP_DEMO_PHOTO_URL = "https://knightlogics.com/images/whistle-stop-pitch.jpg";
   const CLOUD_MEDIA_MAX_BYTES = 3.5 * 1024 * 1024;
   const LOCAL_MEDIA_MAX_BYTES = 12 * 1024 * 1024;
+  const FULL_DEMO_PLATFORMS = ["facebook", "x", "linkedin", "gbp", "nextdoor"];
 
   const PLATFORM_ICONS = {
     facebook: "f",
@@ -74,13 +75,14 @@ window.WSSocial = (function () {
         history: `${base}/api/history`,
       };
     }
+    const routeUrl = (route) => `${base}?route=${encodeURIComponent(route)}`;
     return {
-      health: `${base}/health`,
-      platforms: `${base}/platforms`,
-      preflight: `${base}/preflight`,
-      logs: `${base}/logs`,
-      post: `${base}/post`,
-      history: `${base}/history`,
+      health: routeUrl("health"),
+      platforms: routeUrl("platforms"),
+      preflight: routeUrl("preflight"),
+      logs: routeUrl("logs"),
+      post: routeUrl("post"),
+      history: routeUrl("history"),
     };
   }
 
@@ -99,6 +101,28 @@ window.WSSocial = (function () {
     if (resolveBridgeApiKey(config)) return true;
     if (window.WSConfig?.getAdminAuthPayload?.()) return true;
     return false;
+  }
+
+  async function ensureBridgeAuth(config) {
+    if (bridgeAuthReady(config)) return true;
+    if (!window.WSConfig?.canSocialPost?.() || !window.WSConfig?.isAuthed?.()) {
+      alert("Sign into Whistle Stop admin as owner or editor to post.");
+      return false;
+    }
+    const password = window.prompt(
+      "Confirm your admin password to authorize posting from this device.\n\n(Your session was missing posting credentials — this is a one-time step.)"
+    );
+    if (!password) return false;
+    const ok = await window.WSConfig.refreshBridgeCredentials?.(password);
+    if (!ok) {
+      alert("That password did not match. Sign out and sign in again.");
+      return false;
+    }
+    if (!bridgeAuthReady(config)) {
+      alert("Could not verify posting credentials. Sign out, sign in again, then retry.");
+      return false;
+    }
+    return true;
   }
 
   function bridgeAuthKind(config) {
@@ -240,6 +264,55 @@ window.WSSocial = (function () {
     return false;
   }
 
+  /** Host attachment on the Social Host so Google's API can fetch a public JPG URL. */
+  async function uploadGbpSourceUrl(config, mediaDataUrl, { browserTunnelOnline, cloudRemoteBridge } = {}) {
+    if (!mediaDataUrl || /^data:video\//i.test(mediaDataUrl)) {
+      return { url: "", usedFallback: false, note: "" };
+    }
+
+    if (browserTunnelOnline) {
+      try {
+        const res = await fetch(`${TUNNEL_BRIDGE}/api/gbp-media/upload`, {
+          method: "POST",
+          headers: bridgeHeaders(config),
+          body: JSON.stringify(withBridgeAuth(config, { mediaBase64: mediaDataUrl })),
+        });
+        const data = await res.json();
+        if (res.ok && data.ok && data.url) {
+          console.info("[WSSocial] gbp media hosted via tunnel", { url: data.url });
+          return { url: data.url, usedFallback: false, note: "" };
+        }
+        console.warn("[WSSocial] gbp media upload rejected", data);
+      } catch (err) {
+        console.warn("[WSSocial] gbp media upload failed", err);
+      }
+    }
+
+    // Cloud relay reaches the host even when this browser cannot call the tunnel directly.
+    if (cloudRemoteBridge) {
+      return {
+        url: "",
+        usedFallback: false,
+        note:
+          "GBP photo ships with this post to the shared Social Host for conversion — no action needed on this device.",
+      };
+    }
+
+    return {
+      url: GBP_DEMO_PHOTO_URL,
+      usedFallback: true,
+      note:
+        "GBP used the Knight Logics demo photo — this device could not reach the Social Host. Facebook, X, LinkedIn, and Nextdoor still received your file.",
+    };
+  }
+
+  function estimateDataUrlBytes(dataUrl) {
+    if (!dataUrl || typeof dataUrl !== "string") return 0;
+    const comma = dataUrl.indexOf(",");
+    const b64 = comma >= 0 ? dataUrl.slice(comma + 1) : dataUrl;
+    return Math.floor((b64.length * 3) / 4);
+  }
+
   async function fetchPostUrl(url, config, payload) {
     const authPayload = withBridgeAuth(config, payload);
     const body = JSON.stringify(authPayload);
@@ -275,17 +348,15 @@ window.WSSocial = (function () {
     return data;
   }
 
-  async function postToBridge(config, payload, { tunnelOnline = false, preflight = null, platformCatalog = [], cloudRemoteBridge = false } = {}) {
+  async function postToBridge(config, payload, { tunnelOnline = false, preflight = null, platformCatalog = [], cloudRemoteBridge = false, browserTunnelOnline = false } = {}) {
     const selected = payload.platforms || [];
     const tunnelPlatforms = selected.filter((pid) => platformNeedsTunnel(pid, preflight));
     const cloudPlatforms = selected.filter((pid) => !platformNeedsTunnel(pid, preflight));
     const hostGuideUrl = "downloads/social-host.html";
     const tunnelOfflineMsg =
-      `Playwright host offline. Graph platforms (Facebook Page / X / GBP) still work via cloud. For LinkedIn, Nextdoor, and Facebook groups: run the Social Host on any PC — see ${hostGuideUrl} (or START-HOST.ps1).`;
+      `Full Social Host offline. Facebook Page and X still work via cloud; GBP falls back to a manual queue. For LinkedIn, Nextdoor, GBP API, and Facebook groups: run the Social Host on any PC — see ${hostGuideUrl} (or START-HOST.ps1).`;
 
-    // When Vercel can reach the host, send everything through cloud (best for guest WiFi).
-    if (isHttpsAdmin() && cloudRemoteBridge) {
-      const data = await fetchPostUrl(`${CLOUD_BRIDGE}/post`, config, payload);
+    function packagePostResult(data) {
       return {
         ok: true,
         entry:
@@ -300,9 +371,48 @@ window.WSSocial = (function () {
       };
     }
 
+    // Live GBP API only runs on the Social Host Python poster — never on the cloud Graph shim.
+    // Try the tunnel first whenever the host is up (direct browser path OR cloud remoteBridge).
+    if (isHttpsAdmin() && tunnelOnline) {
+      try {
+        const data = await fetchPostUrl(`${TUNNEL_BRIDGE}/api/post`, config, payload);
+        console.info("[WSSocial] posted via direct tunnel", {
+          browserTunnelOnline,
+          cloudRemoteBridge,
+        });
+        return packagePostResult(data);
+      } catch (tunnelErr) {
+        console.warn("[WSSocial] direct tunnel post failed — falling back to cloud relay", tunnelErr);
+        if (!cloudRemoteBridge) throw tunnelErr;
+      }
+    }
+
+    // Cloud relay — Graph API for FB/X; GBP often lands in manual queue here (not a photo issue).
+    if (isHttpsAdmin() && cloudRemoteBridge) {
+      const data = await fetchPostUrl(bridgeRoutes(config, { forPost: true }).post, config, payload);
+      const packaged = packagePostResult(data);
+      const gbpResult = packaged.results.find((r) => r.platform === "gbp");
+      if (
+        selected.includes("gbp") &&
+        gbpResult &&
+        (gbpResult.status === "queued_manual" || /manual|oauth/i.test(String(gbpResult.message || gbpResult.error || "")))
+      ) {
+        gbpResult.message =
+          "Cloud relay queued GBP — Google OAuth API only runs on the Social Host. Refresh GBP OAuth on the host PC, then post when status shows direct tunnel (or fix ws-social tunnel from this network).";
+      }
+      console.info("[WSSocial] posted via cloud relay", { browserTunnelOnline, cloudRemoteBridge });
+      return packaged;
+    }
+
+    // Legacy: tunnel URL was already selected as bridgeUrl (local dev).
+    if (isHttpsAdmin() && tunnelOnline && isTunnelBridge(bridgeUrl(config))) {
+      const data = await fetchPostUrl(bridgeRoutes(config).post, config, payload);
+      return packagePostResult(data);
+    }
+
     // Graph-only via cloud when no Playwright platforms selected
     if (isHttpsAdmin() && !tunnelPlatforms.length) {
-      const data = await fetchPostUrl(`${CLOUD_BRIDGE}/post`, config, payload);
+      const data = await fetchPostUrl(bridgeRoutes(config, { forPost: true }).post, config, payload);
       return {
         ok: true,
         entry:
@@ -321,7 +431,10 @@ window.WSSocial = (function () {
     let entry = null;
 
     if (cloudPlatforms.length) {
-      const data = await fetchPostUrl(`${CLOUD_BRIDGE}/post`, config, { ...payload, platforms: cloudPlatforms });
+      const data = await fetchPostUrl(bridgeRoutes(config, { forPost: true }).post, config, {
+        ...payload,
+        platforms: cloudPlatforms,
+      });
       allResults.push(...(data.results || []));
       entry = data.entry;
     }
@@ -575,7 +688,7 @@ window.WSSocial = (function () {
   function resultRow(r) {
     const status = r.status || "unknown";
     const cls =
-      status === "ok"
+      status === "ok" || status === "ready" || status === "dry_run"
         ? "is-ok"
         : status === "queued_manual"
           ? "is-gbp"
@@ -585,6 +698,12 @@ window.WSSocial = (function () {
     const detail = [r.message || r.error, r.method ? `method: ${r.method}` : "", r.runId ? `run: ${r.runId}` : "", r.sharedGroups ? `groups: ${r.sharedGroups}` : ""]
       .filter(Boolean)
       .join(" · ");
+    const gbpHelp =
+      r.platform === "gbp" && status === "error"
+        ? `<p class="social-field-hint">GBP needs a public JPG URL Google can download. Try again without an attachment, use a smaller JPG/PNG, or post text-only to Google.</p>`
+        : r.platform === "gbp" && (status === "queued_manual" || /oauth|manual queue/i.test(String(r.message || r.error || "")))
+          ? `<p class="social-field-hint"><strong>GBP API bridge — not a photo problem.</strong> The cloud relay saved this to the manual queue because Google OAuth posting only runs on the Social Host PC. On that PC: open Social Poster → refresh Google OAuth → re-run preflight until <code>gbp_kl</code> is ready. Then post again when bridge status shows <em>direct tunnel</em>. Images work once the API path is live.</p>`
+          : "";
     const title = r.accountId && r.label ? r.label : r.label || r.platform;
     const sub =
       r.accountId && r.label && r.platform
@@ -595,6 +714,7 @@ window.WSSocial = (function () {
         <strong>${esc(title)}</strong>${sub}
         <span>${esc(status.replace(/_/g, " "))}</span>
         ${detail ? `<p>${esc(detail)}</p>` : ""}
+        ${gbpHelp}
       </li>`;
   }
 
@@ -604,6 +724,7 @@ window.WSSocial = (function () {
     let platforms = [];
     let bridgeOnline = false;
     let tunnelOnline = false;
+    let browserTunnelOnline = false;
     let cloudRemoteBridge = false;
     let gbpLimits = null;
     let mediaDataUrl = "";
@@ -631,9 +752,10 @@ window.WSSocial = (function () {
       <p class="admin-note">
         Compose once for <strong>Facebook, X, LinkedIn, Nextdoor, and Google Business Profile</strong>.
         <strong>Live admin:</strong> <a href="${LIVE_ADMIN_URL}" target="_blank" rel="noopener">${LIVE_ADMIN_URL}</a>
-        — Facebook Page / X / GBP work from any WiFi via cloud.
-        LinkedIn / Nextdoor need a <a href="downloads/social-host.html" target="_blank" rel="noopener">Social Host</a>
-        running on any PC (main PC or this laptop). Bookmark: <code>…/Whistle-Stop/admin.html</code> (not <code>/admin/</code>).
+        — all five work from any device while the shared <a href="downloads/social-host.html" target="_blank" rel="noopener">Social Host</a>
+        is online. Install that host once on the designated Windows PC; phones, tablets, and other computers only need this admin page.
+        If the shared host is offline, Facebook Page and X remain available through the cloud fallback.
+        Bookmark: <code>…/Whistle-Stop/admin.html</code> (not <code>/admin/</code>).
       </p>
       <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking cloud bridge…</div>
       <details class="admin-details social-preflight-panel" id="social-preflight-panel" open>
@@ -646,7 +768,7 @@ window.WSSocial = (function () {
         <pre id="social-bridge-logs" class="social-bridge-logs" hidden></pre>
       </details>
       <details class="admin-details social-bridge-settings" id="social-bridge-settings">
-        <summary><strong>Posting connection</strong> <span class="social-gbp-summary-hint">— optional; cloud works after admin login on any device</span></summary>
+        <summary><strong>Posting connection</strong> <span class="social-gbp-summary-hint">— no per-device installation</span></summary>
         <div class="admin-form-grid cols-2" style="margin-top:0.75rem">
           <div class="admin-field admin-field--full">
             <label>Bridge URL</label>
@@ -680,7 +802,7 @@ window.WSSocial = (function () {
               <div class="social-compose-media admin-field">
                 <label>Photo, GIF, or video (optional)</label>
                 <input type="file" id="social-post-media" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm,video/x-m4v" />
-                <p class="social-field-hint" id="social-media-hint">JPG, PNG, WebP, GIF, MP4, MOV, WebM. Facebook, X, LinkedIn &amp; Nextdoor use your attachment. <strong>Google Business Profile</strong> uses a public JPG on knightlogics.com (Google cannot fetch local uploads).</p>
+                <p class="social-field-hint" id="social-media-hint">JPG, PNG, WebP, GIF, MP4, MOV, WebM. Facebook, X, LinkedIn &amp; Nextdoor use your attachment. <strong>Google Business Profile</strong> re-hosts still images as a public JPG for Google's API (PNG/WebP are converted; video is text-only on GBP).</p>
                 <div class="social-media-thumb" id="social-media-thumb" hidden>
                   <img id="social-media-thumb-img" alt="Attached media preview" hidden />
                   <video id="social-media-thumb-video" controls muted playsinline hidden></video>
@@ -728,6 +850,7 @@ window.WSSocial = (function () {
               </details>
               <div class="social-compose-actions admin-social-actions">
                 <button type="button" class="btn btn-outline admin-btn-sm" id="social-load-demo">Load pitch demo</button>
+                <button type="button" class="btn btn-outline admin-btn-sm" id="social-test-routing">Test all 5 — no post</button>
                 <button type="button" class="btn btn-primary" id="social-post-btn">Post now</button>
                 <span class="social-char-count" id="social-char-count">0 characters</span>
               </div>
@@ -881,6 +1004,7 @@ window.WSSocial = (function () {
     async function refreshBridge() {
       activeBridgeOverride = "";
       tunnelOnline = false;
+      browserTunnelOnline = false;
       cloudRemoteBridge = false;
       let health = { online: false };
       let browserTunnel = { online: false };
@@ -889,15 +1013,17 @@ window.WSSocial = (function () {
         health = await pingBridge(config);
         cloudRemoteBridge = Boolean(health.remoteBridge);
         browserTunnel = await pingTunnelBridge();
-        tunnelOnline = cloudRemoteBridge || browserTunnel.online;
-        bridgeOnline = health.online;
-        if (browserTunnel.online && !cloudRemoteBridge) {
-          // Browser can reach host even when Vercel cannot — use for Playwright posts.
-          activeBridgeOverride = "";
+        browserTunnelOnline = Boolean(browserTunnel.online);
+        tunnelOnline = cloudRemoteBridge || browserTunnelOnline;
+        bridgeOnline = health.online || browserTunnelOnline;
+        if (browserTunnelOnline) {
+          // Prefer the full Knight Command catalog and poster whenever the host is reachable.
+          activeBridgeOverride = TUNNEL_BRIDGE;
         }
       } else {
         browserTunnel = await pingTunnelBridge();
-        if (browserTunnel.online) {
+        browserTunnelOnline = Boolean(browserTunnel.online);
+        if (browserTunnelOnline) {
           activeBridgeOverride = TUNNEL_BRIDGE;
           tunnelOnline = true;
           health = { ...browserTunnel, online: true };
@@ -910,8 +1036,6 @@ window.WSSocial = (function () {
       }
 
       const viaTunnel = isTunnelBridge(activeBridgeOverride);
-      const remoteBridge = tunnelOnline || cloudRemoteBridge;
-      const fullBridge = remoteBridge || health.service === "whistle-stop-social-proxy";
       if (statusEl) {
         statusEl.className = `admin-social-bridge-status ${bridgeOnline ? "is-online" : "is-offline"}`;
         if (bridgeOnline) {
@@ -919,17 +1043,17 @@ window.WSSocial = (function () {
           const canPost = bridgeAuthReady(config);
           const keyNote =
             (isCloud || viaTunnel) && !canPost
-              ? ` Log into admin to post from this device.`
+              ? ` Confirm admin password when posting — sign out and sign in again if prompted.`
               : "";
-          const graphNote = " Facebook Page, X, and GBP work from any WiFi via cloud.";
+          const graphNote = " Facebook Page and X remain available through the cloud fallback.";
           if (viaTunnel) {
-            statusEl.innerHTML = `<strong>Playwright host online (direct tunnel).</strong> LinkedIn/Nextdoor use this PC's tunnel.${graphNote}${keyNote}`;
+            statusEl.innerHTML = `<strong>Any-device posting ready — direct tunnel from this device.</strong> Full five-platform demo including your PNG on Google.${graphNote}${keyNote}`;
           } else if (isCloud && cloudRemoteBridge) {
-            statusEl.innerHTML = `<strong>Cloud bridge online — full poster active.</strong> Main PC reachable via Vercel (guest WiFi OK).${keyNote}`;
-          } else if (isCloud && browserTunnel.online) {
+            statusEl.innerHTML = `<strong>Any-device posting ready — cloud relay to shared host.</strong> Large photos (over ~3.5 MB) may need a smaller file on this network; your PNG still converts on the host for Google.${keyNote}`;
+          } else if (isCloud && browserTunnelOnline) {
             statusEl.innerHTML = `<strong>Cloud + Playwright host online.</strong> Graph via cloud; LinkedIn/Nextdoor via tunnel from this browser.${keyNote}`;
           } else if (isCloud) {
-            statusEl.innerHTML = `<strong>Cloud bridge online — Graph ready.</strong>${graphNote} LinkedIn/Nextdoor need a Social Host — <a href="downloads/social-host.html" target="_blank" rel="noopener">download &amp; run</a> or start the main PC host.${keyNote}`;
+            statusEl.innerHTML = `<strong>This admin device is connected; the shared Social Host is offline.</strong>${graphNote} To restore all five platforms, start the designated Windows host or <a href="downloads/social-host.html" target="_blank" rel="noopener">install it once on that PC</a>. No installation is needed on this device.${keyNote}`;
             maybeShowHostModal();
           } else {
             statusEl.innerHTML = `<strong>Local bridge online.</strong> Full Knight Logics poster on this PC.${keyNote}`;
@@ -939,7 +1063,7 @@ window.WSSocial = (function () {
         } else {
           const isCloud = !isLocalBridge(bridgeUrl(config));
           statusEl.innerHTML = isCloud
-            ? `<strong>Cloud bridge offline.</strong> Check Vercel, then <a href="downloads/social-host.html" target="_blank" rel="noopener">Social Host guide</a>.`
+            ? `<strong>Knight Command connection offline.</strong> This device does not need an installation. Check the cloud bridge, then restore the one designated Windows <a href="downloads/social-host.html" target="_blank" rel="noopener">Social Host</a>.`
             : `<strong>Bridge offline.</strong> Run <code>START-HOST.ps1</code> or <code>START-DEMO.ps1</code> on this PC.`;
         }
       }
@@ -1110,6 +1234,48 @@ window.WSSocial = (function () {
       loadPitchDemo();
     });
 
+    panel.querySelector("#social-test-routing")?.addEventListener("click", async (event) => {
+      const btn = event.currentTarget;
+      resultsEl.hidden = false;
+      if (!tunnelOnline) {
+        resultsEl.innerHTML = `<p class="social-offline-msg"><strong>Full routing test unavailable.</strong> Start the Social Host, then retry. Nothing was posted.</p>`;
+        maybeShowHostModal(true);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Testing all 5…";
+      resultsEl.innerHTML = `<p>Checking all five Knight Logics demo routes…</p>`;
+      try {
+        const params = new URLSearchParams({ platforms: FULL_DEMO_PLATFORMS.join(",") });
+        const res = await fetch(`${TUNNEL_BRIDGE}/api/dry-run?${params}`, { cache: "no-store" });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || `Routing test failed (${res.status})`);
+        const checks = Array.isArray(data.checks) ? data.checks : [];
+        const targets = Array.isArray(data.targets) ? data.targets : [];
+        const rows = FULL_DEMO_PLATFORMS.map((platform) => {
+          const check = checks.find((item) => item.platform === platform);
+          const target = targets.find((item) => item.platform === platform);
+          return {
+            platform,
+            label: target?.label || platform,
+            accountId: target?.accountId,
+            status: check?.ok ? "ready" : "error",
+            message: check?.ok ? "Dry run passed — no post sent." : check?.detail || "Route is not ready.",
+          };
+        });
+        resultsEl.innerHTML = `
+          <h4>${data.ok ? "All five routes passed — nothing was posted" : "Routing test needs attention — nothing was posted"}</h4>
+          <ul class="social-results-list">${rows.map(resultRow).join("")}</ul>`;
+        await refreshPreflight();
+      } catch (err) {
+        resultsEl.innerHTML = `<p class="social-offline-msg"><strong>Routing test failed:</strong> ${esc(err.message)} Nothing was posted.</p>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Test all 5 — no post";
+      }
+    });
+
     panel.querySelector("#social-post-btn")?.addEventListener("click", async () => {
       const text = textEl?.value?.trim() || "";
       const selected = [...panel.querySelectorAll('input[name="social-platform"]:checked')].map(
@@ -1124,8 +1290,19 @@ window.WSSocial = (function () {
         return;
       }
       if (!confirmLivePost(selected, preflightData)) return;
-      if (bridgeOnline && !isLocalBridge(bridgeUrl(config)) && !bridgeAuthReady(config)) {
-        alert("Log into Whistle Stop admin to post from this device (cloud bridge uses your admin login).");
+      if (bridgeOnline && !isLocalBridge(bridgeUrl(config)) && !(await ensureBridgeAuth(config))) {
+        return;
+      }
+
+      const viaTunnel = isTunnelBridge(activeBridgeOverride || bridgeUrl(config));
+      const mediaBytes = estimateDataUrlBytes(mediaDataUrl);
+      const maxBytes = viaTunnel || browserTunnelOnline ? LOCAL_MEDIA_MAX_BYTES : CLOUD_MEDIA_MAX_BYTES;
+      if (mediaDataUrl && mediaBytes > maxBytes) {
+        const maxMb = (maxBytes / (1024 * 1024)).toFixed(1);
+        const fileMb = (mediaBytes / (1024 * 1024)).toFixed(1);
+        alert(
+          `This ${fileMb} MB attachment is too large for ${viaTunnel ? "this" : "cloud relay from this"} device (max ${maxMb} MB). Use a smaller JPG/PNG, or post from a network that shows “direct tunnel” in the bridge status.`
+        );
         return;
       }
 
@@ -1135,11 +1312,22 @@ window.WSSocial = (function () {
       resultsEl.hidden = false;
       resultsEl.innerHTML = `<p>Working…</p>`;
 
+      let gbpSourceUrl = "";
+      let gbpMediaNote = "";
+      if (selected.includes("gbp") && mediaDataUrl && !/^data:video\//i.test(mediaDataUrl)) {
+        const gbpMedia = await uploadGbpSourceUrl(config, mediaDataUrl, {
+          browserTunnelOnline,
+          cloudRemoteBridge,
+        });
+        gbpSourceUrl = gbpMedia.url || "";
+        gbpMediaNote = gbpMedia.note || "";
+      }
+
       const payload = {
         text,
         platforms: selected,
         mediaBase64: mediaDataUrl || "",
-        gbpSourceUrl: "",
+        gbpSourceUrl,
         gbp: {
           topicType: panel.querySelector("#social-gbp-topic")?.value || "STANDARD",
           callToAction: panel.querySelector("#social-gbp-cta")?.value || null,
@@ -1153,6 +1341,7 @@ window.WSSocial = (function () {
           const data = await postToBridge(config, payload, {
             tunnelOnline,
             cloudRemoteBridge,
+            browserTunnelOnline,
             preflight: preflightData,
             platformCatalog: platforms,
           });
@@ -1195,6 +1384,7 @@ window.WSSocial = (function () {
 
         resultsEl.innerHTML = `
           <h4>Results</h4>
+          ${gbpMediaNote ? `<p class="social-field-hint">${esc(gbpMediaNote)}</p>` : ""}
           <ul class="social-results-list">${results.map(resultRow).join("")}</ul>`;
         textEl.value = "";
         if (mediaInput) mediaInput.value = "";
@@ -1246,7 +1436,7 @@ window.WSSocial = (function () {
     });
   }
 
-  const HOST_PACKAGE_URL = "downloads/whistle-stop-social-host-2026-07-13.zip";
+  const HOST_PACKAGE_URL = "downloads/whistle-stop-social-host-2026-07-13-v2.zip";
   const HOST_GUIDE_URL = "downloads/social-host.html";
   const HOST_MODAL_KEY = "ws-social-host-modal-dismissed";
   const HOST_DOWNLOADED_KEY = "ws-social-host-package-downloaded";
@@ -1261,6 +1451,10 @@ window.WSSocial = (function () {
     if (document.getElementById("ws-social-host-modal")) return true;
 
     const overlay = document.createElement("div");
+    const isWindowsDevice = /Windows/i.test(window.navigator?.userAgent || "");
+    const hostAction = isWindowsDevice
+      ? `<a class="btn btn-primary admin-btn-sm" id="ws-host-download-pkg" href="${HOST_PACKAGE_URL}" download="whistle-stop-social-host-2026-07-13-v2.zip">Install on this Windows host</a>`
+      : `<a class="btn btn-primary admin-btn-sm" href="${HOST_GUIDE_URL}" target="_blank" rel="noopener">Open host setup guide</a>`;
     overlay.id = "ws-social-host-modal";
     overlay.className = "admin-modal-backdrop";
     overlay.setAttribute("data-admin-modal-backdrop", "");
@@ -1268,28 +1462,28 @@ window.WSSocial = (function () {
       <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="ws-host-modal-title">
         <div class="admin-modal__header">
           <div>
-            <h3 id="ws-host-modal-title">Download Social Host package</h3>
-            <p class="admin-modal__subtitle">Required for LinkedIn / Nextdoor / Facebook groups</p>
+            <h3 id="ws-host-modal-title">Shared Social Host is offline</h3>
+            <p class="admin-modal__subtitle">One designated Windows PC powers every admin device</p>
           </div>
           <button type="button" class="admin-modal__close" data-host-dismiss aria-label="Close">&times;</button>
         </div>
         <div class="admin-modal__body">
-          <p>Your account can post to social, but a <strong>Playwright host</strong> is not running right now.</p>
+          <p><strong>This phone, tablet, or computer is ready to post.</strong> The shared browser-session host is not running right now.</p>
           <p><strong>Works now without the package:</strong> Facebook Page, X, Google Business Profile (cloud).</p>
-          <p><strong>This package unlocks:</strong> LinkedIn, Nextdoor, Facebook community groups.</p>
+          <p><strong>The shared host restores:</strong> LinkedIn, Nextdoor, Facebook community groups, and one consistent route for the full five-platform demo.</p>
           <ol style="margin:0.75rem 0 0;padding-left:1.25rem;line-height:1.5">
-            <li>Download the zip (included for owner/editor accounts)</li>
-            <li>Unzip on any Windows PC that stays awake</li>
+            <li>Choose one designated Windows PC that stays awake</li>
+            <li>Download and unzip the host package on that PC only</li>
             <li>Run <code>START-HOST.ps1</code> and keep the windows open</li>
-            <li>Return here and click Refresh — then post from any device</li>
+            <li>Return here from any device and click Refresh</li>
           </ol>
-          <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.75rem">Browsers cannot install software for you. This download is the host starter package for your role.</p>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.75rem"><strong>Do not install this on every device.</strong> Browsers cannot install software automatically; once the single host is online, all authorized devices use it through Knight Command.</p>
         </div>
         <div class="admin-modal__footer">
-          <button type="button" class="btn btn-outline admin-btn-sm" data-host-dismiss>Not now — Graph only</button>
+          <button type="button" class="btn btn-outline admin-btn-sm" data-host-dismiss>Continue with cloud channels</button>
           <button type="button" class="btn btn-outline admin-btn-sm" data-host-refresh>Already running? Refresh</button>
           <a class="btn btn-outline admin-btn-sm" href="${HOST_GUIDE_URL}" target="_blank" rel="noopener">Guide</a>
-          <a class="btn btn-primary admin-btn-sm" id="ws-host-download-pkg" href="${HOST_PACKAGE_URL}" download="whistle-stop-social-host-2026-07-13.zip">Download verified package (.zip)</a>
+          ${hostAction}
         </div>
       </div>`;
     document.body.classList.add("admin-modal-open");

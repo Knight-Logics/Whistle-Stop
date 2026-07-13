@@ -701,13 +701,26 @@
     }
   }
 
+  /** True when this tab has credentials the cloud bridge / Social Host can verify. */
+  function hasBridgeCredentials() {
+    if (!isAuthed()) return false;
+    return Boolean(getSessionPassword() || getAdminAuthHash());
+  }
+
   /** Auth payload for publish/outreach APIs — uses live session when staff is logged in. */
   function getAdminAuthPayload() {
     const password = getSessionPassword();
     if (password) return { adminPassword: password };
     const adminSessionHash = getAdminAuthHash();
-    if (adminSessionHash && isAuthed()) return { adminSessionHash };
+    if (adminSessionHash) return { adminSessionHash };
     return null;
+  }
+
+  /** Re-verify password without signing out (e.g. social post from a stale session). */
+  async function refreshBridgeCredentials(password) {
+    const user = getSessionUser();
+    const username = user?.username || "owner";
+    return login(username, String(password || "").trim());
   }
 
   function logout() {
@@ -747,13 +760,24 @@
   repairOverlayEmptyArrays();
 
   if (typeof window !== "undefined") {
+    let previewSyncTimer = null;
     window.addEventListener("storage", (e) => {
-      if (e.key !== STORAGE_KEY) return;
-      overlay = null;
-      Object.keys(cache).forEach((k) => delete cache[k]);
-      document.dispatchEvent(
-        new CustomEvent("ws-config-updated", { detail: { section: "all" } })
-      );
+      if (e.key === STORAGE_KEY) {
+        overlay = null;
+        Object.keys(cache).forEach((k) => delete cache[k]);
+        document.dispatchEvent(
+          new CustomEvent("ws-config-updated", { detail: { section: "all" } })
+        );
+        return;
+      }
+      if (e.key === PREVIEW_STORE_KEY) {
+        clearTimeout(previewSyncTimer);
+        previewSyncTimer = setTimeout(() => {
+          document.dispatchEvent(
+            new CustomEvent("ws-config-updated", { detail: { section: "all" } })
+          );
+        }, 40);
+      }
     });
   }
 
@@ -784,6 +808,8 @@
     canManageUsers,
     getAdminAuthHash,
     getAdminAuthPayload,
+    hasBridgeCredentials,
+    refreshBridgeCredentials,
     getSessionPassword,
     setSessionPassword,
     getPublishApiBase,

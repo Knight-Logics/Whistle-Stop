@@ -5,13 +5,15 @@
  */
 import { chromium } from "playwright";
 import { mkdir, rm } from "fs/promises";
-import { join } from "path";
+import { join, resolve, sep } from "path";
 import { tmpdir } from "os";
 
 const BASE = process.env.WS_PREVIEW_BASE || "http://127.0.0.1:3456";
 const OUT = join(tmpdir(), "whistle-stop-presentation-screens");
 
 async function main() {
+  const tempRoot = `${resolve(tmpdir())}${sep}`;
+  if (!resolve(OUT).startsWith(tempRoot)) throw new Error(`Refusing to clean screenshot output outside temp: ${OUT}`);
   await rm(OUT, { recursive: true, force: true });
   await mkdir(OUT, { recursive: true });
 
@@ -26,12 +28,22 @@ async function main() {
 
     const admin = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
     await admin.goto(`${BASE}/admin.html`, { waitUntil: "domcontentloaded" });
+    await admin.locator('input[name="username"]').fill("owner");
     await admin.locator('input[name="password"]').fill("whistlestop2026");
     await admin.locator('button[type="submit"]').click();
     await admin.waitForSelector("#admin-panel", { timeout: 10000 });
     await admin.locator('button[data-tab="menus"]').click();
     await admin.waitForSelector("#menu-draft-preview", { timeout: 10000 });
     await admin.screenshot({ path: join(OUT, "admin-menu-preview.png"), fullPage: false });
+
+    await admin.locator('button[data-tab="social"]').click();
+    await admin.waitForSelector("#social-test-routing", { timeout: 15000 });
+    await admin.locator("#social-test-routing").click();
+    await admin.getByText("All five routes passed — nothing was posted", { exact: true }).waitFor({
+      state: "visible",
+      timeout: 45000,
+    });
+    await admin.screenshot({ path: join(OUT, "admin-social-five-platform-dry-run.png"), fullPage: true });
 
     const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
     await mobile.goto(`${BASE}/menu.html`, { waitUntil: "domcontentloaded" });

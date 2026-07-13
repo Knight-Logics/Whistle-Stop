@@ -1055,6 +1055,7 @@
 
     bindAdminPreviewClicks();
     bindAdminRecurringClicks();
+    document.dispatchEvent(new CustomEvent("ws-preview-layout"));
   }
 
   renderAll();

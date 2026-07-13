@@ -1,4 +1,4 @@
-const CACHE_VERSION = "ws-public-v1";
+const CACHE_VERSION = "ws-public-v2";
 const OFFLINE_URL = new URL("offline.html", self.registration.scope).href;
 const PUBLIC_SHELL = [
   "index.html",
@@ -55,7 +55,19 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (["style", "script", "image", "font"].includes(request.destination)) {
+  if (["style", "script"].includes(request.destination)) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) caches.open(CACHE_VERSION).then((cache) => cache.put(request, response.clone()));
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  if (["image", "font"].includes(request.destination)) {
     event.respondWith(
       caches.match(request).then((cached) => {
         const network = fetch(request).then((response) => {

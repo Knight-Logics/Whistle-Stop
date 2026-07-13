@@ -261,8 +261,8 @@
 
 .admin-draft-full .admin-preview-frame--fit,
 .admin-draft-full .admin-events-preview-frame.admin-preview-frame--fit {
-  height: 480px;
-  min-height: 420px;
+  height: min(88vh, 980px);
+  min-height: 560px;
   max-height: none;
   overflow: hidden;
   vertical-align: top;
@@ -274,7 +274,7 @@
   background: var(--chalk);
   display: block;
   width: 100%;
-  overflow: hidden !important;
+  overflow: auto;
 }
 
 body.admin-modal-open {

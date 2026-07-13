@@ -174,6 +174,7 @@
               <input type="password" name="password" required autocomplete="current-password" />
             </div>
             <p id="login-error" style="color:var(--rust);font-size:0.9rem;display:none;margin:0.5rem 0 0"></p>
+            <p id="login-reauth-note" class="admin-note" style="display:none;margin:0.75rem 0 0;font-size:0.88rem"></p>
             <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1rem">Sign in</button>
           </form>
           <p style="font-size:0.8rem;color:var(--text-muted);margin-top:1.25rem;text-align:center">
@@ -181,6 +182,18 @@
           </p>
         </div>
       </div>`;
+
+    try {
+      if (sessionStorage.getItem("ws-admin-reauth-reason") === "bridge-credentials") {
+        sessionStorage.removeItem("ws-admin-reauth-reason");
+        const note = $("#login-reauth-note");
+        if (note) {
+          note.textContent =
+            "Your session was missing posting credentials (common after an admin update). Sign in once more to post to social and publish live.";
+          note.style.display = "block";
+        }
+      }
+    } catch (_) {}
 
     $("#admin-login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -245,7 +258,7 @@
 
     document.addEventListener("ws-social-host-needed", (e) => {
       if (e.detail?.needsPackage) {
-        toast("Social Host package required for LinkedIn/Nextdoor — download prompted.");
+        toast("Shared Social Host is offline. Restore it once on the designated Windows PC; this device needs no installation.");
       }
     });
 
@@ -510,8 +523,19 @@
   }
 
   async function start() {
-    if (WSConfig.isAuthed()) await initApp();
-    else renderLogin();
+    if (WSConfig.isAuthed()) {
+      if (WSConfig.canSocialPost?.() && !WSConfig.hasBridgeCredentials?.()) {
+        WSConfig.logout();
+        try {
+          sessionStorage.setItem("ws-admin-reauth-reason", "bridge-credentials");
+        } catch (_) {}
+        renderLogin();
+        return;
+      }
+      await initApp();
+    } else {
+      renderLogin();
+    }
   }
 
   if (document.readyState === "loading") {

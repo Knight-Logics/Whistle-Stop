@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "node tests/campaign-safety-smoke.mjs && node tests/menu-draft-preview-smoke.mjs && node tests/presentation-smoke.mjs"
+    "test": "node tests/campaign-safety-smoke.mjs && node tests/menu-draft-preview-smoke.mjs && node tests/presentation-smoke.mjs && node tests/visibility-smoke.mjs"
   },
   "keywords": [],
   "author": "",

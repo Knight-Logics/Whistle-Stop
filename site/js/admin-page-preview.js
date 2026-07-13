@@ -28,7 +28,7 @@
 
   function pageIdFromPath() {
 
-    const path = location.pathname.replace(/\/$/, "") || "/";
+    const path = location.pathname.replace(/\.html$/i, "").replace(/\/$/, "") || "/";
 
     if (path === "/" || path.endsWith("/index")) return "index";
 

@@ -1,4 +1,4 @@
-/* Admin-side iframe auto-height — avoids double vertical scrollbars */
+/* Stable admin preview frames — live data syncs without reloading or page jumps. */
 window.WSAdminPreviewFrame = (function () {
   const bound = new WeakSet();
 
@@ -38,26 +38,9 @@ window.WSAdminPreviewFrame = (function () {
       iframe.id = `admin-preview-${Date.now()}`;
     }
 
-    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("scrolling", "yes");
     iframe.classList.add("admin-preview-frame--fit");
-
-    function onMessage(event) {
-      if (event.origin !== window.location.origin) return;
-      if (event.data?.source !== "ws-preview-height") return;
-      if (event.data.frameId !== iframe.id) return;
-      const height = Math.max(420, Number(event.data.height) || 0);
-      iframe.style.height = `${height}px`;
-    }
-
-    window.addEventListener("message", onMessage);
-
-    iframe.addEventListener("load", () => {
-      try {
-        iframe.contentWindow?.postMessage({ type: "ws-preview-request-height" }, window.location.origin);
-      } catch {
-        /* cross-origin guard */
-      }
-    });
+    iframe.style.removeProperty("height");
   }
 
   function previewSrc(baseUrl, frameId, extraParams = "") {
@@ -74,8 +57,27 @@ window.WSAdminPreviewFrame = (function () {
   }
 
   function setSrc(iframe, baseUrl, extraParams = "") {
-    if (!iframe?.id) bind(iframe);
-    iframe.src = previewSrc(baseUrl, iframe.id, extraParams);
+    bind(iframe);
+    const next = previewSrc(baseUrl, iframe.id, extraParams);
+    try {
+      const currentUrl = new URL(iframe.src, window.location.href);
+      const nextUrl = new URL(next, window.location.href);
+      currentUrl.searchParams.delete("_");
+      nextUrl.searchParams.delete("_");
+      currentUrl.searchParams.sort();
+      nextUrl.searchParams.sort();
+      if (
+        currentUrl.origin === nextUrl.origin &&
+        currentUrl.pathname === nextUrl.pathname &&
+        currentUrl.search === nextUrl.search
+      ) {
+        return false;
+      }
+    } catch {
+      /* Initial about:blank or malformed URL — load the requested preview. */
+    }
+    iframe.src = next;
+    return true;
   }
 
   return { bind, previewSrc, setSrc, normalizePreviewUrl };
