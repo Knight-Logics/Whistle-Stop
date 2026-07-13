@@ -78,6 +78,7 @@
     if (!overlay) return structuredClone(base);
     const out = structuredClone(base);
     const mergeList = (key) => {
+      out[key] = out[key] || [];
       const seen = new Set((out[key] || []).map((r) => r.id));
       (overlay[key] || []).forEach((row) => {
         if (!row?.id || seen.has(row.id)) return;
@@ -86,6 +87,7 @@
       });
     };
     ["signups", "outreachLeads", "emailLog"].forEach(mergeList);
+    out.signupCounts = { ...(out.signupCounts || {}), ...(overlay.signupCounts || {}) };
     if (overlay.updatedAt && overlay.updatedAt > (out.updatedAt || "")) {
       out.updatedAt = overlay.updatedAt;
     }
@@ -136,6 +138,12 @@
     return (runtime.signups || []).filter((s) => s.campaignId === campaignId);
   }
 
+  function getSignupCount(runtime, campaignId) {
+    const detailed = getSignupsForCampaign(runtime, campaignId);
+    if (detailed.length) return detailed.length;
+    return Math.max(0, Number(runtime.signupCounts?.[campaignId]) || 0);
+  }
+
   function getLeadsForCampaign(runtime, campaignId, leadType) {
     let rows = (runtime.outreachLeads || []).filter((l) => l.campaignId === campaignId);
     if (leadType) rows = rows.filter((l) => l.leadType === leadType);
@@ -177,10 +185,12 @@
   }
 
   async function apiRequest(route, options = {}) {
+    const sessionHash = global.WSConfig?.isAuthed?.() ? global.WSConfig?.getAdminAuthHash?.() : "";
     const fetchOpts = {
       ...options,
       headers: {
         "Content-Type": "application/json",
+        ...(sessionHash ? { "X-WS-Admin-Hash": sessionHash } : {}),
         ...(options.headers || {}),
       },
     };
@@ -215,6 +225,8 @@
       experience: payload.experience || "",
       source: payload.source || "web",
       notes: String(payload.notes || "").trim(),
+      marketingConsent: Boolean(payload.marketingConsent),
+      consentAt: payload.consentAt || new Date().toISOString(),
       createdAt: new Date().toISOString(),
     };
     if (!signup.name || !signup.email) throw new Error("Name and email are required.");
@@ -230,12 +242,9 @@
       }
       return result.signup || signup;
     } catch (err) {
-      const runtime = await getRuntime();
-      runtime.signups = runtime.signups || [];
-      runtime.signups.push(signup);
-      runtime.updatedAt = new Date().toISOString();
-      writeLocalRuntime(runtime);
-      return { signup, localOnly: true, apiError: err.message };
+      throw new Error(
+        `Signup service is temporarily unavailable; nothing was submitted. Please try again or call (727) 726-1956. (${err.message})`
+      );
     }
   }
 
@@ -276,38 +285,13 @@
       }
       return result;
     } catch (err) {
-      const runtime = await getRuntime();
-      const campaign = (await getCampaigns()).campaigns.find((c) => c.id === campaignId);
-      const leads = (runtime.outreachLeads || []).filter((l) => leadIds.includes(l.id));
-      const sent = [];
-      const signupLink = campaign ? signupUrl(campaign) : "";
-      leads.forEach((lead) => {
-        const personalized = renderTemplate(body, {
-          name: lead.name,
-          organization: lead.organization || lead.name,
-          signup_link: signupLink,
-          goal: campaign?.signupGoal || 12,
-        });
-        const entry = {
-          id: uid("em"),
-          campaignId,
-          leadId: lead.id,
-          to: lead.email,
-          subject,
-          bodyPreview: personalized.slice(0, 280),
-          status: "sent",
-          sentAt: new Date().toISOString(),
-          via: "local-demo",
-          localOnly: true,
-        };
-        runtime.emailLog = runtime.emailLog || [];
-        runtime.emailLog.push(entry);
-        lead.status = "contacted";
-        sent.push(entry);
-      });
-      runtime.updatedAt = new Date().toISOString();
-      writeLocalRuntime(runtime);
-      return { ok: true, sent, localOnly: true, apiError: err.message };
+      return {
+        ok: false,
+        sent: [],
+        failedLeadIds: leadIds,
+        localOnly: true,
+        error: `Campaign API offline; no email was sent. ${err.message}`,
+      };
     }
   }
 
@@ -366,40 +350,14 @@
       plan = audienceFn()?.inferAudience(campaign) || { segments: [], summary: "" };
       plan.campaignId = campaignId;
       plan.campaignTitle = campaign.title;
-      const localAdded = [];
-      const rt = await getRuntime();
-      const existing = new Set(
-        (rt.outreachLeads || [])
-          .filter((l) => l.campaignId === campaignId)
-          .map((l) => `${l.email}|${l.name}|${l.leadType}`)
-      );
-
-      (plan.segments || []).forEach((seg) => {
-        const pool = audienceFn()?.leadsForSegment(seg.id, "support@knightlogics.com") || DISCOVER_LEADS[seg.id] || [];
-        pool.forEach((row) => {
-          const key = `${row.email}|${row.name}|${seg.id}`;
-          if (existing.has(key)) return;
-          const lead = {
-            id: uid("lead"),
-            campaignId,
-            leadType: seg.id,
-            name: row.name,
-            email: row.email,
-            organization: row.organization,
-            locality: row.locality || "Safety Harbor area",
-            status: "new",
-            discoveredAt: new Date().toISOString(),
-            searchQuery: seg.searchQueries?.[0] || "",
-          };
-          rt.outreachLeads = rt.outreachLeads || [];
-          rt.outreachLeads.push(lead);
-          localAdded.push(lead);
-          existing.add(key);
-        });
-      });
-      rt.updatedAt = new Date().toISOString();
-      writeLocalRuntime(rt);
-      return { ok: true, plan, added: localAdded, source: "local", apiError: err.message };
+      return {
+        ok: false,
+        plan,
+        added: [],
+        source: "rules-preview",
+        offline: true,
+        error: `Audience preview created, but no leads were added because the campaign API is offline. ${err.message}`,
+      };
     }
   }
 
@@ -441,8 +399,8 @@
         to: demoTo,
         subject: mail.subject,
         bodyPreview: mail.text.slice(0, 280),
-        status: "sent",
-        sentAt: new Date().toISOString(),
+        status: "previewed",
+        previewedAt: new Date().toISOString(),
         via: "local-demo-html",
         demo: true,
         html: true,
@@ -459,35 +417,13 @@
   }
 
   async function discoverLeads(campaignId, leadType) {
-    const pool = DISCOVER_LEADS[leadType] || [];
-    const runtime = await getRuntime();
-    const existing = new Set(
-      (runtime.outreachLeads || [])
-        .filter((l) => l.campaignId === campaignId && l.leadType === leadType)
-        .map((l) => `${l.email}|${l.name}`)
-    );
-    const added = [];
-    pool.forEach((row) => {
-      const key = `${row.email}|${row.name}`;
-      if (existing.has(key)) return;
-      const lead = {
-        id: uid("lead"),
-        campaignId,
-        leadType,
-        name: row.name,
-        email: row.email,
-        organization: row.organization,
-        status: "new",
-        discoveredAt: new Date().toISOString(),
-      };
-      runtime.outreachLeads = runtime.outreachLeads || [];
-      runtime.outreachLeads.push(lead);
-      added.push(lead);
-      existing.add(key);
-    });
-    runtime.updatedAt = new Date().toISOString();
-    writeLocalRuntime(runtime);
-    return added;
+    try {
+      const campaign = (await getCampaigns()).campaigns.find((c) => c.id === campaignId);
+      const result = await findBestLeads(campaignId, campaign, { useLlm: true, leadType });
+      return result.added || [];
+    } catch (_) {
+      return [];
+    }
   }
 
   function onRuntimeChange(fn) {
@@ -556,6 +492,16 @@
       headline: draftForAudience.headline,
       description: draftForAudience.description,
       channels: form.channels?.length ? form.channels : ["email", "social"],
+      endAt: String(form.endAt || "").trim() || null,
+      automation: {
+        enabled: Boolean(form.automationEnabled),
+        cadenceMinutes: 60,
+        maxPerRun: 1,
+        randomDelayMinutes: { min: 5, max: 50 },
+        timezone: "America/New_York",
+        sendWindow: { start: "10:00", end: "19:00" },
+        continueAfterGoal: true,
+      },
       landingPath: "campaign.html",
       leadTypes: (inferred?.segments || DEFAULT_LEAD_TYPES).map((seg) => ({
         id: seg.id,
@@ -644,6 +590,14 @@
     }
   }
 
+  async function getServiceHealth() {
+    try {
+      return await apiRequest("health", { method: "GET" });
+    } catch (err) {
+      return { ok: false, error: err.message };
+    }
+  }
+
   function hasUnpublishedCampaigns() {
     return readLocalCampaigns().length > 0;
   }
@@ -653,6 +607,7 @@
     getCampaignBySlug,
     getRuntime,
     getSignupsForCampaign,
+    getSignupCount,
     getLeadsForCampaign,
     getEmailLogForCampaign,
     signupUrl,
@@ -670,6 +625,7 @@
     patchCampaign,
     outreachImagePreviewSrc,
     publishCampaigns,
+    getServiceHealth,
     hasUnpublishedCampaigns,
     slugify,
     invalidateCampaignsCache,

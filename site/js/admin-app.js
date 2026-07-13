@@ -299,9 +299,9 @@
         <div class="admin-actions">
           ${
             isSocialTab
-              ? `<span class="admin-social-top-hint">Posts publish via the local bridge — no save button needed.</span>`
+              ? `<span class="admin-social-top-hint">Knight Command Social Ops chooses the cloud API or Social Host automatically.</span>`
               : isCampaignTab
-                ? `<span class="admin-social-top-hint">Interest-check signups + outreach CRM — syncs via knightlogics.com API when live.</span>`
+                ? `<span class="admin-social-top-hint">Private signups, verified leads, suppression, and delivery status sync through Knight Command.</span>`
                 : isMockTab
                 ? `<span class="admin-social-top-hint">Preview module — not connected to live data yet.</span>`
                 : `<span class="admin-draft-state">Draft preview mode</span><button type="button" class="btn btn-outline" id="admin-save-tab">Save draft</button>${

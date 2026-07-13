@@ -1,4 +1,11 @@
 /* Load partials, then move mobile nav to <body> (fixes drawer inside fixed header) */
+if (!document.querySelector('script[data-ws-pwa]')) {
+  const pwa = document.createElement("script");
+  pwa.src = new URL("js/pwa.js?v=1", document.baseURI).href;
+  pwa.dataset.wsPwa = "1";
+  document.head.appendChild(pwa);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const nodes = document.querySelectorAll("[data-include]");
   await Promise.all(

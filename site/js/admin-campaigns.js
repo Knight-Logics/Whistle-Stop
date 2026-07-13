@@ -7,6 +7,15 @@ window.WSAdminCampaigns = (function () {
   let selectedId = null;
   let refreshTimer = null;
   let showingCreateModal = false;
+  let healthCache = null;
+  let healthCheckedAt = 0;
+
+  async function campaignHealth() {
+    if (healthCache && Date.now() - healthCheckedAt < 60000) return healthCache;
+    healthCache = await store().getServiceHealth();
+    healthCheckedAt = Date.now();
+    return healthCache;
+  }
 
   function esc(s) {
     return String(s ?? "")
@@ -443,6 +452,20 @@ window.WSAdminCampaigns = (function () {
               </div>
             </div>
 
+            <div class="admin-form-grid cols-2" style="margin-top:1rem">
+              <div class="admin-field">
+                <label for="ws-new-end-at">Campaign end (required for automation)</label>
+                <input id="ws-new-end-at" type="datetime-local" />
+              </div>
+              <div class="admin-field">
+                <label class="admin-field--checkbox">
+                  <input type="checkbox" id="ws-new-automation" />
+                  Enable hourly outreach after publish
+                </label>
+                <small>One randomly timed verified email per run, 10 AM–7 PM Eastern. Reaching the signup goal does not stop it; the end time does.</small>
+              </div>
+            </div>
+
             <div id="ws-new-fields-interest" class="ws-campaign-type-fields">
               <div class="admin-field">
                 <label for="ws-new-goal">Signup goal</label>
@@ -550,6 +573,8 @@ window.WSAdminCampaigns = (function () {
         slug: slugInput.value,
         headline: modal.querySelector("#ws-new-headline").value,
         description: modal.querySelector("#ws-new-description").value,
+        endAt: modal.querySelector("#ws-new-end-at")?.value,
+        automationEnabled: modal.querySelector("#ws-new-automation")?.checked,
         signupGoal: modal.querySelector("#ws-new-goal")?.value,
         ctaLabel: modal.querySelector("#ws-new-cta-label")?.value,
         ctaUrl: modal.querySelector("#ws-new-cta-url")?.value,
@@ -563,9 +588,15 @@ window.WSAdminCampaigns = (function () {
       try {
         const created = await store().saveCampaign(form);
         selectedId = created.id;
-        status.className = "ws-send-status is-ok";
-        status.textContent = "Campaign created — click Publish campaigns live so guests on other devices can open it.";
-        setTimeout(() => close(), 800);
+        status.className = "ws-send-status";
+        status.textContent = "Campaign created. Building its audience plan…";
+        const discovery = await store().findBestLeads(created.id, created, { useLlm: true });
+        const discoveryReady = discovery.ok && !discovery.warning;
+        status.className = discoveryReady ? "ws-send-status is-ok" : "ws-send-status is-error";
+        status.textContent = discoveryReady
+          ? `Campaign created with ${discovery.added?.length || 0} verified lead(s). Publish it so guests can open the signup page.`
+          : `Campaign created, but automatic lead discovery needs attention: ${discovery.error || discovery.warning || "no verified leads were added"}`;
+        if (discoveryReady) setTimeout(() => close(), 800);
         store().invalidateCampaignsCache();
         paint();
       } catch (err) {
@@ -586,13 +617,16 @@ window.WSAdminCampaigns = (function () {
 
   async function paint() {
     if (!panelEl) return;
-    const { campaigns } = await store().getCampaigns();
+    const [{ campaigns }, health] = await Promise.all([store().getCampaigns(), campaignHealth()]);
     if (!selectedId && campaigns.length) selectedId = campaigns[0].id;
     const campaign = campaigns.find((c) => c.id === selectedId);
 
     panelEl.innerHTML = `
       <div class="admin-note">
         <strong>Campaign Calendar + Outreach</strong> — Plan interest-check campaigns, collect signups, run outreach like Knight Command Center, then promote to Events when ready.
+      </div>
+      <div class="admin-note ${health.ok ? "" : "admin-note--warning"}">
+        <strong>Campaign service:</strong> ${health.ok ? `online · private database ${health.database ? "ready" : "not configured"} · email ${health.email ? "ready" : "not configured"} · AI ${health.ai ? "configured (quota checked during discovery)" : "not configured"} · hourly trigger ${health.scheduler ? "active" : "not active"}` : "offline — signups and email sends fail honestly; nothing is recorded as delivered."}
       </div>
       <div class="ws-campaign-layout">
         ${await renderList()}
@@ -704,8 +738,11 @@ window.WSAdminCampaigns = (function () {
         const result = await store().findBestLeads(campaign.id, campaign, { useLlm: true });
         const plan = { ...result.plan, campaignId: campaign.id, campaignTitle: campaign.title };
         sessionStorage.setItem(`ws_campaign_audience_${campaign.id}`, JSON.stringify(plan));
-        const msg = `Found ${result.added.length} new lead(s) across ${result.plan.segments?.length || 0} segments (${result.source}).`;
-        writeAudienceStatus(campaign.id, msg, "ws-send-status is-ok");
+        const resultReady = result.ok && !result.warning;
+        const msg = resultReady
+          ? `Found ${result.added.length} verified lead(s) across ${result.plan.segments?.length || 0} segments (${result.source}).`
+          : result.error || result.warning || "Audience preview created; no verified leads were added.";
+        writeAudienceStatus(campaign.id, msg, resultReady ? "ws-send-status is-ok" : "ws-send-status is-error");
         showToast(msg);
         paint();
       } catch (err) {
@@ -834,7 +871,10 @@ window.WSAdminCampaigns = (function () {
           body,
           ...auth,
         });
-        const count = result.sent?.length || leadIds.length;
+        if (!result.ok || result.localOnly) {
+          throw new Error(result.error || "Campaign API offline; no email was sent.");
+        }
+        const count = result.sent?.length || 0;
         statusEl.textContent = result.localOnly
           ? `Logged ${count} send(s) locally (API offline — demo mode)`
           : `Sent ${count} email(s) via Knight Logics`;

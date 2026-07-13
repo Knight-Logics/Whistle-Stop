@@ -9,6 +9,16 @@
       "headline": "Interested in a D&D Night at Whistle Stop?",
       "description": "We're gauging interest before we schedule a recurring tabletop night on the patio. Tell us if you'd play, DM, or bring friends — no commitment until we hit our signup goal.",
       "signupGoal": 12,
+      "endAt": null,
+      "automation": {
+        "enabled": false,
+        "cadenceMinutes": 60,
+        "maxPerRun": 1,
+        "randomDelayMinutes": { "min": 5, "max": 50 },
+        "timezone": "America/New_York",
+        "sendWindow": { "start": "10:00", "end": "19:00" },
+        "continueAfterGoal": true
+      },
       "preferredWindows": ["Wednesday evenings", "Sunday afternoons"],
       "channels": ["qr", "email", "social", "flyer"],
       "landingPath": "campaign.html",

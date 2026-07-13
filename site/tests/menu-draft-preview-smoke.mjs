@@ -51,6 +51,7 @@ async function login(page) {
   await page.goto(`http://localhost:${PORT}/admin.html`);
   const password = page.locator('input[name="password"]');
   if (await password.count()) {
+    await page.locator('input[name="username"]').fill("owner");
     await password.fill("whistlestop2026");
     await page.click('button[type="submit"]');
   }
@@ -59,10 +60,12 @@ async function login(page) {
 
 async function openMenusTab(page) {
   await page.click('button[data-tab="menus"]');
-  await page.waitForSelector("#menu-items [data-menu-item]", { timeout: 10000 });
+  await page.waitForSelector("#menu-draft-preview", { timeout: 10000 });
 }
 
 async function resetMenusTab(page) {
+  const close = page.locator("#admin-modal-root [data-admin-modal-close]").last();
+  if (await close.isVisible().catch(() => false)) await close.click();
   await page.click('button[data-tab="events"]');
   await page.waitForSelector("#admin-panel");
   await page.click('button[data-tab="menus"]');
@@ -73,6 +76,7 @@ async function selectMenuSection(page, menuIndex, sectionIndex, sampleItem) {
   await page.selectOption("#menu-select", String(menuIndex));
   await page.waitForSelector(`#cat-select option[value="${sectionIndex}"]`, { state: "attached", timeout: 10000 });
   await page.selectOption("#cat-select", String(sectionIndex));
+  await page.click("#edit-menu-section");
   await page.waitForSelector(`input[data-field="name"][value="${sampleItem}"]`, { timeout: 10000 });
 }
 

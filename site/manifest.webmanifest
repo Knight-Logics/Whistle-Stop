@@ -1,0 +1,24 @@
+{
+  "name": "Whistle Stop Grill & Bar",
+  "short_name": "Whistle Stop",
+  "description": "Menus, events, ordering, and updates from Whistle Stop Grill & Bar in Safety Harbor.",
+  "id": "./",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "400x400",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Menu", "url": "./menu.html", "icons": [{ "src": "assets/logo.png", "sizes": "400x400" }] },
+    { "name": "Events", "url": "./events.html", "icons": [{ "src": "assets/logo.png", "sizes": "400x400" }] },
+    { "name": "Order", "url": "./order.html", "icons": [{ "src": "assets/logo.png", "sizes": "400x400" }] }
+  ]
+}

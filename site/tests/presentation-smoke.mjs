@@ -97,6 +97,7 @@ async function login(page) {
     cfg.bridgeUrl = "http://127.0.0.1:8787";
     window.WSConfig.save("socialManager", cfg);
   });
+  await page.locator('input[name="username"]').fill("owner");
   await page.locator('input[name="password"]').fill("whistlestop2026");
   await page.locator('button[type="submit"]').click();
   await waitForNoAdminLoadError(page);
@@ -138,35 +139,41 @@ async function assertPublicOrderFlow(page) {
 async function assertAdminAndSocial(page) {
   await login(page);
 
-  for (const tab of ["events", "menus", "promos", "homepage", "heroes", "social", "ordering-hub", "reports"]) {
+  for (const tab of [
+    "events",
+    "menus",
+    "pages",
+    "social",
+    "gbp",
+    "reviews-mgr",
+    "campaign-calendar",
+    "qr-codes",
+    "ordering-hub",
+    "reports",
+    "integrations",
+  ]) {
     await clickAdminTab(page, tab);
   }
 
   await clickAdminTab(page, "events");
-  const eventCalendar = page.frameLocator("#events-page-iframe");
-  await eventCalendar.locator("[data-admin-date]").first().waitFor({ timeout: 10000 });
-  const clickedDate = await page
-    .locator("#events-page-iframe")
-    .evaluate((iframe) => {
-      const doc = iframe.contentDocument;
-      const emptyDay = [...doc.querySelectorAll("[data-admin-date]")].find(
-        (day) => !day.querySelector("[data-admin-event-id]")
-      );
-      return (emptyDay || doc.querySelector("[data-admin-date]")).dataset.adminDate;
-    });
-  await eventCalendar.locator(`[data-admin-date="${clickedDate}"]`).first().click({ position: { x: 10, y: 10 } });
-  const focusDate = page.locator('#event-focus-editor input[data-focus-field="date"]');
-  await focusDate.waitFor({ timeout: 10000 });
-  if ((await focusDate.inputValue()) !== clickedDate) {
-    throw new Error(`Calendar click did not open the selected date: ${clickedDate}`);
+  await page.locator("#add-perf").click();
+  const addTitle = page.locator('#admin-modal-root [data-add-oneoff-field="title"]');
+  await addTitle.waitFor({ timeout: 10000 });
+  await addTitle.fill("Presentation Calendar Test");
+  await page.locator("#admin-modal-root #modal-add-event-submit").click();
+  const focusTitle = page.locator('#admin-modal-root [data-focus-field="title"]');
+  await focusTitle.waitFor({ timeout: 10000 });
+  if ((await focusTitle.inputValue()) !== "Presentation Calendar Test") {
+    throw new Error("New performance did not reopen in the event editor");
   }
-  await page.locator('#event-focus-editor input[data-focus-field="title"]').fill("Presentation Calendar Test");
-  await eventCalendar.getByText("Presentation Calendar Test").first().waitFor({ timeout: 10000 });
+  await page.locator("#admin-modal-root [data-admin-modal-close]").last().click();
 
   await clickAdminTab(page, "menus");
+  await page.locator("#edit-menu-section").click();
   const firstName = page.locator('#menu-items [data-menu-item] input[data-field="name"]').first();
   await firstName.fill("Presentation Test Burger");
   await page.waitForSelector("#menu-draft-preview >> text=Presentation Test Burger", { timeout: 10000 });
+  await page.locator("#admin-modal-root [data-admin-modal-close]").last().click();
 
   await page.evaluate(async () => {
     window.WSConfig.save("promos", { homepageFeatured: [], eventsPageFeatured: [] });
@@ -212,6 +219,18 @@ async function main() {
     await mobile.waitForSelector("#pickup-order-bar", { timeout: 10000 });
     await mobile.close();
 
+    const mobileAdmin = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
+    await login(mobileAdmin);
+    await clickAdminTab(mobileAdmin, "campaign-calendar");
+    await mobileAdmin.waitForSelector(".ws-campaign-layout", { timeout: 10000 });
+    await clickAdminTab(mobileAdmin, "social");
+    await mobileAdmin.waitForSelector("#social-post-preview", { timeout: 10000 });
+    const mobileAdminOverflow = await mobileAdmin.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth + 2
+    );
+    if (mobileAdminOverflow) throw new Error("Mobile admin has horizontal page overflow");
+    await mobileAdmin.close();
+
     if (pageErrors.length) throw new Error(`Page errors: ${pageErrors.join(" | ")}`);
     if (localFailures.length) throw new Error(`Local failed responses: ${localFailures.join(" | ")}`);
 
@@ -223,6 +242,7 @@ async function main() {
     console.log("  Browser-local empty-array saves: OK");
     console.log("  Social poster demo state: OK");
     console.log("  Mobile order bar: OK");
+    console.log("  Mobile staff campaigns + social: OK");
   } finally {
     await context.close();
     await browser.close();

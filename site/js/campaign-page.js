@@ -210,7 +210,7 @@
       status.textContent = "Submitting…";
 
       try {
-        await store().submitSignup(campaign.id, {
+        const saved = await store().submitSignup(campaign.id, {
           name: fd.get("name"),
           email: fd.get("email"),
           phone: fd.get("phone"),
@@ -219,7 +219,10 @@
           experience: fd.get("experience"),
           notes: fd.get("notes"),
           source: detectSource(),
+          marketingConsent: true,
+          consentAt: new Date().toISOString(),
         });
+        if (saved?.localOnly) throw new Error("Signup was not saved to Whistle Stop. Please try again.");
         signupCount += 1;
         document.getElementById("campaign-form-area").innerHTML = renderSuccess(campaign, signupCount);
       } catch (err) {
@@ -247,8 +250,9 @@
 
     document.title = `${campaign.title} | Whistle Stop`;
 
-    const runtime = await store().getRuntime();
-    let signupCount = store().getSignupsForCampaign(runtime, campaign.id).length;
+    await store().syncRuntimeFromCloud().catch(() => {});
+    const runtime = await store().getRuntime(true);
+    let signupCount = store().getSignupCount(runtime, campaign.id);
     const type = campaignType(campaign);
 
     let bodyHtml = renderMedia(campaign) + renderEventMeta(campaign);

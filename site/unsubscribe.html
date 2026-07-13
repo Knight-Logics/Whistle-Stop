@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#141414" />
+  <title>Unsubscribe | Whistle Stop Grill &amp; Bar</title>
+  <link rel="icon" href="assets/logo.png" type="image/png" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <main class="container" style="min-height:100vh;display:grid;place-content:center;max-width:40rem;text-align:center">
+    <img src="assets/logo.webp" width="160" height="160" alt="Whistle Stop Grill &amp; Bar" style="margin:0 auto 1rem" />
+    <h1>Email preferences</h1>
+    <p id="unsubscribe-status">Confirm below to stop Whistle Stop marketing emails.</p>
+    <p><button type="button" id="unsubscribe-button" class="btn btn-primary">Unsubscribe me</button></p>
+    <p><a href="index.html">Return to Whistle Stop</a></p>
+  </main>
+  <script>
+    (function () {
+      const button = document.getElementById("unsubscribe-button");
+      const status = document.getElementById("unsubscribe-status");
+      const token = new URLSearchParams(location.search).get("token") || "";
+      if (!token) {
+        status.textContent = "This unsubscribe link is incomplete.";
+        button.hidden = true;
+        return;
+      }
+      button.addEventListener("click", async () => {
+        button.disabled = true;
+        status.textContent = "Updating your preference…";
+        try {
+          const response = await fetch("https://knightlogics.com/api/whistle-stop-social?service=campaigns&route=unsubscribe", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token }),
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok || !result.ok) throw new Error(result.error || "Unsubscribe failed.");
+          status.textContent = result.message || "You have been unsubscribed.";
+          button.hidden = true;
+        } catch (err) {
+          status.textContent = `${err.message || "Unsubscribe failed."} Please email admin@whistlestopgrill.com.`;
+          button.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

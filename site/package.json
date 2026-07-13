@@ -1,15 +1,18 @@
 {
   "name": "site",
   "version": "1.0.0",
-  "description": "Knight Logics prospect demo. **Not production** — preview for client pitch.",
+  "description": "Whistle Stop Grill & Bar Phase 1 website and staff portal.",
   "main": "index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "node tests/menu-draft-preview-smoke.mjs && node tests/presentation-smoke.mjs"
+    "test": "node tests/campaign-safety-smoke.mjs && node tests/menu-draft-preview-smoke.mjs && node tests/presentation-smoke.mjs"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
 }

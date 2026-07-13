@@ -1,0 +1,19 @@
+{
+  "name": "Whistle Stop Staff",
+  "short_name": "WS Staff",
+  "description": "Whistle Stop website, campaign, and social operations portal.",
+  "id": "./admin.html",
+  "start_url": "./admin.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme_color": "#141414",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "400x400",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
