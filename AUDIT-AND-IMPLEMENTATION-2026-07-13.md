@@ -8,7 +8,7 @@ The rebuild is a strong Phase 1 launch candidate, but the GitHub Pages preview i
 
 The most important defects found during this audit were corrected:
 
-- The Social Host was offline, causing the package prompt after admin login. Its bridge and tunnel are now healthy, and both scheduled tasks exit successfully.
+- The Social Host was offline, causing the package prompt after admin login. Its bridge and tunnel are now healthy, both scheduled tasks exit successfully, and `/admin` now downloads a versioned package containing the verified PowerShell 5/VBS watchdog fixes.
 - Campaign API routes were missing from the live Knight Command deployment. A private Neon/Zoho/OpenAI campaign service is now deployed at `knightlogics.com`.
 - Campaign failures previously looked like successful local email sends. Offline or provider failures now say that no email was sent and never mark a lead contacted.
 - Campaign signup names and email addresses were stored in a public GitHub Pages JSON file. Public runtime data is now aggregate-only; private rows live in Neon.
@@ -178,4 +178,3 @@ No Phase 2 visual redesign was made during this audit, honoring the requested ph
 - Live AI discovery currently falls back with a provider quota warning and adds zero unverified leads.
 - Local and public Social Host health passed.
 - Bridge task and watchdog task both returned `0x00000000`.
-

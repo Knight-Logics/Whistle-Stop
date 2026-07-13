@@ -1246,7 +1246,7 @@ window.WSSocial = (function () {
     });
   }
 
-  const HOST_PACKAGE_URL = "downloads/whistle-stop-social-host.zip";
+  const HOST_PACKAGE_URL = "downloads/whistle-stop-social-host-2026-07-13.zip";
   const HOST_GUIDE_URL = "downloads/social-host.html";
   const HOST_MODAL_KEY = "ws-social-host-modal-dismissed";
   const HOST_DOWNLOADED_KEY = "ws-social-host-package-downloaded";
@@ -1289,7 +1289,7 @@ window.WSSocial = (function () {
           <button type="button" class="btn btn-outline admin-btn-sm" data-host-dismiss>Not now — Graph only</button>
           <button type="button" class="btn btn-outline admin-btn-sm" data-host-refresh>Already running? Refresh</button>
           <a class="btn btn-outline admin-btn-sm" href="${HOST_GUIDE_URL}" target="_blank" rel="noopener">Guide</a>
-          <a class="btn btn-primary admin-btn-sm" id="ws-host-download-pkg" href="${HOST_PACKAGE_URL}" download="whistle-stop-social-host.zip">Download package (.zip)</a>
+          <a class="btn btn-primary admin-btn-sm" id="ws-host-download-pkg" href="${HOST_PACKAGE_URL}" download="whistle-stop-social-host-2026-07-13.zip">Download verified package (.zip)</a>
         </div>
       </div>`;
     document.body.classList.add("admin-modal-open");

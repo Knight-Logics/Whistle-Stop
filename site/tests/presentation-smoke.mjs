@@ -84,6 +84,20 @@ async function assertDataAssetRefsExist() {
   }
 }
 
+async function assertVerifiedSocialHostPackage() {
+  const packageName = "whistle-stop-social-host-2026-07-13.zip";
+  const packagePath = join(SITE_ROOT, "downloads", packageName);
+  if (!existsSync(packagePath)) throw new Error(`Missing verified Social Host package: ${packageName}`);
+
+  const [manager, guide] = await Promise.all([
+    readFile(join(SITE_ROOT, "js", "social-manager.js"), "utf8"),
+    readFile(join(SITE_ROOT, "downloads", "social-host.html"), "utf8"),
+  ]);
+  if (!manager.includes(packageName) || !guide.includes(packageName)) {
+    throw new Error("Admin or Social Host guide still points to an unverified package");
+  }
+}
+
 async function waitForNoAdminLoadError(page) {
   await page.waitForSelector("#admin-panel", { timeout: 10000 });
   const error = await page.locator("#admin-panel").getByText("Could not load this section", { exact: false }).count();
@@ -193,6 +207,7 @@ async function assertAdminAndSocial(page) {
 
 async function main() {
   await assertDataAssetRefsExist();
+  await assertVerifiedSocialHostPackage();
 
   const server = await startServer();
   const browser = await chromium.launch({ headless: true });
@@ -236,6 +251,7 @@ async function main() {
 
     console.log("PASS: presentation smoke test");
     console.log("  Asset references: OK");
+    console.log("  Verified Social Host package: OK");
     console.log("  Menu/order flow: OK");
     console.log("  Alcohol sections excluded from cart: OK");
     console.log("  Admin tabs + draft preview: OK");
