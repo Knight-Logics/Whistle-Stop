@@ -28,51 +28,45 @@
 
   function pageIdFromPath() {
 
-    const path = location.pathname.replace(/\.html$/i, "").replace(/\/$/, "") || "/";
+    const parts = location.pathname.replace(/\.html$/i, "").replace(/\/$/, "").split("/").filter(Boolean);
 
-    if (path === "/" || path.endsWith("/index")) return "index";
+    const leaf = parts[parts.length - 1] || "index";
 
-    if (path.endsWith("/order")) return "order";
+    if (!leaf || leaf === "index") return "index";
 
-    if (path.endsWith("/happy-hour")) return "happyHour";
+    if (leaf === "order") return "order";
 
-    if (path.endsWith("/about")) return "about";
+    if (leaf === "happy-hour") return "happyHour";
 
-    if (path.endsWith("/contact")) return "contact";
+    if (leaf === "about") return "about";
 
-    if (path.endsWith("/menu")) return "menu";
+    if (leaf === "contact") return "contact";
 
-    if (path.endsWith("/private-events")) return "privateEvents";
+    if (leaf === "menu") return "menu";
 
-    return null;
+    if (leaf === "private-events") return "privateEvents";
+
+    // Project-site root (e.g. /Whistle-Stop) is the homepage, not an unknown page.
+
+    return "index";
 
   }
 
 
 
-  const NAV_TARGETS = {
-
-    "/": "index",
-
-    "/index": "index",
-
-    "/order": "order",
-
-    "/menu": "menu",
-
-    "/events": "events",
-
-    "/happy-hour": "happyHour",
-
-    "/about": "about",
-
-    "/contact": "contact",
-
-    "/private-events": "privateEvents",
-
-  };
-
-
+  function pageIdFromNavPath(path) {
+    if (!path) return null;
+    if (path === "/" || path === "/index") return "index";
+    if (path.endsWith("/index")) return "index";
+    if (path.endsWith("/order") || path === "/order") return "order";
+    if (path.endsWith("/happy-hour") || path === "/happy-hour") return "happyHour";
+    if (path.endsWith("/about") || path === "/about") return "about";
+    if (path.endsWith("/contact") || path === "/contact") return "contact";
+    if (path.endsWith("/menu") || path === "/menu") return "menu";
+    if (path.endsWith("/events") || path === "/events") return "events";
+    if (path.endsWith("/private-events") || path === "/private-events") return "privateEvents";
+    return null;
+  }
 
   function post(payload) {
 
@@ -350,7 +344,7 @@
 
 
 
-        const pageId = NAV_TARGETS[path];
+        const pageId = pageIdFromNavPath(path);
 
         if (!pageId) return;
 
@@ -362,9 +356,9 @@
 
 
 
-        if (pageId === "events" || pageId === "menu") {
+        if (pageId === "events") {
 
-          post({ type: "admin-nav", target: pageId === "menu" ? "menus" : "events" });
+          post({ type: "admin-nav", target: "events", toast: "Events & live music are edited in the Events tab — opening there now." });
 
           return;
 

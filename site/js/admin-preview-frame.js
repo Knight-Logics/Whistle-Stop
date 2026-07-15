@@ -6,6 +6,10 @@ window.WSAdminPreviewFrame = (function () {
   function siteBasePath() {
     try {
       const path = String(window.location.pathname || "/");
+      // Staff portal at /admin.html or clean-url /admin — public pages are at site root, not /admin/*
+      if (/\/admin\.html$/i.test(path) || /\/admin$/i.test(path)) {
+        return path.slice(0, path.lastIndexOf("/") + 1) || "/";
+      }
       if (path.endsWith(".html")) {
         const dir = path.slice(0, path.lastIndexOf("/") + 1);
         return dir || "./";
@@ -16,18 +20,27 @@ window.WSAdminPreviewFrame = (function () {
     }
   }
 
+  /**
+   * Build iframe preview paths without ".html".
+   * npx serve 301-redirects *.html and drops query strings (preview=1, pageEditPreview=1),
+   * which disables click-to-edit. Clean paths keep the query intact.
+   */
   function normalizePreviewUrl(baseUrl) {
     if (!baseUrl) return baseUrl;
     const raw = String(baseUrl).trim();
-    // Keep .html so python -m http.server and GitHub project pages resolve the file.
-    // Never map index.html → "/" (that 404s on github.io/Whistle-Stop/).
-    if (raw === "index.html" || raw === "./index.html" || raw === "/index.html") {
-      return `${siteBasePath()}index.html`;
+    if (raw.includes("://")) return raw;
+
+    let stem = raw.startsWith("/") ? raw.slice(1) : raw.replace(/^\.\//, "");
+    stem = stem.replace(/\.html$/i, "").replace(/\/$/, "");
+    const base = siteBasePath();
+
+    if (!stem || stem === "index") {
+      if (base === "./") return "./";
+      // Keep a trailing slash so relative assets resolve under /Whistle-Stop/, not site root.
+      return base.endsWith("/") ? base : `${base}/`;
     }
-    if (raw === "/" || raw === "./") {
-      return `${siteBasePath()}index.html`;
-    }
-    return raw;
+
+    return `${base}${stem}`;
   }
 
   function bind(iframe) {

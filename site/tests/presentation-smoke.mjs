@@ -10,6 +10,7 @@ import { existsSync } from "fs";
 import { readdir, readFile } from "fs/promises";
 import { join, extname, dirname, normalize } from "path";
 import { fileURLToPath } from "url";
+import { resolveSiteFile } from "./static-site-resolve.mjs";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const SITE_ROOT = join(__dirname, "..");
@@ -34,7 +35,7 @@ function startServer() {
     const server = createServer(async (req, res) => {
       try {
         const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
-        const filePath = join(SITE_ROOT, urlPath === "/" ? "index.html" : urlPath.replace(/^\//, ""));
+        const filePath = resolveSiteFile(SITE_ROOT, urlPath);
         const body = await readFile(filePath);
         const ext = extname(filePath).toLowerCase();
         res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
@@ -125,7 +126,15 @@ async function login(page) {
 }
 
 async function clickAdminTab(page, tab) {
-  await page.locator(`button[data-tab="${tab}"]`).click();
+  const tabBtn = page.locator(`button[data-tab="${tab}"]`);
+  if (!(await tabBtn.isVisible())) {
+    const toggle = page.locator("#admin-mobile-nav-toggle");
+    if ((await toggle.count()) && (await toggle.isVisible())) {
+      await toggle.click();
+      await page.locator(".admin-sidebar.is-mobile-open #admin-nav").waitFor({ state: "visible", timeout: 5000 });
+    }
+  }
+  await tabBtn.click();
   await waitForNoAdminLoadError(page);
 }
 
@@ -191,7 +200,7 @@ async function assertAdminAndSocial(page) {
   ) {
     throw new Error(`Events preview is not stable: ${JSON.stringify(eventFrameMetrics)}`);
   }
-  const eventFrame = page.frames().find((frame) => frame.url().includes("/events.html?"));
+  const eventFrame = page.frames().find((frame) => frame.url().includes("preview=1") && frame.url().includes("/events"));
   if (!eventFrame) throw new Error("Events preview frame did not load");
   const calendarDays = eventFrame.locator("[data-admin-date]");
   const calendarDayCount = await calendarDays.count();
@@ -225,13 +234,13 @@ async function assertAdminAndSocial(page) {
   await page.waitForSelector("#other-page-iframe");
   const pageSelect = page.locator("#edit-page-select");
   const editablePages = [
-    ["index", "/index.html?"],
-    ["order", "/order.html?"],
-    ["happyHour", "/happy-hour.html?"],
-    ["about", "/about.html?"],
-    ["contact", "/contact.html?"],
-    ["menu", "/menu.html?"],
-    ["privateEvents", "/private-events.html?"],
+    ["index", "pageEditPreview=1"],
+    ["order", "/order?"],
+    ["happyHour", "/happy-hour?"],
+    ["about", "/about?"],
+    ["contact", "/contact?"],
+    ["menu", "/menu?"],
+    ["privateEvents", "/private-events?"],
   ];
   for (const [pageId, pathPart] of editablePages) {
     await pageSelect.selectOption(pageId);
@@ -275,7 +284,7 @@ async function assertAdminAndSocial(page) {
       const iframe = document.querySelector("#other-page-iframe");
       try {
         return Boolean(
-          iframe?.contentWindow?.location.href.includes("/order.html?") &&
+          iframe?.contentWindow?.location.href.includes("/order?") &&
           iframe.contentDocument?.querySelector("[data-admin-block]")
         );
       } catch {

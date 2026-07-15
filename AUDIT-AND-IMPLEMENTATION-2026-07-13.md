@@ -34,6 +34,14 @@ Current draft/publish behavior:
 4. Knight Command commits the changed JSON/media to the Whistle Stop repository.
 5. GitHub Pages deploys the new public version.
 
+### Editor stability repair
+
+The pre-launch local-host check found two regressions in the full-page editor. Preview iframes were auto-growing from their initial height to the full 5,000+ pixel document height, which made the admin page jump and flash. The Other Pages helper also compared paths such as `/order` while the real static URLs end in `/order.html`, so those content blocks were never marked editable.
+
+The editor now uses a stable, internally scrollable preview window, synchronizes drafts across the parent page and iframe without reloading, recognizes `.html` page URLs, and uses network-first loading for scripts/styles so installed PWA devices do not stay stuck on an older editor bundle. Browser regression coverage now clicks a real calendar date, verifies editable markers on all seven page previews, opens an Order-page content block, and confirms draft synchronization causes zero iframe navigations.
+
+The live content publisher was also checked without publishing: its health route reports the GitHub token and admin password configured, and its POST preflight explicitly permits `http://127.0.0.1:<port>`, `http://localhost:<port>`, and `https://knight-logics.github.io`. This supports Save Draft on the current device and Publish Live from any authorized desktop, tablet, or phone browser.
+
 The login itself remains demo-grade because the user directory and password hashes are downloadable with the static site. It keeps casual visitors out of the UI, but it is not suitable as the only security boundary. Sensitive actions are independently authorized by Knight Command, but a later authentication phase should move all staff identity and sessions server-side.
 
 ### Why the package prompt appears
@@ -80,9 +88,27 @@ The Whistle Stop poster is connected to Knight Command's Social workspace. Live 
 - the Whistle Stop bridge task at logon/boot;
 - the 15-minute watchdog task.
 
+The presentation configuration is intentionally a **Knight Logics demonstration**, not a claim that Whistle Stop has connected or authorized its own profiles. Facebook, X, LinkedIn, Google Business Profile, and Nextdoor route only to the configured Knight Logics demo destinations. The Whistle Stop public business schema continues to identify only Whistle Stop's publicly listed profiles; Knight Logics demo accounts are never presented as Whistle Stop accounts.
+
+After X API credits were added on July 13, a read-only `GET /2/users/me` returned HTTP 200 for `@KnightLogics`. This confirms the configured OAuth credentials can reach the X API without publishing or changing a post.
+
 The watchdog had two real defects: UTF-8 punctuation broke Windows PowerShell 5 parsing, and the VBScript wrapper contained invalid nested quoting. Both were corrected and the scheduled task now returns `0x00000000`.
 
 No public post was created during this audit. Before client launch, replace the Knight Logics demo accounts/tokens with Whistle Stop-owned accounts and run one explicitly approved private/test post per channel.
+
+## Search and AI visibility audit
+
+The visibility foundation is now stronger than adding speculative crawler files alone:
+
+- all canonical URLs and JSON-LD identifiers now agree on `https://www.whistlestopgrill.com/`;
+- the home, menu, events, order, happy hour, private events, about, and contact pages have production-domain Open Graph and X/Twitter preview metadata;
+- public pages explicitly permit indexing and large image previews;
+- the About page now has an `AboutPage` graph linked to the Restaurant and WebSite entities;
+- expired one-off performances are no longer emitted as upcoming `Event` or `MusicEvent` schema;
+- `/llms.txt` provides a concise, factual map for tools that voluntarily support the proposal and explicitly separates Whistle Stop from Knight Logics demo social accounts;
+- `/ai.txt` was not added because there is no broadly adopted search standard for it, and Google states that Google Search does not use AI text files such as `llms.txt` for ranking or generative visibility.
+
+The highest-impact launch actions remain domain cutover, crawlable people-first content, fresh event dates, Google Search Console, Bing Webmaster Tools/IndexNow, and a complete Whistle Stop Google Business Profile. `llms.txt` is optional compatibility documentation, not a substitute for those actions.
 
 ## Campaign architecture now implemented
 
@@ -162,6 +188,9 @@ No Phase 2 visual redesign was made during this audit, honoring the requested ph
 - Confirm the existing Wix/legacy domain migration and redirects before cutover.
 - Verify `https://www.whistlestopgrill.com/robots.txt` and `/sitemap.xml` after cutover.
 - Submit the final sitemap in Google Search Console and Bing Webmaster Tools.
+- Configure an IndexNow key on the production domain and submit changed public URLs after launch/publish events.
+- Verify the Whistle Stop Google Business Profile and align its address, phone, hours, menu, website, and event links with the production site.
+- Keep dated performers current; the schema generator now refuses to relabel expired performances as upcoming.
 - Replace the contact form's email-client fallback with a configured server form endpoint if Whistle Stop wants centralized lead capture.
 - Replace Knight Logics demo social accounts with Whistle Stop accounts.
 - Restore OpenAI API quota.
@@ -173,6 +202,9 @@ No Phase 2 visual redesign was made during this audit, honoring the requested ph
 ## Verification evidence
 
 - `npm test`: campaign privacy/delivery safety, four menu-section editor cases, order handoff, alcohol exclusion, all admin tabs, content draft behavior, social state, public mobile, and mobile staff campaign/social checks.
+- Editor regression: calendar date click opens the event editor; all seven public-page previews expose editable sections; fixed preview height is stable; live draft sync performs zero iframe reloads; Publish Live modal retains the authenticated session.
+- Installed-device regression: service worker cache upgrades to `ws-public-v2`, the authenticated admin survives reload, and the calendar retains 35 editable day cells.
+- Publish bridge: health returned HTTP 200 and POST CORS preflight returned HTTP 204 for localhost, 127.0.0.1, and the GitHub-hosted admin; no publish was sent during verification.
 - JavaScript syntax checks passed for the PWA, campaign browser code, and Knight Command API.
 - Live campaign health: private database configured, Zoho configured, OpenAI key configured, public runtime aggregate-only.
 - Live AI discovery currently falls back with a provider quota warning and adds zero unverified leads.

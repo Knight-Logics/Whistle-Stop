@@ -1,5 +1,26 @@
 /* Whistle Stop — staff admin (content updates only) */
 (function () {
+  if (/\/admin$/i.test(window.location.pathname) && !/\.html$/i.test(window.location.pathname)) {
+    const next = `${window.location.pathname}.html${window.location.search}${window.location.hash}`;
+    window.history.replaceState(null, "", next);
+  }
+
+  if (window.parent !== window) {
+    document.body.className = "admin-body";
+    document.body.innerHTML = `
+      <div class="admin-login">
+        <div class="admin-login-card">
+          <h1>Staff portal</h1>
+          <p>The admin portal cannot run inside a page preview. Open it in the main browser window instead.</p>
+          <button type="button" class="btn btn-primary" id="admin-open-top">Open staff portal</button>
+        </div>
+      </div>`;
+    document.getElementById("admin-open-top")?.addEventListener("click", () => {
+      window.top.location.href = new URL("admin.html", window.location.href).href;
+    });
+    return;
+  }
+
   const GUI = () => window.WSAdminGUI;
 
   const state = {
@@ -177,6 +198,13 @@
             <p id="login-reauth-note" class="admin-note" style="display:none;margin:0.75rem 0 0;font-size:0.88rem"></p>
             <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1rem">Sign in</button>
           </form>
+          <div class="admin-install-tip">
+            <strong>Use like an app:</strong> Open in <strong>Safari</strong> (iPhone) or <strong>Chrome</strong> (Android) — not an in-app browser from texts or email.
+            Follow the <strong>Install Whistle Stop Staff</strong> banner after this page loads.
+            <br><br>
+            <strong>iPhone:</strong> Share &#x2197; → Add to Home Screen &nbsp;·&nbsp;
+            <strong>Android:</strong> Menu &#x22EE; → Install app
+          </div>
           <p style="font-size:0.8rem;color:var(--text-muted);margin-top:1.25rem;text-align:center">
             <a href="index.html">← Back to website</a>
           </p>
@@ -218,11 +246,16 @@
       <div class="admin-shell is-active">
         <aside class="admin-sidebar">
           <div class="admin-sidebar-brand">
-            <strong>Whistle Stop</strong>
-            <span>Staff portal · ${escHtml(user.displayName || user.username)} (${escHtml(user.role)})</span>
+            <div class="admin-sidebar-identity">
+              <strong>Whistle Stop</strong>
+              <span>Staff portal · ${escHtml(user.displayName || user.username)} (${escHtml(user.role)})</span>
+            </div>
+            <button type="button" class="admin-mobile-nav-toggle" id="admin-mobile-nav-toggle" aria-expanded="false" aria-controls="admin-nav">
+              <span>Sections</span><span aria-hidden="true">▾</span>
+            </button>
           </div>
           <nav class="admin-nav" id="admin-nav"></nav>
-          <div style="padding:1rem 1.25rem 0">
+          <div class="admin-sidebar-actions">
             <a href="index.html" class="btn btn-outline" style="width:100%;font-size:0.85rem" target="_blank">View website ↗</a>
             <button type="button" class="btn btn-outline" id="admin-logout" style="width:100%;margin-top:0.5rem;font-size:0.85rem">Sign out</button>
           </div>
@@ -231,6 +264,15 @@
       </div>`;
 
     const nav = $("#admin-nav");
+    const sidebar = document.querySelector(".admin-sidebar");
+    const mobileNavToggle = $("#admin-mobile-nav-toggle");
+    const setMobileNavOpen = (open) => {
+      sidebar?.classList.toggle("is-mobile-open", open);
+      mobileNavToggle?.setAttribute("aria-expanded", String(open));
+    };
+    mobileNavToggle?.addEventListener("click", () => {
+      setMobileNavOpen(!sidebar?.classList.contains("is-mobile-open"));
+    });
     NAV_SECTIONS.forEach((section) => {
       const head = document.createElement("div");
       head.className = "admin-nav-section-title";
@@ -271,7 +313,9 @@
   }
 
   window.addEventListener("ws-admin-switch-tab", (e) => {
-    if (e.detail?.tab) switchTab(e.detail.tab);
+    if (!e.detail?.tab) return;
+    if (e.detail.toast) toast(e.detail.toast);
+    switchTab(e.detail.tab);
   });
 
   const PREVIEW_SECTIONS = {
@@ -282,7 +326,16 @@
   };
 
   async function switchTab(id) {
+    document.querySelector(".admin-sidebar")?.classList.remove("is-mobile-open");
+    document.querySelector("#admin-mobile-nav-toggle")?.setAttribute("aria-expanded", "false");
     if (state.tab && state.tab !== id) {
+      if (state.tab === "pages") {
+        const pagesPanel = document.getElementById("admin-panel");
+        if (pagesPanel?._pagePreviewMessageHandler) {
+          window.removeEventListener("message", pagesPanel._pagePreviewMessageHandler);
+          pagesPanel._pagePreviewMessageHandler = null;
+        }
+      }
       if (state.tab === "campaign-calendar") {
         window.WSAdminCampaigns?.destroy();
       }

@@ -1,4 +1,4 @@
-# Whistle Stop — preflight (flash drive or desktop)
+# Whistle Stop - preflight (flash drive or desktop)
 param([switch]$Strict)
 
 $ErrorActionPreference = "Continue"
@@ -16,6 +16,7 @@ $localBridge = "http://127.0.0.1:$bridgePort"
 $tunnelUrl = "https://ws-social.knightlogics.com"
 $logPath = $roots.LogPath
 $allowedAccounts = @("fb_kl", "x_kl", "gbp_kl", "li_kl", "nd_kl")
+$allowedPlatforms = @("facebook", "x", "linkedin", "gbp", "nextdoor")
 
 function Test-Step {
     param([string]$Label, [scriptblock]$Check)
@@ -49,27 +50,31 @@ $results += Test-Step "Local bridge" {
 
 $results += Test-Step "Local preflight API" {
     $p = Invoke-RestMethod -Uri "$localBridge/api/preflight" -TimeoutSec 30
-    if ($p.demoScope -eq "knight_logics_only") {
-        return @{ Ok = $true; Detail = "fbMode=$($p.facebookMode) ready=$($p.readyForLiveTest)" }
+    $readyAccounts = @($p.checks | Where-Object { $_.accountId -and $_.ok }).Count
+    if ($p.demoScope -eq "knight_logics_only" -and $p.readyForFullLiveTest -and $readyAccounts -eq 5) {
+        return @{ Ok = $true; Detail = "all five sessions ready; fbMode=$($p.facebookMode)" }
     }
-    @{ Ok = $false; Detail = "scope=$($p.demoScope)" }
+    @{ Ok = $false; Detail = "scope=$($p.demoScope) fullLive=$($p.readyForFullLiveTest) readyAccounts=$readyAccounts/5" }
 }
 
 $results += Test-Step "Tunnel ($tunnelUrl)" {
-    $r = Invoke-RestMethod -Uri "$tunnelUrl/health" -TimeoutSec 12
-    if ($r.ok) { return @{ Ok = $true; Detail = "reachable" } }
-    @{ Ok = $false; Detail = "health failed" }
+    $p = Invoke-RestMethod -Uri "$tunnelUrl/api/preflight" -TimeoutSec 30
+    if ($p.readyForFullLiveTest) { return @{ Ok = $true; Detail = "reachable; all five sessions ready" } }
+    @{ Ok = $false; Detail = "reachable but full five-platform preflight failed" }
 }
 
 $results += Test-Step "Cloud health" {
-    $h = Invoke-RestMethod -Uri "$cloudApi/health" -TimeoutSec 15
-    if ($h.ok) { return @{ Ok = $true; Detail = "remoteBridge=$($h.remoteBridge)" } }
+    $h = Invoke-RestMethod -Uri "${cloudApi}?route=health" -TimeoutSec 15
+    if ($h.ok) { return @{ Ok = $true; Detail = "Facebook=$($h.facebook) X=$($h.x) fallback ready" } }
     @{ Ok = $false; Detail = "down" }
 }
 
-$results += Test-Step "Cloud preflight" {
-    $p = Invoke-RestMethod -Uri "$cloudApi/preflight" -TimeoutSec 20
-    @{ Ok = ($p.demoScope -eq "knight_logics_only"); Detail = "fullLive=$($p.readyForFullLiveTest) tunnel=$($p.tunnelOnline)" }
+$results += Test-Step "Five-platform dry run (no post)" {
+    $platforms = $allowedPlatforms -join ","
+    $p = Invoke-RestMethod -Uri "$tunnelUrl/api/dry-run?platforms=$platforms" -TimeoutSec 45
+    $readyChecks = @($p.checks | Where-Object { $_.ok }).Count
+    $targetCount = @($p.targets).Count
+    @{ Ok = ($p.ok -and $p.dryRun -and $readyChecks -eq 5 -and $targetCount -eq 5); Detail = "ready=$readyChecks/5 targets=$targetCount noPost=$($p.dryRun)" }
 }
 
 $results += Test-Step "Bridge log" {

@@ -1,4 +1,4 @@
-const CACHE_VERSION = "ws-public-v2";
+const CACHE_VERSION = "ws-public-v3";
 const OFFLINE_URL = new URL("offline.html", self.registration.scope).href;
 const PUBLIC_SHELL = [
   "index.html",

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import re
+from html import escape
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -20,7 +21,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parent
 SITE = ROOT / "site"
-BASE_URL = "https://knight-logics.github.io/Whistle-Stop/"
+BASE_URL = "https://www.whistlestopgrill.com/"
 RESTAURANT_ID = f"{BASE_URL}#restaurant"
 WEBSITE_ID = f"{BASE_URL}#website"
 ORDER_URL = "https://www.whistlestopgrill.com/online-ordering"
@@ -43,6 +44,52 @@ def write_jsonld(page: Path, graph: list[dict[str, Any]]) -> None:
     text = page.read_text(encoding="utf-8")
     pattern = re.compile(
         r'<script type="application/ld\+json">.*?</script>',
+        flags=re.DOTALL,
+    )
+    if pattern.search(text):
+        text = pattern.sub(block, text, count=1)
+    else:
+        text = text.replace("</head>", f"{block}\n</head>", 1)
+    page.write_text(text, encoding="utf-8", newline="")
+
+
+def write_visibility_meta(
+    page: Path,
+    *,
+    page_url: str,
+    title: str,
+    description: str,
+    image: str,
+) -> None:
+    """Keep social previews and crawler directives consistent across public pages."""
+    marker_start = "  <!-- generated:visibility-meta:start -->"
+    marker_end = "  <!-- generated:visibility-meta:end -->"
+    safe_title = escape(title, quote=True)
+    safe_description = escape(description, quote=True)
+    safe_url = escape(page_url, quote=True)
+    safe_image = escape(abs_url(image), quote=True)
+    block = "\n".join(
+        [
+            marker_start,
+            '  <meta name="robots" content="index, follow, max-image-preview:large" />',
+            '  <meta property="og:type" content="website" />',
+            '  <meta property="og:site_name" content="Whistle Stop Grill &amp; Bar" />',
+            '  <meta property="og:locale" content="en_US" />',
+            f'  <meta property="og:title" content="{safe_title}" />',
+            f'  <meta property="og:description" content="{safe_description}" />',
+            f'  <meta property="og:url" content="{safe_url}" />',
+            f'  <meta property="og:image" content="{safe_image}" />',
+            '  <meta property="og:image:alt" content="Whistle Stop Grill &amp; Bar in Safety Harbor, Florida" />',
+            '  <meta name="twitter:card" content="summary_large_image" />',
+            f'  <meta name="twitter:title" content="{safe_title}" />',
+            f'  <meta name="twitter:description" content="{safe_description}" />',
+            f'  <meta name="twitter:image" content="{safe_image}" />',
+            marker_end,
+        ]
+    )
+    text = page.read_text(encoding="utf-8")
+    pattern = re.compile(
+        rf"{re.escape(marker_start)}.*?{re.escape(marker_end)}",
         flags=re.DOTALL,
     )
     if pattern.search(text):
@@ -283,8 +330,6 @@ def upcoming_event_schemas(limit: int | None = 3) -> list[dict[str, Any]]:
         [event for event in events if event.get("date", "") >= today],
         key=lambda event: (event.get("date", ""), event.get("startTime", "")),
     )
-    if not upcoming:
-        upcoming = sorted(events, key=lambda event: (event.get("date", ""), event.get("startTime", "")))
     selected = upcoming if limit is None else upcoming[:limit]
     return [event_schema(event) for event in selected]
 
@@ -528,6 +573,19 @@ def page_graph(
 def main() -> None:
     homepage_events = upcoming_event_schemas(limit=3)
     all_events = upcoming_event_schemas(limit=None)
+    homepage_extras: list[dict[str, Any]] = [faq_schema()]
+    if homepage_events:
+        homepage_extras.append(event_item_list(homepage_events))
+    event_extras: list[dict[str, Any]] = []
+    if all_events:
+        event_extras = [
+            event_item_list(
+                all_events,
+                schema_id=abs_url("events.html#event-list"),
+                name="Whistle Stop Grill & Bar events calendar",
+            ),
+            *all_events,
+        ]
 
     write_jsonld(
         SITE / "index.html",
@@ -537,10 +595,7 @@ def main() -> None:
             "Safety Harbor's landmark grill and bar since 1995.",
             image="assets/gallery/WSSunset.webp",
             main_entity=RESTAURANT_ID,
-            extra=[
-                faq_schema(),
-                event_item_list(homepage_events),
-            ],
+            extra=homepage_extras,
         ),
     )
     write_jsonld(
@@ -551,14 +606,7 @@ def main() -> None:
             "Weekly happenings, live music, cornhole, book club, and ukulele jam at Whistle Stop Grill & Bar.",
             label="Events",
             image="assets/gallery/WSRocker.webp",
-            extra=[
-                event_item_list(
-                    all_events,
-                    schema_id=abs_url("events.html#event-list"),
-                    name="Whistle Stop Grill & Bar events calendar",
-                ),
-                *all_events,
-            ],
+            extra=event_extras,
         ),
     )
     write_jsonld(
@@ -621,7 +669,87 @@ def main() -> None:
             extra=[private_events_service_schema()],
         ),
     )
-    print("Updated schema on all public customer-facing pages.")
+    write_jsonld(
+        SITE / "about.html",
+        page_graph(
+            "about.html",
+            "Our Story | Whistle Stop Grill & Bar",
+            "The story of Whistle Stop Grill & Bar, a Safety Harbor landmark since 1995.",
+            label="Our Story",
+            page_type="AboutPage",
+            image="assets/original-whistle-stop.webp",
+            main_entity=RESTAURANT_ID,
+        ),
+    )
+
+    visibility_pages = [
+        (
+            "index.html",
+            BASE_URL,
+            "Whistle Stop Grill & Bar | Safety Harbor, FL",
+            "Safety Harbor's landmark grill and bar since 1995, with live music, happy hour, a dog-friendly patio, and open-air dining on Main Street.",
+            "assets/gallery/WSSunset.webp",
+        ),
+        (
+            "menu.html",
+            abs_url("menu.html"),
+            "Menu | Whistle Stop Grill & Bar",
+            "Explore Whistle Stop's main menu, seasonal specials, fried green tomatoes, burgers, seafood, cocktails, and 18 taps in Safety Harbor.",
+            "assets/gallery/WSFood.webp",
+        ),
+        (
+            "events.html",
+            abs_url("events.html"),
+            "Events Calendar | Whistle Stop Grill & Bar",
+            "See live music and recurring community events at Whistle Stop Grill & Bar in downtown Safety Harbor.",
+            "assets/gallery/WSRocker.webp",
+        ),
+        (
+            "order.html",
+            abs_url("order.html"),
+            "Order Online | Whistle Stop Grill & Bar",
+            "Order pickup from Whistle Stop Grill & Bar or choose delivery through Uber Eats, DoorDash, or Grubhub.",
+            "assets/gallery/WSFood.webp",
+        ),
+        (
+            "happy-hour.html",
+            abs_url("happy-hour.html"),
+            "Happy Hour Safety Harbor | Whistle Stop Grill & Bar",
+            "Happy hour in Safety Harbor with craft cocktails, Hip Sips, 18 taps, and open-air patio seating.",
+            "assets/gallery/WSDrinks.webp",
+        ),
+        (
+            "private-events.html",
+            abs_url("private-events.html"),
+            "Private Events | Whistle Stop Grill & Bar",
+            "Plan a private party, group dinner, or casual celebration at Whistle Stop Grill & Bar in Safety Harbor.",
+            "assets/gallery/WSLounge.webp",
+        ),
+        (
+            "about.html",
+            abs_url("about.html"),
+            "Our Story | Whistle Stop Grill & Bar",
+            "Learn how Whistle Stop became a Safety Harbor landmark for open-air dining, live music, and Old Florida charm.",
+            "assets/original-whistle-stop.webp",
+        ),
+        (
+            "contact.html",
+            abs_url("contact.html"),
+            "Visit Whistle Stop | Directions & Hours",
+            "Find Whistle Stop Grill & Bar at 915 Main Street in downtown Safety Harbor, Florida.",
+            "assets/gallery/WSGoodTimes.webp",
+        ),
+    ]
+    for filename, page_url, title, description, image in visibility_pages:
+        write_visibility_meta(
+            SITE / filename,
+            page_url=page_url,
+            title=title,
+            description=description,
+            image=image,
+        )
+
+    print("Updated production-domain schema and visibility metadata on all public pages.")
 
 
 if __name__ == "__main__":

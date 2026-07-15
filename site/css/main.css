@@ -30,6 +30,9 @@
 
 html {
   scroll-behavior: smooth;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -40,6 +43,9 @@ body {
   color: var(--text);
   background: var(--chalk);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* QR promo scan banner (?ws_offer=...) */
@@ -779,18 +785,100 @@ html.ws-js .header-nav .nav-desktop a {
 }
 
 @media (max-width: 767px) {
+  .container {
+    width: 100%;
+    padding-left: max(0.65rem, env(safe-area-inset-left, 0px));
+    padding-right: max(0.65rem, env(safe-area-inset-right, 0px));
+  }
+
+  .header-inner {
+    grid-template-columns: 40px minmax(46px, 1fr) auto;
+    gap: 0.35rem;
+    width: 100%;
+  }
+
+  .nav-toggle {
+    width: 40px;
+    height: 44px;
+    padding: 8px;
+    align-items: center;
+    justify-content: center;
+    justify-self: start;
+  }
+
+  .logo-link {
+    justify-self: center;
+  }
+
+  .header-actions {
+    gap: 0.35rem;
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .ws-header-order,
   .ws-header-order-wrap {
     display: none !important;
   }
+
+  .ws-header-call {
+    width: auto;
+    height: 40px;
+    min-width: 0;
+    gap: 0.35rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+  }
+
+  .ws-header-call__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ws-header-call__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .ws-header-call__text {
+    display: flex;
+    min-width: 0;
+    line-height: 1;
+  }
+
+  .ws-header-call__label {
+    display: none;
+  }
+
+  .ws-header-call__number {
+    display: block;
+    color: var(--cream);
+    font-size: clamp(0.7rem, 3.25vw, 0.82rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .nav-mobile {
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    border-left: 0;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  .nav-mobile-inner {
+    width: 100%;
+    padding-bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .nav-mobile-ctas .ws-header-install-btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 400px) {
-  .ws-header-call {
-    width: 38px;
-    height: 38px;
-  }
-
   .ws-logo-coin__scene {
     width: 46px;
     height: 46px;
@@ -999,12 +1087,12 @@ body.nav-open {
   top: var(--header-h);
   right: 0;
   bottom: 0;
-  left: auto;
-  width: clamp(260px, 40vw, 340px);
-  max-width: 100%;
+  left: 0;
+  width: 100%;
+  max-width: none;
   background: var(--chalk);
-  border-left: 1px solid var(--chalk-light);
-  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.45);
+  border-left: 0;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
   transform: translateX(100%);
   transition: transform 0.4s var(--ease-out);
   z-index: 1001;
@@ -1017,7 +1105,7 @@ body.nav-open {
 }
 
 .nav-mobile-inner {
-  padding: 1rem 1.15rem 1.75rem;
+  padding: 1rem 1.15rem calc(1.75rem + env(safe-area-inset-bottom, 0px));
   width: 100%;
 }
 
@@ -1542,6 +1630,26 @@ section {
 .card-grid {
   display: grid;
   gap: 1.5rem;
+}
+
+@media (max-width: 639px) {
+  .card-grid,
+  #promo-happenings,
+  #promo-cards-home,
+  .review-carousel-shell,
+  main {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  html.ws-js [data-ws-enter="left"],
+  html.ws-js [data-ws-enter="right"],
+  html.ws-js main h1[data-ws-enter="left"],
+  html.ws-js .hero h1[data-ws-enter="left"],
+  .card.reveal,
+  .card.reveal.visible {
+    transform: none !important;
+  }
 }
 
 @media (min-width: 640px) {
@@ -2617,6 +2725,105 @@ html.ws-hero-preview-embed [data-hero] .page-hero-content {
   width: 20px;
   height: 20px;
   margin-bottom: 2px;
+}
+
+/* PWA install prompt — same pattern as Handyman Ticket Manager */
+#ws-install-banner {
+  position: fixed;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+  z-index: 1005;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  background: linear-gradient(135deg, #1f1f1f 0%, #141414 100%);
+  border: 1px solid var(--lime);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--cream);
+}
+
+#ws-install-banner.is-ios-top {
+  top: calc(var(--header-h, 4rem) + 0.5rem + env(safe-area-inset-top, 0px));
+  bottom: auto;
+}
+
+body.admin-body #ws-install-banner {
+  bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));
+}
+
+body.admin-body #ws-install-banner.is-ios-top {
+  top: calc(0.85rem + env(safe-area-inset-top, 0px));
+  bottom: auto;
+}
+
+.ws-header-install-btn {
+  white-space: nowrap;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.7rem;
+}
+
+.ws-install-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.ws-install-text strong {
+  color: var(--lime);
+  font-size: 0.82rem;
+}
+
+.ws-install-text span {
+  color: var(--cream-dim);
+}
+
+.ws-install-icon {
+  display: inline-block;
+  color: var(--lime);
+  font-weight: 700;
+}
+
+.ws-install-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.ws-install-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  background: var(--lime);
+  color: var(--chalk);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ws-install-close {
+  border: none;
+  background: transparent;
+  color: var(--cream-dim);
+  font-size: 1.35rem;
+  line-height: 1;
+  padding: 0.15rem 0.35rem;
+  cursor: pointer;
+}
+
+@media (min-width: 769px) {
+  #ws-install-banner,
+  .ws-header-install-btn {
+    display: none !important;
+  }
 }
 
 /* Page hero smaller */

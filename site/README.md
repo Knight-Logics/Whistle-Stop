@@ -9,7 +9,11 @@ cd "E:\High Prospective Clients\Whistle-Stop\site"
 npx --yes serve -l 3456
 ```
 
-Open http://localhost:3456
+Open **http://localhost:3456/admin.html** (the address bar may show `/admin` — that is fine).
+
+Use `npx serve` from the **`site`** folder only. Preview click-to-edit needs query params on iframe URLs; `serve` strips them if you load `*.html` paths directly, so the admin preview uses clean paths like `/events?preview=1` automatically.
+
+Do **not** open the repo root or `file://` paths — the editor will not work.
 
 ## Staff admin portal
 

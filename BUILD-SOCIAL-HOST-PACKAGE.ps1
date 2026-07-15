@@ -1,19 +1,24 @@
 #Requires -Version 5.1
-# Build site/downloads/whistle-stop-social-host.zip for auth-gated admin download.
+# Build the verified versioned Social Host package used by /admin.
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = $PSScriptRoot
 $GrowthRoot = "E:\KnightLogics-Growth-System"
 $Staging = Join-Path $RepoRoot "packaging\social-host-staging"
 $OutDir = Join-Path $RepoRoot "site\downloads"
-$ZipPath = Join-Path $OutDir "whistle-stop-social-host.zip"
+$ZipPath = Join-Path $OutDir "whistle-stop-social-host-2026-07-13-v2.zip"
 $PkgName = "whistle-stop-social-host"
 
 if (-not (Test-Path (Join-Path $GrowthRoot "Social\WhistleStop\bridge-server.js"))) {
     Write-Error "Growth System bridge not found at $GrowthRoot\Social\WhistleStop"
 }
 
-if (Test-Path $Staging) { Remove-Item $Staging -Recurse -Force }
+$resolvedRepoRoot = [System.IO.Path]::GetFullPath($RepoRoot).TrimEnd("\") + "\"
+$resolvedStaging = [System.IO.Path]::GetFullPath($Staging)
+if (-not $resolvedStaging.StartsWith($resolvedRepoRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Refusing to clean staging outside the repository: $resolvedStaging"
+}
+if (Test-Path $resolvedStaging) { Remove-Item -LiteralPath $resolvedStaging -Recurse -Force }
 $root = Join-Path $Staging $PkgName
 New-Item -ItemType Directory -Force -Path $root | Out-Null
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
@@ -24,6 +29,7 @@ foreach ($f in @(
         "START-PRESENTATION.ps1",
         "START-MAIN-PC-HOST.ps1",
         "PRE-LEAVE-HEALTH.ps1",
+        "TEST-SOCIAL-PREFLIGHT.ps1",
         "portable-paths.ps1"
     )) {
     $src = Join-Path $RepoRoot $f
@@ -78,15 +84,16 @@ Who this is for
   Staff with owner or editor access in the Whistle Stop admin.
   You were prompted to download this because a Playwright host was not detected.
 
-What you get without this package (cloud only)
+What you get without this package (cloud fallback)
   - Facebook Page
   - X (Twitter)
-  - Google Business Profile
 
-What this package enables (Playwright on THIS PC)
+What this package enables through one always-on Windows PC
+  - Facebook Page + community groups
+  - X (Twitter)
   - LinkedIn
+  - Google Business Profile API
   - Nextdoor
-  - Facebook community groups
 
 Quick start
   1. Unzip anywhere (e.g. Desktop\whistle-stop-social-host)
@@ -106,7 +113,7 @@ Requirements
 Notes
   - Demo posts target Knight Logics accounts ONLY
   - Graph platforms do not need this package
-  - Before a venue pitch, run PRE-LEAVE-HEALTH.ps1 on the host PC
+  - Before a venue pitch, run TEST-SOCIAL-PREFLIGHT.ps1 -Strict on the host PC
 
 Admin bookmark (correct URL)
   https://knight-logics.github.io/Whistle-Stop/admin.html

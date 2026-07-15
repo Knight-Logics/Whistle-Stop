@@ -3468,7 +3468,11 @@ window.WSAdminGUI = (function () {
         return;
       }
       if (payload.type === "admin-nav" && payload.target) {
-        window.dispatchEvent(new CustomEvent("ws-admin-switch-tab", { detail: { tab: payload.target } }));
+        window.dispatchEvent(
+          new CustomEvent("ws-admin-switch-tab", {
+            detail: { tab: payload.target, toast: payload.toast || "" },
+          })
+        );
         return;
       }
       if (payload.type === "switch-page" && payload.pageId) {
@@ -3603,8 +3607,10 @@ window.WSAdminGUI = (function () {
       iframe.dataset.pageEditGuard = "1";
       iframe.addEventListener("load", () => {
         try {
-          const qs = new URLSearchParams(iframe.contentWindow.location.search);
-          if (!qs.has("pageEditPreview")) pushPagePreview(true);
+          const win = iframe.contentWindow;
+          const qs = new URLSearchParams(win.location.search);
+          const isAdminDoc = /(?:^|\/)admin\.html$/i.test(win.location.pathname);
+          if (isAdminDoc || !qs.has("pageEditPreview")) pushPagePreview(true);
         } catch {
           /* ignore */
         }
