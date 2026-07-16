@@ -545,64 +545,38 @@
   }
 
   function renderUpcomingListItem(e) {
-
     const timeStr =
-
       e.startTime && e.endTime
-
         ? `${formatTime(e.startTime)} – ${formatTime(e.endTime)}`
-
         : e.startTime
-
           ? formatTime(e.startTime)
-
           : "";
-
     const tagClass = e.category === "live-music" ? "music" : "";
-
     const tagLabel =
-
       e.category === "live-music" && !e.recurring
-
         ? "Featured act"
-
         : e.recurring
-
           ? "Weekly"
-
           : "This date";
+    const adminAttrs = adminEventAttrs(e);
+    const clickable = isPreview ? " admin-preview-clickable" : "";
 
     return `
-
-        <li class="reveal">
-
+        <li class="reveal${clickable}"${adminAttrs}>
           <div class="date-box">
-
             <div class="day">${e.date.getDate()}</div>
-
             <div class="month">${MONTHS_SHORT[e.date.getMonth()]}</div>
-
           </div>
-
           <div>
-
-            <h3>${e.title}</h3>
-
-            ${timeStr ? `<div class="time">${timeStr}</div>` : ""}
-
-            ${e.summary ? `<p style="margin:0.25rem 0 0;color:var(--text-muted);font-size:0.9rem">${e.summary}</p>` : ""}
-
+            <h3>${esc(e.title)}</h3>
+            ${timeStr ? `<div class="time">${esc(timeStr)}</div>` : ""}
+            ${e.summary ? `<p style="margin:0.25rem 0 0;color:var(--text-muted);font-size:0.9rem">${esc(e.summary)}</p>` : ""}
             <span class="tag ${tagClass}">${tagLabel}</span>
-
           </div>
-
         </li>`;
-
   }
 
-
-
-  function renderHomeEvents(container, events, today) {
+function renderHomeEvents(container, events, today) {
 
     const listEvents = events.slice(0, 6);
 
@@ -794,152 +768,97 @@
 
 
   function renderCalendar() {
-
     if (!calendarEl) return;
-
     const now = new Date();
-
     if (viewYear == null) {
-
       viewYear = now.getFullYear();
-
       viewMonth = now.getMonth();
-
     }
-
-
 
     const first = new Date(viewYear, viewMonth, 1);
-
     const last = new Date(viewYear, viewMonth + 1, 0);
-
     const startPad = new Date(first);
-
     startPad.setDate(startPad.getDate() - first.getDay());
-
     const endPad = new Date(last);
-
     endPad.setDate(endPad.getDate() + (6 - last.getDay()));
 
-
-
     const events = filterCalendarEvents(getEventsInRange(startPad, endPad));
-
     const byDay = {};
-
     events.forEach((e) => {
-
       const key = e.date.toDateString();
-
       if (!byDay[key]) byDay[key] = [];
-
       byDay[key].push(e);
-
     });
 
-
-
     const monthNames = [
-
       "January", "February", "March", "April", "May", "June",
-
       "July", "August", "September", "October", "November", "December",
-
     ];
-
     const dows = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+    const monthEvents = events
+      .filter((e) => e.date.getMonth() === viewMonth && e.date.getFullYear() === viewYear)
+      .sort((a, b) => a.date - b.date || (a.startTime || "").localeCompare(b.startTime || ""));
 
+    const listHtml = monthEvents.length
+      ? `<ul class="upcoming-list">${monthEvents.map(renderUpcomingListItem).join("")}</ul>`
+      : `<p class="events-cal-empty">No events scheduled this month.</p>`;
 
-    let html = `
-
-      <div class="cal-header">
-
-        <button type="button" id="cal-prev" aria-label="Previous month">‹</button>
-
-        <h3>${monthNames[viewMonth]} ${viewYear}</h3>
-
-        <button type="button" id="cal-next" aria-label="Next month">›</button>
-
-      </div>`;
-
-    dows.forEach((d) => (html += `<div class="cal-dow">${d}</div>`));
-
-
+    let gridHtml = "";
+    dows.forEach((d) => (gridHtml += `<div class="cal-dow">${d}</div>`));
 
     const cur = new Date(startPad);
-
     while (cur <= endPad) {
-
       const inMonth = cur.getMonth() === viewMonth;
-
       const isToday = cur.toDateString() === now.toDateString();
-
       const evs = byDay[cur.toDateString()] || [];
-
-      const adminDayAttrs = isPreview ? ` data-admin-date="${esc(formatISODate(cur))}" title="Click to add or edit this date"` : "";
-
-      html += `<div class="cal-day${inMonth ? "" : " other-month"}${isToday ? " today" : ""}"${adminDayAttrs}>
-
+      const adminDayAttrs = isPreview
+        ? ` data-admin-date="${esc(formatISODate(cur))}" title="Click to add or edit this date"`
+        : "";
+      gridHtml += `<div class="cal-day${inMonth ? "" : " other-month"}${isToday ? " today" : ""}"${adminDayAttrs}>
         <span class="num">${cur.getDate()}</span>
-
         ${evs
-
           .slice(0, 3)
-
           .map((e) => renderCalEventChip(e))
-
           .join("")}
-
       </div>`;
-
       cur.setDate(cur.getDate() + 1);
-
     }
 
+    calendarEl.classList.remove("calendar-grid");
+    calendarEl.classList.add("event-calendar-root");
+    calendarEl.innerHTML = `
+      <div class="cal-header">
+        <button type="button" id="cal-prev" aria-label="Previous month">‹</button>
+        <h3>${monthNames[viewMonth]} ${viewYear}</h3>
+        <button type="button" id="cal-next" aria-label="Next month">›</button>
+      </div>
+      <div class="events-cal-mobile" aria-label="Month events list">${listHtml}</div>
+      <div class="events-cal-desktop calendar-grid" role="grid" aria-label="Month calendar">${gridHtml}</div>`;
 
-
-    calendarEl.innerHTML = html;
     bindAdminCalendarClicks();
     applyAdminHighlightDate(adminHighlightDate);
 
     calendarEl.querySelector("#cal-prev")?.addEventListener("click", () => {
-
       viewMonth--;
-
       if (viewMonth < 0) {
-
         viewMonth = 11;
-
         viewYear--;
-
       }
-
       renderCalendar();
-
     });
 
     calendarEl.querySelector("#cal-next")?.addEventListener("click", () => {
-
       viewMonth++;
-
       if (viewMonth > 11) {
-
         viewMonth = 0;
-
         viewYear++;
-
       }
-
       renderCalendar();
-
     });
-
   }
 
-
-
-  async function renderOneOffEvents() {
+async function renderOneOffEvents() {
     const root = oneOffEl;
     if (!root) return;
 

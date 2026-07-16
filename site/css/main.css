@@ -2100,10 +2100,62 @@ section {
 }
 
 .events-calendar-block,
-#event-calendar {
+#event-calendar,
+.event-calendar-root {
   width: 100%;
   max-width: 100%;
   min-width: 0;
+}
+
+.event-calendar-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-sizing: border-box;
+  background: var(--chalk-mid);
+  color: var(--cream);
+  border: 1px solid var(--chalk-light);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.event-calendar-root > .cal-header {
+  margin-bottom: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.events-cal-mobile {
+  display: block;
+}
+
+.events-cal-desktop.calendar-grid {
+  display: none;
+}
+
+.event-calendar-root .events-cal-desktop.calendar-grid {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+.events-cal-empty {
+  margin: 0.5rem 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+@media (min-width: 768px) {
+  .events-cal-mobile {
+    display: none;
+  }
+
+  .events-cal-desktop.calendar-grid {
+    display: grid;
+  }
 }
 
 .calendar-grid {
@@ -2278,6 +2330,24 @@ html.ws-preview-embed .events-section-title {
 
 html.ws-preview-embed .calendar-grid {
   padding: 0.75rem;
+}
+
+html.ws-preview-embed .event-calendar-root {
+  padding: 0.75rem;
+}
+
+html.ws-preview-embed .event-calendar-root .events-cal-desktop.calendar-grid {
+  padding: 0;
+}
+
+html.ws-preview-embed .events-cal-mobile .upcoming-list li.admin-preview-clickable {
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+html.ws-preview-embed .events-cal-mobile .upcoming-list li.admin-preview-clickable:hover {
+  background: rgba(184, 224, 74, 0.08);
 }
 
 html.ws-preview-embed .cal-day {
