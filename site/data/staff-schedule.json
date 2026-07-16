@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "timezone": "America/New_York",
+  "source": "manual",
+  "updatedAt": "2026-07-16T12:00:00.000Z",
+  "notes": "Staff-only week board. Use first names only. Toast Scheduling / Sling / MyToast is the private long-term source of truth when enabled.",
+  "employees": [
+    { "id": "e-alex", "name": "Alex", "roles": ["Manager"] },
+    { "id": "e-jordan", "name": "Jordan", "roles": ["Server", "Host"] },
+    { "id": "e-sam", "name": "Sam", "roles": ["Server"] },
+    { "id": "e-casey", "name": "Casey", "roles": ["Bartender"] },
+    { "id": "e-riley", "name": "Riley", "roles": ["Cook"] },
+    { "id": "e-morgan", "name": "Morgan", "roles": ["Cook"] },
+    { "id": "e-taylor", "name": "Taylor", "roles": ["Host", "Server"] }
+  ],
+  "roles": ["Manager", "Server", "Bartender", "Cook", "Host"],
+  "shifts": [
+    { "id": "s1", "employeeId": "e-alex", "date": "2026-07-13", "start": "10:00", "end": "18:00", "role": "Manager", "note": "" },
+    { "id": "s2", "employeeId": "e-jordan", "date": "2026-07-13", "start": "11:00", "end": "19:00", "role": "Server", "note": "" },
+    { "id": "s3", "employeeId": "e-riley", "date": "2026-07-13", "start": "10:00", "end": "18:00", "role": "Cook", "note": "" },
+    { "id": "s4", "employeeId": "e-casey", "date": "2026-07-13", "start": "16:00", "end": "23:00", "role": "Bartender", "note": "Happy hour" },
+
+    { "id": "s5", "employeeId": "e-alex", "date": "2026-07-14", "start": "10:00", "end": "18:00", "role": "Manager", "note": "" },
+    { "id": "s6", "employeeId": "e-sam", "date": "2026-07-14", "start": "11:00", "end": "19:00", "role": "Server", "note": "" },
+    { "id": "s7", "employeeId": "e-taylor", "date": "2026-07-14", "start": "11:00", "end": "17:00", "role": "Host", "note": "" },
+    { "id": "s8", "employeeId": "e-morgan", "date": "2026-07-14", "start": "10:00", "end": "18:00", "role": "Cook", "note": "" },
+    { "id": "s9", "employeeId": "e-casey", "date": "2026-07-14", "start": "16:00", "end": "23:00", "role": "Bartender", "note": "" },
+
+    { "id": "s10", "employeeId": "e-alex", "date": "2026-07-15", "start": "10:00", "end": "18:00", "role": "Manager", "note": "" },
+    { "id": "s11", "employeeId": "e-jordan", "date": "2026-07-15", "start": "11:00", "end": "20:00", "role": "Server", "note": "" },
+    { "id": "s12", "employeeId": "e-sam", "date": "2026-07-15", "start": "16:00", "end": "22:00", "role": "Server", "note": "Dinner" },
+    { "id": "s13", "employeeId": "e-riley", "date": "2026-07-15", "start": "10:00", "end": "18:00", "role": "Cook", "note": "" },
+    { "id": "s14", "employeeId": "e-morgan", "date": "2026-07-15", "start": "15:00", "end": "22:00", "role": "Cook", "note": "" },
+    { "id": "s15", "employeeId": "e-casey", "date": "2026-07-15", "start": "16:00", "end": "23:30", "role": "Bartender", "note": "" },
+
+    { "id": "s16", "employeeId": "e-alex", "date": "2026-07-16", "start": "10:00", "end": "18:00", "role": "Manager", "note": "" },
+    { "id": "s17", "employeeId": "e-jordan", "date": "2026-07-16", "start": "11:00", "end": "19:00", "role": "Server", "note": "" },
+    { "id": "s18", "employeeId": "e-taylor", "date": "2026-07-16", "start": "11:00", "end": "17:00", "role": "Host", "note": "" },
+    { "id": "s19", "employeeId": "e-riley", "date": "2026-07-16", "start": "10:00", "end": "18:00", "role": "Cook", "note": "" },
+    { "id": "s20", "employeeId": "e-casey", "date": "2026-07-16", "start": "16:00", "end": "23:00", "role": "Bartender", "note": "" },
+
+    { "id": "s21", "employeeId": "e-alex", "date": "2026-07-17", "start": "10:00", "end": "18:00", "role": "Manager", "note": "" },
+    { "id": "s22", "employeeId": "e-sam", "date": "2026-07-17", "start": "11:00", "end": "20:00", "role": "Server", "note": "" },
+    { "id": "s23", "employeeId": "e-jordan", "date": "2026-07-17", "start": "16:00", "end": "22:00", "role": "Server", "note": "" },
+    { "id": "s24", "employeeId": "e-morgan", "date": "2026-07-17", "start": "10:00", "end": "18:00", "role": "Cook", "note": "" },
+    { "id": "s25", "employeeId": "e-riley", "date": "2026-07-17", "start": "15:00", "end": "22:00", "role": "Cook", "note": "" },
+    { "id": "s26", "employeeId": "e-casey", "date": "2026-07-17", "start": "16:00", "end": "23:30", "role": "Bartender", "note": "Live music" },
+
+    { "id": "s27", "employeeId": "e-alex", "date": "2026-07-18", "start": "09:00", "end": "17:00", "role": "Manager", "note": "Saturday brunch" },
+    { "id": "s28", "employeeId": "e-jordan", "date": "2026-07-18", "start": "09:00", "end": "17:00", "role": "Server", "note": "" },
+    { "id": "s29", "employeeId": "e-sam", "date": "2026-07-18", "start": "16:00", "end": "23:00", "role": "Server", "note": "" },
+    { "id": "s30", "employeeId": "e-taylor", "date": "2026-07-18", "start": "09:00", "end": "15:00", "role": "Host", "note": "" },
+    { "id": "s31", "employeeId": "e-riley", "date": "2026-07-18", "start": "08:30", "end": "16:30", "role": "Cook", "note": "" },
+    { "id": "s32", "employeeId": "e-morgan", "date": "2026-07-18", "start": "15:00", "end": "23:00", "role": "Cook", "note": "" },
+    { "id": "s33", "employeeId": "e-casey", "date": "2026-07-18", "start": "15:00", "end": "00:00", "role": "Bartender", "note": "" },
+
+    { "id": "s34", "employeeId": "e-alex", "date": "2026-07-19", "start": "09:00", "end": "17:00", "role": "Manager", "note": "" },
+    { "id": "s35", "employeeId": "e-jordan", "date": "2026-07-19", "start": "10:00", "end": "18:00", "role": "Server", "note": "" },
+    { "id": "s36", "employeeId": "e-sam", "date": "2026-07-19", "start": "16:00", "end": "22:00", "role": "Server", "note": "" },
+    { "id": "s37", "employeeId": "e-riley", "date": "2026-07-19", "start": "09:00", "end": "17:00", "role": "Cook", "note": "" },
+    { "id": "s38", "employeeId": "e-casey", "date": "2026-07-19", "start": "14:00", "end": "22:00", "role": "Bartender", "note": "" }
+  ]
+}

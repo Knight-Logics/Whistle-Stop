@@ -8,7 +8,7 @@
   const MENU_FULL_RESTORE_FLAG = "ws-menu-full-restore-v1";
   const PUBLISHED_RESTORE_FLAG = "ws-published-content-restore-v2";
   const EMPTY_OVERLAY_FIX_FLAG = "ws-overlay-empty-array-fix-v1";
-  const CONTENT_SECTIONS = ["site", "events", "menus", "reviews", "promos", "socialManager"];
+  const CONTENT_SECTIONS = ["site", "events", "menus", "reviews", "promos", "socialManager", "staffSchedule"];
 
   const FILES = {
     site: "data/site.json",
@@ -18,6 +18,7 @@
     promos: "data/promos.json",
     images: "data/images.json",
     socialManager: "data/social-manager.json",
+    staffSchedule: "data/staff-schedule.json",
   };
 
   const UPLOAD_PREFIX = "ws-upload:";
@@ -437,7 +438,7 @@
   }
 
   async function exportBundle() {
-    const sections = ["site", "events", "menus", "reviews", "promos"];
+    const sections = ["site", "events", "menus", "reviews", "promos", "staffSchedule"];
     const bundle = {};
     for (const s of sections) {
       bundle[s] = await get(s);

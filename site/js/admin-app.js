@@ -59,6 +59,16 @@
       ],
     },
     {
+      title: "Operations",
+      tabs: [
+        {
+          id: "staff-scheduling",
+          label: "Staff Scheduling",
+          hint: "Week board · Toast / MyToast",
+        },
+      ],
+    },
+    {
       title: "Revenue Tools",
       tabs: [
         { id: "ordering-hub", label: "Ordering Hub", mock: true },
@@ -304,6 +314,16 @@
       }
     });
 
+    try {
+      const tabParam = new URLSearchParams(window.location.search).get("tab");
+      if (tabParam && TABS.some((t) => t.id === tabParam)) {
+        state.tab = tabParam;
+        nav.querySelectorAll("button[data-tab]").forEach((b) => {
+          b.classList.toggle("is-active", b.dataset.tab === tabParam);
+        });
+      }
+    } catch (_) {}
+
     await renderTab();
     try {
       if (WSConfig.canSocialPost?.()) {
@@ -356,7 +376,11 @@
     const isMockTab = MOCK_TABS.has(state.tab);
     const isSocialTab = state.tab === "social";
     const isCampaignTab = state.tab === "campaign-calendar";
-    const isWideTab = ["heroes", "events", "menus", "pages", "social", "qr-codes", "campaign-calendar"].includes(state.tab) || isMockTab;
+    const isScheduleTab = state.tab === "staff-scheduling";
+    const isWideTab =
+      ["heroes", "events", "menus", "pages", "social", "qr-codes", "campaign-calendar", "staff-scheduling"].includes(
+        state.tab
+      ) || isMockTab;
     main.classList.toggle("admin-main--wide", isWideTab);
     main.classList.toggle("admin-main--draft-manager", DRAFT_MANAGER_TABS.has(state.tab));
     main.innerHTML = `
@@ -370,11 +394,17 @@
                 ? `<span class="admin-social-top-hint">Private signups, verified leads, suppression, and delivery status sync through Knight Command.</span>`
                 : isMockTab
                 ? `<span class="admin-social-top-hint">Preview module — not connected to live data yet.</span>`
-                : `<span class="admin-draft-state">Draft preview mode</span><button type="button" class="btn btn-outline" id="admin-save-tab">Save draft</button>${
-                    WSConfig.canPublish?.()
-                      ? `<button type="button" class="btn btn-primary" id="admin-publish-live">Publish live</button>`
-                      : `<span class="admin-social-top-hint">Publish live requires owner/editor role</span>`
-                  }`
+                : isScheduleTab
+                  ? `<span class="admin-draft-state">Staff-only week board</span><button type="button" class="btn btn-outline" id="admin-save-tab">Save draft</button>${
+                      WSConfig.canPublish?.()
+                        ? `<button type="button" class="btn btn-primary" id="admin-publish-live">Publish for staff</button>`
+                        : `<span class="admin-social-top-hint">Publishing the week requires owner/editor</span>`
+                    }`
+                  : `<span class="admin-draft-state">Draft preview mode</span><button type="button" class="btn btn-outline" id="admin-save-tab">Save draft</button>${
+                      WSConfig.canPublish?.()
+                        ? `<button type="button" class="btn btn-primary" id="admin-publish-live">Publish live</button>`
+                        : `<span class="admin-social-top-hint">Publish live requires owner/editor role</span>`
+                    }`
           }
         </div>
       </div>
@@ -418,6 +448,10 @@
             state.events = await WSConfig.get("events");
           }
           window.WSAdminQRCodes?.render(panel, { events: state.events });
+          break;
+        case "staff-scheduling":
+          WSConfig.invalidateCache("staffSchedule");
+          await window.WSAdminStaffScheduling?.render(panel);
           break;
         case "ordering-hub":
           window.WSAdminMockups?.renderOrderingHub(panel);
@@ -463,11 +497,18 @@
       return;
     }
 
+    const schedulePublish = tab === "staff-scheduling";
     g.openAdminModal({
-      title: "Publish live to website",
-      subtitle: "Updates the public GitHub Pages site for all visitors. Requires admin password.",
+      title: schedulePublish ? "Publish week for staff" : "Publish live to website",
+      subtitle: schedulePublish
+        ? "Shares the staff week board with every signed-in staff device. Use first names only."
+        : "Updates the public GitHub Pages site for all visitors. Requires admin password.",
       bodyHtml: `
-        <p class="admin-note" style="margin-top:0">This sends your current draft content (events, menus, promos, homepage, heroes) to the secure Knight Logics publish bridge. GitHub Pages usually updates within 1–3 minutes.</p>
+        <p class="admin-note" style="margin-top:0">${
+          schedulePublish
+            ? "This publishes the staff schedule JSON with the content bundle. It is not shown on the public guest website, but the file is served with the site — keep names first-name only. Prefer Toast Scheduling / MyToast for private labor when Whistle Stop has it enabled."
+            : "This sends your current draft content (events, menus, promos, homepage, heroes) to the secure Knight Logics publish bridge. GitHub Pages usually updates within 1–3 minutes."
+        }</p>
         <div class="admin-field">
           <label for="admin-publish-password">Admin password</label>
           <input type="password" id="admin-publish-password" autocomplete="current-password" placeholder="Same password used to sign in" />
@@ -560,13 +601,23 @@
           break;
         case "social":
           return true;
+        case "staff-scheduling":
+          state.staffSchedule = panel._getStaffSchedule
+            ? panel._getStaffSchedule()
+            : await WSConfig.get("staffSchedule");
+          WSConfig.save("staffSchedule", state.staffSchedule);
+          break;
         default:
           return false;
       }
       panel._refreshPagePreview?.();
       panel._clearUnsaved?.();
       if (!opts.quiet) {
-        toast("Draft saved on this device. Use Publish live when ready for everyone to see it.");
+        toast(
+          tab === "staff-scheduling"
+            ? "Week board saved on this device. Publish for staff when everyone should see the same week."
+            : "Draft saved on this device. Use Publish live when ready for everyone to see it."
+        );
       }
       return true;
     } catch (e) {

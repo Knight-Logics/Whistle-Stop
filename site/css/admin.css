@@ -4375,6 +4375,323 @@ body.admin-modal-open {
   color: var(--text-muted);
 }
 
+/* —— Staff Scheduling —— */
+.admin-schedule-toast-card {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(184, 224, 74, 0.28);
+  border-radius: 12px;
+  background: rgba(184, 224, 74, 0.06);
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.admin-schedule-toast-card > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-schedule-toast-card p {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  color: var(--cream-dim);
+  line-height: 1.45;
+}
+
+.admin-schedule-toast-links {
+  font-size: 0.82rem !important;
+  overflow-wrap: anywhere;
+}
+
+.admin-schedule-toast-links a {
+  color: var(--lime);
+}
+
+.admin-schedule-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.admin-schedule-week-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.admin-schedule-week-label {
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-schedule-week-label strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  color: var(--cream);
+  overflow-wrap: anywhere;
+}
+
+.admin-schedule-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.admin-schedule-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+  max-width: 100%;
+}
+
+.admin-schedule-week {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.admin-schedule-day {
+  border: 1px solid var(--chalk-light);
+  border-radius: 12px;
+  background: var(--chalk-mid);
+  padding: 0.85rem 0.95rem;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.admin-schedule-day.is-today {
+  border-color: rgba(184, 224, 74, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(184, 224, 74, 0.2);
+}
+
+.admin-schedule-day-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+  min-width: 0;
+}
+
+.admin-schedule-day-head h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+  color: var(--cream);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.admin-schedule-today-tag {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: var(--lime);
+  color: var(--chalk);
+  font: 700 0.65rem var(--font-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.admin-schedule-shift-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.admin-schedule-shift {
+  display: grid;
+  grid-template-columns: minmax(0, 7.5rem) minmax(0, 1fr);
+  gap: 0.25rem 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border-left: 3px solid var(--lime);
+  background: var(--chalk);
+  border: 1px solid var(--chalk-light);
+  border-left-width: 3px;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.admin-schedule-shift[data-ss-edit] {
+  cursor: pointer;
+}
+
+.admin-schedule-shift[data-ss-edit]:hover {
+  border-color: rgba(184, 224, 74, 0.4);
+}
+
+.admin-schedule-shift.is-manager {
+  border-left-color: #f0c14d;
+}
+
+.admin-schedule-shift.is-cook {
+  border-left-color: #e05050;
+}
+
+.admin-schedule-shift.is-bar {
+  border-left-color: #9b7ed9;
+}
+
+.admin-schedule-shift.is-host {
+  border-left-color: #6ec6ff;
+}
+
+.admin-schedule-shift.is-server {
+  border-left-color: var(--lime);
+}
+
+.admin-schedule-shift-time {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--gold, #f0c14d);
+  white-space: nowrap;
+}
+
+.admin-schedule-shift-who {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  min-width: 0;
+}
+
+.admin-schedule-shift-who strong {
+  color: var(--cream);
+}
+
+.admin-schedule-role {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.admin-schedule-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--cream-dim);
+}
+
+.admin-schedule-empty {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.admin-schedule-roster {
+  margin-top: 1.25rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.admin-schedule-roster-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.admin-schedule-roster-list li {
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  background: var(--chalk);
+  border: 1px solid var(--chalk-light);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.admin-schedule-roster-list strong {
+  display: block;
+  color: var(--cream);
+}
+
+.admin-schedule-roster-list span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 720px) {
+  .admin-schedule-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-schedule-toast-card {
+    flex-direction: column;
+  }
+
+  .admin-schedule-shift {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-schedule-shift-time {
+    white-space: normal;
+  }
+
+  .admin-schedule-toolbar {
+    align-items: stretch;
+  }
+
+  .admin-schedule-week-nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .admin-schedule-toolbar-actions {
+    width: 100%;
+  }
+
+  .admin-schedule-toolbar-actions .btn {
+    flex: 1;
+    min-height: 42px;
+  }
+
+  .admin-schedule-day-head {
+    flex-wrap: wrap;
+  }
+
+  .admin-schedule-day-head .btn {
+    flex: 0 0 auto;
+  }
+
+  .admin-schedule-roster-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 960px) {
   .ws-campaign-layout {
     grid-template-columns: 1fr;

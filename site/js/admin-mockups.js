@@ -78,7 +78,7 @@ window.WSAdminMockups = (function () {
           <h3>Phase 1 — what you get now</h3>
           <ul class="admin-roadmap-list">
             <li><strong>Fast, accessible website</strong> — menus, events, hours, photos, and local SEO structure.</li>
-            <li><strong>Staff admin (this portal)</strong> — edit events, menu copy &amp; prices, promo cards, homepage, hero images.</li>
+            <li><strong>Staff admin (this portal)</strong> — edit events, menu copy &amp; prices, promo cards, homepage, hero images, and the staff week schedule.</li>
             <li><strong>Publish workflow</strong> — save drafts on device, publish live when ready.</li>
             <li><strong>Social &amp; GBP hooks</strong> — cross-post events; deeper GBP automation in marketing previews.</li>
             <li><strong>Order buttons today</strong> — guests pick pickup or delivery; site sends them to Toast / Uber / DoorDash / Grubhub (links, not a shared cart).</li>
@@ -89,6 +89,7 @@ window.WSAdminMockups = (function () {
           <h3>Phase 2 — after Toast API access</h3>
           <ul class="admin-roadmap-list">
             <li><strong>Toast menu sync</strong> — website pulls published menus &amp; pickup prices from Toast (Menus API). Staff change prices once in Toast Web.</li>
+            <li><strong>Toast staff scheduling</strong> — Toast Scheduling / Sling + MyToast remain the private labor apps; this portal’s Staff Scheduling tab is the phone week board until that sync is wired.</li>
             <li><strong>Toast pickup ordering</strong> — embed or deep-link Toast Online Ordering so checkout stays in Toast, not Wix.</li>
             <li><strong>Order Out hub</strong> — one admin screen for pickup vs delivery paths, featured partners, and click tracking.</li>
             <li><strong>Delivery app menus</strong> — Uber / DoorDash / Grubhub menus &amp; markup % sync <em>Toast → apps</em> (already how Toast integrations work; website does not push to apps).</li>

@@ -176,6 +176,34 @@ async function assertAdminMobile(page, width) {
     throw new Error("Admin mobile section list did not collapse after choosing a section");
   }
   assertNoPageOverflow(`admin Pages section at ${width}px`, await widthMetrics(page));
+
+  await menuButton.click();
+  await page.locator(".admin-sidebar.is-mobile-open #admin-nav").waitFor({ state: "visible", timeout: 5000 });
+  const scheduleTab = page.locator('#admin-nav button[data-tab="staff-scheduling"]');
+  if ((await scheduleTab.count()) !== 1) throw new Error("Admin Staff Scheduling navigation is missing");
+  await scheduleTab.click();
+  await page.locator(".admin-schedule-week").waitFor({ state: "visible", timeout: 10000 });
+  if (await page.locator(".admin-sidebar.is-mobile-open").count()) {
+    throw new Error("Admin mobile section list did not collapse after Staff Scheduling");
+  }
+  assertNoPageOverflow(`admin Staff Scheduling at ${width}px`, await widthMetrics(page));
+  const scheduleVisible = await page.evaluate(() => {
+    const week = document.querySelector(".admin-schedule-week");
+    const save = document.getElementById("admin-save-tab");
+    const publish = document.getElementById("admin-publish-live");
+    if (!week) return { ok: false, reason: "missing week board" };
+    const wr = week.getBoundingClientRect();
+    if (wr.width < 200) return { ok: false, reason: "week board too narrow", wr };
+    if (save && publish) {
+      const sr = save.getBoundingClientRect();
+      const pr = publish.getBoundingClientRect();
+      if (Math.abs(sr.top - pr.top) > 6) return { ok: false, reason: "save/publish not same row", sr, pr };
+    }
+    return { ok: true };
+  });
+  if (!scheduleVisible.ok) {
+    throw new Error(`Staff Scheduling mobile layout failed: ${JSON.stringify(scheduleVisible)}`);
+  }
 }
 
 async function main() {

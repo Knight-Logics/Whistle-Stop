@@ -178,6 +178,7 @@ async function assertAdminAndSocial(page) {
     "reviews-mgr",
     "campaign-calendar",
     "qr-codes",
+    "staff-scheduling",
     "ordering-hub",
     "reports",
     "integrations",
@@ -382,6 +383,8 @@ async function main() {
     await mobileAdmin.waitForSelector(".ws-campaign-layout", { timeout: 10000 });
     await clickAdminTab(mobileAdmin, "social");
     await mobileAdmin.waitForSelector("#social-post-preview", { timeout: 10000 });
+    await clickAdminTab(mobileAdmin, "staff-scheduling");
+    await mobileAdmin.waitForSelector(".admin-schedule-week", { timeout: 10000 });
     const mobileAdminOverflow = await mobileAdmin.evaluate(
       () => document.documentElement.scrollWidth > window.innerWidth + 2
     );

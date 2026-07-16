@@ -1,7 +1,7 @@
 {
   "name": "Whistle Stop Staff",
   "short_name": "WS Staff",
-  "description": "Whistle Stop website, campaign, and social operations portal.",
+  "description": "Whistle Stop website, schedule, campaign, and social operations portal.",
   "id": "./admin.html",
   "start_url": "./admin.html?source=pwa",
   "scope": "./",
@@ -14,6 +14,21 @@
       "sizes": "400x400",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Staff Scheduling",
+      "short_name": "Schedule",
+      "description": "This week’s shifts for cooks, servers, and managers",
+      "url": "./admin.html?tab=staff-scheduling&source=pwa-shortcut",
+      "icons": [{ "src": "assets/logo.png", "sizes": "400x400" }]
+    },
+    {
+      "name": "Events",
+      "short_name": "Events",
+      "url": "./admin.html?tab=events&source=pwa-shortcut",
+      "icons": [{ "src": "assets/logo.png", "sizes": "400x400" }]
     }
   ]
 }
