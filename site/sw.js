@@ -1,4 +1,4 @@
-const CACHE_VERSION = "ws-public-v3";
+const CACHE_VERSION = "ws-public-v4";
 const OFFLINE_URL = new URL("offline.html", self.registration.scope).href;
 const PUBLIC_SHELL = [
   "index.html",
@@ -27,13 +27,17 @@ self.addEventListener("activate", (event) => {
 });
 
 function isSensitive(url) {
+  const path = url.pathname;
   return (
-    /\/admin(?:\.html)?$/i.test(url.pathname) ||
-    /\/data\//i.test(url.pathname) ||
-    /\/downloads\//i.test(url.pathname) ||
-    /\/api\//i.test(url.pathname) ||
-    /\/campaign(?:\.html)?$/i.test(url.pathname) ||
-    /\/unsubscribe(?:\.html)?$/i.test(url.pathname)
+    /\/admin(?:\.html)?$/i.test(path) ||
+    /\/admin-manifest\.webmanifest$/i.test(path) ||
+    /\/css\/admin\.css$/i.test(path) ||
+    /\/js\/(?:admin|config-store|campaign|social-manager|menu-render|pwa)/i.test(path) ||
+    /\/data\//i.test(path) ||
+    /\/downloads\//i.test(path) ||
+    /\/api\//i.test(path) ||
+    /\/campaign(?:\.html)?$/i.test(path) ||
+    /\/unsubscribe(?:\.html)?$/i.test(path)
   );
 }
 
