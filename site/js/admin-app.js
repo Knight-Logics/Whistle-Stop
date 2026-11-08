@@ -89,6 +89,20 @@
     },
   ];
 
+  // Cloudflare version: real staff logins, an inbox for the contact form, and publish history.
+  const CLOUD = Boolean(window.WSConfig?.isCloud?.());
+  const CLOUD_TABS = new Set(["messages", "publish-history", "staff-logins"]);
+  if (CLOUD) {
+    NAV_SECTIONS.splice(1, 0, {
+      title: "Site admin",
+      tabs: [
+        { id: "messages", label: "Messages", hint: "Contact form inbox" },
+        { id: "publish-history", label: "Publish history", hint: "See and undo publishes" },
+        { id: "staff-logins", label: "Staff logins", hint: "Accounts & passwords" },
+      ],
+    });
+  }
+
   const TABS = NAV_SECTIONS.flatMap((s) => s.tabs);
   const MOCK_TABS = new Set(TABS.filter((t) => t.mock).map((t) => t.id));
   const DRAFT_MANAGER_TABS = new Set(["events", "menus", "pages"]);
@@ -155,6 +169,8 @@
     });
   }
 
+  window.WSAdminToast = (msg) => toast(msg);
+
   function toast(msg) {
     let el = $("#admin-toast");
     if (!el) {
@@ -194,7 +210,11 @@
       <div class="admin-login">
         <div class="admin-login-card">
           <h1>Staff Portal</h1>
-          <p>Update events, pages, campaigns, and social — no code required. Live URL: <code>…/Whistle-Stop/admin.html</code></p>
+          <p>${
+            CLOUD
+              ? "Update events, menus, pages and social from any phone or computer. Changes go live the moment you publish."
+              : "Update events, pages, campaigns, and social — no code required. Live URL: <code>…/Whistle-Stop/admin.html</code>"
+          }</p>
           <form id="admin-login-form">
             <div class="admin-field">
               <label>Username</label>
@@ -237,14 +257,58 @@
       e.preventDefault();
       const username = e.target.username.value;
       const password = e.target.password.value;
+      const submitBtn = e.target.querySelector('[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
       const ok = await WSConfig.login(username, password);
+      if (submitBtn) submitBtn.disabled = false;
       if (!ok) {
         const err = $("#login-error");
-        err.textContent = "Incorrect username or password.";
+        err.textContent = WSConfig.getLastLoginError?.() || "Incorrect username or password.";
         err.style.display = "block";
         return;
       }
       initApp();
+    });
+  }
+
+  /** Cloudflare first run: no logins exist yet, so the first visitor creates the owner login. */
+  function renderSetup() {
+    document.body.className = "admin-body";
+    document.body.innerHTML = `
+      <div class="admin-login">
+        <div class="admin-login-card">
+          <h1>Create the owner login</h1>
+          <p>This site has no staff logins yet. Choose the owner's username and password. You can add editors and staff afterwards under <strong>Staff logins</strong>.</p>
+          <form id="admin-setup-form">
+            <div class="admin-field"><label for="setup-username">Username</label><input id="setup-username" name="username" required autocomplete="username" value="owner" /></div>
+            <div class="admin-field"><label for="setup-display">Your name</label><input id="setup-display" name="displayName" autocomplete="name" placeholder="Owner" /></div>
+            <div class="admin-field"><label for="setup-password">Password (10+ characters)</label><input id="setup-password" name="password" type="password" required minlength="10" autocomplete="new-password" /></div>
+            <div class="admin-field"><label for="setup-confirm">Type it again</label><input id="setup-confirm" name="confirm" type="password" required minlength="10" autocomplete="new-password" /></div>
+            <p id="setup-error" style="color:var(--rust);font-size:0.9rem;display:none;margin:0.5rem 0 0"></p>
+            <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1rem">Create login and open the admin</button>
+          </form>
+        </div>
+      </div>`;
+    $("#admin-setup-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const f = e.target;
+      const err = $("#setup-error");
+      if (f.password.value !== f.confirm.value) {
+        err.textContent = "The two passwords don't match.";
+        err.style.display = "block";
+        return;
+      }
+      try {
+        await WSConfig.cloudSetupOwner({
+          username: f.username.value,
+          displayName: f.displayName.value || "Owner",
+          password: f.password.value,
+        });
+        initApp();
+      } catch (ex) {
+        err.textContent = ex.message || "Could not create the login.";
+        err.style.display = "block";
+      }
     });
   }
 
@@ -310,7 +374,7 @@
 
     document.addEventListener("ws-social-host-needed", (e) => {
       if (e.detail?.needsPackage) {
-        toast("Shared Social Host is offline. Restore it once on the designated Windows PC; this device needs no installation.");
+        toast("Social Host is offline: LinkedIn, Nextdoor, Facebook groups and Google posts wait for it. Facebook Page and X still post from the cloud.");
       }
     });
 
@@ -327,7 +391,7 @@
     await renderTab();
     try {
       if (WSConfig.canSocialPost?.()) {
-        await window.WSSocial?.checkHostAndPrompt?.({ forceModal: false });
+        await window.WSSocial?.checkHostAndPrompt?.({ forceModal: false, quiet: true });
       }
     } catch (_) {}
   }
@@ -377,6 +441,7 @@
     const isSocialTab = state.tab === "social";
     const isCampaignTab = state.tab === "campaign-calendar";
     const isScheduleTab = state.tab === "staff-scheduling";
+    const isCloudTab = CLOUD_TABS.has(state.tab);
     const isWideTab =
       ["heroes", "events", "menus", "pages", "social", "qr-codes", "campaign-calendar", "staff-scheduling"].includes(
         state.tab
@@ -388,7 +453,9 @@
         <h2>${tab.label}</h2>
         <div class="admin-actions">
           ${
-            isSocialTab
+            isCloudTab
+              ? `<span class="admin-social-top-hint">Live on Cloudflare · changes here apply immediately.</span>`
+              : isSocialTab
               ? `<span class="admin-social-top-hint">Knight Command Social Ops chooses the cloud API or Social Host automatically.</span>`
               : isCampaignTab
                 ? `<span class="admin-social-top-hint">Private signups, verified leads, suppression, and delivery status sync through Knight Command.</span>`
@@ -435,6 +502,15 @@
           break;
         case "gbp":
           window.WSAdminMockups?.renderGbp(panel);
+          break;
+        case "messages":
+          await window.WSAdminCloud?.renderMessages(panel);
+          break;
+        case "publish-history":
+          await window.WSAdminCloud?.renderHistory(panel);
+          break;
+        case "staff-logins":
+          await window.WSAdminCloud?.renderStaffLogins(panel);
           break;
         case "reviews-mgr":
           window.WSAdminMockups?.renderReviews(panel);
@@ -502,17 +578,25 @@
       title: schedulePublish ? "Publish week for staff" : "Publish live to website",
       subtitle: schedulePublish
         ? "Shares the staff week board with every signed-in staff device. Use first names only."
-        : "Updates the public GitHub Pages site for all visitors. Requires admin password.",
+        : CLOUD
+          ? "Updates the public website for every visitor within seconds. You can undo it from Publish history."
+          : "Updates the public GitHub Pages site for all visitors. Requires admin password.",
       bodyHtml: `
         <p class="admin-note" style="margin-top:0">${
           schedulePublish
             ? "This publishes the staff schedule JSON with the content bundle. It is not shown on the public guest website, but the file is served with the site — keep names first-name only. Prefer Toast Scheduling / MyToast for private labor when Whistle Stop has it enabled."
-            : "This sends your current draft content (events, menus, promos, homepage, heroes) to the secure Knight Logics publish bridge. GitHub Pages usually updates within 1–3 minutes."
+            : CLOUD
+              ? "This publishes your current draft (events, menus, specials, homepage and photos) to the live website."
+              : "This sends your current draft content (events, menus, promos, homepage, heroes) to the secure Knight Logics publish bridge. GitHub Pages usually updates within 1–3 minutes."
         }</p>
-        <div class="admin-field">
+        ${
+          CLOUD
+            ? ""
+            : `<div class="admin-field">
           <label for="admin-publish-password">Admin password</label>
           <input type="password" id="admin-publish-password" autocomplete="current-password" placeholder="Same password used to sign in" />
-        </div>
+        </div>`
+        }
         <p id="admin-publish-status" class="admin-publish-status" hidden></p>`,
       footerHtml: `
         <button type="button" class="btn btn-outline admin-btn-sm" data-admin-modal-close>Cancel</button>
@@ -526,7 +610,7 @@
 
         confirmBtn?.addEventListener("click", async () => {
           const password = (passwordInput?.value || "").trim();
-          if (!password) {
+          if (!password && !CLOUD) {
             toast("Enter the admin password to publish live.");
             passwordInput?.focus();
             return;
@@ -536,16 +620,16 @@
           confirmBtn.textContent = "Publishing…";
           if (statusEl) {
             statusEl.hidden = false;
-            statusEl.textContent = "Saving draft and sending to publish bridge…";
+            statusEl.textContent = CLOUD ? "Saving draft and publishing…" : "Saving draft and sending to publish bridge…";
           }
 
           try {
             await saveTab(tab, { quiet: true });
             const result = await WSConfig.publishContent({ adminPassword: password, sourceTab: tab });
             if (statusEl) {
-              statusEl.textContent = "Published to GitHub. Waiting for the live site to refresh…";
+              statusEl.textContent = CLOUD ? "Published. Confirming the live site…" : "Published to GitHub. Waiting for the live site to refresh…";
             }
-            toast("Publish sent. Waiting for GitHub Pages…");
+            if (!CLOUD) toast("Publish sent. Waiting for GitHub Pages…");
             const live = await WSConfig.waitForPublishLive(result.versionId, { attempts: 24, intervalMs: 5000 });
             await WSConfig.finalizeLocalAfterPublish();
             await loadAll();
@@ -627,6 +711,17 @@
   }
 
   async function start() {
+    if (CLOUD) {
+      try {
+        const session = await WSConfig.cloudSession();
+        if (session.user) return initApp();
+        if (session.setupRequired) return renderSetup();
+      } catch (_) {
+        /* fall through to the sign-in screen */
+      }
+      renderLogin();
+      return;
+    }
     if (WSConfig.isAuthed()) {
       if (WSConfig.canSocialPost?.() && !WSConfig.hasBridgeCredentials?.()) {
         WSConfig.logout();

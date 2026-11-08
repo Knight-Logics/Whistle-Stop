@@ -11,11 +11,32 @@ function initials(name) {
     .toUpperCase();
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/** Relative dates such as "3 weeks ago" go stale on a static site, so only show real dates. */
+function reviewDateLabel(r) {
+  const raw = String(r.date || "").trim();
+  if (/^\d{4}-\d{2}(-\d{2})?/.test(raw)) {
+    const d = new Date(raw.length === 7 ? `${raw}-01T12:00:00` : `${raw.slice(0, 10)}T12:00:00`);
+    if (!Number.isNaN(d.getTime())) {
+      return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+    }
+  }
+  return "Google review";
+}
+
 function buildMeta(r) {
   const parts = [];
   if (r.badge) parts.push(r.badge);
   if (r.meal) parts.push(r.meal);
-  if (parts.length) return parts.join(" · ");
+  if (parts.length) return parts.map(escapeHtml).join(" · ");
   return "Google review";
 }
 
@@ -126,21 +147,22 @@ function initReviewCarousels() {
     trackEl.innerHTML = (data.featured || [])
       .map((r, i) => {
         const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
-        const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
-        const quote =
-          r.text.length > 160 ? `${r.text.slice(0, 157).trim()}...` : r.text;
+        const rating = Math.max(0, Math.min(5, Math.round(Number(r.rating) || 0)));
+        const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+        const text = String(r.text || "");
+        const quote = text.length > 160 ? `${text.slice(0, 157).trim()}...` : text;
         return `
         <article class="review-card">
           <div class="review-card-top">
-            <div class="review-avatar review-avatar--${color}">${initials(r.author)}</div>
+            <div class="review-avatar review-avatar--${color}">${escapeHtml(initials(String(r.author || "")))}</div>
             <div class="review-card-person">
-              <h3>${r.author}</h3>
+              <h3>${escapeHtml(r.author)}</h3>
               <p class="review-card-meta">${buildMeta(r)}</p>
             </div>
           </div>
-          <span class="review-card-stars" aria-label="${r.rating} out of 5 stars">${stars}</span>
-          <p class="review-card-quote">"${quote}"</p>
-          <p class="review-card-date">${r.date}</p>
+          <span class="review-card-stars" aria-label="${rating} out of 5 stars">${stars}</span>
+          <p class="review-card-quote">"${escapeHtml(quote)}"</p>
+          <p class="review-card-date">${escapeHtml(reviewDateLabel(r))}</p>
         </article>`;
       })
       .join("");

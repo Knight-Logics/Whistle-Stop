@@ -109,13 +109,11 @@ def load_reviews() -> dict[str, Any]:
 
 def restaurant_schema() -> dict[str, Any]:
     site = load_site()
-    reviews = load_reviews()
     business = site.get("business", {})
     social = site.get("social", {})
     links = site.get("links", {})
     seo = site.get("seo", {})
     hours = site.get("hours", {})
-    google = reviews.get("google", {})
 
     return {
         "@type": ["Organization", "Restaurant"],
@@ -205,13 +203,9 @@ def restaurant_schema() -> dict[str, Any]:
                 "closes": hours.get("weekend", {}).get("closes", "22:00"),
             },
         ],
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": str(google.get("rating", "4.4")),
-            "reviewCount": str(google.get("count", "2036")),
-            "bestRating": "5",
-            "worstRating": "1",
-        },
+        # No aggregateRating: Google's review-snippet rules say not to mark up ratings
+        # aggregated from other sites (these come from Google Maps), and a business's
+        # own pages are ineligible for review stars anyway.
         "amenityFeature": [
             {"@type": "LocationFeatureSpecification", "name": "Dog-friendly patio", "value": True},
             {"@type": "LocationFeatureSpecification", "name": "Live music", "value": True},

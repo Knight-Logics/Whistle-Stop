@@ -5,3 +5,8 @@ node_modules/
 packaging/
 .env
 .env.*
+
+# Cloudflare Worker tooling
+node_modules/
+.wrangler/
+.dev.vars

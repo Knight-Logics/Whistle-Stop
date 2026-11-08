@@ -2,6 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /downloads/
-Disallow: /data/
 
 Sitemap: https://www.whistlestopgrill.com/sitemap.xml

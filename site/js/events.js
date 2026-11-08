@@ -796,8 +796,10 @@ function renderHomeEvents(container, events, today) {
     ];
     const dows = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+    // Mobile list: skip the every-day specials row so it doesn't repeat 30 times above real events.
     const monthEvents = events
       .filter((e) => e.date.getMonth() === viewMonth && e.date.getFullYear() === viewYear)
+      .filter((e) => e.id !== "daily-specials" && e.title !== "Daily Drink & Food Specials")
       .sort((a, b) => a.date - b.date || (a.startTime || "").localeCompare(b.startTime || ""));
 
     const listHtml = monthEvents.length

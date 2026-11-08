@@ -204,6 +204,8 @@ async function assertAdminAndSocial(page) {
   const eventFrame = page.frames().find((frame) => frame.url().includes("preview=1") && frame.url().includes("/events"));
   if (!eventFrame) throw new Error("Events preview frame did not load");
   const calendarDays = eventFrame.locator("[data-admin-date]");
+  // The preview iframe renders asynchronously; wait for the first day cell before counting.
+  await calendarDays.first().waitFor({ timeout: 15000 }).catch(() => {});
   const calendarDayCount = await calendarDays.count();
   if (!calendarDayCount) throw new Error("Events calendar has no editable day cells");
   await calendarDays.nth(Math.min(15, calendarDayCount - 1)).click();

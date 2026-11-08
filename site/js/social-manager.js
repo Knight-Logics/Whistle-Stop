@@ -110,7 +110,9 @@ window.WSSocial = (function () {
       return false;
     }
     const password = window.prompt(
-      "Confirm your admin password to authorize posting from this device.\n\n(Your session was missing posting credentials — this is a one-time step.)"
+      window.WSConfig?.isCloud?.()
+        ? "Enter the Social Host posting password (the one set on the posting PC).\n\nYou only need to do this once per browser session."
+        : "Confirm your admin password to authorize posting from this device.\n\n(Your session was missing posting credentials — this is a one-time step.)"
     );
     if (!password) return false;
     const ok = await window.WSConfig.refreshBridgeCredentials?.(password);
@@ -1514,7 +1516,12 @@ window.WSSocial = (function () {
     return true;
   }
 
-  async function checkHostAndPrompt({ forceModal = false } = {}) {
+  /**
+   * quiet: report status (toast via ws-social-host-needed) without the blocking modal.
+   * Used at login so an offline Social Host never covers the menu/events editor;
+   * the Social Poster tab still shows the full setup modal.
+   */
+  async function checkHostAndPrompt({ forceModal = false, quiet = false } = {}) {
     if (!window.WSConfig?.canSocialPost?.()) {
       return { tunnelOnline: false, cloudRemoteBridge: false, needsPackage: false };
     }
@@ -1533,7 +1540,7 @@ window.WSSocial = (function () {
     const needsPackage = !hostUp;
 
     if (needsPackage) {
-      showSocialHostPackageModal({ force: forceModal });
+      if (!quiet) showSocialHostPackageModal({ force: forceModal });
       try {
         document.dispatchEvent(
           new CustomEvent("ws-social-host-needed", {

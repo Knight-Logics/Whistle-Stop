@@ -29,6 +29,84 @@
   const PUBLISH_API = "https://knightlogics.com/api/whistle-stop-content";
   const LIVE_VERSION_URL = "https://knight-logics.github.io/Whistle-Stop/data/content-version.json";
 
+  // Cloudflare host: the Worker adds <meta name="ws-host" content="cloudflare"> to every page.
+  // There, staff sign in against the Worker (server-side), and Publish writes straight to the
+  // live site. On GitHub Pages the original browser-only flow below is unchanged.
+  const SOCIAL_KEY = "ws-social-key";
+  let lastLoginError = "";
+
+  function isCloud() {
+    if (typeof document === "undefined") return false;
+    return Boolean(document.querySelector('meta[name="ws-host"][content="cloudflare"]'));
+  }
+
+  async function cloudApi(path, { method = "GET", body } = {}) {
+    const res = await fetch(`api/admin/${path}`, {
+      method,
+      credentials: "same-origin",
+      cache: "no-store",
+      headers: body === undefined ? {} : { "Content-Type": "application/json" },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    let data = {};
+    try {
+      data = await res.json();
+    } catch {
+      data = {};
+    }
+    if (!res.ok || data.ok === false) {
+      const err = new Error(data.error || `Request failed (${res.status}).`);
+      err.status = res.status;
+      err.code = data.code;
+      throw err;
+    }
+    return data;
+  }
+
+  function storeCloudSession(user) {
+    sessionPassword = null;
+    sessionStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({
+        at: Date.now(),
+        cloud: true,
+        username: user.username || user.email || "staff",
+        displayName: user.displayName || user.username || "Staff",
+        email: user.email || "",
+        role: user.role || "staff",
+      })
+    );
+  }
+
+  /** Asks the Worker who is signed in. Returns { user, setupRequired } (cloud only). */
+  async function cloudSession() {
+    const data = await cloudApi("session");
+    if (data.user) storeCloudSession(data.user);
+    else sessionStorage.removeItem(SESSION_KEY);
+    return { user: data.user || null, setupRequired: Boolean(data.setupRequired) };
+  }
+
+  async function cloudSetupOwner({ username, displayName, email, password }) {
+    const data = await cloudApi("setup", { method: "POST", body: { username, displayName, email, password } });
+    storeCloudSession(data.user);
+    return data.user;
+  }
+
+  function getSocialKey() {
+    try {
+      return sessionStorage.getItem(SOCIAL_KEY) || "";
+    } catch {
+      return "";
+    }
+  }
+
+  function setSocialKey(value) {
+    try {
+      if (value) sessionStorage.setItem(SOCIAL_KEY, String(value));
+      else sessionStorage.removeItem(SOCIAL_KEY);
+    } catch (_) {}
+  }
+
   const cache = {};
   const blobUrlCache = new Map();
   let overlay = null;
@@ -484,6 +562,20 @@
   }
 
   async function login(usernameOrPassword, passwordMaybe) {
+    lastLoginError = "";
+    if (isCloud()) {
+      const username = String(passwordMaybe === undefined ? "owner" : usernameOrPassword || "").trim().toLowerCase();
+      const password = String(passwordMaybe === undefined ? usernameOrPassword : passwordMaybe || "");
+      if (!password) return false;
+      try {
+        const data = await cloudApi("login", { method: "POST", body: { username, password } });
+        storeCloudSession(data.user);
+        return true;
+      } catch (err) {
+        lastLoginError = err.message || "Sign-in failed.";
+        return false;
+      }
+    }
     const site = await fetchFile("site");
     let username = "";
     let password = "";
@@ -598,7 +690,7 @@
   }
 
   function getPublishApiBase() {
-    return PUBLISH_API;
+    return isCloud() ? "api/admin" : PUBLISH_API;
   }
 
   async function publishApiFetch(route, options = {}) {
@@ -624,12 +716,14 @@
   }
 
   async function checkPublishHealth() {
+    if (isCloud()) return cloudApi("health");
     return publishApiFetch("health", { method: "GET" });
   }
 
   async function checkPublishStatus(versionId) {
     const query = versionId ? `?version=${encodeURIComponent(versionId)}&_=${Date.now()}` : `?_=${Date.now()}`;
-    const res = await fetch(`${LIVE_VERSION_URL}${query}`, { cache: "no-store" });
+    const liveUrl = isCloud() ? "data/content-version.json" : LIVE_VERSION_URL;
+    const res = await fetch(`${liveUrl}${query}`, { cache: "no-store" });
     if (!res.ok) {
       return { ok: true, live: false, versionId, liveVersionId: null, liveUrl: LIVE_VERSION_URL };
     }
@@ -645,6 +739,10 @@
   }
 
   async function waitForPublishLive(versionId, { attempts = 24, intervalMs = 5000 } = {}) {
+    if (isCloud()) {
+      attempts = Math.min(attempts, 10);
+      intervalMs = Math.min(intervalMs, 1500);
+    }
     for (let i = 0; i < attempts; i += 1) {
       const status = await checkPublishStatus(versionId);
       if (status.live) return status;
@@ -654,6 +752,10 @@
   }
 
   async function publishContent({ adminPassword, adminSessionHash, sourceTab } = {}) {
+    if (isCloud()) {
+      const bundle = await exportBundle();
+      return cloudApi("publish", { method: "POST", body: { bundle, source: { tab: sourceTab || "" } } });
+    }
     const password = String(adminPassword || getSessionPassword() || "").trim();
     const sessionHash = adminSessionHash || (!password ? getAdminAuthHash() : null);
     const authBody = password
@@ -705,11 +807,16 @@
   /** True when this tab has credentials the cloud bridge / Social Host can verify. */
   function hasBridgeCredentials() {
     if (!isAuthed()) return false;
+    if (isCloud()) return true; // Social Host password is asked for separately, only when posting
     return Boolean(getSessionPassword() || getAdminAuthHash());
   }
 
   /** Auth payload for publish/outreach APIs — uses live session when staff is logged in. */
   function getAdminAuthPayload() {
+    if (isCloud()) {
+      const key = getSocialKey();
+      return key ? { adminPassword: key } : null;
+    }
     const password = getSessionPassword();
     if (password) return { adminPassword: password };
     const adminSessionHash = getAdminAuthHash();
@@ -719,6 +826,11 @@
 
   /** Re-verify password without signing out (e.g. social post from a stale session). */
   async function refreshBridgeCredentials(password) {
+    if (isCloud()) {
+      // On Cloudflare, staff logins are separate from the Social Host password on the posting PC.
+      setSocialKey(String(password || "").trim());
+      return Boolean(getSocialKey());
+    }
     const user = getSessionUser();
     const username = user?.username || "owner";
     return login(username, String(password || "").trim());
@@ -727,6 +839,10 @@
   function logout() {
     sessionPassword = null;
     sessionStorage.removeItem(SESSION_KEY);
+    if (isCloud()) {
+      setSocialKey("");
+      fetch("api/admin/logout", { method: "POST", credentials: "same-origin" }).catch(() => {});
+    }
   }
 
   function isAuthed() {
@@ -741,6 +857,10 @@
   }
 
   async function changePassword(current, next) {
+    if (isCloud()) {
+      await cloudApi("password", { method: "POST", body: { current, next } });
+      return true;
+    }
     const site = await fetchFile("site");
     const currentHash = await sha256(current);
     const stored = readOverlay().passwordHash || site.admin?.passwordHash;
@@ -784,6 +904,13 @@
 
   global.WSConfig = {
     FILES,
+    isCloud,
+    cloudApi,
+    cloudSession,
+    cloudSetupOwner,
+    getSocialKey,
+    setSocialKey,
+    getLastLoginError: () => lastLoginError,
     UPLOAD_PREFIX,
     get,
     getForPreview,

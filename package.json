@@ -1,0 +1,13 @@
+{
+  "name": "whistle-stop",
+  "private": true,
+  "description": "Whistle Stop Grill & Bar site, staff admin and Cloudflare Worker",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test:worker": "node worker/test/worker-smoke.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.150.0"
+  }
+}

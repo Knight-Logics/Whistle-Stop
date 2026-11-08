@@ -1,0 +1,9 @@
+# Files that exist for development only and must not be served by the Cloudflare Worker
+tests/
+node_modules/
+package.json
+package-lock.json
+README.md
+downloads/
+*.mjs
+.assetsignore

@@ -147,7 +147,7 @@ if ($localOk -and $tunnelOk -and $cloudOk) {
 
 Start-Process $liveAdmin
 Write-Host ""
-Write-Host "Admin: $liveAdmin  |  Login: whistlestop2026" -ForegroundColor Cyan
+Write-Host "Admin: $liveAdmin  |  Login: staff password (not stored in this repo)" -ForegroundColor Cyan
 Write-Host "Logs:  $($roots.LogPath)" -ForegroundColor DarkGray
 Write-Host "Keep bridge + tunnel windows open during the pitch." -ForegroundColor White
 Write-Host ""

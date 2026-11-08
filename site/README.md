@@ -5,7 +5,7 @@ Knight Logics prospect demo. **Not production** — preview for client pitch.
 ## Run locally
 
 ```bash
-cd "E:\High Prospective Clients\Whistle-Stop\site"
+cd "E:\All Client Websites\Whistle-Stop\site"
 npx --yes serve -l 3456
 ```
 
@@ -19,7 +19,7 @@ Do **not** open the repo root or `file://` paths — the editor will not work.
 
 **URL:** `admin.html` (password required · not indexed by Google)
 
-Preview password: `whistlestop2026`
+Staff credentials are not kept in this repository. The old shared demo password was published here and must be treated as compromised; see `AUDIT-2026-11-08.md` (security section).
 
 **Staff tabs only** (reviews pull from Google at launch; business/theme/settings hidden):
 

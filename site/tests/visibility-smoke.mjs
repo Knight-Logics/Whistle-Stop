@@ -29,6 +29,8 @@ for (const filename of publicPages) {
     `${filename} JSON-LD must not identify the preview host`,
   );
   assert.ok(serialized.includes(productionBase), `${filename} JSON-LD must identify the production host`);
+  // Ratings copied from Google Maps must not be marked up (Google review-snippet guidelines).
+  assert.equal(serialized.includes("aggregateRating"), false, `${filename} must not mark up aggregated third-party ratings`);
   assert.match(html, /<meta name="robots" content="index, follow, max-image-preview:large" \/>/i);
   assert.match(html, /<meta property="og:title"/i);
   assert.match(html, /<meta property="og:image" content="https:\/\/www\.whistlestopgrill\.com\//i);
@@ -54,7 +56,8 @@ const robots = fs.readFileSync(path.join(site, "robots.txt"), "utf8");
 assert.match(robots, /Sitemap: https:\/\/www\.whistlestopgrill\.com\/sitemap\.xml/i);
 assert.match(robots, /Disallow: \/admin\.html/i);
 assert.match(robots, /Disallow: \/downloads\//i);
-assert.match(robots, /Disallow: \/data\//i);
+// Menu and events render from /data/*.json, so crawlers must be allowed to fetch it.
+assert.doesNotMatch(robots, /Disallow: \/data\//i);
 
 const sitemap = fs.readFileSync(path.join(site, "sitemap.xml"), "utf8");
 for (const filename of publicPages) {

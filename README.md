@@ -64,4 +64,10 @@ Campaign signups and outreach records are private in Knight Command's database. 
 
 After changing public business, menu, or event data, run `python generate-schema.py` from the repository root before deployment. The generator removes expired performances from upcoming event schema and keeps canonical, Open Graph, and structured-data URLs aligned with the production domain.
 
+## Workspace
+
+The one working copy lives at `E:\All Client Websites\Whistle-Stop` (GitHub: `Knight-Logics/Whistle-Stop`). On 2026-11-08 it was moved here from `E:\High Prospective Clients\Whistle-Stop` and merged with the older launcher-only copy that already sat in this folder, which added `START-DEMO.ps1` and `SYNC-TO-FLASH.ps1`. The superseded July 5 launcher drafts are kept in `packaging\_archive-old-copy-2026-07-05\` (git-ignored). Update any notes, shortcuts or agent instructions that still point at the old path.
+
+Latest audit and agent handoff: `AUDIT-2026-11-08.md` (security issues to fix first, launch blockers, Cloudflare plan, and every change made that day).
+
 Built and operated by Knight Logics for the Whistle Stop launch program.

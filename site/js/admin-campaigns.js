@@ -485,7 +485,7 @@ window.WSAdminCampaigns = (function () {
                 </div>
                 <div class="admin-field" style="grid-column:1/-1">
                   <label for="ws-new-hero">Hero image path (optional)</label>
-                  <input id="ws-new-hero" type="text" placeholder="assets/gallery/WSGoodTimes-768.webp" />
+                  <input id="ws-new-hero" type="text" placeholder="assets/gallery/WSGoodTimes-560.webp" />
                 </div>
                 <div class="admin-field">
                   <label class="admin-field--checkbox"><input type="checkbox" id="ws-new-info-signup" /> Also show signup form</label>
