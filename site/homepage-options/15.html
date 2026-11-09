@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 15 · Plate Orbit · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="stylesheet" href="kit.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;750&display=swap" rel="stylesheet">
+<style>
+  body { --paper: #fff7ee; --ink: #23170f; --hot: #e4572e; font-family: Outfit, system-ui, sans-serif; }
+  .orbit { height: 190vh; background: radial-gradient(circle at 50% 40%, #fff, #f3d7b0 70%, #e7b07a); }
+  .orbit .pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+  .copy { position: relative; z-index: 3; text-align: center; padding-top: 16vh; }
+  h1 { margin: 0; font-size: clamp(42px, 6vw, 76px); letter-spacing: -.04em; }
+  .scene { position: absolute; inset: 22% 0 8%; perspective: 900px; }
+  .ring { position: absolute; left: 50%; top: 46%; width: 0; height: 0; transform-style: preserve-3d; }
+  .plate { position: absolute; width: 150px; margin-left: -75px; padding: 8px; background: #fff; border-radius: 18px; box-shadow: 0 12px 24px rgba(80,40,10,.18); text-align: center; text-decoration: none; transform: rotateY(calc(var(--i) * 40deg)) translateZ(min(34vw, 280px)); }
+  .plate .art { width: 100px; height: 100px; margin: 0 auto; }
+  .plate b { display: block; font-size: 14px; }
+  html.still .ring { transform: none !important; }
+  html.still .scene { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; position: relative; inset: auto; height: auto; }
+  html.still .plate { position: relative; left: auto; top: auto; transform: none; margin: 0; }
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+  <ul><li><a href="../menu.html">Menu</a></li><li><a href="#visit">Visit</a></li></ul>
+  <a class="btn" href="../order.html">Order online</a>
+</div></header>
+<main>
+  <section class="orbit" id="orbit" aria-labelledby="h1">
+    <div class="pin">
+      <div class="copy">
+        <h1 id="h1" data-split>Everything spins around the table.</h1>
+        <p>Nine parts of the menu, from the Original burger at $8.90 to milkshakes Henry still gets credit for.</p>
+      </div>
+      <div class="scene"><div class="ring" id="ring"></div></div>
+    </div>
+  </section>
+  <div id="rest"></div>
+</main>
+<script src="shared.js"></script>
+<script src="food.js"></script>
+<script src="fx.js"></script>
+<script src="kit.js"></script>
+<script>
+(function () {
+  var ring = document.getElementById("ring");
+  ring.innerHTML = WSFOOD.cats.map(function (c, i) {
+    return '<a class="plate" style="--i:' + i + '" href="' + c.href + '"><span class="art">' + WSFOOD.art(c.art) + "</span><b>" + c.name + "</b></a>";
+  }).join("");
+  var extra = 0;
+  FX.progress(document.getElementById("orbit"), "pin", function (p) { extra = p * 220; });
+  FX.loop(function (t) {
+    ring.style.transform = "rotateX(12deg) rotateY(" + (t * 18 + extra).toFixed(2) + "deg)";
+  });
+  if (FX.reduce) ring.style.transform = "none";
+})();
+</script>
+</body>
+</html>

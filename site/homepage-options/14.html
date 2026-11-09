@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 14 · Spotlight · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="stylesheet" href="kit.css">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { --paper: #120c18; --ink: #f7f1ff; --hot: #ff4d8d; --card: #24182e; --line: rgba(255,255,255,.12); --muted: #d7cbe4; font-family: Outfit, system-ui, sans-serif; }
+  h1, h2, .tonight .big { font-family: Oswald, sans-serif; letter-spacing: .01em; text-transform: uppercase; }
+  .btn { color: #fff; } .btn.line { color: #fff; }
+  .stage { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: hidden; background: #07040c; }
+  .photo { position: absolute; inset: 0; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; opacity: .72; animation: ken 16s ease-in-out infinite alternate; }
+  @keyframes ken { to { transform: scale(1.08) translate3d(-2%, -1%, 0); } }
+  .spot { position: absolute; top: -10%; width: 46%; height: 140%; background: linear-gradient(rgba(255,220,140,.05), rgba(255,210,120,.38)); clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%); transform-origin: top center; mix-blend-mode: screen; }
+  .spot.a { left: 4%; animation: sweep 5.5s ease-in-out infinite alternate; }
+  .spot.b { right: 0; animation: sweep 7s ease-in-out infinite alternate-reverse; filter: hue-rotate(40deg); }
+  @keyframes sweep { to { transform: rotate(16deg); } }
+  .eq { position: absolute; left: 6vw; bottom: 18vh; display: flex; align-items: flex-end; gap: 5px; height: 70px; z-index: 2; }
+  .eq i { width: 7px; height: 100%; background: #ff4d8d; transform-origin: bottom; animation: eq .7s ease-in-out infinite alternate; display: block; }
+  .eq i:nth-child(2n) { animation-duration: .5s; background: #ffd36a; }
+  .eq i:nth-child(3n) { animation-duration: .9s; }
+  @keyframes eq { from { transform: scaleY(.15); } to { transform: scaleY(1); } }
+  .copy { position: relative; z-index: 2; padding: 0 7vw 12vh; max-width: 760px; }
+  h1 { margin: 0 0 8px; font-size: clamp(56px, 9vw, 110px); line-height: .86; }
+  html.still .photo img, html.still .spot, html.still .eq i { animation: none; }
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+  <ul><li><a href="../events.html">Live music</a></li><li><a href="../menu.html">Menu</a></li><li><a href="#visit">Visit</a></li></ul>
+  <a class="btn" href="../order.html">Order online</a>
+</div></header>
+<main>
+  <section class="stage" aria-labelledby="h1">
+    <div class="photo"><img src="../assets/gallery/WSRocker-560.webp" alt="" width="560" height="560"></div>
+    <div class="spot a" aria-hidden="true"></div>
+    <div class="spot b" aria-hidden="true"></div>
+    <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="copy">
+      <h1 id="h1" data-split>The patio is the stage.</h1>
+      <p>Live music Friday and Saturday, 6:30 to 9:30 PM. Open mic on Tuesday. Happy hour starts at 4.</p>
+      <p><a class="btn" href="../events.html">See this week</a></p>
+      <p data-ws="status">Open daily from 11 AM</p>
+    </div>
+  </section>
+  <div id="rest"></div>
+</main>
+<script src="shared.js"></script>
+<script src="food.js"></script>
+<script src="fx.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

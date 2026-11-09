@@ -10,19 +10,19 @@
   :root { --bar: #1d1f24; --ink: #f4f4f2; --muted: #a9adb5; --pick: #ffffff; --pick-ink: #1d1f24; }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--bar); color: var(--ink); font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  .bar { position: fixed; inset: 0 0 auto 0; height: 56px; display: flex; align-items: center; gap: 16px; padding: 0 16px; background: var(--bar); border-bottom: 1px solid #33363d; z-index: 2; }
+  .bar { position: fixed; inset: 0 0 auto 0; min-height: 56px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; padding: 8px 16px; background: var(--bar); border-bottom: 1px solid #33363d; z-index: 2; }
   .bar h1 { margin: 0; font-size: 15px; font-weight: 600; white-space: nowrap; }
   .bar h1 span { color: var(--muted); font-weight: 400; }
-  .picks { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 4px 2px; }
+  .picks { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 2px; }
   .picks::-webkit-scrollbar { display: none; }
-  .picks button { flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; border: 1px solid #4a4e57; background: transparent; color: var(--ink); font: 600 15px/1 system-ui, sans-serif; cursor: pointer; }
+  .picks button { flex: 0 0 auto; min-width: 38px; height: 38px; padding: 0 8px; border-radius: 999px; border: 1px solid #4a4e57; background: transparent; color: var(--ink); font: 600 14px/1 system-ui, sans-serif; cursor: pointer; }
   .picks button:hover { border-color: var(--ink); }
   .picks button[aria-pressed="true"] { background: var(--pick); color: var(--pick-ink); border-color: var(--pick); }
   .picks button:focus-visible, .open:focus-visible { outline: 2px solid #8ab4ff; outline-offset: 2px; }
   .now { margin-left: auto; display: flex; align-items: center; gap: 14px; white-space: nowrap; }
   .now strong { font-weight: 600; }
   .open { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; font-size: 14px; }
-  iframe { position: fixed; inset: 56px 0 0 0; width: 100%; height: calc(100% - 56px); border: 0; background: #fff; }
+  iframe { position: fixed; inset: var(--bar-h, 56px) 0 0 0; width: 100%; height: calc(100% - var(--bar-h, 56px)); border: 0; background: #fff; }
   @media (max-width: 760px) {
     .bar { height: auto; flex-wrap: wrap; padding: 8px 12px; gap: 6px 12px; }
     .bar h1 { font-size: 14px; }
@@ -41,7 +41,7 @@
 </header>
 <iframe id="frame" title="Homepage design preview" src="1.html"></iframe>
 <script>
-  const designs = ["Neon Roadside", "Stack It Up", "Spin the Menu", "Patio After Dark", "Spin for Dinner", "Scroll the Patio", "Depot Board", "Frostee Harbor Diner", "Big Type", "Seven Nights"];
+  const designs = ["Neon Roadside", "Stack It Up", "Spin the Menu", "Patio After Dark", "Spin for Dinner", "Scroll the Patio", "Depot Board", "Frostee Harbor Diner", "Big Type", "Seven Nights", "Harbor Sky", "Incoming Train", "Pour the Mule", "Spotlight", "Plate Orbit", "Chase Lights", "Wednesday Boards", "Tap Line", "Tide on Main", "Night Lanterns"];
   const picks = document.getElementById("picks");
   const frame = document.getElementById("frame");
   const nameEl = document.getElementById("now-name");

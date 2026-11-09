@@ -45,6 +45,17 @@
   /* Hero */
   .hero { position: relative; min-height: 100vh; min-height: 100svh; display: grid; align-items: end; overflow: hidden; background: var(--night); }
   .hero-photo { position: absolute; inset: 0 0 0 38%; }
+  .live-sky { position: absolute; inset: 0 0 0 38%; width: auto; height: 100%; z-index: 1; pointer-events: none; }
+  .oaks { position: absolute; left: 3vw; bottom: 0; z-index: 2; display: flex; align-items: flex-end; gap: 6px; pointer-events: none; }
+  .oaks svg { height: 150px; width: auto; transform-origin: 50% 100%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .oaks svg { animation: oak 3.8s ease-in-out infinite; }
+    .oaks svg:nth-child(2) { animation-duration: 4.6s; height: 110px; }
+    .oaks svg:nth-child(3) { animation-duration: 3.2s; height: 130px; }
+    .hero-photo img { animation: photo-drift 18s ease-in-out infinite alternate; }
+  }
+  @keyframes oak { 50% { transform: rotate(4deg); } }
+  @keyframes photo-drift { to { transform: scale(1.08) translate3d(-2%, -1%, 0); } }
   .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
   .hero-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--night) 0%, rgba(12,22,51,.75) 22%, rgba(12,22,51,0) 60%), linear-gradient(0deg, var(--night) 0%, rgba(12,22,51,0) 40%); }
   .hero .wrap { position: relative; z-index: 2; padding: 150px 0 72px; }
@@ -121,7 +132,7 @@
   @media (max-width: 900px) {
     .nav ul { display: none; }
     .nav .btn { margin-left: auto; }
-    .hero-photo { inset: 0; }
+    .hero-photo, .live-sky { inset: 0; }
     .hero-photo::after { background: linear-gradient(0deg, var(--night) 8%, rgba(12,22,51,.55) 55%, rgba(12,22,51,.35) 100%); }
     .tonight .grid, .kitchen .grid, .story .grid { grid-template-columns: 1fr; gap: 36px; }
     .reviews .grid, .visit .grid { grid-template-columns: 1fr; }
@@ -157,6 +168,12 @@
 <main>
   <section class="hero" aria-label="Welcome">
     <div class="hero-photo"><img src="../assets/gallery/WSSunset-960.webp" srcset="../assets/gallery/WSSunset-768.webp 768w, ../assets/gallery/WSSunset-960.webp 960w, ../assets/gallery/WSSunset.webp 1290w" sizes="(max-width: 900px) 100vw, 62vw" alt="The Whistle Stop roadside sign on Main Street at sunset" width="1290" height="1714"></div>
+    <canvas class="live-sky" id="sky" aria-hidden="true"></canvas>
+    <div class="oaks" aria-hidden="true">
+      <svg viewBox="0 0 80 140"><path d="M38 140 V78" stroke="#1c3a28" stroke-width="8"/><ellipse cx="40" cy="62" rx="28" ry="24" fill="#1f4d32"/><ellipse cx="28" cy="78" rx="20" ry="16" fill="#163c28"/><ellipse cx="54" cy="80" rx="18" ry="15" fill="#245c3a"/></svg>
+      <svg viewBox="0 0 80 140"><path d="M38 140 V78" stroke="#1c3a28" stroke-width="8"/><ellipse cx="40" cy="62" rx="28" ry="24" fill="#1f4d32"/><ellipse cx="28" cy="78" rx="20" ry="16" fill="#163c28"/><ellipse cx="54" cy="80" rx="18" ry="15" fill="#245c3a"/></svg>
+      <svg viewBox="0 0 80 140"><path d="M38 140 V78" stroke="#1c3a28" stroke-width="8"/><ellipse cx="40" cy="62" rx="28" ry="24" fill="#1f4d32"/><ellipse cx="28" cy="78" rx="20" ry="16" fill="#163c28"/><ellipse cx="54" cy="80" rx="18" ry="15" fill="#245c3a"/></svg>
+    </div>
     <div class="wrap">
       <h1 class="neon">Whistle Stop</h1>
       <span class="neon-sub">Grill &amp; Bar</span>
@@ -259,5 +276,7 @@
   </div>
 </footer>
 <div class="mobile-cta"><a class="btn btn-lime" href="../order.html">Order online</a><a class="btn btn-line" style="background:var(--night)" href="tel:+17277261956">Call</a></div>
+<script src="sky.js"></script>
+<script>WSSky.attach(document.getElementById("sky"), { birds: 8, trees: false, sun: true, gleam: true, leaves: true, gusts: true, clouds: false });</script>
 </body>
 </html>

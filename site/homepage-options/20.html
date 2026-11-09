@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 20 · Night Lanterns · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="stylesheet" href="kit.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,620&family=Outfit:wght@400;650&display=swap" rel="stylesheet">
+<style>
+  body { --paper: #10182e; --ink: #f4f0e4; --hot: #f2b632; --card: #1b2644; --line: rgba(255,255,255,.12); --muted: #d5d0c4; font-family: Outfit, system-ui, sans-serif; }
+  h1, h2 { font-family: Fraunces, Georgia, serif; }
+  .btn { color: #10182e; } .btn.line { color: #f4f0e4; }
+  .night { position: relative; min-height: 100svh; overflow: hidden; background: radial-gradient(circle at 70% 20%, #24345e, #10182e 60%); }
+  .night canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .strings { position: absolute; left: -5%; right: -5%; top: 12%; height: 180px; z-index: 2; }
+  .wire { fill: none; stroke: rgba(255,255,255,.35); stroke-width: 2; }
+  .lamp { transform-origin: center top; transform-box: fill-box; animation: sway 3.4s ease-in-out infinite; }
+  .lamp:nth-child(odd) { animation-duration: 4.2s; }
+  @keyframes sway { 50% { transform: rotate(7deg); } }
+  .copy { position: relative; z-index: 3; padding: 36vh 7vw 16vh; max-width: 680px; }
+  h1 { margin: 0 0 10px; font-size: clamp(48px, 7vw, 86px); line-height: .92; }
+  html.still .lamp { animation: none; }
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+  <ul><li><a href="../events.html">This week</a></li><li><a href="../menu.html">Menu</a></li><li><a href="#visit">Visit</a></li></ul>
+  <a class="btn" href="../order.html">Order online</a>
+</div></header>
+<main>
+  <section class="night" id="night" aria-labelledby="h1">
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <svg class="strings" viewBox="0 0 1200 200" aria-hidden="true">
+      <path class="wire" d="M0 20 Q 150 80 300 30 T 600 40 T 900 28 T 1200 50"/>
+      <g class="lamp"><line x1="150" y1="52" x2="150" y2="78" stroke="#f2b632"/><ellipse cx="150" cy="96" rx="14" ry="18" fill="#f2b632"/></g>
+      <g class="lamp"><line x1="320" y1="36" x2="320" y2="64" stroke="#f2b632"/><ellipse cx="320" cy="82" rx="14" ry="18" fill="#ffe08a"/></g>
+      <g class="lamp"><line x1="500" y1="48" x2="500" y2="76" stroke="#f2b632"/><ellipse cx="500" cy="94" rx="14" ry="18" fill="#f2b632"/></g>
+      <g class="lamp"><line x1="690" y1="34" x2="690" y2="62" stroke="#f2b632"/><ellipse cx="690" cy="80" rx="14" ry="18" fill="#ffe08a"/></g>
+      <g class="lamp"><line x1="880" y1="40" x2="880" y2="70" stroke="#f2b632"/><ellipse cx="880" cy="88" rx="14" ry="18" fill="#f2b632"/></g>
+      <g class="lamp"><line x1="1060" y1="46" x2="1060" y2="74" stroke="#f2b632"/><ellipse cx="1060" cy="92" rx="14" ry="18" fill="#ffe08a"/></g>
+    </svg>
+    <div class="copy">
+      <h1 id="h1" data-split>Lanterns in the wind.</h1>
+      <p>Friday and Saturday the patio stays up for live music, 6:30 to 9:30 PM. The kitchen is open until 10 those nights.</p>
+      <p><a class="btn" href="../events.html">See who's playing</a></p>
+      <p data-ws="status">Open daily from 11 AM</p>
+    </div>
+  </section>
+  <div id="rest"></div>
+</main>
+<script src="shared.js"></script>
+<script src="food.js"></script>
+<script src="fx.js"></script>
+<script src="kit.js"></script>
+<script src="sky.js"></script>
+<script>
+WSSky.attach(document.getElementById("sky"), { birds: 4, trees: true, sun: false, night: true, gleam: false, clouds: false, leaves: true, gusts: true });
+</script>
+</body>
+</html>

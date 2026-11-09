@@ -1,0 +1,68 @@
+/* Shared lower page for homepage options 11–20. Each design overrides the colors. */
+:root {
+  --ink: #1c1914;
+  --paper: #f4efe4;
+  --muted: #5e584e;
+  --hot: #e25b2a;
+  --card: #fffdf8;
+  --line: rgba(28, 25, 20, .12);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 "Segoe UI", system-ui, sans-serif; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--hot); outline-offset: 3px; }
+.wrap { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
+.nav { position: absolute; inset: 0 0 auto; z-index: 5; }
+.nav .wrap { display: flex; align-items: center; gap: 22px; padding: 18px 0; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; }
+.brand img { width: 44px; height: 44px; border-radius: 10px; }
+.nav ul { display: flex; gap: 18px; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.nav a { text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border-radius: 999px; background: var(--hot); color: #fff; font-weight: 700; text-decoration: none; border: 2px solid transparent; }
+.btn.line { background: transparent; color: inherit; border-color: currentColor; }
+h2 { margin: 0 0 8px; font-size: clamp(36px, 5vw, 64px); line-height: .95; letter-spacing: -0.03em; }
+.rest { padding: 28px 0 0; }
+.ticker { overflow: hidden; border-block: 1px solid var(--line); background: rgba(226, 91, 42, .1); }
+.ticker .track { display: flex; gap: 28px; width: max-content; padding: 14px 0; font-weight: 700; }
+.ticker b { color: var(--hot); font-weight: 800; }
+html.moving .ticker .track { animation: tick 42s linear infinite; }
+@keyframes tick { to { transform: translateX(-50%); } }
+.crave, .week, .visit { padding: 84px 0; }
+.crave .sub, .week .sub { max-width: 46ch; color: var(--muted); margin: 0 0 28px; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.card { background: var(--card); border-radius: 22px; padding: 18px 18px 20px; box-shadow: 0 10px 30px rgba(0,0,0,.06); transform: translateY(24px); opacity: 0; transition: transform .6s ease, opacity .6s ease; }
+.card.in { transform: none; opacity: 1; transition-delay: calc(var(--i, 0) * 50ms); }
+.card .art { width: 120px; height: 120px; margin: 0 auto 8px; }
+.card h3 { margin: 0 0 4px; font-size: 22px; }
+.card .meta { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
+.card ul { list-style: none; margin: 0 0 14px; padding: 0; }
+.card li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.card .go { font-weight: 800; color: var(--hot); text-decoration: none; }
+.tonight { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: end; margin-bottom: 22px; }
+.tonight .big { margin: 0; font-size: clamp(32px, 4vw, 52px); line-height: 1; font-weight: 800; }
+.days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+.day { padding: 14px 10px; border-radius: 16px; background: var(--card); min-height: 120px; transform: translateY(16px); opacity: 0; transition: .5s ease; }
+.day.in { transform: none; opacity: 1; }
+.day b { display: block; color: var(--hot); }
+.day.is-today { outline: 3px solid var(--hot); }
+.visit { background: var(--ink); color: var(--paper); }
+.visit .grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 28px; }
+.visit h3 { margin: 0 0 8px; }
+.visit a { color: var(--paper); }
+.foot { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; margin-top: 36px; font-size: 14px; opacity: .8; }
+html.still .card, html.still .day { transform: none; opacity: 1; }
+@media (max-width: 900px) {
+  .nav ul { display: none; }
+  .cards, .days, .visit .grid, .tonight { grid-template-columns: 1fr 1fr; }
+  .visit .grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .cards, .days { grid-template-columns: 1fr; }
+  .brand span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker .track { animation: none; flex-wrap: wrap; width: auto; }
+  .card, .day { transform: none; opacity: 1; }
+}
