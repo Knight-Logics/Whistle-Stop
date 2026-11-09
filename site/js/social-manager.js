@@ -4,9 +4,15 @@ window.WSSocial = (function () {
   const CLOUD_BRIDGE = "https://knightlogics.com/api/whistle-stop-social";
   /** Main PC tunnel — browser reaches this directly when PC is on */
   const TUNNEL_BRIDGE = "https://ws-social.knightlogics.com";
-  const LIVE_ADMIN_URL = "https://knight-logics.github.io/Whistle-Stop/admin.html";
+  /** Cloudflare version: the Worker tags every page with <meta name="ws-host" content="cloudflare"> */
+  const CLOUD_HOST = Boolean(document.querySelector('meta[name="ws-host"][content="cloudflare"]'));
+  const LIVE_ADMIN_URL = CLOUD_HOST
+    ? new URL("admin.html", document.baseURI).href
+    : "https://knight-logics.github.io/Whistle-Stop/admin.html";
   /** Fallback only when cloud cannot host attachment (no blob / no tunnel) */
-  const GBP_DEMO_PHOTO_URL = "https://knightlogics.com/images/whistle-stop-pitch.jpg";
+  const GBP_DEMO_PHOTO_URL = CLOUD_HOST
+    ? new URL("assets/gallery/WSGoodTimes.jpg", document.baseURI).href
+    : "https://knightlogics.com/images/whistle-stop-pitch.jpg";
   const CLOUD_MEDIA_MAX_BYTES = 3.5 * 1024 * 1024;
   const LOCAL_MEDIA_MAX_BYTES = 12 * 1024 * 1024;
   const FULL_DEMO_PLATFORMS = ["facebook", "x", "linkedin", "gbp", "nextdoor"];
@@ -750,15 +756,23 @@ window.WSSocial = (function () {
       return;
     }
 
-    panel.innerHTML = `
-      <p class="admin-note">
+    const hostNote = CLOUD_HOST
+      ? `<p class="admin-note">
+        Compose once for <strong>Facebook, X, LinkedIn, Nextdoor, and Google Business Profile</strong>.
+        Posts go out through the shared <strong>Social Host</strong>, the Windows PC that stays signed in to each account.
+        Any phone, tablet or computer can post from this page while that host is online. If it is offline, the poster says so and nothing is sent.
+      </p>`
+      : `<p class="admin-note">
         Compose once for <strong>Facebook, X, LinkedIn, Nextdoor, and Google Business Profile</strong>.
         <strong>Live admin:</strong> <a href="${LIVE_ADMIN_URL}" target="_blank" rel="noopener">${LIVE_ADMIN_URL}</a>
         — all five work from any device while the shared <a href="downloads/social-host.html" target="_blank" rel="noopener">Social Host</a>
         is online. Install that host once on the designated Windows PC; phones, tablets, and other computers only need this admin page.
         If the shared host is offline, Facebook Page and X remain available through the cloud fallback.
         Bookmark: <code>…/Whistle-Stop/admin.html</code> (not <code>/admin/</code>).
-      </p>
+      </p>`;
+
+    panel.innerHTML = `
+      ${hostNote}
       <div class="admin-social-bridge-status" id="social-bridge-status" aria-live="polite">Checking cloud bridge…</div>
       <details class="admin-details social-preflight-panel" id="social-preflight-panel" open>
         <summary><strong>Live test preflight</strong> <span class="social-gbp-summary-hint">— run before posting</span></summary>

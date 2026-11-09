@@ -10,6 +10,13 @@
   const PUBLIC_SHARE_BASE = "https://knight-logics.github.io/Whistle-Stop/";
 
   let campaignsCache = null;
+
+  function isCloudHost() {
+    return (
+      typeof document !== "undefined" &&
+      Boolean(document.querySelector('meta[name="ws-host"][content="cloudflare"]'))
+    );
+  }
   let runtimeCache = null;
   let listeners = new Set();
 
@@ -230,6 +237,27 @@
       createdAt: new Date().toISOString(),
     };
     if (!signup.name || !signup.email) throw new Error("Name and email are required.");
+
+    if (isCloudHost()) {
+      // Cloudflare version: signups go to the site's own inbox (admin → Messages).
+      const title = campaignsCache?.campaigns?.find((c) => c.id === campaignId)?.title || "";
+      let data = {};
+      let res;
+      try {
+        res = await fetch(new URL("api/forms/campaign-signup", document.baseURI).href, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ signup, campaignTitle: title }),
+        });
+        data = await res.json().catch(() => ({}));
+      } catch (err) {
+        throw new Error("We couldn't reach the signup service. Please try again or call (727) 726-1956.");
+      }
+      if (!res.ok || data.ok === false) {
+        throw new Error(data.error || "Signup didn't go through. Please try again or call (727) 726-1956.");
+      }
+      return signup;
+    }
 
     try {
       const result = await apiRequest("signup", {

@@ -166,12 +166,23 @@ bot.append("_gotcha", "filled");
 bot.append("message", "spam");
 r = await call("/api/forms/contact", { method: "POST", form: bot });
 assert.equal(r.status, 200, "honeypot is accepted silently");
+r = await call("/api/forms/campaign-signup", {
+  method: "POST",
+  body: { campaignTitle: "D&D Night", signup: { campaignId: "dnd", name: "Smoke Player", email: "player@example.com", role: "player", preferredNight: "Thursday", marketingConsent: true } },
+});
+assert.equal(r.status, 200, "campaign signup accepted: " + JSON.stringify(r.data));
+r = await call("/api/forms/campaign-signup", { method: "POST", body: { signup: { name: "No Email" } } });
+assert.equal(r.status, 400, "campaign signup needs an email");
 if (firstRun) {
   r = await call("/api/admin/leads");
   const lead = r.data.leads.find((l) => l.email === "smoke@example.com");
   assert.ok(lead, "message reached the inbox");
   assert.equal(r.data.leads.some((l) => l.name === "Bot"), false, "honeypot message was dropped");
+  const signupLead = r.data.leads.find((l) => l.email === "player@example.com");
+  assert.ok(signupLead && signupLead.kind === "campaign-signup" && /D&D Night/.test(signupLead.topic), "campaign signup reached the inbox");
   r = await call(`/api/admin/leads/${lead.id}`, { method: "DELETE", headers: { origin: BASE } });
+  assert.equal(r.status, 200);
+  r = await call(`/api/admin/leads/${signupLead.id}`, { method: "DELETE", headers: { origin: BASE } });
   assert.equal(r.status, 200);
 
   r = await call("/api/admin/logout", { method: "POST", headers: { origin: BASE } });

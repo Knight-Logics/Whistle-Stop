@@ -210,7 +210,7 @@ export async function handlePublish(request, env, user) {
   const meta = {
     versionId: versionId(),
     publishedAt: new Date().toISOString(),
-    publishedBy: user.email,
+    publishedBy: user.displayName || user.email || user.username || "",
     note: String(body?.source?.tab || "").slice(0, 60),
   };
   const version = await writePublished(env, files, meta);
@@ -240,7 +240,7 @@ export async function handleRestore(request, env, user) {
   const meta = {
     versionId: versionId(),
     publishedAt: new Date().toISOString(),
-    publishedBy: user.email,
+    publishedBy: user.displayName || user.email || user.username || "",
     note: `Restored ${target}`,
   };
   const version = await writePublished(env, record.files, meta);

@@ -29,8 +29,59 @@ async function overLimit(env, ip) {
   return false;
 }
 
+async function saveLead(env, kind, lead) {
+  const id = `${String(Date.now()).padStart(14, "0")}-${crypto.randomUUID().slice(0, 8)}`;
+  await env.CONTENT.put(`lead:${id}`, JSON.stringify(lead), {
+    expirationTtl: LEAD_TTL_SECONDS,
+    metadata: { kind, name: lead.name, receivedAt: lead.receivedAt, topic: lead.topic },
+  });
+}
+
+/** POST /api/forms/campaign-signup — JSON { signup } from campaign.html; lands in Messages. */
+async function handleCampaignSignup(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorJson("Could not read the signup.");
+  }
+  const s = body?.signup || {};
+  const text = (v, max) => String(v ?? "").trim().slice(0, max);
+  if (text(s._gotcha, 200)) return json({ ok: true });
+  const ip = request.headers.get("cf-connecting-ip") || "local";
+  if (await overLimit(env, ip)) return errorJson("Too many signups from this connection. Please call us instead.", 429);
+
+  const name = text(s.name, 120);
+  const email = text(s.email, 160).toLowerCase();
+  if (!name || !email) return errorJson("Name and email are required.");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return errorJson("That email address doesn't look right.");
+  const campaign = text(body?.campaignTitle || s.campaignId, 120);
+  const lines = [
+    `Signed up for: ${campaign || "a campaign"}`,
+    s.role ? `Role: ${text(s.role, 60)}` : "",
+    s.preferredNight ? `Preferred night: ${text(s.preferredNight, 60)}` : "",
+    s.experience ? `Experience: ${text(s.experience, 60)}` : "",
+    s.notes ? `Notes: ${text(s.notes, 1500)}` : "",
+    `Email updates: ${s.marketingConsent ? "yes" : "no"}`,
+  ].filter(Boolean);
+  await saveLead(env, "campaign-signup", {
+    kind: "campaign-signup",
+    name,
+    email,
+    phone: text(s.phone, 40),
+    topic: campaign ? `Signup · ${campaign}` : "Campaign signup",
+    campaignId: text(s.campaignId, 80),
+    message: lines.join("\n"),
+    receivedAt: new Date().toISOString(),
+    country: request.cf?.country || "",
+    page: (request.headers.get("referer") || "").slice(0, 200),
+  });
+  return json({ ok: true, signup: { ...s, name, email } });
+}
+
 /** POST /api/forms/:kind (multipart or urlencoded form) */
 export async function handleFormSubmit(request, env, kind) {
+  if (kind === "campaign-signup") return handleCampaignSignup(request, env);
   if (!["contact", "private-event"].includes(kind)) return errorJson("Unknown form.", 404);
   let form;
   try {
@@ -65,11 +116,7 @@ export async function handleFormSubmit(request, env, kind) {
   }
   if (lead.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) return errorJson("That email address doesn't look right.");
 
-  const id = `${String(Date.now()).padStart(14, "0")}-${crypto.randomUUID().slice(0, 8)}`;
-  await env.CONTENT.put(`lead:${id}`, JSON.stringify(lead), {
-    expirationTtl: LEAD_TTL_SECONDS,
-    metadata: { kind, name: lead.name, receivedAt: lead.receivedAt, topic: lead.topic },
-  });
+  await saveLead(env, kind, lead);
   return json({ ok: true });
 }
 

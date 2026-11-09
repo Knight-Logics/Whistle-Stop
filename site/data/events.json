@@ -168,6 +168,20 @@
       "startTime": "18:30",
       "endTime": "21:30",
       "category": "live-music"
+    },
+    {
+      "date": "2026-11-19",
+      "title": "TB Guitar Guild",
+      "startTime": "18:00",
+      "endTime": "21:00",
+      "category": "community"
+    },
+    {
+      "date": "2026-12-17",
+      "title": "TB Guitar Guild",
+      "startTime": "18:00",
+      "endTime": "21:00",
+      "category": "community"
     }
   ]
 }
