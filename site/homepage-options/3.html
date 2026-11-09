@@ -4,125 +4,162 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 3 · Greetings from Safety Harbor · Whistle Stop Grill &amp; Bar</title>
+<title>Option 3 · Spin the Menu · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Homemade+Apple&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gulf: #127a84;
-    --gulf-deep: #0b5560;
-    --coral: #f2694b;
-    --sun: #f8c63e;
-    --sand: #f5ead3;
-    --ink: #1c2a35;
-    --paper: #fffaf0;
-  }
+  :root { --deep: #062b2f; --sea: #0d4a4c; --gold: #f2c46d; --coral: #ff7f61; --foam: #eaf5f0; --muted: #a9c7c0; }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--gulf); color: var(--ink); font: 400 18px/1.6 "Karla", system-ui, sans-serif; }
+  body { margin: 0; background: var(--deep); color: var(--foam); font: 400 18px/1.6 "Figtree", system-ui, sans-serif; overflow-x: clip; }
   a { color: inherit; }
-  img { display: block; max-width: 100%; height: auto; }
-  :focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
-  .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
-  .hand { font-family: "Homemade Apple", cursive; }
-  h2 { margin: 0 0 14px; font: 400 clamp(34px, 4.4vw, 56px)/1.02 "Bowlby One", sans-serif; letter-spacing: .01em; }
-  .btn { display: inline-block; padding: 14px 24px; border-radius: 6px; font-weight: 700; text-decoration: none; border: 2px solid var(--ink); }
-  .btn-coral { background: var(--coral); color: #fff; border-color: var(--coral); }
-  .btn-coral:hover { background: #e0553a; }
-  .btn-ghost:hover { background: rgba(28,42,53,.06); }
+  img, svg { display: block; max-width: 100%; }
+  img { height: auto; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; margin: 0; letter-spacing: -.02em; }
+  .wrap { width: min(1240px, 100% - 40px); margin-inline: auto; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 999px; border: 1px solid rgba(234,245,240,.5); color: var(--foam); text-decoration: none; font-weight: 600; transition: background .3s, color .3s, border-color .3s, translate .3s cubic-bezier(.2,.7,.2,1); backdrop-filter: blur(6px); background: rgba(6,43,47,.25); }
+  .btn:hover { background: var(--foam); color: var(--deep); }
+  .btn.gold { background: var(--gold); border-color: var(--gold); color: var(--deep); }
+  .btn.gold:hover { background: #ffd98f; }
 
-  /* Nav */
-  .nav { color: #fff; }
-  .nav .wrap { display: flex; align-items: center; gap: 24px; padding: 18px 0; }
-  .nav .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; font-size: 19px; }
+  /* words condense out of the mist */
+  .moving [data-split] .w { display: inline-block; opacity: .1; filter: blur(14px); transform: translateY(.35em) rotateX(-60deg); transform-origin: 50% 100%; }
+  .moving [data-split].in .w { animation: mist 1.3s cubic-bezier(.16,.8,.2,1) forwards; animation-delay: calc(var(--wi) * 90ms + .2s); }
+  @keyframes mist { to { opacity: 1; filter: blur(0); transform: none; } }
+
+  .nav { position: absolute; inset: 0 0 auto; z-index: 10; }
+  .nav .wrap { display: flex; align-items: center; gap: 26px; height: 84px; }
+  .nav .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600; }
   .nav .brand img { width: 46px; height: 46px; }
-  .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 500; }
-  .nav ul a { text-decoration: none; }
-  .nav ul a:hover { text-decoration: underline; text-underline-offset: 5px; }
-  .nav .btn { border-color: #fff; color: #fff; }
+  .nav ul { display: flex; gap: 24px; margin: 0 0 0 auto; padding: 0; list-style: none; }
+  .nav ul a { text-decoration: none; opacity: .85; }
+  .nav ul a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 6px; }
+  .nav .btn { padding: 10px 20px; }
 
-  /* Postcard hero */
-  .card { position: relative; margin: 14px auto 0; padding: clamp(22px, 3vw, 40px); background: var(--sand); border-radius: 4px; box-shadow: 0 2px 0 #0d5c66, 0 30px 60px rgba(0,0,0,.28); }
-  .card::before { content: ""; position: absolute; inset: 12px; border: 2px solid rgba(28,42,53,.18); pointer-events: none; }
-  .greet { margin: 0 0 -6px 4px; font-size: clamp(26px, 3.4vw, 46px); color: var(--coral); transform: rotate(-4deg); transform-origin: left; }
-  .big { margin: 0; display: flex; flex-wrap: wrap; gap: 0 .14em; font: 400 clamp(64px, 12.6vw, 186px)/.9 "Bowlby One", sans-serif; letter-spacing: -.01em; text-transform: uppercase; }
-  .big span { -webkit-background-clip: text; background-clip: text; color: transparent; background-size: cover; background-position: center; filter: drop-shadow(5px 6px 0 var(--ink)); }
-  .big .w1 { background-image: url(../assets/gallery/WSGoodTimes-560.webp); background-position: 50% 60%; }
-  .big .w2 { background-image: url(../assets/gallery/WSSunset-768.webp); background-position: 50% 35%; }
-  .card .sub { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 20px; margin-top: 18px; }
-  .card .sub p { max-width: 44ch; margin: 0; font-size: 20px; }
-  .card .sub .actions { display: flex; flex-wrap: wrap; gap: 12px; }
-  .stamp { position: absolute; top: 24px; right: 26px; width: 118px; padding: 9px; background: #fff; transform: rotate(4deg); box-shadow: 0 6px 14px rgba(28,42,53,.18); }
-  .stamp::after { content: ""; position: absolute; inset: -4px; border: 6px dotted var(--sand); pointer-events: none; }
-  .stamp img { width: 100%; aspect-ratio: 1; object-fit: cover; }
-  .stamp b { display: block; text-align: center; font-size: 12px; margin-top: 4px; }
-  .postmark { position: absolute; top: 34px; right: 128px; width: 132px; height: 132px; border: 3px solid rgba(28,42,53,.55); border-radius: 50%; display: grid; place-items: center; text-align: center; font-weight: 700; font-size: 13px; line-height: 1.25; color: rgba(28,42,53,.7); transform: rotate(-12deg); }
-  .postmark::after { content: ""; position: absolute; left: 100%; top: 40%; width: 110px; height: 26px; background: repeating-linear-gradient(0deg, rgba(28,42,53,.5) 0 3px, transparent 3px 8px); }
+  /* hero scene */
+  .hero { position: relative; min-height: 100vh; min-height: 100svh; overflow: hidden; display: flex; align-items: center; isolation: isolate; }
+  .scene { position: absolute; inset: -6%; z-index: -3; }
+  .scene img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; transform: scale(var(--kb, 1)); }
+  .moving .scene img { animation: kb 18s cubic-bezier(.2,.6,.2,1) both; }
+  @keyframes kb { from { transform: scale(1.18); } to { transform: scale(1.02); } }
+  .leak { position: absolute; inset: 0; z-index: -2; background: radial-gradient(40% 50% at var(--lx, 70%) 40%, rgba(255,150,80,.45), transparent 70%); mix-blend-mode: screen; }
+  .moving .leak { animation: leak 12s ease-in-out infinite alternate; }
+  @keyframes leak { from { --lx: 62%; opacity: .7; } to { --lx: 82%; opacity: 1; } }
+  @property --lx { syntax: "<percentage>"; inherits: false; initial-value: 70%; }
+  .shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(4,28,31,.92) 0%, rgba(4,28,31,.7) 34%, rgba(4,28,31,.1) 62%), linear-gradient(0deg, var(--deep) 0%, transparent 30%); }
+  #motes { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 60px; align-items: center; padding: 120px 0 90px; }
+  .hero h1 { font-size: clamp(50px, 6.4vw, 100px); line-height: 1; max-width: 12ch; }
+  .hero p.lede { font-size: 20px; max-width: 40ch; color: #d4e6e0; margin: 26px 0 32px; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 14px; }
+  .tonight { perspective: 1200px; }
+  .tonight .card { --rx: 0deg; --ry: 0deg; padding: 30px; border-radius: 22px; background: rgba(6,43,47,.55); border: 1px solid rgba(242,196,109,.4); backdrop-filter: blur(14px); transform: rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .6s cubic-bezier(.2,.7,.2,1); box-shadow: 0 30px 60px rgba(0,0,0,.35); }
+  .tonight.tilting .card { transition: transform .1s linear; }
+  .moving .tonight { animation: cardIn 1.6s 1s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes cardIn { from { opacity: 0; transform: translate3d(60px, 30px, 0) rotateY(-28deg); } }
+  .tonight .when { color: var(--gold); font-weight: 600; }
+  .tonight h2 { font-size: 34px; line-height: 1.08; margin: 8px 0 10px; }
+  .tonight p { margin: 0 0 18px; color: #cfe2dc; font-size: 16px; }
+  .tonight .status { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--foam); margin-bottom: 0; padding-top: 16px; border-top: 1px solid rgba(234,245,240,.18); }
+  .tonight .status::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+  .tonight .status.is-open::before { background: #7fe0a8; box-shadow: 0 0 12px #7fe0a8; }
 
-  /* Back of the card */
-  .back { padding: 70px 0; color: #fff; }
-  .back .sheet { display: grid; grid-template-columns: 1.15fr 1fr; background: var(--paper); color: var(--ink); border-radius: 4px; box-shadow: 0 30px 60px rgba(0,0,0,.25); }
-  .back .msg { padding: 44px; border-right: 2px solid rgba(28,42,53,.2); }
-  .back .msg .hand { font-size: 21px; line-height: 2; color: #24456b; }
-  .back .msg .sig { margin-top: 18px; font-size: 22px; color: var(--coral); }
-  .back .addr { padding: 44px; display: grid; align-content: start; gap: 22px; }
-  .back .addr .line { border-bottom: 2px solid rgba(28,42,53,.25); padding-bottom: 6px; }
-  .back .addr small { display: block; font-weight: 700; color: var(--gulf-deep); }
-  .back .addr a { font-weight: 700; }
+  /* the menu ring */
+  .ringsec { position: relative; overflow: hidden; isolation: isolate; padding: 76px 0 90px; background: radial-gradient(ellipse 80% 60% at 50% 45%, #145a58 0%, #0a3a3c 45%, var(--deep) 100%); }
+  .aurora { position: absolute; inset: -40% -10% auto; height: 140%; z-index: -1; background: conic-gradient(from 200deg at 50% 50%, transparent, rgba(242,196,109,.16), rgba(255,127,97,.16), rgba(80,190,170,.14), transparent 70%); filter: blur(60px); }
+  .moving .aurora { animation: aur 24s linear infinite; }
+  @keyframes aur { to { transform: rotate(360deg); } }
+  .ringhead { text-align: center; max-width: 720px; margin: 0 auto; padding: 0 20px; }
+  .ringhead h2 { font-size: clamp(46px, 5.4vw, 84px); line-height: 1; }
+  .ringhead p { color: var(--muted); margin: 14px 0 0; }
+  .stage { --cw: 196px; --gap: 36px; --n: 9; --r: calc(var(--n) * (var(--cw) + var(--gap)) / 6.2832); position: relative; height: calc(var(--cw) * 1.42 + 200px); perspective: 2000px; perspective-origin: 50% -10%; cursor: grab; touch-action: pan-y; user-select: none; margin-top: 10px; }
+  .stage.dragging { cursor: grabbing; }
+  .ring { position: absolute; left: 50%; top: 70px; transform-style: preserve-3d; transform: translateZ(calc(var(--r) * -1 + 200px)) rotateX(-10deg) rotateY(var(--angle, 0deg)); }
+  .item { position: absolute; left: calc(var(--cw) / -2); top: 0; width: var(--cw); height: calc(var(--cw) * 1.42); transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--r)); text-decoration: none; }
+  .face { position: absolute; inset: 0; border-radius: 16px; backface-visibility: hidden; transition: transform .6s cubic-bezier(.2,.7,.2,1), box-shadow .6s; overflow: hidden; }
+  .front { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 14px; text-align: center; background: linear-gradient(170deg, color-mix(in srgb, var(--c) 82%, #fff) 0%, var(--c) 45%, color-mix(in srgb, var(--c) 55%, #000) 100%); color: #13201f; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+  .front .art { position: absolute; left: 8%; right: 8%; top: 6%; filter: drop-shadow(0 12px 10px rgba(0,0,0,.3)); }
+  .front b { font: 600 23px/1.05 "Fraunces", serif; }
+  .front small { font-weight: 700; font-size: 13px; margin-top: 4px; opacity: .8; }
+  .back { transform: rotateY(180deg); background: repeating-linear-gradient(45deg, #0b4244 0 10px, #0d4a4c 10px 20px); box-shadow: inset 0 0 0 1px rgba(242,196,109,.3); display: grid; place-items: center; }
+  .back img { width: 56px; opacity: .6; }
+  .item::after { content: ""; position: absolute; left: -12%; right: -12%; top: calc(100% + 14px); height: 24px; background: radial-gradient(closest-side, rgba(0,0,0,.55), transparent); transform: rotateX(90deg); }
+  .item.isfront .front { transform: translateZ(40px) translateY(-16px); box-shadow: 0 0 0 2px var(--gold), 0 0 50px rgba(242,196,109,.45); }
+  .sheen { position: absolute; inset: -20% -60%; background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,.5) 50%, transparent 58%); transform: translateX(-70%); pointer-events: none; mix-blend-mode: overlay; }
+  .moving .item.isfront .sheen { animation: sheen 5s ease-in-out infinite; }
+  @keyframes sheen { 0%, 55% { transform: translateX(-70%); } 80%, 100% { transform: translateX(70%); } }
+  .floor { position: absolute; left: 50%; top: calc(var(--cw) * 1.42 + 100px); width: min(1400px, 120vw); height: 240px; translate: -50% -50%; background: radial-gradient(ellipse at center, rgba(242,196,109,.25), rgba(242,196,109,.06) 38%, transparent 68%); transform: rotateX(78deg); filter: blur(6px); pointer-events: none; }
+  .caption { display: grid; grid-template-columns: auto minmax(0, 620px) auto; justify-content: center; align-items: center; gap: 34px; padding: 0 20px; margin-top: 10px; text-align: center; position: relative; z-index: 2; }
+  .caption .pane { transition: opacity .35s, transform .35s; }
+  .caption .pane.swap { opacity: 0; transform: translateY(10px); }
+  .caption h3 { font-size: clamp(34px, 3.6vw, 52px); line-height: 1.05; }
+  .caption .line { color: #cfe2dc; margin: 10px auto 14px; max-width: 46ch; }
+  .caption ul { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 10px; padding: 0; margin: 0 0 22px; }
+  .caption li { padding: 6px 14px; border-radius: 999px; background: rgba(234,245,240,.08); border: 1px solid rgba(234,245,240,.16); font-size: 15px; }
+  .caption li b { color: var(--gold); font-weight: 600; margin-left: 6px; }
+  .caption .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .arrow { width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(234,245,240,.35); background: rgba(234,245,240,.05); color: var(--foam); cursor: pointer; display: grid; place-items: center; transition: border-color .3s, color .3s, scale .3s; }
+  .arrow:hover { border-color: var(--gold); color: var(--gold); scale: 1.08; }
+  .arrow svg { width: 20px; height: 20px; }
 
-  /* Week of stamps */
-  .week-sec { padding: 20px 0 80px; color: #fff; }
-  .stamps { display: grid; grid-template-columns: repeat(7, 1fr); gap: 16px; margin-top: 26px; }
-  .stamps li { position: relative; list-style: none; background: var(--paper); color: var(--ink); padding: 20px 12px 22px; text-align: center; }
-  .stamps li::after { content: ""; position: absolute; inset: -4px; border: 7px dotted var(--gulf); pointer-events: none; }
-  .stamps { padding: 0; margin-bottom: 0; }
-  .stamps b { display: block; font: 400 26px/1 "Bowlby One", sans-serif; color: var(--coral); }
-  .stamps span { display: block; margin-top: 10px; font-weight: 700; line-height: 1.2; }
-  .stamps em { display: block; margin-top: 8px; font-style: normal; font-size: 15px; color: #4b5a66; }
-  .stamps .is-today { background: var(--sun); }
-  .week-sec p { margin-top: 22px; }
+  /* story */
+  .story { padding: 130px 0; background: linear-gradient(180deg, var(--deep), #0a3437); }
+  .story .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 70px; align-items: center; }
+  .story .photo { perspective: 1400px; }
+  .story .photo img { width: 100%; border-radius: 18px; box-shadow: 0 40px 80px rgba(0,0,0,.45); transform-origin: 0% 50%; transform: rotateY(var(--sw, 0deg)) translateZ(var(--sz, 0px)); }
+  .story h2 { font-size: clamp(40px, 4.4vw, 68px); line-height: 1.02; }
+  .story p { color: #cfe2dc; }
+  .steps { list-style: none; padding: 0; margin: 30px 0 0; display: grid; gap: 16px; }
+  .steps li { display: grid; grid-template-columns: 110px 1fr; gap: 18px; align-items: baseline; padding-top: 16px; border-top: 1px solid rgba(234,245,240,.14); }
+  .steps b { font: 600 30px/1 "Fraunces", serif; color: var(--gold); }
+  .moving .steps li[data-reveal] { opacity: 0; transform: translateX(-30px); transition: opacity .8s, transform .9s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i) * 140ms); }
+  .moving .steps li[data-reveal].in { opacity: 1; transform: none; }
 
-  /* Menu */
-  .taste { background: var(--sand); padding: 84px 0; }
-  .taste .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 28px; }
-  .snap { background: #fff; padding: 12px 12px 18px; box-shadow: 0 16px 30px rgba(28,42,53,.18); }
-  .snap:nth-child(1) { transform: rotate(-1.5deg); } .snap:nth-child(3) { transform: rotate(1.5deg); }
-  .snap img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
-  .snap h3 { margin: 14px 4px 4px; font-size: 21px; }
-  .snap p { margin: 0 4px; color: #4b5a66; }
-  .taste .more { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  /* reviews fan */
+  .reviews { padding: 110px 0 130px; text-align: center; }
+  .reviews h2 { font-size: clamp(38px, 4vw, 60px); }
+  .reviews .score { color: var(--muted); margin: 10px 0 50px; }
+  .fan { display: flex; justify-content: center; perspective: 1400px; }
+  .fan blockquote { width: 340px; margin: 0 -14px; padding: 30px; border-radius: 20px; background: var(--foam); color: #13201f; text-align: left; box-shadow: 0 30px 60px rgba(0,0,0,.35); transition: transform 1.1s cubic-bezier(.2,.7,.2,1); font: 400 21px/1.35 "Fraunces", serif; }
+  .fan blockquote footer { margin-top: 16px; font: 600 15px/1.4 "Figtree", sans-serif; color: #3d5552; }
+  .fan blockquote:nth-child(1) { transform: rotate(-7deg) translateY(16px); }
+  .fan blockquote:nth-child(2) { transform: translateY(-10px); z-index: 1; }
+  .fan blockquote:nth-child(3) { transform: rotate(7deg) translateY(16px); }
+  .moving .fan:not(.in) blockquote { transform: translateY(160px) rotateX(50deg) scale(.9); opacity: 0; }
+  .moving .fan blockquote { transition: transform 1.1s cubic-bezier(.2,.7,.2,1), opacity .8s; }
+  .moving .fan blockquote:nth-child(2) { transition-delay: .12s; }
+  .moving .fan blockquote:nth-child(3) { transition-delay: .24s; }
+  .fan blockquote:hover { transform: translateY(-24px) rotate(0deg) !important; z-index: 2; }
 
-  /* Make a day of it */
-  .day { padding: 84px 0; color: #fff; background: var(--gulf-deep); }
-  .day .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 26px; }
-  .day figure { margin: 0; }
-  .day img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border: 8px solid #fff; }
-  .day figcaption { margin-top: 10px; font-weight: 700; }
-  .day .reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
-  .day blockquote { margin: 0; padding: 22px; background: rgba(255,255,255,.08); border-left: 4px solid var(--sun); }
-  .day blockquote footer { margin-top: 10px; color: #cfe3e5; font-size: 15px; }
+  .visit { padding: 100px 0 50px; border-top: 1px solid rgba(234,245,240,.12); }
+  .visit .grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 40px; }
+  .visit h2 { font-size: clamp(38px, 4vw, 60px); line-height: 1.02; }
+  .visit h3 { font-size: 22px; margin-bottom: 8px; color: var(--gold); }
+  .visit p { margin: 0 0 4px; color: #d4e6e0; }
+  .visit .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 70px; color: var(--muted); font-size: 15px; }
 
-  footer.site { padding: 30px 0 40px; color: #d6eef0; background: var(--gulf-deep); border-top: 1px solid rgba(255,255,255,.15); }
-  footer.site .wrap { display: flex; flex-wrap: wrap; gap: 10px 26px; justify-content: space-between; }
-
-  @media (max-width: 940px) {
+  @media (max-width: 900px) {
     .nav ul { display: none; }
     .nav .btn { margin-left: auto; }
-    .postmark { display: none; }
-    .stamp { width: 84px; top: 16px; right: 16px; }
-    .back .sheet { grid-template-columns: 1fr; }
-    .back .msg { border-right: 0; border-bottom: 2px solid rgba(28,42,53,.2); }
-    .stamps { grid-template-columns: repeat(2, 1fr); }
-    .taste .grid, .day .grid, .day .reviews { grid-template-columns: 1fr; }
-    .back .msg, .back .addr { padding: 28px; }
+    .hero .wrap { grid-template-columns: 1fr; gap: 34px; padding: 110px 0 70px; }
+    .shade { background: linear-gradient(180deg, rgba(4,28,31,.5) 0%, rgba(4,28,31,.82) 55%, var(--deep) 100%); }
+    .stage { --cw: 110px; --gap: 18px; perspective: 1100px; height: calc(var(--cw) * 1.42 + 200px); }
+    .ring { top: 80px; transform: translateZ(calc(var(--r) * -1 + 60px)) rotateX(-10deg) rotateY(var(--angle, 0deg)); }
+    .front b { font-size: 15px; }
+    .front small { font-size: 11px; }
+    .item.isfront .front { transform: translateZ(24px) translateY(-10px); }
+    .caption { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; margin-top: -20px; }
+    .arrow { width: 44px; height: 44px; }
+    .story .grid { grid-template-columns: 1fr; gap: 40px; }
+    .fan { flex-direction: column; align-items: center; gap: 16px; }
+    .fan blockquote { width: min(360px, 100%); margin: 0; }
+    .visit .grid { grid-template-columns: 1fr; }
   }
-  @media (max-width: 520px) {
-    .nav .brand span { display: none; }
-    .stamp { display: none; }
-  }
+  @media (max-width: 520px) { .nav .brand span { display: none; } .steps li { grid-template-columns: 80px 1fr; } .caption li { font-size: 14px; } }
 </style>
-<script src="shared.js" defer></script>
 </head>
 <body>
 <header class="nav">
@@ -130,93 +167,198 @@
     <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="46" height="46"><span>Whistle Stop Grill &amp; Bar</span></a>
     <ul>
       <li><a href="../menu.html">Menu</a></li>
-      <li><a href="../events.html">Events</a></li>
+      <li><a href="../events.html">Live music</a></li>
       <li><a href="../happy-hour.html">Happy hour</a></li>
       <li><a href="../private-events.html">Private events</a></li>
       <li><a href="#visit">Visit</a></li>
     </ul>
-    <a class="btn" href="../order.html">Order online</a>
+    <a class="btn gold" href="../order.html" data-magnetic>Order online</a>
   </div>
 </header>
 
 <main>
-  <div class="wrap">
-    <section class="card" aria-label="Welcome">
-      <div class="postmark">SAFETY<br>HARBOR FL<br>SINCE 1995</div>
-      <div class="stamp" aria-hidden="true"><img src="../assets/gallery/WSRocker-280.webp" alt=""><b>915 Main St</b></div>
-      <p class="greet hand">Greetings from</p>
-      <h1 class="big"><span class="w1">Whistle</span><span class="w2">Stop</span></h1>
-      <div class="sub">
-        <p>Old Florida, new vibe on Main Street in Safety Harbor. Real good food, cold drinks and local music on an open-air patio.</p>
-        <div class="actions"><a class="btn btn-coral" href="../menu.html">See the menu</a><a class="btn btn-ghost" href="../events.html">What's happening</a></div>
-      </div>
-    </section>
-  </div>
-
-  <section class="back" id="visit" aria-label="About and visiting">
+  <section class="hero" aria-labelledby="h1">
+    <div class="scene" id="scene"><img src="../assets/gallery/WSSunset.webp" alt="" width="964" height="1280" fetchpriority="high"></div>
+    <div class="leak" aria-hidden="true"></div>
+    <canvas id="motes" aria-hidden="true"></canvas>
+    <div class="shade" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="sheet">
-        <div class="msg">
-          <p class="hand">“Since 1995, I have had a true romance with this place. Purchasing it not once, but twice!”</p>
-          <p>Before it was Whistle Stop, this corner was Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand, for more than 35 years. Henry's famous milkshakes are still on the menu. Today there are 100-plus seats, a full bar and 18 taps.</p>
-          <p class="sig hand">Dawn &amp; Patrick Pendola</p>
+      <div>
+        <h1 id="h1" class="in" data-split>Sunsets, shakes and live music on Main Street</h1>
+        <p class="lede">Whistle Stop Grill &amp; Bar is Safety Harbor's open-air grill and bar under the oaks, on this corner since 1995.</p>
+        <div class="ctas"><a class="btn gold" href="#menu-ring" data-magnetic>Spin the menu</a><a class="btn" href="../order.html" data-magnetic>Order for pickup</a></div>
+      </div>
+      <aside class="tonight" data-tilt="8" aria-label="Tonight at Whistle Stop">
+        <div class="card">
+          <div class="when"><span data-ws="weekday">Today</span>, <span data-ws="tonight-time"></span></div>
+          <h2 data-ws="tonight">Live music</h2>
+          <p data-ws="tonight-detail"></p>
+          <a class="btn" href="../events.html">This week's lineup</a>
+          <p class="status" data-ws="status">Open daily from 11 AM</p>
         </div>
-        <div class="addr">
-          <div class="line"><small>Address</small>915 Main Street, Safety Harbor, FL 34695</div>
-          <div class="line"><small>Hours</small>Sun–Thu 11 AM–9 PM · Fri–Sat 11 AM–10 PM</div>
-          <div class="line"><small>Right now</small><span data-ws="status">Open daily from 11 AM</span></div>
-          <div class="line"><small>Call</small><a href="tel:+17277261956">(727) 726-1956</a></div>
-          <div style="display:flex;flex-wrap:wrap;gap:12px"><a class="btn btn-coral" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Get directions</a><a class="btn btn-ghost" href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="ringsec" id="menu-ring" aria-labelledby="rh">
+    <div class="aurora" aria-hidden="true"></div>
+    <div class="ringhead">
+      <h2 id="rh" data-split>Spin the menu</h2>
+      <p>Drag, swipe or use the arrows. Every card opens that part of the menu.</p>
+    </div>
+    <div class="stage" id="stage" tabindex="0" aria-label="Menu categories, use the left and right arrow keys to turn">
+      <div class="floor" aria-hidden="true"></div>
+      <div class="ring" id="ring"></div>
+    </div>
+    <div class="caption">
+      <button class="arrow" id="prev" type="button" aria-label="Previous category"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 4 7 10l6 6"/></svg></button>
+      <div class="pane" id="pane" aria-live="polite"></div>
+      <button class="arrow" id="next" type="button" aria-label="Next category"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 4 6 6-6 6"/></svg></button>
+    </div>
+  </section>
+
+  <section class="story" aria-labelledby="sh">
+    <div class="wrap grid">
+      <div class="photo" id="photo"><img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building on Main Street" loading="lazy" width="988" height="415"></div>
+      <div>
+        <h2 id="sh" data-split>From cones and car-hop trays to Friday-night bands</h2>
+        <p>Regulars still call it "the Whistle Stop," and visitors find it the same way: walking downtown Safety Harbor and following the sound of laughter from the patio.</p>
+        <ol class="steps">
+          <li data-reveal style="--i:0"><b>35+ years</b><span>Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand, is a Safety Harbor landmark.</span></li>
+          <li data-reveal style="--i:1"><b>1995</b><span>Dawn buys the corner. "Purchasing it not once, but twice!"</span></li>
+          <li data-reveal style="--i:2"><b>Today</b><span>A full kitchen, a full bar with 18 taps, and Henry's milkshakes still on the menu.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="reviews" aria-labelledby="rv">
+    <div class="wrap">
+      <h2 id="rv">What regulars say</h2>
+      <p class="score">4.4 stars from more than 2,000 Google reviews</p>
+      <div class="fan" id="fan">
+        <blockquote>"Great spot to relax and listen to local music. Food and service were amazing."<footer>Greg Bell, Google review</footer></blockquote>
+        <blockquote>"Excellent fried green tomatoes, great service with a hometown vibe."<footer>Karl Sauer, Google review</footer></blockquote>
+        <blockquote>"Amazing experience beginning at the hostess stand. The best food and vibes!"<footer>Eric Fenech, Google review</footer></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit" id="visit" aria-labelledby="vh">
+    <div class="wrap">
+      <div class="grid">
+        <div>
+          <h2 id="vh">915 Main Street, Safety Harbor</h2>
+          <div class="ctas"><a class="btn gold" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL" data-magnetic>Get directions</a><a class="btn" href="tel:+17277261956">(727) 726-1956</a></div>
         </div>
+        <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM</p><p>Fri–Sat 11 AM–10 PM</p><p>Happy hour daily 4–7 PM</p></div>
+        <div><h3>Around the corner</h3><p>Steps from the Safety Harbor marina and Philippe Park. Dogs are welcome on the covered patio.</p></div>
       </div>
-    </div>
-  </section>
-
-  <section class="week-sec" aria-labelledby="wk">
-    <div class="wrap">
-      <h2 id="wk">Every week on the patio</h2>
-      <ul class="stamps">
-        <li data-ws-day="1"><b>Mon</b><span>Martini Monday &amp; Tacos</span><em>4 PM–close</em></li>
-        <li data-ws-day="2"><b>Tue</b><span>Open Mic Night</span><em>6:30–9:30 PM</em></li>
-        <li data-ws-day="3"><b>Wed</b><span>Cornhole</span><em>from 6 PM</em></li>
-        <li data-ws-day="4"><b>Thu</b><span>Guitar Guild &amp; Ukulele Jam</span><em>3rd &amp; 4th Thu</em></li>
-        <li data-ws-day="5"><b>Fri</b><span>Live music</span><em>6:30–9:30 PM</em></li>
-        <li data-ws-day="6"><b>Sat</b><span>Live music</span><em>6:30–9:30 PM</em></li>
-        <li data-ws-day="0"><b>Sun</b><span>Bloody Mary Sunday</span><em>$5 mimosas</em></li>
-      </ul>
-      <p>Happy hour 4–7 PM every day, 4 PM to close on Tuesdays and Wednesdays.</p>
-    </div>
-  </section>
-
-  <section class="taste">
-    <div class="wrap">
-      <h2>A taste of Main Street</h2>
-      <div class="grid">
-        <figure class="snap"><img src="../assets/gallery/WSFood2-768.webp" alt="A plate from the Whistle Stop kitchen with fresh vegetables" loading="lazy" width="768" height="1024"><h3>Gulf-coast plates</h3><p>Fresh Grouper Sandwich, Blue Crab Cakes, Smoked Fish Spread</p></figure>
-        <figure class="snap"><img src="../assets/gallery/WSFood3-768.webp" alt="A loaded hot dog with onion straws and fries" loading="lazy" width="768" height="960"><h3>Burgers &amp; handhelds</h3><p>Original Whistle Stop Burger, Crab &amp; Shrimp Burger, Baja tacos</p></figure>
-        <figure class="snap"><img src="../assets/gallery/WSDrinks3.webp" alt="A long table of friends on the patio" loading="lazy" width="1080" height="1080"><h3>Round of drinks</h3><p>Green Tomato Bloody Mary, Key Lime Martini, Safety Harbor Sangria</p></figure>
-      </div>
-      <div class="more"><a class="btn btn-coral" href="../menu.html">Full menu</a><a class="btn btn-ghost" href="../order.html">Order for pickup</a></div>
-    </div>
-  </section>
-
-  <section class="day">
-    <div class="wrap">
-      <h2>Make a day of it</h2>
-      <p>Whistle Stop is on Main Street in downtown Safety Harbor, up the road from the waterfront and the spa.</p>
-      <div class="grid">
-        <figure><img src="../assets/gallery/safety-harbor-resort-spa.webp" alt="Safety Harbor Resort and Spa sign lit at night" loading="lazy" width="960" height="597"><figcaption>Safety Harbor Resort &amp; Spa</figcaption></figure>
-        <figure><img src="../assets/gallery/spa-marina-statue-mini-mall-safety-harbor.webp" alt="Heron sculpture fountain downtown" loading="lazy" width="960" height="593"><figcaption>Downtown Safety Harbor</figcaption></figure>
-        <figure><img src="../assets/gallery/tocobaga-indian-teple-mount-safety-harbor.webp" alt="Tocobaga temple mound sign at Philippe Park" loading="lazy" width="960" height="720"><figcaption>Philippe Park's Tocobaga mound</figcaption></figure>
-      </div>
-      <div class="reviews">
-        <blockquote>“Great spot to relax and listen to local music.”<footer>Greg Bell, Google review</footer></blockquote>
-        <blockquote>“Love the hometown atmosphere!”<footer>Shannon Schafer, Google review</footer></blockquote>
-        <blockquote>“Amazing experience beginning at the hostess stand. The best food and vibes!”<footer>Eric Fenech, Google review</footer></blockquote>
-      </div>
+      <div class="foot"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a> &nbsp; <a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div>
     </div>
   </section>
 </main>
-<footer class="site"><div class="wrap"><span>Whistle Stop Grill &amp; Bar · 915 Main Street, Safety Harbor</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a> &nbsp; <a href="../private-events.html">Private events</a></span></div></footer>
+
+<script src="shared.js"></script>
+<script src="food.js"></script>
+<script src="fx.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { cats, art, order } = WSFOOD;
+  const N = cats.length, STEP = 360 / N;
+
+  /* ---- hero: pointer parallax on the scene + drifting warm motes */
+  const scene = document.getElementById("scene");
+  if (FX.fine && !FX.reduce) {
+    let tx = 0, ty = 0, x = 0, y = 0;
+    addEventListener("pointermove", (e) => { tx = (e.clientX / innerWidth - 0.5) * -26; ty = (e.clientY / innerHeight - 0.5) * -18; });
+    FX.loop(() => { x += (tx - x) * 0.05; y += (ty - y) * 0.05; scene.style.transform = `translate3d(${x.toFixed(2)}px, ${(y + scrollY * 0.18).toFixed(2)}px, 0)`; });
+  }
+  const cv = document.getElementById("motes"), cx = cv.getContext("2d");
+  let motes = [];
+  function sizeMotes() {
+    const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
+    cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0);
+    motes = Array.from({ length: Math.round(r.width / 22) }, () => ({ x: Math.random() * r.width, y: Math.random() * r.height, r: 0.6 + Math.random() * 2.2, s: 6 + Math.random() * 18, p: Math.random() * 6.28, a: 0.25 + Math.random() * 0.5 }));
+  }
+  sizeMotes(); addEventListener("resize", sizeMotes);
+  let heroOn = true;
+  new IntersectionObserver(([e]) => (heroOn = e.isIntersecting)).observe(cv);
+  FX.loop((t, dt) => {
+    if (!heroOn) return;
+    const w = cv.clientWidth, h = cv.clientHeight;
+    cx.clearRect(0, 0, w, h);
+    for (const m of motes) {
+      m.y -= m.s * dt; m.x += Math.sin(t * 0.6 + m.p) * 0.25;
+      if (m.y < -10) { m.y = h + 10; m.x = Math.random() * w; }
+      const tw = 0.6 + 0.4 * Math.sin(t * 2 + m.p);
+      cx.beginPath(); cx.fillStyle = `rgba(255,214,150,${(m.a * tw).toFixed(3)})`; cx.arc(m.x, m.y, m.r, 0, 6.283); cx.fill();
+    }
+  });
+
+  /* ---- the ring */
+  const ring = document.getElementById("ring"), stage = document.getElementById("stage"), pane = document.getElementById("pane");
+  ring.innerHTML = cats.map((c, i) => `
+    <a class="item" href="${c.href}" style="--i:${i};--c:${c.color}" aria-label="${c.name}, ${c.count}, from ${c.from}" data-i="${i}">
+      <span class="face front"><span class="art">${art(c.art)}</span><b>${c.name}</b><small>from ${c.from}</small><span class="sheen"></span></span>
+      <span class="face back"><img src="../assets/logo-160.webp" alt="" width="56" height="56"></span>
+    </a>`).join("");
+  const items = [...ring.children];
+  let angle = 0, vel = 0, target = null, dragging = false, moved = 0, lastX = 0, hover = false, idle = !FX.reduce, front = -1;
+  const frontIndex = () => ((Math.round(-angle / STEP) % N) + N) % N;
+  function caption(i) {
+    const c = cats[i];
+    pane.classList.add("swap");
+    setTimeout(() => {
+      pane.innerHTML = `<h3>${c.name}</h3><p class="line">${c.line}</p>
+        <ul>${c.picks.map(([n, p]) => `<li>${n}<b>${p}</b></li>`).join("")}</ul>
+        <div class="ctas"><a class="btn gold" href="${c.href}">${c.cta}</a><a class="btn" href="${order}">Order online</a></div>`;
+      pane.classList.remove("swap");
+    }, front === -1 ? 0 : 180);
+  }
+  function paint() {
+    ring.style.setProperty("--angle", angle.toFixed(2) + "deg");
+    const f = frontIndex();
+    if (f !== front) { items.forEach((el, i) => el.classList.toggle("isfront", i === f)); caption(f); front = f; }
+  }
+  const goTo = (i) => { const cur = -angle / STEP; let d = ((i - cur) % N + N) % N; if (d > N / 2) d -= N; target = angle - d * STEP; idle = false; };
+  document.getElementById("prev").onclick = () => goTo(frontIndex() - 1);
+  document.getElementById("next").onclick = () => goTo(frontIndex() + 1);
+  stage.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") { goTo(frontIndex() - 1); e.preventDefault(); } if (e.key === "ArrowRight") { goTo(frontIndex() + 1); e.preventDefault(); } });
+  stage.addEventListener("pointerenter", () => (hover = true));
+  stage.addEventListener("pointerleave", () => (hover = false));
+  stage.addEventListener("pointerdown", (e) => { dragging = true; moved = 0; lastX = e.clientX; vel = 0; target = null; idle = false; stage.classList.add("dragging"); stage.setPointerCapture(e.pointerId); });
+  stage.addEventListener("pointermove", (e) => { if (!dragging) return; const dx = e.clientX - lastX; lastX = e.clientX; moved += Math.abs(dx); angle += dx * 0.28; vel = dx * 0.28; paint(); });
+  const release = () => { if (!dragging) return; dragging = false; stage.classList.remove("dragging"); };
+  stage.addEventListener("pointerup", release); stage.addEventListener("pointercancel", release);
+  ring.addEventListener("click", (e) => {
+    const a = e.target.closest(".item");
+    if (!a) return;
+    if (moved > 6) { e.preventDefault(); return; }
+    const i = Number(a.dataset.i);
+    if (i !== frontIndex()) { e.preventDefault(); goTo(i); }
+  });
+  paint();
+  let ringOn = true;
+  new IntersectionObserver(([e]) => (ringOn = e.isIntersecting)).observe(stage);
+  FX.loop((t, dt) => {
+    if (!ringOn || dragging) return;
+    if (target !== null) { angle += (target - angle) * Math.min(1, dt * 7); if (Math.abs(target - angle) < 0.05) { angle = target; target = null; } }
+    else if (Math.abs(vel) > 0.05) { angle += vel; vel *= 0.93; if (Math.abs(vel) <= 0.05) target = -Math.round(-angle / STEP) * STEP; }
+    else if (idle && !hover) angle -= dt * 7;
+    paint();
+  });
+
+  /* ---- story photo swings open as it scrolls in */
+  const photo = document.querySelector("#photo img");
+  FX.progress(document.getElementById("photo"), "pass", (p) => {
+    const k = FX.reduce ? 1 : FX.ease(FX.smooth(0.05, 0.5, p));
+    photo.style.setProperty("--sw", ((1 - k) * 48).toFixed(2) + "deg");
+    photo.style.setProperty("--sz", ((1 - k) * -120).toFixed(1) + "px");
+  });
+  FX.reveal(document.getElementById("fan"));
+  document.querySelectorAll(".ringhead h2, .story h2").forEach(FX.reveal);
+});
+</script>
 </body>
 </html>

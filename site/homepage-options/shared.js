@@ -7,7 +7,7 @@
     { day: "Sunday", short: "Sun", title: "Breakfast Bloody Mary Sunday", time: "From 11 AM", detail: "$5 mimosas and Bloody Marys with brunch on the patio." },
     { day: "Monday", short: "Mon", title: "Martini Monday & Taco Night", time: "4 PM to close", detail: "Half-off martinis and 2-for-$6 tacos. Words & Wine book club meets the 3rd Monday." },
     { day: "Tuesday", short: "Tue", title: "Open Mic Night", time: "6:30 to 9:30 PM", detail: "Local talent takes the stage. Happy hour runs 4 PM to close." },
-    { day: "Wednesday", short: "Wed", title: "Cornhole Wednesdays", time: "From 6 PM", detail: "Boards out in the lot, happy hour 4 PM to close." },
+    { day: "Wednesday", short: "Wed", title: "Cornhole Wednesdays", time: "From 6 PM", detail: "Every Wednesday at 6 PM, with happy hour from 4 PM to close." },
     { day: "Thursday", short: "Thu", title: "Guitar Guild & Ukulele Jam", time: "3rd & 4th Thursdays", detail: "TB Guitar Guild on the 3rd Thursday (6–9 PM), Tampa Bay Ukulele Society open jam on the 4th (6:30–9:30 PM)." },
     { day: "Friday", short: "Fri", title: "Live Music", time: "6:30 to 9:30 PM", detail: "Local artists on the patio stage." },
     { day: "Saturday", short: "Sat", title: "Live Music", time: "6:30 to 9:30 PM", detail: "Local artists on the patio stage." },

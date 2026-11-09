@@ -4,237 +4,387 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 2 · Chalkboard · Whistle Stop Grill &amp; Bar</title>
+<title>Option 2 · Stack It Up · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --slate: #1f2b27;
-    --slate-2: #26332e;
-    --chalk: #f2f0e6;
-    --chalk-dim: #c9cdc2;
-    --lime: #cfe86a;
-    --pink: #f49ac1;
-    --sun: #f5d76e;
-    --wood: #7a4e2c;
-    --wood-hi: #a46c3d;
-  }
+  :root { --mustard: #ffc928; --ketchup: #e8402a; --pickle: #4f9d2d; --espresso: #24150d; --white: #fffdf7; --ink: #24150d; }
   * { box-sizing: border-box; }
-  body {
-    margin: 0; color: var(--chalk); font: 400 21px/1.45 "Patrick Hand", "Comic Neue", cursive;
-    background-color: var(--slate);
-    background-image:
-      radial-gradient(1200px 500px at 20% 10%, rgba(255,255,255,.05), transparent 60%),
-      radial-gradient(900px 600px at 85% 60%, rgba(255,255,255,.04), transparent 60%),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--mustard); color: var(--ink); font: 400 18px/1.55 "Work Sans", system-ui, sans-serif; overflow-x: clip; }
   a { color: inherit; }
-  img { display: block; max-width: 100%; height: auto; }
-  :focus-visible { outline: 3px dashed var(--sun); outline-offset: 4px; }
-  .wrap { width: min(1160px, 100% - 40px); margin-inline: auto; }
-  h1, h2, h3 { font-family: "Cabin Sketch", cursive; font-weight: 700; margin: 0; letter-spacing: .01em; }
-  h2 { font-size: clamp(40px, 5vw, 62px); line-height: 1.02; }
-  .chalk-btn { display: inline-block; padding: 10px 22px 8px; border: 2.5px solid var(--chalk); border-radius: 14px 18px 12px 20px; text-decoration: none; font-family: "Cabin Sketch", cursive; font-weight: 700; font-size: 22px; letter-spacing: .02em; }
-  .chalk-btn:hover { background: rgba(242,240,230,.08); }
-  .chalk-btn.fill { background: var(--lime); color: var(--slate); border-color: var(--lime); }
+  img, svg { display: block; max-width: 100%; }
+  img { height: auto; }
+  :focus-visible { outline: 3px solid var(--espresso); outline-offset: 3px; }
+  h1, h2, h3 { font-family: "Bowlby One", Impact, sans-serif; font-weight: 400; margin: 0; line-height: .92; }
+  .wrap { width: min(1240px, 100% - 40px); margin-inline: auto; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 999px; background: var(--white); color: var(--espresso); border: 3px solid var(--espresso); font-weight: 700; text-decoration: none; box-shadow: 0 5px 0 var(--espresso); transition: translate .25s cubic-bezier(.2,.7,.2,1), box-shadow .2s, background .2s; }
+  .btn:hover { box-shadow: 0 8px 0 var(--espresso); }
+  .btn:active { box-shadow: 0 1px 0 var(--espresso); }
+  .btn.hot { background: var(--ketchup); color: #fff; }
 
-  /* Nav */
-  .nav .wrap { display: flex; align-items: center; gap: 22px; padding: 20px 0; }
-  .nav .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-  .nav .logo img { width: 56px; height: 56px; transform: rotate(-4deg); }
-  .nav .logo span { font: 700 24px/1 "Cabin Sketch", cursive; }
-  .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; }
+  /* word-by-word headline: each word drops and lands */
+  .moving [data-split] .w { display: inline-block; opacity: 0; transform: translateY(-1.2em) rotate(-8deg); }
+  .moving [data-split].in .w { animation: drop .8s cubic-bezier(.3,1.6,.5,1) forwards; animation-delay: calc(var(--wi) * 110ms + .15s); }
+  @keyframes drop { to { opacity: 1; transform: none; } }
+
+  /* nav */
+  .nav { position: fixed; inset: 0 0 auto; z-index: 20; transition: background .3s, box-shadow .3s; }
+  .nav.solid { background: var(--mustard); box-shadow: 0 2px 0 var(--espresso); }
+  .nav .wrap { display: flex; align-items: center; gap: 24px; height: 72px; }
+  .nav .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; }
+  .nav .brand img { width: 46px; height: 46px; }
+  .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 600; }
   .nav ul a { text-decoration: none; }
-  .nav ul a:hover { text-decoration: underline wavy var(--pink); text-underline-offset: 6px; }
+  .nav ul a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+  .nav .btn { padding: 10px 18px; box-shadow: 0 3px 0 var(--espresso); }
 
-  /* Hero board */
-  .hero { padding: 20px 0 80px; }
-  .hero .wrap { display: grid; grid-template-columns: 1.35fr 1fr; gap: 48px; align-items: center; }
-  .board { position: relative; padding: 44px 46px 40px; background: var(--slate-2); border: 18px solid var(--wood); border-image: linear-gradient(135deg, var(--wood-hi), var(--wood) 30%, #5a3a20 70%, var(--wood-hi)) 1; box-shadow: 0 30px 60px rgba(0,0,0,.45), inset 0 0 80px rgba(0,0,0,.35); }
-  .board h1 { font-size: clamp(54px, 6.4vw, 92px); line-height: .95; }
-  .board h1 small { display: block; font-size: .5em; color: var(--lime); margin-top: 6px; }
-  .swash { width: min(360px, 80%); height: 26px; margin: 6px 0 16px; }
-  .today { margin-top: 18px; padding-top: 18px; border-top: 2px dashed rgba(242,240,230,.35); }
-  .today .label { font-family: "Cabin Sketch", cursive; font-size: 26px; color: var(--sun); }
-  .today .big { display: block; margin: 4px 0; font: 700 clamp(34px, 3.6vw, 48px)/1.05 "Cabin Sketch", cursive; color: var(--pink); }
-  .today p { margin: 4px 0 0; color: var(--chalk-dim); }
-  .status { margin-top: 18px; font-size: 22px; }
-  .status [data-ws="status"]::before { content: "○ "; color: var(--chalk-dim); }
-  .status [data-ws="status"].is-open::before { content: "● "; color: var(--lime); }
-  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
-  .pinned { position: relative; transform: rotate(3deg); background: #fff; padding: 12px 12px 46px; box-shadow: 0 24px 50px rgba(0,0,0,.5); }
-  .pinned img { width: 100%; aspect-ratio: 1; object-fit: cover; }
-  .pinned figcaption { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; color: #333; font-size: 22px; }
-  .tape { position: absolute; top: -16px; left: 50%; width: 120px; height: 34px; transform: translateX(-50%) rotate(-3deg); background: rgba(245,215,110,.75); }
+  /* the build */
+  .build { position: relative; height: 250vh; }
+  .pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: 20px; padding: 80px max(20px, (100vw - 1240px) / 2) 30px; }
+  .sun { position: absolute; left: 62%; top: 52%; width: 120vmin; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: repeating-conic-gradient(from 0deg, #ffd65a 0 10deg, #ffc928 10deg 20deg); opacity: .9; z-index: 0; }
+  .moving .sun { animation: spin 60s linear infinite; }
+  @keyframes spin { to { rotate: 360deg; } }
+  .copy { position: relative; z-index: 2; }
+  .copy h1 { font-size: clamp(54px, 7.4vw, 118px); letter-spacing: -.01em; color: var(--espresso); }
+  .copy h1 .red { color: var(--ketchup); }
+  .copy .lede { max-width: 30ch; margin: 22px 0 26px; font-size: 20px; }
+  .copy .lede b { font-weight: 700; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 14px; }
+  .status { margin: 22px 0 0; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+  .status::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--espresso); }
+  .status.is-open::before { background: var(--pickle); box-shadow: 0 0 0 0 rgba(79,157,45,.6); }
+  .moving .status.is-open::before { animation: ping 1.8s infinite; }
+  @keyframes ping { 70% { box-shadow: 0 0 0 12px rgba(79,157,45,0); } 100% { box-shadow: 0 0 0 0 rgba(79,157,45,0); } }
 
-  /* Week */
-  section { padding: 70px 0; }
-  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; margin-top: 30px; border-top: 2px dashed rgba(242,240,230,.3); }
-  .week div { padding: 18px 14px 20px; border-right: 2px dashed rgba(242,240,230,.18); }
-  .week div:last-child { border-right: 0; }
-  .week b { display: block; font: 700 30px/1 "Cabin Sketch", cursive; color: var(--sun); }
-  .week span { display: block; margin-top: 10px; font-size: 21px; line-height: 1.2; }
-  .week em { display: block; margin-top: 8px; font-style: normal; color: var(--chalk-dim); font-size: 18px; }
-  .week .is-today { background: rgba(207,232,106,.1); border-radius: 10px; }
-  .week .is-today b { color: var(--lime); }
-  .hh { margin-top: 24px; font-size: 22px; }
-  .hh strong { color: var(--pink); font-weight: 400; }
+  .stage { position: relative; z-index: 1; height: 100%; min-height: 360px; perspective: 1400px; }
+  .burger { position: absolute; left: 40%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+  .narrow .burger { left: 50%; }
+  .layer { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; will-change: transform; filter: drop-shadow(0 10px 8px rgba(36,21,13,.18)); }
+  .layer svg { width: 100%; height: 100%; }
+  .moving .layer.drop { animation: stackIn .7s cubic-bezier(.3,1.5,.55,1) both; animation-delay: calc(var(--k) * 120ms + .35s); }
+  @keyframes stackIn { from { translate: 0 -110vh; } }
+  .callout { position: absolute; left: 40%; top: 50%; display: flex; align-items: center; gap: 10px; white-space: nowrap; font-weight: 700; font-size: 17px; opacity: 0; pointer-events: none; }
+  .narrow .callout { left: 50%; }
+  .callout i { display: block; height: 3px; width: 44px; background: var(--espresso); border-radius: 2px; }
+  .callout span { background: var(--white); border: 3px solid var(--espresso); padding: 6px 12px; border-radius: 999px; box-shadow: 0 3px 0 var(--espresso); }
+  .callout.l { flex-direction: row-reverse; }
+  .narrow .callout i { display: none; }
+  .narrow .callout span { padding: 2px 10px; font-size: 13px; border-width: 2px; box-shadow: 0 2px 0 var(--espresso); }
+  .price-tag { position: absolute; right: 6%; top: 10%; width: 150px; height: 150px; border-radius: 50%; background: var(--ketchup); color: #fff; display: grid; place-content: center; text-align: center; border: 4px solid var(--espresso); box-shadow: 0 6px 0 var(--espresso); rotate: 12deg; z-index: 3; }
+  .price-tag b { display: block; font: 400 40px/1 "Bowlby One", sans-serif; }
+  .price-tag small { font-weight: 700; font-size: 14px; line-height: 1.2; }
+  .moving .price-tag { animation: stamp .6s cubic-bezier(.3,1.7,.5,1) 1.6s both; }
+  @keyframes stamp { from { scale: 2.4; opacity: 0; rotate: -20deg; } }
+  .bit { position: absolute; z-index: 1; pointer-events: none; }
+  .bit.seed { width: 18px; height: 9px; border-radius: 50%; background: #fff4d8; box-shadow: 0 2px 0 rgba(36,21,13,.25); }
+  .bit.pickle { width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle, #cfe58a 0 30%, #8dbb3c 31% 62%, #4f8a24 63%); box-shadow: 0 3px 0 rgba(36,21,13,.25); }
+  .bit.tom { width: 46px; height: 46px; border-radius: 50%; background: radial-gradient(circle, #ff8a6a 0 22%, #e8402a 23% 70%, #b92a18 71%); }
+  .moving .bit { animation: bob var(--t, 5s) ease-in-out infinite alternate; }
+  @keyframes bob { to { transform: translateY(-22px) rotate(25deg); } }
+  .hint { position: absolute; left: 50%; bottom: 18px; translate: -50% 0; z-index: 3; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .hint i { width: 22px; height: 34px; border: 3px solid var(--espresso); border-radius: 12px; position: relative; }
+  .hint i::after { content: ""; position: absolute; left: 50%; top: 6px; width: 4px; height: 7px; margin-left: -2px; border-radius: 2px; background: var(--espresso); }
+  .moving .hint i::after { animation: wheel 1.4s infinite; }
+  @keyframes wheel { to { transform: translateY(10px); opacity: 0; } }
 
-  /* Chalk menu */
-  .menu-board { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 70px; margin-top: 34px; }
-  .menu-board h3 { font-size: 32px; color: var(--lime); margin-bottom: 8px; }
-  .menu-board ul { list-style: none; margin: 0; padding: 0; }
-  .menu-board li { display: flex; align-items: baseline; gap: 10px; padding: 3px 0; }
-  .menu-board li::after { content: ""; flex: 1; border-bottom: 2px dotted rgba(242,240,230,.35); transform: translateY(-5px); order: 1; }
-  .menu-board li span { order: 0; }
-  .menu-board li i { order: 2; font-style: normal; color: var(--chalk-dim); font-size: 18px; }
-  .doodle { width: 90px; height: 90px; }
+  /* ticker */
+  .tickwrap { position: relative; z-index: 3; overflow: hidden; padding: 22px 0; margin: -36px 0 -22px; }
+  .ticker { background: var(--ketchup); color: #fff; border-block: 3px solid var(--espresso); overflow: hidden; padding: 16px 0; transform: rotate(-1.5deg); margin: 0 -24px; }
+  .ticker .track { display: flex; width: max-content; gap: 0; font: 400 26px/1 "Bowlby One", sans-serif; }
+  .moving .ticker .track { animation: tick 60s linear infinite; }
+  .ticker:hover .track { animation-play-state: paused; }
+  .ticker .track span { display: inline-flex; align-items: center; gap: 22px; padding-right: 22px; white-space: nowrap; }
+  .ticker .track span::after { content: ""; width: 14px; height: 8px; border-radius: 50%; background: var(--mustard); }
+  .ticker .track b { color: var(--mustard); font-weight: 400; }
+  @keyframes tick { to { transform: translateX(-50%); } }
 
-  /* Story */
-  .story .wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
-  .polaroid { background: #fff; padding: 12px 12px 44px; transform: rotate(-2.5deg); box-shadow: 0 24px 50px rgba(0,0,0,.45); position: relative; }
-  .polaroid figcaption { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; color: #333; }
-  .story p { max-width: 54ch; }
+  /* cravings */
+  .crave { background: var(--espresso); color: var(--white); padding: 120px 0 110px; position: relative; }
+  .crave h2 { font-size: clamp(48px, 6.2vw, 96px); color: var(--mustard); max-width: 12ch; }
+  .crave .sub { max-width: 46ch; margin: 18px 0 50px; color: #f1e3cf; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .card { --rx: 0deg; --ry: 0deg; position: relative; perspective: 900px; }
+  .card .in3d { position: relative; height: 100%; display: flex; flex-direction: column; padding: 150px 26px 26px; border-radius: 26px; background: var(--c); color: var(--espresso); border: 3px solid #000; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .5s cubic-bezier(.2,.7,.2,1); box-shadow: 0 8px 0 #000; }
+  .card.tilting .in3d { transition: transform .08s linear; }
+  .card .art { position: absolute; left: 50%; top: -34px; width: 190px; margin-left: -95px; transform: translateZ(70px); filter: drop-shadow(0 18px 14px rgba(0,0,0,.35)); }
+  .moving .card .art svg { animation: hover 3.2s ease-in-out infinite alternate; animation-delay: calc(var(--i) * -.4s); }
+  @keyframes hover { to { transform: translateY(-10px) rotate(-4deg); } }
+  .card .glare { position: absolute; inset: 0; border-radius: 23px; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255,255,255,.45), transparent 55%); opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .card.tilting .glare { opacity: 1; }
+  .card h3 { font-size: 32px; transform: translateZ(30px); }
+  .card .meta { font-weight: 700; margin: 6px 0 12px; transform: translateZ(24px); }
+  .card ul { list-style: none; padding: 0; margin: 0 0 20px; transform: translateZ(18px); }
+  .card li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 2px dashed rgba(0,0,0,.25); font-size: 16px; }
+  .card li b { white-space: nowrap; }
+  .card .go { margin-top: auto; align-self: flex-start; transform: translateZ(40px); padding: 11px 18px; box-shadow: 0 4px 0 #000; border-color: #000; }
+  .moving .card[data-reveal] { opacity: 0; transform: translateY(60px) rotateX(-35deg); transform-origin: 50% 100%; transition: opacity .7s, transform .9s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) % 3 * 120ms); }
+  .moving .card[data-reveal].in { opacity: 1; transform: none; }
 
-  /* Reviews */
-  .notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 30px; }
-  .notes blockquote { margin: 0; padding: 22px 22px 18px; color: #2b2b2b; background: var(--sun); box-shadow: 0 16px 30px rgba(0,0,0,.35); font-size: 22px; line-height: 1.3; }
-  .notes blockquote:nth-child(1) { transform: rotate(-2deg); }
-  .notes blockquote:nth-child(2) { transform: rotate(1.5deg); background: var(--pink); }
-  .notes blockquote:nth-child(3) { transform: rotate(-1deg); background: var(--lime); }
-  .notes footer { margin-top: 12px; font-size: 18px; }
+  /* week */
+  .week { padding: 110px 0; }
+  .week h2 { font-size: clamp(44px, 5.6vw, 84px); }
+  .tonight { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: end; margin-bottom: 40px; }
+  .tonight .big { font: 400 clamp(34px, 4vw, 58px)/1 "Bowlby One", sans-serif; color: var(--ketchup); margin: 12px 0 10px; }
+  .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; }
+  .day { background: var(--white); border: 3px solid var(--espresso); border-radius: 18px; padding: 16px 14px; box-shadow: 0 5px 0 var(--espresso); transition: translate .3s cubic-bezier(.3,1.6,.5,1); }
+  .day:hover { translate: 0 -6px; }
+  .day b { display: block; font: 400 22px/1 "Bowlby One", sans-serif; }
+  .day span { display: block; font-size: 15px; margin-top: 8px; line-height: 1.35; }
+  .day.is-today { background: var(--ketchup); color: #fff; }
+  .moving .day[data-reveal] { opacity: 0; translate: 0 40px; transition: opacity .5s, translate .6s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--i) * 70ms); }
+  .moving .day[data-reveal].in { opacity: 1; translate: 0 0; }
 
-  /* Visit */
-  .visit .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 26px; }
-  .visit h3 { font-size: 30px; color: var(--sun); margin-bottom: 6px; }
-  .visit p { margin: 0; }
-  .visit .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
-  footer.site { padding: 30px 0 50px; color: var(--chalk-dim); font-size: 19px; border-top: 2px dashed rgba(242,240,230,.25); }
-  footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; }
+  .visit { background: var(--white); border-top: 3px solid var(--espresso); padding: 100px 0 60px; }
+  .visit .grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 40px; align-items: start; }
+  .visit h2 { font-size: clamp(40px, 5vw, 72px); }
+  .visit h3 { font-size: 22px; margin-bottom: 8px; }
+  .visit p { margin: 0 0 6px; }
+  .visit .ctas { margin-top: 26px; }
+  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 70px; font-size: 15px; }
 
+  .still .build { height: 100vh; height: 100svh; }
   @media (max-width: 960px) {
     .nav ul { display: none; }
-    .nav .chalk-btn { margin-left: auto; }
-    .hero .wrap, .story .wrap { grid-template-columns: 1fr; }
-    .pinned { max-width: 420px; justify-self: center; }
-    .week { grid-template-columns: 1fr; }
-    .week div { display: grid; grid-template-columns: 70px 1fr; column-gap: 12px; border-right: 0; border-bottom: 2px dashed rgba(242,240,230,.18); padding: 12px 8px; }
-    .week b { grid-row: span 2; font-size: 26px; }
-    .week span { margin-top: 0; }
-    .week em { margin-top: 2px; }
-    .menu-board, .notes, .visit .grid { grid-template-columns: 1fr; }
-    .board { padding: 30px 24px; border-width: 12px; }
-    .nav .logo span { display: none; }
+    .nav .btn { margin-left: auto; }
+    .build { height: 210vh; }
+    .pin { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding-top: 84px; gap: 0; }
+    .copy h1 { font-size: clamp(42px, 11vw, 70px); }
+    .copy .lede { display: none; }
+    .copy h1 { margin-bottom: 14px; }
+    .copy .status { display: none; }
+    .ctas { gap: 10px; }
+    .btn { padding: 11px 16px; font-size: 16px; }
+    .price-tag { width: 84px; height: 84px; right: 0; top: auto; bottom: 3%; }
+    .price-tag b { font-size: 24px; }
+    .price-tag small { font-size: 10px; }
+    .callout { font-size: 13px; }
+    .callout i { width: 26px; }
+    .cards { grid-template-columns: 1fr 1fr; gap: 60px 18px; }
+    .tonight { grid-template-columns: 1fr; gap: 10px; }
+    .days { grid-template-columns: repeat(2, 1fr); }
+    .visit .grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 620px) {
+    .cards { grid-template-columns: 1fr; gap: 70px; }
+    .nav .brand span { display: none; }
+    .hint { display: none; }
   }
 </style>
-<script src="shared.js" defer></script>
 </head>
 <body>
-<header class="nav">
+<header class="nav" id="nav">
   <div class="wrap">
-    <a class="logo" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="56" height="56"><span>Whistle Stop</span></a>
+    <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="46" height="46"><span>Whistle Stop Grill &amp; Bar</span></a>
     <ul>
       <li><a href="../menu.html">Menu</a></li>
-      <li><a href="../events.html">Events</a></li>
+      <li><a href="../events.html">This week</a></li>
       <li><a href="../happy-hour.html">Happy hour</a></li>
-      <li><a href="../private-events.html">Private events</a></li>
-      <li><a href="#visit">Find us</a></li>
+      <li><a href="../private-events.html">Parties</a></li>
+      <li><a href="#visit">Visit</a></li>
     </ul>
-    <a class="chalk-btn fill" href="../order.html">Order online</a>
+    <a class="btn hot" href="../order.html" data-magnetic>Order online</a>
   </div>
 </header>
 
 <main>
-  <section class="hero" aria-label="Today's board">
-    <div class="wrap">
-      <div class="board">
-        <h1>Whistle Stop<small>grill &amp; bar · Safety Harbor</small></h1>
-        <svg class="swash" viewBox="0 0 360 26" aria-hidden="true"><path d="M4 18 C 80 4, 160 26, 240 12 S 340 8, 356 14" fill="none" stroke="#f49ac1" stroke-width="4" stroke-linecap="round"/></svg>
-        <div class="today">
-          <span class="label">On the board today, <span data-ws="weekday">today</span>:</span>
-          <span class="big" data-ws="tonight">Daily drink &amp; food specials</span>
-          <p><span data-ws="tonight-time"></span>. <span data-ws="tonight-detail">Ask your server for today's specials.</span></p>
-          <p>Happy hour 4–7 PM every day. Tuesday &amp; Wednesday it runs till close.</p>
+  <section class="build" id="build" aria-labelledby="h1">
+    <div class="pin">
+      <div class="sun" aria-hidden="true"></div>
+      <div class="copy">
+        <h1 id="h1" class="in" data-split>The Original, <span class="red">stacked.</span></h1>
+        <p class="lede">The <b>Original Whistle Stop Burger</b> comes with a fried green tomato, provolone, onion and aioli. It's one of nine burgers on Main Street.</p>
+        <div class="ctas">
+          <a class="btn hot" href="../menu.html#main-menu-burgers" data-magnetic>See all 9 burgers</a>
+          <a class="btn" href="../order.html" data-magnetic>Order for pickup</a>
         </div>
-        <p class="status"><span data-ws="status">Open daily from 11 AM</span></p>
-        <div class="hero-actions">
-          <a class="chalk-btn fill" href="../menu.html">See the menu</a>
-          <a class="chalk-btn" href="../events.html">This month's lineup</a>
+        <p class="status" data-ws="status">Open daily from 11 AM</p>
+      </div>
+      <div class="stage" id="stage" aria-hidden="true">
+        <div class="price-tag"><b>$8.90</b><small>The Original<br>Whistle Stop</small></div>
+        <div class="burger" id="burger"></div>
+      </div>
+      <div class="hint" aria-hidden="true"><i></i>Scroll to take it apart</div>
+    </div>
+  </section>
+
+  <div class="tickwrap"><div class="ticker" aria-label="A few things on the menu"><div class="track" id="ticker"></div></div></div>
+
+  <section class="crave" aria-labelledby="ch">
+    <div class="wrap">
+      <h2 id="ch" data-split>What are you craving?</h2>
+      <p class="sub">Nine ways to eat and drink at Whistle Stop. Pick one and jump straight to that part of the menu.</p>
+      <div class="cards" id="cards"></div>
+    </div>
+  </section>
+
+  <section class="week" aria-labelledby="wh">
+    <div class="wrap">
+      <div class="tonight">
+        <div>
+          <h2 id="wh">Something every night</h2>
+        </div>
+        <div>
+          <p class="big" data-ws="tonight">Live music</p>
+          <p><b data-ws="tonight-time"></b> <span data-ws="tonight-detail"></span></p>
         </div>
       </div>
-      <figure class="pinned"><span class="tape" aria-hidden="true"></span><img src="../assets/gallery/WSBar-768.webp" alt="Bartenders pouring cocktails at the Whistle Stop bar" width="768" height="768"><figcaption>Behind the bar</figcaption></figure>
+      <div class="days" id="days"></div>
     </div>
   </section>
 
-  <section id="week">
+  <section class="visit" id="visit" aria-labelledby="vh">
     <div class="wrap">
-      <h2>Every week on Main Street</h2>
-      <div class="week">
-        <div data-ws-day="1"><b>Mon</b><span>Martini Monday &amp; Taco Night</span><em>4 PM–close</em></div>
-        <div data-ws-day="2"><b>Tue</b><span>Open Mic Night</span><em>6:30–9:30 PM</em></div>
-        <div data-ws-day="3"><b>Wed</b><span>Cornhole Wednesdays</span><em>from 6 PM</em></div>
-        <div data-ws-day="4"><b>Thu</b><span>Guitar Guild &amp; Ukulele Jam</span><em>3rd &amp; 4th Thu</em></div>
-        <div data-ws-day="5"><b>Fri</b><span>Live music</span><em>6:30–9:30 PM</em></div>
-        <div data-ws-day="6"><b>Sat</b><span>Live music</span><em>6:30–9:30 PM</em></div>
-        <div data-ws-day="0"><b>Sun</b><span>Bloody Mary Sunday</span><em>$5 mimosas &amp; Bloodys</em></div>
-      </div>
-      <p class="hh"><strong>Happy hour:</strong> 4–7 PM daily, 4 PM–close Tuesdays &amp; Wednesdays. Words &amp; Wine book club meets the 3rd Monday.</p>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <h2>Off the chalk menu</h2>
-      <div class="menu-board">
-        <div><h3>Starters</h3><ul><li><span>Fancy Fried Green Tomatoes</span></li><li><span>Smoked Fish Spread</span></li><li><span>Blue Crab Cakes</span></li><li><span>Southern Sampler</span></li></ul></div>
-        <div><h3>Burgers &amp; sandwiches</h3><ul><li><span>Original Whistle Stop Burger</span></li><li><span>Crab &amp; Shrimp Burger</span></li><li><span>Fresh Grouper Sandwich</span><i>market price</i></li><li><span>BLFGT, the ultimate BLT</span></li></ul></div>
-        <div><h3>From the bar</h3><ul><li><span>Green Tomato Bloody Mary</span></li><li><span>Key Lime Martini</span></li><li><span>Old Florida Mule</span></li><li><span>18 drafts on tap</span></li></ul></div>
-        <div><h3>Sweets</h3><ul><li><span>Key Lime Pie</span></li><li><span>Milkshakes &amp; malts</span><i>since the drive-in days</i></li><li><span>Bee Charmer Sundae</span></li></ul></div>
-      </div>
-      <p style="margin-top:30px"><a class="chalk-btn" href="../menu.html">Full menu</a></p>
-    </div>
-  </section>
-
-  <section class="story">
-    <div class="wrap">
-      <figure class="polaroid"><img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building on Main Street" loading="lazy" width="988" height="415"><figcaption>915 Main Street</figcaption></figure>
-      <div>
-        <h2>Written in chalk since 1995</h2>
-        <p>This corner started as Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand. Dawn fell for it in 1995 and bought it twice, the second time with Patrick in 2000.</p>
-        <p>The take-out window grew into 100-plus seats, a full bar and an open-air patio. Henry's milkshakes never left the menu.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <h2>Overheard on the patio</h2>
-      <div class="notes">
-        <blockquote>“Great spot to relax and listen to local music. Food and service were amazing.”<footer>Greg Bell, on Google</footer></blockquote>
-        <blockquote>“Excellent fried green tomatoes, great service with a hometown vibe.”<footer>Karl Sauer, on Google</footer></blockquote>
-        <blockquote>“The burgers were great… Excellent happy hour.”<footer>Kenneth Miller, on Google</footer></blockquote>
-      </div>
-    </div>
-  </section>
-
-  <section class="visit" id="visit">
-    <div class="wrap">
-      <h2>Come sit a while</h2>
       <div class="grid">
-        <div><h3>Where</h3><p>915 Main Street<br>Safety Harbor, FL 34695</p><p><a href="tel:+17277261956">(727) 726-1956</a></p></div>
-        <div><h3>When</h3><p>Sun–Thu 11 AM–9 PM<br>Fri–Sat 11 AM–10 PM</p></div>
-        <div><h3>Parties</h3><p>Birthdays, reunions and team dinners, with room for 100+ guests.</p></div>
+        <div>
+          <h2 id="vh">915 Main Street</h2>
+          <p>Safety Harbor, FL 34695</p>
+          <div class="ctas"><a class="btn hot" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL" data-magnetic>Get directions</a><a class="btn" href="tel:+17277261956" data-magnetic>(727) 726-1956</a></div>
+        </div>
+        <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM</p><p>Fri–Sat 11 AM–10 PM</p><p>Happy hour daily 4–7 PM</p></div>
+        <div><h3>Since 1995</h3><p>Before that, this corner was Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand. Henry's milkshakes are still on the menu.</p><p><a href="../about.html">Our story</a> · <a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a></p></div>
       </div>
-      <div class="actions">
-        <a class="chalk-btn fill" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Directions</a>
-        <a class="chalk-btn" href="../private-events.html">Book a private event</a>
-        <a class="chalk-btn" href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a>
-      </div>
+      <div class="foot"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div>
     </div>
   </section>
 </main>
-<footer class="site"><div class="wrap"><span>Whistle Stop Grill &amp; Bar, Safety Harbor since 1995</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div></footer>
+
+<script src="shared.js"></script>
+<script src="food.js"></script>
+<script src="fx.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { cats, art, layers } = WSFOOD;
+  const nav = document.getElementById("nav");
+  addEventListener("scroll", () => nav.classList.toggle("solid", scrollY > 40), { passive: true });
+
+  /* ---- the burger: seven real layers, stacked from the bottom bun up */
+  const order = [
+    ["topBun"], ["aioli", "Aioli", "r"], ["onion", "Onion", "r"], ["fgt", "Fried green tomato", "r"],
+    ["provolone", "Provolone", "r"], ["patty"], ["bottomBun"],
+  ];
+  const burger = document.getElementById("burger");
+  const stage = document.getElementById("stage");
+  const parts = order.map(([key, label, side], i) => {
+    const L = layers[key]();
+    const el = document.createElement("div");
+    el.className = "layer drop";
+    el.style.setProperty("--k", order.length - 1 - i);
+    el.innerHTML = L.svg;
+    burger.append(el);
+    let call = null;
+    if (label) {
+      call = document.createElement("div");
+      call.className = "callout " + side;
+      call.innerHTML = `<i></i><span>${label}</span>`;
+      stage.append(call);
+    }
+    return { el, h: L.h, call, side };
+  });
+  setTimeout(() => parts.forEach((p) => p.el.classList.remove("drop")), 2200);
+
+  // floating bits
+  const bits = [["seed", 8, 20, 4], ["pickle", 86, 18, 6], ["tom", 10, 76, 5.5], ["seed", 92, 62, 3.6], ["pickle", 20, 40, 7], ["seed", 74, 86, 4.4], ["tom", 88, 40, 6.2]];
+  const bitEls = bits.map(([k, x, y, t], i) => {
+    const b = document.createElement("i");
+    b.className = "bit " + k;
+    b.style.cssText = `left:${x}%;top:${y}%;--t:${t}s;animation-delay:${-i * 0.7}s`;
+    b.dataset.depth = (0.4 + (i % 3) * 0.35).toFixed(2);
+    stage.append(b);
+    return b;
+  });
+
+  let S = 2, explode = 0, rx = 0, ry = 0, trx = 0, try_ = 0, narrow = false, inView = true;
+  let GAPU = 30; // exploded gap in layer units (wider on phones so the labels fit between layers)
+  function layout() {
+    const r = stage.getBoundingClientRect();
+    narrow = r.width < 620;
+    GAPU = narrow ? 48 : 30;
+    stage.classList.toggle("narrow", narrow);
+    const stackU = parts.reduce((a, p) => a + p.h, 0) - 6 * 4;
+    parts.forEach((p) => { if (p.call) { p.cw = p.call.offsetWidth; p.ch = p.call.offsetHeight; } });
+    const maxCall = Math.max(...parts.filter((p) => p.call).map((p) => p.cw));
+    const room = narrow ? r.width * 0.8 / 2 : Math.min(r.width * 0.4, r.width * 0.6 - maxCall - 20);
+    S = Math.max(0.8, Math.min(room / 98, (r.height * 0.84) / (stackU + 6 * GAPU), 2.4));
+    parts.forEach((p) => { p.el.style.width = 200 * S + "px"; p.el.style.height = p.h * S + "px"; p.el.style.marginLeft = -100 * S + "px"; });
+    paint();
+  }
+  function paint() {
+    const e = FX.reduce ? 0.85 : explode;
+    const total = parts.reduce((a, p) => a + p.h, 0) - 6 * 4 + 6 * GAPU * e;
+    let y = -total / 2;
+    parts.forEach((p, i) => {
+      const mid = y + p.h / 2;
+      const wob = (i % 2 ? 1 : -1) * 5 * e;
+      const z = (3 - i) * 26 * e;
+      p.el.style.transform = `translate3d(0, ${(y * S).toFixed(1)}px, ${z.toFixed(1)}px) rotate(${wob.toFixed(2)}deg)`;
+      if (p.call) {
+        const show = FX.smooth(0.45, 0.8, e);
+        p.call.style.opacity = show.toFixed(3);
+        if (narrow) {
+          const gy = (y + p.h - 4 + (GAPU * e) / 2) * S;
+          p.call.style.transform = `translate(${(-p.cw / 2).toFixed(1)}px, ${(gy - p.ch / 2).toFixed(1)}px) scale(${(0.6 + 0.4 * show).toFixed(3)})`;
+        } else {
+          const dir = p.side === "r" ? 1 : -1;
+          const x = dir * (100 * S * 0.98 + 10);
+          p.call.style.transform = `translate(${(p.side === "r" ? x : x - p.cw).toFixed(1)}px, ${(mid * S - p.ch / 2).toFixed(1)}px) translateX(${(dir * (1 - show) * 30).toFixed(1)}px)`;
+        }
+      }
+      y += p.h - 4 + GAPU * e;
+    });
+    burger.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+  }
+  layout();
+  addEventListener("resize", layout);
+  const hint = document.querySelector(".hint");
+  FX.progress(document.getElementById("build"), "pin", (p) => { explode = FX.ease(FX.smooth(0.04, 0.62, p)); hint.style.opacity = (1 - explode * 2.5).toFixed(2); paint(); });
+  if (FX.fine && !FX.reduce) {
+    stage.closest(".pin").addEventListener("pointermove", (e) => {
+      const r = stage.getBoundingClientRect();
+      try_ = ((e.clientX - r.left) / r.width - 0.5) * 26;
+      trx = -((e.clientY - r.top) / r.height - 0.5) * 16;
+      bitEls.forEach((b) => (b.style.translate = `${(try_ * b.dataset.depth * 1.4).toFixed(1)}px ${(-trx * b.dataset.depth * 1.6).toFixed(1)}px`));
+    });
+  }
+  new IntersectionObserver(([e]) => (inView = e.isIntersecting)).observe(stage);
+  FX.loop((t) => {
+    if (!inView) return;
+    const k = 0.08;
+    rx += (trx + Math.sin(t * 0.9) * 3 - rx) * k;
+    ry += (try_ + Math.sin(t * 0.6) * 8 - ry) * k;
+    paint();
+  });
+
+  /* ---- ticker: real menu items and prices */
+  const items = cats.flatMap((c) => c.picks);
+  const html = items.map(([n, p]) => `<span>${n} <b>${p}</b></span>`).join("");
+  document.getElementById("ticker").innerHTML = html + html.replace(/<span>/g, '<span aria-hidden="true">');
+
+  /* ---- craving cards */
+  document.getElementById("cards").innerHTML = cats.map((c, i) => `
+    <article class="card" data-reveal data-tilt="9" style="--c:${c.color};--i:${i}">
+      <div class="in3d">
+        <div class="art">${art(c.art)}</div>
+        <h3>${c.name}</h3>
+        <p class="meta">${c.count}, from ${c.from}</p>
+        <ul>${c.picks.map(([n, p]) => `<li><span>${n}</span><b>${p}</b></li>`).join("")}</ul>
+        <a class="btn go" href="${c.href}">${c.cta}</a>
+        <span class="glare"></span>
+      </div>
+    </article>`).join("");
+
+  /* ---- the week */
+  const today = WS.today().dayIndex;
+  const order7 = [1, 2, 3, 4, 5, 6, 0];
+  document.getElementById("days").innerHTML = order7.map((d, i) => {
+    const w = WS.WEEK[d];
+    return `<div class="day${d === today ? " is-today" : ""}" data-reveal style="--i:${i}"><b>${w.short}</b><span>${w.title}</span></div>`;
+  }).join("");
+  document.querySelectorAll("#cards [data-reveal], #days [data-reveal], .crave h2").forEach(FX.reveal);
+  document.querySelectorAll("#cards [data-tilt]").forEach((el) => FX.tilt(el, 9));
+});
+</script>
 </body>
 </html>
