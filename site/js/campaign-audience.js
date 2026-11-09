@@ -165,7 +165,12 @@
     }));
   }
 
-  const PUBLIC_SHARE_BASE = "https://knight-logics.github.io/Whistle-Stop/";
+  const PUBLIC_SHARE_BASE =
+    typeof document !== "undefined" &&
+    document.querySelector('meta[name="ws-host"][content="cloudflare"]') &&
+    typeof location !== "undefined"
+      ? `${location.origin}/`
+      : "https://knight-logics.github.io/Whistle-Stop/";
 
   function resolveOutreachImageSrc(campaign, baseOverride) {
     if (campaign?.outreachImageData) return campaign.outreachImageData;

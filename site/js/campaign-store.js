@@ -7,7 +7,14 @@
   const API_BASE = "https://knightlogics.com/api/whistle-stop-campaigns";
   const LIVE_RUNTIME_URL =
     "https://knight-logics.github.io/Whistle-Stop/data/campaign-runtime.json";
-  const PUBLIC_SHARE_BASE = "https://knight-logics.github.io/Whistle-Stop/";
+  const GH_PAGES_SHARE_BASE = "https://knight-logics.github.io/Whistle-Stop/";
+  // On the Cloudflare version, share links, QR codes and emails point at this site (where signups work).
+  const PUBLIC_SHARE_BASE =
+    typeof document !== "undefined" &&
+    document.querySelector('meta[name="ws-host"][content="cloudflare"]') &&
+    typeof location !== "undefined"
+      ? `${location.origin}/`
+      : GH_PAGES_SHARE_BASE;
 
   let campaignsCache = null;
 
@@ -276,7 +283,49 @@
     }
   }
 
+  /** Cloudflare version: campaign signups live in the admin inbox (KV leads). */
+  async function cloudSignups() {
+    const res = await fetch(new URL("api/admin/leads", document.baseURI).href, {
+      credentials: "same-origin",
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error(`Inbox unavailable (${res.status})`);
+    const data = await res.json();
+    return (data.leads || [])
+      .filter((l) => l.kind === "campaign-signup" && l.campaignId)
+      .map((l) => {
+        const line = (label) =>
+          (String(l.message || "").split("\n").find((x) => x.startsWith(label + ": ")) || "").slice(label.length + 2);
+        return {
+          id: l.id,
+          campaignId: l.campaignId,
+          name: l.name,
+          email: l.email,
+          phone: l.phone || "",
+          role: line("Role"),
+          preferredNight: line("Preferred night"),
+          experience: line("Experience"),
+          notes: line("Notes"),
+          marketingConsent: line("Email updates") === "yes",
+          createdAt: l.receivedAt,
+          source: "cloudflare",
+        };
+      });
+  }
+
   async function syncRuntimeFromCloud() {
+    if (isCloudHost()) {
+      try {
+        const signups = await cloudSignups();
+        const base = runtimeCache || (await getRuntime(true));
+        const others = (base.signups || []).filter((s) => s.source !== "cloudflare" && !signups.some((c) => c.email === s.email && c.campaignId === s.campaignId));
+        runtimeCache = { ...base, signups: [...signups, ...others] };
+        writeLocalRuntime(runtimeCache);
+        return { ok: true, source: "cloudflare", count: signups.length };
+      } catch (err) {
+        return { ok: false, error: err.message };
+      }
+    }
     try {
       const data = await apiRequest("runtime", { method: "GET" });
       if (data.runtime) {
@@ -619,6 +668,9 @@
   }
 
   async function getServiceHealth() {
+    if (isCloudHost()) {
+      return { ok: true, cloudflare: true, signups: true, email: false };
+    }
     try {
       return await apiRequest("health", { method: "GET" });
     } catch (err) {

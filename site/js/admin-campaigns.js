@@ -626,7 +626,7 @@ window.WSAdminCampaigns = (function () {
         <strong>Campaign Calendar + Outreach</strong> — Plan interest-check campaigns, collect signups, run outreach like Knight Command Center, then promote to Events when ready.
       </div>
       <div class="admin-note ${health.ok ? "" : "admin-note--warning"}">
-        <strong>Campaign service:</strong> ${health.ok ? `online · private database ${health.database ? "ready" : "not configured"} · email ${health.email ? "ready" : "not configured"} · AI ${health.ai ? "configured (quota checked during discovery)" : "not configured"} · hourly trigger ${health.scheduler ? "active" : "not active"}` : "offline — signups and email sends fail honestly; nothing is recorded as delivered."}
+        <strong>Campaign service:</strong> ${health.cloudflare ? "signups from the campaign page arrive in Messages and are counted here (Sync signups refreshes). Outreach email sending is not connected on this version yet." : health.ok ? `online · private database ${health.database ? "ready" : "not configured"} · email ${health.email ? "ready" : "not configured"} · AI ${health.ai ? "configured (quota checked during discovery)" : "not configured"} · hourly trigger ${health.scheduler ? "active" : "not active"}` : "offline — signups and email sends fail honestly; nothing is recorded as delivered."}
       </div>
       <div class="ws-campaign-layout">
         ${await renderList()}
