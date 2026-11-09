@@ -14,6 +14,27 @@ window.WSAdminGUI = (function () {
     return `<div class="admin-field"><label>${label}</label>${html}</div>`;
   }
 
+  /**
+   * Editor modals hand their HTML back to hidden panel blocks via innerHTML on close.
+   * innerHTML only carries attributes, so copy what staff typed (the live .value,
+   * checked and selected state) into attributes first, or the edits are lost.
+   */
+  function freezeFieldValues(root) {
+    if (!root) return root;
+    root.querySelectorAll("input, textarea, select").forEach((el) => {
+      if (el.tagName === "TEXTAREA") {
+        el.textContent = el.value;
+      } else if (el.tagName === "SELECT") {
+        [...el.options].forEach((o) => o.toggleAttribute("selected", o.selected));
+      } else if (el.type === "checkbox" || el.type === "radio") {
+        el.toggleAttribute("checked", el.checked);
+      } else if (el.type !== "file") {
+        el.setAttribute("value", el.value);
+      }
+    });
+    return root;
+  }
+
   const EVENT_CATEGORIES = [
     ["live-music", "Live music"],
     ["community", "Community"],
@@ -952,7 +973,7 @@ window.WSAdminGUI = (function () {
         onClose: () => {
           const modalRoot = document.getElementById("admin-modal-root");
           const body = modalRoot?.querySelector(".admin-modal__body");
-          if (body) block.innerHTML = body.innerHTML;
+          if (body) block.innerHTML = freezeFieldValues(body).innerHTML;
           bindImagePickers(panel);
           syncEventsPageFromScope();
           pushEventsDraft(true);
@@ -2453,7 +2474,7 @@ window.WSAdminGUI = (function () {
             ? modalBody.querySelector('[data-field="heroes.index.eyebrow"]')
             : modalBody.querySelector("#gallery-rows, #sig-rows, #faq-rows, #homepage-promo-list, #homepage-promo-editor");
         if (isOpen) {
-          block.innerHTML = modalBody.innerHTML;
+          block.innerHTML = freezeFieldValues(modalBody).innerHTML;
           break;
         }
       }
@@ -2605,7 +2626,7 @@ window.WSAdminGUI = (function () {
           onClose: () => {
             const modalRoot = document.getElementById("admin-modal-root");
             const body = modalRoot?.querySelector(".admin-modal__body");
-            if (body) block.innerHTML = body.innerHTML;
+            if (body) block.innerHTML = freezeFieldValues(body).innerHTML;
             bindPhotoGroups(panel, images, () => scheduleHomepagePreview(false));
             bindImagePickers(panel);
             bindRemove(panel);
@@ -3049,7 +3070,7 @@ window.WSAdminGUI = (function () {
         },
         onClose: () => {
           const body = document.getElementById("admin-modal-root")?.querySelector(".admin-modal__body");
-          if (body) block.innerHTML = body.innerHTML;
+          if (body) block.innerHTML = freezeFieldValues(body).innerHTML;
           bindPhotoGroups(panel, images, () => schedulePagePreview(false));
           bindImagePickers(panel);
           bindRemove(panel);
@@ -3070,7 +3091,7 @@ window.WSAdminGUI = (function () {
         onMount: (root) => bindPhotoGroups(root, images, () => schedulePagePreview(false)),
         onClose: () => {
           const body = document.getElementById("admin-modal-root")?.querySelector(".admin-modal__body");
-          if (body) block.innerHTML = body.innerHTML;
+          if (body) block.innerHTML = freezeFieldValues(body).innerHTML;
           syncHeroKey(heroKey);
           schedulePagePreview(true);
         },
