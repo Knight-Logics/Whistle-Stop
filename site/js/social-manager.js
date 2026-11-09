@@ -1059,9 +1059,11 @@ window.WSSocial = (function () {
           const canPost = bridgeAuthReady(config);
           const keyNote =
             (isCloud || viaTunnel) && !canPost
-              ? ` Confirm admin password when posting — sign out and sign in again if prompted.`
+              ? CLOUD_HOST
+                ? ` The first post in a session asks for the Social Host posting password.`
+                : ` Confirm admin password when posting — sign out and sign in again if prompted.`
               : "";
-          const graphNote = " Facebook Page and X remain available through the cloud fallback.";
+          const graphNote = CLOUD_HOST ? "" : " Facebook Page and X remain available through the cloud fallback.";
           if (viaTunnel) {
             statusEl.innerHTML = `<strong>Any-device posting ready — direct tunnel from this device.</strong> Full five-platform demo including your PNG on Google.${graphNote}${keyNote}`;
           } else if (isCloud && cloudRemoteBridge) {
@@ -1078,7 +1080,9 @@ window.WSSocial = (function () {
           statusEl.innerHTML = `<strong>Local bridge blocked on HTTPS.</strong> Use the live admin at <a href="${LIVE_ADMIN_URL}" target="_blank" rel="noopener">${LIVE_ADMIN_URL}</a> — cloud bridge handles posting.`;
         } else {
           const isCloud = !isLocalBridge(bridgeUrl(config));
-          statusEl.innerHTML = isCloud
+          statusEl.innerHTML = CLOUD_HOST
+            ? `<strong>Social Host offline.</strong> Posting needs the Social Host PC switched on with its tunnel running. Nothing is sent while it is offline; the rest of the admin works normally.`
+            : isCloud
             ? `<strong>Knight Command connection offline.</strong> This device does not need an installation. Check the cloud bridge, then restore the one designated Windows <a href="downloads/social-host.html" target="_blank" rel="noopener">Social Host</a>.`
             : `<strong>Bridge offline.</strong> Run <code>START-HOST.ps1</code> or <code>START-DEMO.ps1</code> on this PC.`;
         }
