@@ -117,7 +117,7 @@ window.WSSocial = (function () {
     }
     const password = window.prompt(
       window.WSConfig?.isCloud?.()
-        ? "Enter the Social Host posting password (the one set on the posting PC).\n\nYou only need to do this once per browser session."
+        ? "Social Host password\n\nThis is the shared Whistle Stop staff password used for social posting. It is NOT your computer's Windows password.\n\nYou only need to enter it once per browser tab."
         : "Confirm your admin password to authorize posting from this device.\n\n(Your session was missing posting credentials — this is a one-time step.)"
     );
     if (!password) return false;
@@ -350,7 +350,9 @@ window.WSSocial = (function () {
     if (!res.ok || data.ok === false) {
       console.error("[WSSocial] post failed", { status: res.status, debug, response: data });
       const detail = data.debug ? ` (${JSON.stringify(data.debug)})` : "";
-      throw new Error((data.error || `Post failed (${res.status})`) + detail);
+      const err = new Error((data.error || `Post failed (${res.status})`) + detail);
+      err.status = res.status;
+      throw err;
     }
     console.info("[WSSocial] post ok", { results: data.results });
     return data;
@@ -1411,6 +1413,16 @@ window.WSSocial = (function () {
         setMediaPreview("");
         updateCharCount();
       } catch (err) {
+        if (
+          CLOUD_HOST &&
+          (err.status === 401 || err.status === 403 || /password is incorrect|unauthori[sz]ed/i.test(err.message || ""))
+        ) {
+          // Wrong Social Host password: forget it so the next "Post now" asks again.
+          window.WSConfig?.setSocialKey?.("");
+          resultsEl.innerHTML = `<p class="social-error">That Social Host password was not accepted, so nothing was posted.</p>
+            <p class="social-field-hint">Click <strong>Post now</strong> again and enter the shared Whistle Stop staff password for social posting (not your computer's Windows password).</p>`;
+          return;
+        }
         const isCloud = bridgeOnline && !isLocalBridge(bridgeUrl(config));
         const logHint = bridgeOnline
           ? isCloud
