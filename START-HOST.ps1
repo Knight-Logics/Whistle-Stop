@@ -15,7 +15,7 @@ Write-Host ""
 Write-Host "=== Whistle Stop Social Host ===" -ForegroundColor Cyan
 Write-Host "This PC becomes the Playwright host for LinkedIn / Nextdoor / FB groups." -ForegroundColor White
 Write-Host "Keep this machine awake and the bridge/tunnel windows open." -ForegroundColor DarkGray
-Write-Host "Admin (any device): https://knight-logics.github.io/Whistle-Stop/admin.html" -ForegroundColor DarkGray
+Write-Host "Admin (any device): https://whistle-stop.knightlogics.workers.dev/admin.html" -ForegroundColor DarkGray
 Write-Host ""
 
 if (Test-Path $mainHost) {

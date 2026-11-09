@@ -11,7 +11,7 @@ try {
 }
 
 $bridgePort = 8787
-$cloudApi = "https://knightlogics.com/api/whistle-stop-social"
+$siteHealth = "https://whistle-stop.knightlogics.workers.dev/api/health"
 $localBridge = "http://127.0.0.1:$bridgePort"
 $tunnelUrl = "https://ws-social.knightlogics.com"
 $logPath = $roots.LogPath
@@ -63,9 +63,9 @@ $results += Test-Step "Tunnel ($tunnelUrl)" {
     @{ Ok = $false; Detail = "reachable but full five-platform preflight failed" }
 }
 
-$results += Test-Step "Cloud health" {
-    $h = Invoke-RestMethod -Uri "${cloudApi}?route=health" -TimeoutSec 15
-    if ($h.ok) { return @{ Ok = $true; Detail = "Facebook=$($h.facebook) X=$($h.x) fallback ready" } }
+$results += Test-Step "Website + admin (Cloudflare)" {
+    $h = Invoke-RestMethod -Uri $siteHealth -TimeoutSec 15
+    if ($h.ok) { return @{ Ok = $true; Detail = "whistle-stop.knightlogics.workers.dev is up" } }
     @{ Ok = $false; Detail = "down" }
 }
 

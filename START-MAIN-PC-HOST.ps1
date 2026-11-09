@@ -3,7 +3,7 @@
 $ErrorActionPreference = "Stop"
 
 $GrowthDeploy = "E:\KnightLogics-Growth-System\Social\WhistleStop\deploy"
-$liveAdmin = "https://knight-logics.github.io/Whistle-Stop/admin.html"
+$liveAdmin = "https://whistle-stop.knightlogics.workers.dev/admin.html"
 
 Write-Host "=== Whistle Stop - main PC host mode ===" -ForegroundColor Cyan
 Write-Host "Presentation laptop: open $liveAdmin only (no scripts there)" -ForegroundColor White
@@ -31,15 +31,11 @@ try {
 }
 
 try {
-    $cloud = Invoke-RestMethod -Uri "https://knightlogics.com/api/whistle-stop-social/health" -TimeoutSec 20
-    if ($cloud.remoteBridge) {
-        Write-Host "  Vercel sees bridge: OK (full poster from any device)" -ForegroundColor Green
-    } else {
-        Write-Host "  Vercel sees bridge: waiting (DNS may need 5-15 min after first setup)" -ForegroundColor Yellow
-        Write-Host "  ws-social works locally? If yes, cloud will catch up shortly." -ForegroundColor DarkGray
-    }
+    $site = Invoke-RestMethod -Uri "https://whistle-stop.knightlogics.workers.dev/api/health" -TimeoutSec 20
+    if ($site.ok) { Write-Host "  Website + admin (Cloudflare): OK" -ForegroundColor Green }
+    else { Write-Host "  Website + admin (Cloudflare): unexpected reply" -ForegroundColor Yellow }
 } catch {
-    Write-Host "  Cloud health: FAIL" -ForegroundColor Red
+    Write-Host "  Website + admin (Cloudflare): FAIL" -ForegroundColor Red
 }
 
 Write-Host ""

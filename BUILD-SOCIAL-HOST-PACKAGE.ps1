@@ -101,7 +101,7 @@ Quick start
      (If blocked: Unblock-File .\START-HOST.ps1)
   3. Keep the bridge + tunnel windows open and the PC awake
   4. On any device open:
-     https://knight-logics.github.io/Whistle-Stop/admin.html
+     https://whistle-stop.knightlogics.workers.dev/admin.html
      Sign in → Social Poster → post
 
 Requirements
@@ -116,7 +116,7 @@ Notes
   - Before a venue pitch, run TEST-SOCIAL-PREFLIGHT.ps1 -Strict on the host PC
 
 Admin bookmark (correct URL)
-  https://knight-logics.github.io/Whistle-Stop/admin.html
+  https://whistle-stop.knightlogics.workers.dev/admin.html
   (not /admin/ and not /site/admin.html)
 '@ | Set-Content -Path (Join-Path $root "README.txt") -Encoding UTF8
 
@@ -134,7 +134,7 @@ Write-Host ""
 Write-Host "=== Whistle Stop Social Host (package) ===" -ForegroundColor Cyan
 Write-Host "Unzipped at: $here" -ForegroundColor DarkGray
 Write-Host "Growth root: $env:KL_GROWTH_ROOT" -ForegroundColor DarkGray
-Write-Host "Admin: https://knight-logics.github.io/Whistle-Stop/admin.html" -ForegroundColor DarkGray
+Write-Host "Admin: https://whistle-stop.knightlogics.workers.dev/admin.html" -ForegroundColor DarkGray
 Write-Host ""
 
 $presentation = Join-Path $here "START-PRESENTATION.ps1"

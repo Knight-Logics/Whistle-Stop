@@ -1,4 +1,6 @@
 # Whistle Stop LIVE presentation — works from flash drive (D:) or desktop (E:)
+# The website and admin run on Cloudflare (whistle-stop.knightlogics.workers.dev) and need nothing from this PC.
+# This script only starts the Social Host (bridge + tunnel) used by the Social Poster tab.
 # MAIN PC HOST (recommended): run START-MAIN-PC-HOST.ps1 on always-on PC; laptop = browser only.
 $ErrorActionPreference = "Stop"
 
@@ -9,11 +11,12 @@ $bridgeRoot = $roots.BridgeRoot
 $tunnelScript = $roots.TunnelScript
 $tunnelSetup = $roots.TunnelSetup
 $repoRoot = $roots.RepoRoot
-$liveAdmin = "https://knight-logics.github.io/Whistle-Stop/admin.html"
+$liveSite = "https://whistle-stop.knightlogics.workers.dev"
+$liveAdmin = "$liveSite/admin.html"
 $bridgePort = 8787
 $localBridge = "http://127.0.0.1:$bridgePort"
 $tunnelUrl = "https://ws-social.knightlogics.com"
-$cloudHealth = "https://knightlogics.com/api/whistle-stop-social/health"
+$siteHealth = "$liveSite/api/health"
 
 $env:KL_GROWTH_ROOT = $roots.GrowthRoot
 $env:WS_ADMIN_PASSWORD_HASH = "400c226817e7e87a668c1988b211de97430bf1560be7e57a5c0577a6c76c5065"
@@ -30,7 +33,7 @@ function Test-PortInUse([int]$Port) {
 
 function Test-Internet {
     try {
-        $null = Invoke-RestMethod -Uri $cloudHealth -TimeoutSec 12
+        $null = Invoke-RestMethod -Uri $siteHealth -TimeoutSec 12
         return $true
     } catch {
         return $false
@@ -58,7 +61,7 @@ Write-Host "=== Whistle Stop — live presentation ===" -ForegroundColor Cyan
 Write-Host "Growth System: $($roots.GrowthRoot)" -ForegroundColor DarkGray
 Write-Host "Drive:         $($roots.DriveLetter):" -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "TWO layers: [1] Cloud API (knightlogics.com)  [2] This PC bridge + tunnel (Playwright)" -ForegroundColor White
+Write-Host "TWO layers: [1] Website + admin on Cloudflare  [2] Social Host on this PC (bridge + tunnel, Playwright)" -ForegroundColor White
 Write-Host ""
 
 if (-not (Test-Internet)) {
@@ -110,10 +113,6 @@ if (Test-Path $tunnelScript) {
     } -MaxSeconds 120
 }
 
-$cloudOk = Wait-ForUrl "Cloud sees this PC (remoteBridge=true)" {
-    $h = Invoke-RestMethod -Uri $cloudHealth -TimeoutSec 15
-    [bool]$h.remoteBridge
-} -MaxSeconds 60
 
 Write-Host ""
 Write-Host "========== STATUS ==========" -ForegroundColor White
@@ -121,10 +120,9 @@ function Show-Light($ok, $label) {
     if ($ok) { Write-Host "  [GREEN]  $label" -ForegroundColor Green }
     else { Write-Host "  [RED]    $label" -ForegroundColor Red }
 }
-Show-Light $true "Cloud API"
+Show-Light $true "Website + admin (Cloudflare)"
 Show-Light $localOk "Local bridge (:8787)"
 Show-Light $tunnelOk "Tunnel (ws-social)"
-Show-Light $cloudOk "Full poster linked"
 Write-Host "============================" -ForegroundColor White
 
 if (-not $tunnelOk) {
@@ -136,20 +134,20 @@ if (-not $tunnelOk) {
     }
 }
 
-if ($localOk -and $tunnelOk -and $cloudOk) {
+if ($localOk -and $tunnelOk) {
     Write-Host ""
     Write-Host "FULL POSTER READY" -ForegroundColor Green
     & (Join-Path $repoRoot "TEST-SOCIAL-PREFLIGHT.ps1")
 } elseif ($localOk) {
     Write-Host ""
-    Write-Host "PARTIAL — FB/X/GBP via cloud only until tunnel is green." -ForegroundColor Yellow
+    Write-Host "PARTIAL — Social Poster can only post from this PC until the tunnel is green. Website and admin are unaffected." -ForegroundColor Yellow
 }
 
 Start-Process $liveAdmin
 Write-Host ""
 Write-Host "Admin: $liveAdmin  |  Login: staff password (not stored in this repo)" -ForegroundColor Cyan
 Write-Host "Logs:  $($roots.LogPath)" -ForegroundColor DarkGray
-Write-Host "Keep bridge + tunnel windows open during the pitch." -ForegroundColor White
+Write-Host "Keep bridge + tunnel windows open during the pitch (only needed for social posting)." -ForegroundColor White
 Write-Host ""
 
-if (-not ($localOk -and $tunnelOk -and $cloudOk)) { exit 1 }
+if (-not ($localOk -and $tunnelOk)) { exit 1 }
