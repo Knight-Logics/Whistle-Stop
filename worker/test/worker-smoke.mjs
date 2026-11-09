@@ -171,6 +171,10 @@ r = await call("/api/forms/campaign-signup", {
   body: { campaignTitle: "D&D Night", signup: { campaignId: "dnd", name: "Smoke Player", email: "player@example.com", role: "player", preferredNight: "Thursday", marketingConsent: true } },
 });
 assert.equal(r.status, 200, "campaign signup accepted: " + JSON.stringify(r.data));
+const countAfter = r.data.count;
+r = await call("/api/forms/campaign-count?campaign=dnd");
+assert.equal(r.status, 200);
+assert.equal(r.data.count, countAfter, "public campaign count matches");
 r = await call("/api/forms/campaign-signup", { method: "POST", body: { signup: { name: "No Email" } } });
 assert.equal(r.status, 400, "campaign signup needs an email");
 if (firstRun) {

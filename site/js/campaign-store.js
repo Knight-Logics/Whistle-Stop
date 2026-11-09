@@ -143,6 +143,27 @@
     } catch {
       base = { version: 1, signups: [], outreachLeads: [], emailLog: [] };
     }
+    if (isCloudHost()) {
+      // Cloudflare version: live public counts from the Worker replace the July demo numbers.
+      const counts = {};
+      try {
+        const ids = ((await getCampaigns()).campaigns || []).map((c) => c.id).filter(Boolean);
+        await Promise.all(
+          ids.map(async (id) => {
+            const res = await fetch(
+              new URL(`api/forms/campaign-count?campaign=${encodeURIComponent(id)}`, document.baseURI).href,
+              { cache: "no-store" }
+            );
+            const data = res.ok ? await res.json() : null;
+            counts[id] = Number(data?.count) || 0;
+          })
+        );
+      } catch (_) {}
+      base = { ...base, signupCounts: counts };
+      runtimeCache = mergeRuntime(base, readLocalRuntime());
+      runtimeCache.signupCounts = counts;
+      return structuredClone(runtimeCache);
+    }
     const local = readLocalRuntime();
     runtimeCache = mergeRuntime(base, local);
     return structuredClone(runtimeCache);

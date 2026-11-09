@@ -76,7 +76,25 @@ async function handleCampaignSignup(request, env) {
     country: request.cf?.country || "",
     page: (request.headers.get("referer") || "").slice(0, 200),
   });
-  return json({ ok: true, signup: { ...s, name, email } });
+  const count = await bumpCampaignCount(env, text(s.campaignId, 80));
+  return json({ ok: true, count, signup: { ...s, name, email } });
+}
+
+const countKey = (campaignId) => `count:campaign:${campaignId}`;
+
+async function bumpCampaignCount(env, campaignId) {
+  if (!campaignId) return null;
+  const next = (Number(await env.CONTENT.get(countKey(campaignId))) || 0) + 1;
+  await env.CONTENT.put(countKey(campaignId), String(next));
+  return next;
+}
+
+/** GET /api/forms/campaign-count?campaign=<id> — public aggregate for the progress bar (no names). */
+export async function handleCampaignCount(url, env) {
+  const id = String(url.searchParams.get("campaign") || "").trim().slice(0, 80);
+  if (!/^[a-z0-9-]+$/i.test(id)) return errorJson("Unknown campaign.", 404);
+  const count = Number(await env.CONTENT.get(countKey(id))) || 0;
+  return json({ ok: true, campaign: id, count });
 }
 
 /** POST /api/forms/:kind (multipart or urlencoded form) */

@@ -24,7 +24,7 @@ import {
   handleDeleteUser,
   handleChangePassword,
 } from "./staff.js";
-import { handleFormSubmit, handleListLeads, handleDeleteLead } from "./forms.js";
+import { handleFormSubmit, handleListLeads, handleDeleteLead, handleCampaignCount } from "./forms.js";
 import { menuHtml, upcomingEventsHtml } from "./prerender.js";
 
 const PAGES = [
@@ -180,6 +180,9 @@ export default {
 
     try {
       if (path.startsWith("/api/admin/")) return await handleAdminApi(request, env, path);
+      if (path === "/api/forms/campaign-count" && request.method === "GET") {
+        return await handleCampaignCount(url, env);
+      }
       if (path.startsWith("/api/forms/") && request.method === "POST") {
         return await handleFormSubmit(request, env, path.slice("/api/forms/".length));
       }
