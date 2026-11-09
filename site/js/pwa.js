@@ -9,6 +9,24 @@
   const hadServiceWorkerController = Boolean(navigator.serviceWorker?.controller);
 
   let deferredInstall = null;
+  // Guests see the install tip only after they show interest (scrolled past the hero or
+  // stayed 25 s), so it never covers the hero on first load. Staff see it right away.
+  let engaged = isAdmin;
+  function markEngaged() {
+    if (engaged) return;
+    engaged = true;
+    showInstallBanner(false);
+  }
+  if (!engaged) {
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (window.scrollY > window.innerHeight * 0.9) markEngaged();
+      },
+      { passive: true }
+    );
+    window.setTimeout(markEngaged, 25000);
+  }
 
   if (!document.querySelector('link[rel="manifest"]')) {
     const link = document.createElement("link");
@@ -136,7 +154,7 @@
 
   function showInstallBanner(force) {
     if (isStandalone() || !isMobile() || isPreviewEmbed()) return;
-    if (!force && isDismissed()) return;
+    if (!force && (isDismissed() || !engaged)) return;
     if (document.getElementById("ws-install-banner")) return;
 
     const ios = isIOS();

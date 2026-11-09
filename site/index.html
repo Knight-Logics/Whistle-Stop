@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="assets/gallery/WSSunset-480.webp" as="image" type="image/webp" fetchpriority="high" />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <link rel="stylesheet" href="css/main.css?v=42" />
+  <link rel="stylesheet" href="css/main.css?v=43" />
   <link rel="preload" href="css/reviews.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <style>
     .hero .reveal,
@@ -291,6 +291,7 @@
           <a href="events.html" class="btn btn-outline">What's Happening</a>
           <a href="tel:+17277261956" class="btn btn-outline">(727) 726-1956</a>
         </div>
+        <div class="today-strip" id="today-strip" hidden aria-live="polite"></div>
       </div>
     </section>
 
@@ -438,6 +439,7 @@
   <script src="js/main.js?v=11" defer></script>
   <script src="js/promos.js?v=12" defer></script>
   <script src="js/home-content.js?v=11" defer></script>
+  <script src="js/today-strip.js?v=1" defer></script>
   <script src="js/reviews.js" defer></script>
   <script>
     window.addEventListener("DOMContentLoaded", () => {
