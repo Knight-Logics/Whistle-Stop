@@ -1,4 +1,4 @@
-const CACHE_VERSION = "ws-public-v4";
+const CACHE_VERSION = "ws-public-v5";
 const OFFLINE_URL = new URL("offline.html", self.registration.scope).href;
 const PUBLIC_SHELL = [
   "index.html",
@@ -51,7 +51,11 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          if (response.ok) caches.open(CACHE_VERSION).then((cache) => cache.put(request, response.clone()));
+          if (response.ok) {
+            // Clone now: the page reads the body right away, and a later clone() throws.
+            const copy = response.clone();
+            caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy)).catch(() => {});
+          }
           return response;
         })
         .catch(async () => (await caches.match(request)) || caches.match(OFFLINE_URL))
@@ -63,7 +67,11 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          if (response.ok) caches.open(CACHE_VERSION).then((cache) => cache.put(request, response.clone()));
+          if (response.ok) {
+            // Clone now: the page reads the body right away, and a later clone() throws.
+            const copy = response.clone();
+            caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy)).catch(() => {});
+          }
           return response;
         })
         .catch(() => caches.match(request))
@@ -75,7 +83,11 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.match(request).then((cached) => {
         const network = fetch(request).then((response) => {
-          if (response.ok) caches.open(CACHE_VERSION).then((cache) => cache.put(request, response.clone()));
+          if (response.ok) {
+            // Clone now: the page reads the body right away, and a later clone() throws.
+            const copy = response.clone();
+            caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy)).catch(() => {});
+          }
           return response;
         });
         return cached || network;

@@ -273,6 +273,40 @@ window.WSSocial = (function () {
   }
 
   /** Host attachment on the Social Host so Google's API can fetch a public JPG URL. */
+  /** Google only takes still photos: turn a GIF/WebP into a JPG (first frame) before hosting it for GBP. */
+  async function stillJpegForGoogle(dataUrl) {
+    if (!/^data:image\/(gif|webp)/i.test(dataUrl || "")) return dataUrl;
+    try {
+      const img = new Image();
+      img.src = dataUrl;
+      await img.decode();
+      const scale = Math.min(1, 1600 / Math.max(img.naturalWidth || 1, img.naturalHeight || 1));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL("image/jpeg", 0.88);
+    } catch (err) {
+      console.warn("[WSSocial] could not make a JPG for Google", err);
+      return dataUrl;
+    }
+  }
+
+  /** Plain-language reason for a failed per-platform post. */
+  function explainPostError(err) {
+    const msg = String(err?.message || err || "");
+    if (err instanceof TypeError || /failed to fetch|networkerror|load failed/i.test(msg)) {
+      return "No reply within Cloudflare's 100-second limit. The Social Host may still be finishing this post, so check the account before trying again.";
+    }
+    if (/invalid cli output|invalid cli json/i.test(msg)) {
+      return "The Social Host ran this post but could not read the poster's report. Check the account; it has most likely gone out.";
+    }
+    return msg || "Post failed.";
+  }
+
   async function uploadGbpSourceUrl(config, mediaDataUrl, { browserTunnelOnline, cloudRemoteBridge } = {}) {
     if (!mediaDataUrl || /^data:video\//i.test(mediaDataUrl)) {
       return { url: "", usedFallback: false, note: "" };
@@ -1337,7 +1371,7 @@ window.WSSocial = (function () {
       let gbpSourceUrl = "";
       let gbpMediaNote = "";
       if (selected.includes("gbp") && mediaDataUrl && !/^data:video\//i.test(mediaDataUrl)) {
-        const gbpMedia = await uploadGbpSourceUrl(config, mediaDataUrl, {
+        const gbpMedia = await uploadGbpSourceUrl(config, await stillJpegForGoogle(mediaDataUrl), {
           browserTunnelOnline,
           cloudRemoteBridge,
         });
@@ -1359,7 +1393,47 @@ window.WSSocial = (function () {
 
       try {
         let results;
-        if (bridgeOnline) {
+        if (bridgeOnline && CLOUD_HOST) {
+          // One platform per request: each run stays under Cloudflare's 100-second limit,
+          // and one platform's problem doesn't hide the others' results.
+          results = [];
+          const labelFor = (pid) => platforms.find((x) => x.id === pid)?.label || pid;
+          for (let i = 0; i < selected.length; i++) {
+            const pid = selected[i];
+            resultsEl.innerHTML = `
+              <p>Posting to <strong>${esc(labelFor(pid))}</strong>… (${i + 1} of ${selected.length})</p>
+              ${results.length ? `<ul class="social-results-list">${results.map(resultRow).join("")}</ul>` : ""}`;
+            try {
+              const data = await postToBridge(config, { ...payload, platforms: [pid] }, {
+                tunnelOnline,
+                cloudRemoteBridge,
+                browserTunnelOnline,
+                preflight: preflightData,
+                platformCatalog: platforms,
+              });
+              const rows = (data.results || []).length
+                ? data.results
+                : [{ platform: pid, label: labelFor(pid), status: "ok", message: "Posted." }];
+              results.push(...rows);
+            } catch (err) {
+              if (err.status === 401 || err.status === 403 || /password is incorrect|unauthori[sz]ed/i.test(err.message || "")) {
+                throw err;
+              }
+              console.warn("[WSSocial] platform post failed", pid, err);
+              results.push({ platform: pid, label: labelFor(pid), status: "error", error: explainPostError(err) });
+            }
+          }
+          const entry = {
+            id: `post_${Date.now()}`,
+            createdAt: new Date().toISOString(),
+            text: text.slice(0, 500),
+            platforms: selected,
+            results,
+          };
+          config.postHistory = [entry, ...(config.postHistory || [])].slice(0, 50);
+          if (window.WSConfig) WSConfig.save("socialManager", config);
+          renderHistory(config.postHistory);
+        } else if (bridgeOnline) {
           const data = await postToBridge(config, payload, {
             tunnelOnline,
             cloudRemoteBridge,
