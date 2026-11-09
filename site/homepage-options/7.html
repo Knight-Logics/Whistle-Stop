@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 7 · Depot Board · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Share+Tech+Mono&family=Work+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #0f4d3a;
+    --green-2: #0b3b2c;
+    --amber: #ffb627;
+    --paper: #efe3c4;
+    --brick: #a8382a;
+    --cream: #f7f2e6;
+    --board: #000;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--green); color: var(--cream); font: 400 18px/1.6 "Work Sans", system-ui, sans-serif; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; height: auto; }
+  :focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+  .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
+  .slab { font-family: "Alfa Slab One", Rockwell, serif; font-weight: 400; }
+  h2 { margin: 0 0 18px; font: 400 clamp(34px, 4.2vw, 54px)/1.05 "Alfa Slab One", serif; }
+
+  /* Ticket buttons */
+  .ticket { position: relative; display: inline-block; padding: 14px 28px; background: var(--paper); color: var(--green-2); font-weight: 700; text-decoration: none;
+    -webkit-mask: radial-gradient(circle 9px at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 9px at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+            mask: radial-gradient(circle 9px at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 9px at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat; }
+  .ticket:hover { background: #fff3d1; }
+  .ticket.amber { background: var(--amber); color: #2a1a00; }
+
+  /* Nav */
+  .nav .wrap { display: flex; align-items: center; gap: 22px; padding: 16px 0; }
+  .nav .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; }
+  .nav .brand img { width: 44px; height: 44px; }
+  .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 500; }
+  .nav ul a { text-decoration: none; }
+  .nav ul a:hover { color: var(--amber); }
+
+  /* Station sign */
+  .hero { padding: 30px 0 80px; }
+  .sign { position: relative; display: inline-block; padding: 22px 46px 18px; background: var(--green-2); border: 6px solid var(--cream); border-radius: 14px; box-shadow: 0 0 0 6px var(--green-2), 0 24px 40px rgba(0,0,0,.35); }
+  .sign::before, .sign::after { content: ""; position: absolute; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: var(--cream); }
+  .sign::before { left: 14px; } .sign::after { right: 14px; }
+  .sign h1 { margin: 0; font: 400 clamp(52px, 7vw, 100px)/.95 "Alfa Slab One", serif; letter-spacing: .01em; }
+  .sign p { margin: 6px 0 0; font-weight: 700; color: var(--amber); font-size: clamp(16px, 1.6vw, 22px); }
+  .hero .intro { display: grid; grid-template-columns: auto minmax(300px, 1fr); gap: 40px; align-items: end; }
+  .hero .intro p { max-width: 38ch; font-size: 20px; margin: 0 0 6px; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 18px; }
+
+  /* Departure board */
+  .board { margin-top: 46px; background: var(--board); border-radius: 12px; padding: 22px 22px 16px; box-shadow: inset 0 0 0 2px #222, 0 30px 60px rgba(0,0,0,.4); }
+  .board header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 0 4px 14px; color: var(--amber); }
+  .board header h2 { margin: 0; font: 400 26px/1 "Alfa Slab One", serif; color: var(--cream); }
+  .board header span { font: 400 18px/1 "Share Tech Mono", monospace; }
+  .rows { display: grid; gap: 6px; }
+  .row { display: grid; grid-template-columns: 110px 1.6fr 1fr 1fr; gap: 6px; }
+  .row.head { color: #8f8a7c; font: 400 15px/1 "Share Tech Mono", monospace; padding: 0 4px 4px; }
+  .cell { display: flex; gap: 2px; flex-wrap: wrap; min-height: 42px; align-items: center; }
+  .cell .f { display: inline-grid; place-items: center; width: .82em; height: 1.35em; background: #1b1b1b; border-radius: 3px; color: var(--amber); font: 400 26px/1 "Share Tech Mono", monospace; background-image: linear-gradient(180deg, #232323 0 49%, #000 49% 51%, #161616 51%); }
+  .cell .f.sp { background: transparent; }
+  .row.is-today .cell .f { color: #fff; background-image: linear-gradient(180deg, #3a2a00 0 49%, #000 49% 51%, #2a1f00 51%); }
+  .board footer { padding: 14px 4px 2px; color: #8f8a7c; font: 400 15px/1.4 "Share Tech Mono", monospace; }
+
+  /* Menu tickets */
+  section { padding: 84px 0; }
+  .menu { background: var(--cream); color: var(--green-2); }
+  .stubs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 26px; }
+  .stub { display: grid; grid-template-columns: 1fr 70px; background: var(--paper); border-radius: 6px; overflow: hidden; }
+  .stub div { padding: 20px 22px; }
+  .stub h3 { margin: 0 0 8px; font: 400 24px/1.1 "Alfa Slab One", serif; color: var(--brick); }
+  .stub ul { margin: 0; padding: 0; list-style: none; }
+  .stub li { padding: 3px 0; }
+  .stub aside { border-left: 3px dashed rgba(11,59,44,.4); display: grid; place-items: center; writing-mode: vertical-rl; transform: rotate(180deg); font: 400 18px/1 "Share Tech Mono", monospace; color: var(--green); }
+  .menu .photos { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-top: 30px; }
+  .menu .photos img { width: 100%; height: 260px; object-fit: cover; border-radius: 6px; }
+  .menu .actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .menu .ticket { background: var(--green); color: var(--cream); }
+
+  /* Line history */
+  .line { background: var(--green-2); }
+  .stops { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; list-style: none; margin: 34px 0 0; padding: 0; }
+  .stops::before { content: ""; position: absolute; left: 0; right: 0; top: 13px; height: 6px; background: repeating-linear-gradient(90deg, var(--cream) 0 22px, transparent 22px 30px); opacity: .5; }
+  .stops li { position: relative; padding-top: 44px; }
+  .stops li::before { content: ""; position: absolute; top: 2px; left: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--amber); border: 5px solid var(--green-2); box-shadow: 0 0 0 3px var(--amber); }
+  .stops b { display: block; font: 400 28px/1 "Alfa Slab One", serif; color: var(--amber); }
+  .stops p { margin: 8px 0 0; }
+  .line .with-photo { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-top: 50px; }
+  .line img { border: 8px solid var(--cream); }
+  .line blockquote { margin: 0; font-size: 22px; }
+  .line blockquote footer { margin-top: 8px; font-size: 15px; color: #c9d8cf; }
+
+  /* Station info */
+  .info .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+  .info h3 { margin: 0 0 8px; font: 400 22px/1 "Alfa Slab One", serif; color: var(--amber); }
+  .info p { margin: 0; }
+  .info .actions { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 14px; }
+  footer.site { padding: 26px 0 40px; border-top: 2px solid rgba(247,242,230,.2); font-size: 15px; color: #c9d8cf; }
+  footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; }
+
+  @media (max-width: 960px) {
+    .nav ul { display: none; }
+    .nav .ticket { margin-left: auto; }
+    .hero .intro { grid-template-columns: 1fr; gap: 20px; }
+    .row { grid-template-columns: 70px 1fr; }
+    .row .c3, .row .c4 { display: none; }
+    .cell .f { font-size: 19px; }
+    .stubs, .info .grid { grid-template-columns: 1fr; }
+    .menu .photos { grid-template-columns: 1fr; }
+    .stops { grid-template-columns: 1fr 1fr; }
+    .stops::before { display: none; }
+    .line .with-photo { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) { .nav .brand span { display: none; } .sign { padding: 18px 28px 14px; } .cell .f { font-size: 16px; } }
+</style>
+<script src="shared.js" defer></script>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+    <ul>
+      <li><a href="../menu.html">Menu</a></li>
+      <li><a href="../events.html">Events</a></li>
+      <li><a href="../happy-hour.html">Happy hour</a></li>
+      <li><a href="../private-events.html">Private events</a></li>
+      <li><a href="#info">Station info</a></li>
+    </ul>
+    <a class="ticket amber" href="../order.html">Order online</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-label="Welcome">
+    <div class="wrap">
+      <div class="intro">
+        <div class="sign"><h1>Whistle Stop</h1><p>Safety Harbor · 915 Main Street</p></div>
+        <div>
+          <p>Your stop on Main Street since 1995. Grill, full bar, 18 taps and live music under the open air.</p>
+          <div class="hero-actions"><a class="ticket amber" href="../menu.html">See the menu</a><a class="ticket" href="../events.html">Full calendar</a></div>
+        </div>
+      </div>
+
+      <div class="board" role="region" aria-labelledby="dep">
+        <header><h2 id="dep">Departures this week</h2><span data-ws="status">Open daily 11 AM</span></header>
+        <div class="row head" aria-hidden="true"><span>DAY</span><span>EVENT</span><span class="c3">WHERE</span><span class="c4">TIME</span></div>
+        <div class="rows" id="rows"></div>
+        <footer>Happy hour boards daily 4–7 PM, and 4 PM to close Tuesdays and Wednesdays.</footer>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu" aria-labelledby="mn">
+    <div class="wrap">
+      <h2 id="mn">Tickets to the menu</h2>
+      <div class="stubs">
+        <article class="stub"><div><h3>First class starters</h3><ul><li>Fancy Fried Green Tomatoes</li><li>Blue Crab Cakes</li><li>Smoked Fish Spread</li></ul></div><aside>ADMIT ONE</aside></article>
+        <article class="stub"><div><h3>Main line</h3><ul><li>Original Whistle Stop Burger</li><li>Fresh Grouper Sandwich</li><li>12 oz Rib Eye Steak</li></ul></div><aside>ADMIT ONE</aside></article>
+        <article class="stub"><div><h3>Club car</h3><ul><li>Green Tomato Bloody Mary</li><li>Key Lime Martini</li><li>18 drafts on tap</li></ul></div><aside>ADMIT ONE</aside></article>
+      </div>
+      <div class="photos">
+        <img src="../assets/gallery/WSDrinks3.webp" alt="A long patio table full of friends" loading="lazy" width="1080" height="1080">
+        <img src="../assets/gallery/WSFood2-480.webp" alt="A plate from the kitchen with fresh vegetables" loading="lazy" width="480" height="640">
+        <img src="../assets/gallery/WSBar-480.webp" alt="Bartenders mixing drinks" loading="lazy" width="480" height="480">
+      </div>
+      <div class="actions"><a class="ticket" href="../menu.html">Full menu</a><a class="ticket" href="../order.html">Order for pickup</a></div>
+    </div>
+  </section>
+
+  <section class="line" aria-labelledby="ln">
+    <div class="wrap">
+      <h2 id="ln">Stops along the line</h2>
+      <ol class="stops">
+        <li><b>Frostee Harbor</b><p>Jane and Henry Fox's drive-in ice cream stand, a Main Street landmark for more than 35 years.</p></li>
+        <li><b>1995</b><p>Dawn buys the place for the first time.</p></li>
+        <li><b>2000</b><p>Dawn and Patrick Pendola buy it together and build today's Whistle Stop.</p></li>
+        <li><b>Today</b><p>100-plus seats, a full bar, 18 taps, and Henry's milkshakes still on the menu.</p></li>
+      </ol>
+      <div class="with-photo">
+        <img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building" loading="lazy" width="988" height="415">
+        <blockquote>“Excellent fried green tomatoes, great service with a hometown vibe.”<footer>Karl Sauer, Google review · Whistle Stop is rated 4.4 on Google</footer></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="info" id="info" aria-labelledby="si">
+    <div class="wrap">
+      <h2 id="si">Station info</h2>
+      <div class="grid">
+        <div><h3>Address</h3><p>915 Main Street<br>Safety Harbor, FL 34695</p></div>
+        <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM<br>Fri–Sat 11 AM–10 PM</p></div>
+        <div><h3>Call ahead</h3><p><a href="tel:+17277261956">(727) 726-1956</a></p></div>
+      </div>
+      <div class="actions"><a class="ticket amber" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Get directions</a><a class="ticket" href="../private-events.html">Charter the patio</a><a class="ticket" href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a></div>
+    </div>
+  </section>
+</main>
+<footer class="site"><div class="wrap"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div></footer>
+<script>
+  // The departures board: this week's nights, starting today, with one split-flap settle on load.
+  const BOARD = [
+    ["SUN", "BLOODY MARY SUNDAY", "PATIO", "11 AM"],
+    ["MON", "MARTINI MONDAY", "BAR", "4 PM"],
+    ["TUE", "OPEN MIC NIGHT", "STAGE", "6:30 PM"],
+    ["WED", "CORNHOLE", "THE LOT", "6 PM"],
+    ["THU", "GUITAR + UKE JAM", "STAGE", "3RD/4TH"],
+    ["FRI", "LIVE MUSIC", "PATIO STAGE", "6:30 PM"],
+    ["SAT", "LIVE MUSIC", "PATIO STAGE", "6:30 PM"],
+  ];
+  const rowsEl = document.getElementById("rows");
+  const todayIdx = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" }).format(new Date()));
+  const order = Array.from({ length: 7 }, (_, k) => (todayIdx + k) % 7);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:/+";
+  const flaps = [];
+  order.forEach((d, k) => {
+    const row = document.createElement("div");
+    row.className = "row" + (k === 0 ? " is-today" : "");
+    row.setAttribute("aria-label", `${BOARD[d][0]}: ${BOARD[d][1]}, ${BOARD[d][2]}, ${BOARD[d][3]}`);
+    BOARD[d].forEach((text, c) => {
+      const cell = document.createElement("div");
+      cell.className = `cell c${c + 1}`;
+      cell.setAttribute("aria-hidden", "true");
+      for (const ch of text) {
+        const f = document.createElement("span");
+        f.className = "f" + (ch === " " ? " sp" : "");
+        f.textContent = ch === " " ? "" : reduce ? ch : CHARS[Math.floor(Math.random() * CHARS.length)];
+        if (ch !== " " && !reduce) flaps.push({ f, ch, at: 6 + Math.floor(Math.random() * 18) + k * 2 });
+        cell.appendChild(f);
+      }
+      row.appendChild(cell);
+    });
+    rowsEl.appendChild(row);
+  });
+  if (flaps.length) {
+    let tick = 0;
+    const timer = setInterval(() => {
+      tick++;
+      let pending = 0;
+      for (const fl of flaps) {
+        if (tick >= fl.at) fl.f.textContent = fl.ch;
+        else { fl.f.textContent = CHARS[Math.floor(Math.random() * CHARS.length)]; pending++; }
+      }
+      if (!pending) clearInterval(timer);
+    }, 55);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 5 · Magazine Cover · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,700;0,900;1,500&family=Libre+Franklin:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #e1251b;
+    --black: #000;
+    --white: #fff;
+    --sun: #ffd23f;
+    --stone: #f3f1ee;
+    --grey: #5c5c5c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--white); color: var(--black); font: 400 18px/1.65 "Libre Franklin", system-ui, sans-serif; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; height: auto; }
+  :focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+  .wrap { width: min(1200px, 100% - 40px); margin-inline: auto; }
+  .serif { font-family: "Bodoni Moda", Didot, serif; }
+
+  /* Top strip */
+  .strip { background: var(--black); color: var(--white); font-size: 14px; }
+  .strip .wrap { display: flex; flex-wrap: wrap; gap: 6px 24px; justify-content: space-between; padding: 9px 0; }
+  .strip a { text-decoration: none; }
+  .strip nav { display: flex; gap: 20px; }
+  .strip nav a:hover { color: var(--sun); }
+
+  /* Cover */
+  .cover-row { display: grid; grid-template-columns: minmax(320px, 560px) 1fr; gap: 56px; align-items: center; padding: 42px 0 70px; }
+  .cover { position: relative; container-type: inline-size; aspect-ratio: 3 / 4; overflow: hidden; background: #222; box-shadow: 0 30px 60px rgba(0,0,0,.25); }
+  .cover > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+  .cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 55%, rgba(0,0,0,.6) 100%); }
+  .masthead { position: absolute; z-index: 2; top: 12px; left: 0; right: 0; margin: 0; text-align: center; color: var(--red); font: 900 15.5cqi/.85 "Bodoni Moda", serif; letter-spacing: -.03em; white-space: nowrap; }
+  .issue { position: absolute; z-index: 2; top: calc(18px + 14cqi); left: 0; right: 0; text-align: center; color: var(--white); font-size: 13px; font-weight: 600; letter-spacing: .04em; }
+  .lines { position: absolute; z-index: 2; left: 22px; right: 22px; bottom: 22px; color: var(--white); }
+  .lines p { margin: 0 0 12px; max-width: 17ch; font: 800 clamp(16px, 1.5vw, 21px)/1.15 "Libre Franklin", sans-serif; text-shadow: 0 1px 8px rgba(0,0,0,.4); }
+  .lines p em { display: block; font: italic 500 clamp(26px, 2.6vw, 38px)/1 "Bodoni Moda", serif; color: var(--sun); }
+  .burst { position: absolute; z-index: 2; right: 18px; top: 42%; width: 116px; height: 116px; display: grid; place-items: center; text-align: center; background: var(--sun); color: var(--black); font: 800 15px/1.1 "Libre Franklin", sans-serif; clip-path: polygon(50% 0, 61% 12%, 77% 6%, 79% 22%, 95% 25%, 88% 40%, 100% 50%, 88% 60%, 95% 75%, 79% 78%, 77% 94%, 61% 88%, 50% 100%, 39% 88%, 23% 94%, 21% 78%, 5% 75%, 12% 60%, 0 50%, 12% 40%, 5% 25%, 21% 22%, 23% 6%, 39% 12%); transform: rotate(8deg); }
+  .burst b { display: block; font: 900 30px/1 "Bodoni Moda", serif; }
+
+  .contents h2 { margin: 0 0 6px; font: 500 italic clamp(40px, 4.4vw, 62px)/1 "Bodoni Moda", serif; }
+  .contents > p { margin: 0 0 28px; color: var(--grey); max-width: 46ch; }
+  .contents ul { list-style: none; margin: 0; padding: 0; }
+  .contents li { border-top: 1px solid #d9d6d0; }
+  .contents li a { display: grid; grid-template-columns: 1fr auto; gap: 6px 20px; padding: 16px 0; text-decoration: none; }
+  .contents li strong { font: 700 25px/1.15 "Bodoni Moda", serif; }
+  .contents li span { grid-column: 1; color: var(--grey); font-size: 16px; }
+  .contents li i { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-style: normal; color: var(--red); font-weight: 800; }
+  .contents li a:hover strong { color: var(--red); }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .btn { display: inline-block; padding: 14px 24px; font-weight: 800; text-decoration: none; background: var(--black); color: var(--white); }
+  .btn.red { background: var(--red); }
+  .btn.ghost { background: transparent; color: var(--black); box-shadow: inset 0 0 0 2px var(--black); }
+
+  /* Feature */
+  .feature { background: var(--stone); padding: 90px 0; }
+  .kicker { font-weight: 800; color: var(--red); }
+  .feature h2 { margin: 8px 0 30px; max-width: 16ch; font: 900 clamp(46px, 6vw, 88px)/.95 "Bodoni Moda", serif; letter-spacing: -.02em; }
+  .feature .cols { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 40px; align-items: start; }
+  .feature .cols p { margin: 0 0 16px; font-family: "Bodoni Moda", serif; font-size: 19px; line-height: 1.75; }
+  .dropcap::first-letter { float: left; margin: 6px 10px 0 0; font: 900 76px/.8 "Bodoni Moda", serif; color: var(--red); }
+  .pull { margin: 0; padding: 26px 0; border-top: 4px solid var(--black); border-bottom: 1px solid var(--black); font: italic 500 30px/1.25 "Bodoni Moda", serif; }
+  .pull footer { margin-top: 12px; font: 600 15px/1.3 "Libre Franklin", sans-serif; color: var(--grey); }
+  .feature figure { margin: 0; }
+  .feature figure img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
+  .feature figcaption { margin-top: 8px; font-size: 14px; color: var(--grey); }
+
+  /* Week */
+  .week { padding: 90px 0; }
+  .week h2, .order h2 { margin: 0 0 30px; font: 900 clamp(40px, 5vw, 70px)/1 "Bodoni Moda", serif; letter-spacing: -.02em; }
+  .days { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 4px solid var(--black); }
+  .days article { padding: 20px 20px 26px 0; border-bottom: 1px solid #d9d6d0; }
+  .days article:not(:nth-child(4n)) { margin-right: 20px; }
+  .days h3 { margin: 0; font: 700 italic 28px/1.1 "Bodoni Moda", serif; color: var(--red); }
+  .days strong { display: block; margin-top: 6px; font-size: 18px; }
+  .days p { margin: 4px 0 0; color: var(--grey); font-size: 16px; }
+  .days .is-today h3::after { content: " · tonight"; font: 800 14px/1 "Libre Franklin", sans-serif; color: var(--black); }
+
+  /* What to order */
+  .order { background: var(--black); color: var(--white); padding: 90px 0; }
+  .order .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+  .order figure { margin: 0; }
+  .order img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .order figcaption { margin-top: 14px; }
+  .order figcaption strong { display: block; font: 700 26px/1.1 "Bodoni Moda", serif; color: var(--sun); }
+  .order .more { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .order .btn.ghost { color: var(--white); box-shadow: inset 0 0 0 2px var(--white); }
+
+  /* Masthead box = visit */
+  .colophon { padding: 90px 0; }
+  .colophon .box { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 40px; padding: 36px; border: 4px solid var(--black); }
+  .colophon h2 { margin: 0; font: 900 44px/1 "Bodoni Moda", serif; color: var(--red); }
+  .colophon h3 { margin: 0 0 6px; font-size: 15px; font-weight: 800; }
+  .colophon p { margin: 0 0 4px; }
+  footer.site { background: var(--black); color: #cfcfcf; font-size: 14px; }
+  footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; padding: 22px 0; }
+
+  @media (max-width: 980px) {
+    .cover-row { grid-template-columns: 1fr; gap: 40px; }
+    .cover { max-width: 560px; width: 100%; margin-inline: auto; }
+    .feature .cols, .order .grid, .colophon .box { grid-template-columns: 1fr; }
+    .days { grid-template-columns: 1fr 1fr; }
+    .days article:not(:nth-child(4n)) { margin-right: 0; }
+    .days article { padding-right: 14px; }
+    .strip nav { display: none; }
+  }
+  @media (max-width: 520px) { .days { grid-template-columns: 1fr; } .burst { width: 92px; height: 92px; font-size: 12px; } .burst b { font-size: 24px; } }
+</style>
+<script src="shared.js" defer></script>
+</head>
+<body>
+<div class="strip">
+  <div class="wrap">
+    <span>915 Main Street, Safety Harbor · <a href="tel:+17277261956">(727) 726-1956</a> · <span data-ws="status">Open daily 11 AM</span></span>
+    <nav aria-label="Main"><a href="../menu.html">Menu</a><a href="../events.html">Events</a><a href="../happy-hour.html">Happy hour</a><a href="../private-events.html">Private events</a><a href="../order.html">Order online</a></nav>
+  </div>
+</div>
+
+<main>
+  <div class="wrap cover-row">
+    <section class="cover" aria-label="Cover">
+      <img src="../assets/gallery/WSWorkers2.webp" alt="Two friends raising drinks on the Whistle Stop lounge couch" width="1536" height="2048">
+      <h1 class="masthead">Whistle Stop</h1>
+      <div class="issue">Old Florida / New Vibe · Safety Harbor</div>
+      <div class="burst" aria-hidden="true"><span>Since<b>1995</b></span></div>
+      <div class="lines">
+        <p><em>Martini Monday</em>Half off, every week, 4 PM to close</p>
+        <p>Who's on the patio stage this weekend</p>
+        <p>Henry's milkshakes, still on the menu since the drive-in days</p>
+      </div>
+    </section>
+
+    <section class="contents" aria-labelledby="inside">
+      <h2 id="inside">Inside this issue</h2>
+      <p>Safety Harbor's hometown grill and bar: real good food, 18 taps and local music under the open air.</p>
+      <ul>
+        <li><a href="#feature"><strong>Almost famous</strong><span>How a drive-in ice cream stand became Main Street's living room</span><i>Read</i></a></li>
+        <li><a href="#week"><strong>The week on Main Street</strong><span>Martinis, open mic, cornhole and live music</span><i>See</i></a></li>
+        <li><a href="#order"><strong>What to order</strong><span>Fried green tomatoes, burgers and a Key Lime Martini</span><i>Taste</i></a></li>
+        <li><a href="#visit"><strong>Pull up a chair</strong><span>Hours, directions and private events</span><i>Visit</i></a></li>
+      </ul>
+      <div class="cta"><a class="btn red" href="../order.html">Order online</a><a class="btn ghost" href="../menu.html">Read the menu</a></div>
+    </section>
+  </div>
+
+  <section class="feature" id="feature">
+    <div class="wrap">
+      <span class="kicker">The story</span>
+      <h2>Almost famous on Main Street</h2>
+      <div class="cols">
+        <div>
+          <p class="dropcap">For more than 35 years this corner was Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand, with a short menu of burgers, fries and Henry's famous milkshakes. Folks still stop by to share stories of coming here back in the day.</p>
+          <p>Dawn first bought the place in 1995. She bought it again in 2000, this time with her husband Patrick, and together they built today's Whistle Stop Grill &amp; Bar.</p>
+        </div>
+        <div>
+          <p>The take-out window became more than 100 seats, a full bar and 18 taps of beer, with fresh cocktails on an open-air patio. The milkshakes stayed.</p>
+          <blockquote class="pull">“Love the hometown atmosphere! Whistle Stop is one of our favorites!”<footer>Shannon Schafer, Google review</footer></blockquote>
+        </div>
+        <figure><img src="../assets/gallery/WSLounge-560.webp" alt="The outdoor lounge with sofas under string lights" loading="lazy" width="560" height="747"><figcaption>The patio lounge at 915 Main Street.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="week" id="week">
+    <div class="wrap">
+      <h2>The week on Main Street</h2>
+      <div class="days">
+        <article data-ws-day="1"><h3>Monday</h3><strong>Martini Monday &amp; Taco Night</strong><p>Half-off martinis and 2-for-$6 tacos, 4 PM–close</p></article>
+        <article data-ws-day="2"><h3>Tuesday</h3><strong>Open Mic Night</strong><p>6:30–9:30 PM, happy hour till close</p></article>
+        <article data-ws-day="3"><h3>Wednesday</h3><strong>Cornhole</strong><p>From 6 PM, happy hour till close</p></article>
+        <article data-ws-day="4"><h3>Thursday</h3><strong>Guitar Guild &amp; Ukulele Jam</strong><p>3rd and 4th Thursdays of the month</p></article>
+        <article data-ws-day="5"><h3>Friday</h3><strong>Live music</strong><p>Local artists, 6:30–9:30 PM</p></article>
+        <article data-ws-day="6"><h3>Saturday</h3><strong>Live music</strong><p>Local artists, 6:30–9:30 PM</p></article>
+        <article data-ws-day="0"><h3>Sunday</h3><strong>Breakfast Bloody Mary Sunday</strong><p>$5 mimosas and Bloody Marys</p></article>
+        <article><h3>Every day</h3><strong>Happy hour</strong><p>4–7 PM, ask about today's specials</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="order" id="order">
+    <div class="wrap">
+      <h2>What to order</h2>
+      <div class="grid">
+        <figure><img src="../assets/gallery/WSFood4.webp" alt="A wrap with seasoned fries" loading="lazy" width="1080" height="1080"><figcaption><strong>Handhelds</strong>Wraps, sandwiches and the Original Whistle Stop Burger.</figcaption></figure>
+        <figure><img src="../assets/gallery/WSFood3-768.webp" alt="A loaded hot dog with onion straws and fries" loading="lazy" width="768" height="960"><figcaption><strong>Made to share</strong>Fancy Fried Green Tomatoes, Whistle Stop Wings and Smoked Fish Spread.</figcaption></figure>
+        <figure><img src="../assets/gallery/WSGirls2.jpg" alt="Two guests with cocktails at the bar" loading="lazy" width="1080" height="1080"><figcaption><strong>Raise a glass</strong>Key Lime Martini, Green Tomato Bloody Mary or a flight from 18 taps.</figcaption></figure>
+      </div>
+      <div class="more"><a class="btn red" href="../menu.html">The full menu</a><a class="btn ghost" href="../order.html">Order for pickup</a></div>
+    </div>
+  </section>
+
+  <section class="colophon" id="visit">
+    <div class="wrap">
+      <div class="box">
+        <div><h2>Pull up a chair</h2><p style="margin-top:12px">Birthdays, reunions and team dinners have room for 100+ guests.</p><p style="margin-top:16px"><a class="btn" href="../private-events.html">Plan a private event</a></p></div>
+        <div><h3>Address</h3><p>915 Main Street</p><p>Safety Harbor, FL 34695</p><p><a href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Get directions</a></p><h3 style="margin-top:18px">Phone</h3><p><a href="tel:+17277261956">(727) 726-1956</a></p></div>
+        <div><h3>Hours</h3><p>Sunday–Thursday, 11 AM–9 PM</p><p>Friday–Saturday, 11 AM–10 PM</p><h3 style="margin-top:18px">Gift cards</h3><p><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Send one online</a></p></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site"><div class="wrap"><span>Whistle Stop Grill &amp; Bar · Dawn &amp; Patrick Pendola, owners</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div></footer>
+</body>
+</html>

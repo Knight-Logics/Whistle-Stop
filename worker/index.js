@@ -57,6 +57,7 @@ const REDIRECTS = {
   "/live-music": "/events.html#live-music",
   "/live-music.html": "/events.html#live-music",
   "/index.html": "/",
+  "/homepage-options": "/homepage-options/",
 };
 for (const page of PAGES) {
   if (page !== "index") REDIRECTS[`/${page}`] = `/${page}.html`;
@@ -152,7 +153,7 @@ async function prerender(response, request, env, pathname) {
 }
 
 async function servePage(request, env, url) {
-  let assetPath = url.pathname === "/" ? "/index.html" : url.pathname;
+  let assetPath = url.pathname.endsWith("/") ? `${url.pathname}index.html` : url.pathname;
   let res = await env.ASSETS.fetch(new Request(new URL(assetPath + url.search, url), request));
   if (res.status === 404) {
     const notFound = await env.ASSETS.fetch(new Request(new URL("/404.html", url), request));
@@ -164,7 +165,9 @@ async function servePage(request, env, url) {
 
   const isAdmin = assetPath === "/admin.html";
   let out = await prerender(res, request, env, assetPath);
-  out = withPageHeaders(out, { noindex: isAdmin || assetPath === "/404.html", noStore: isAdmin });
+  // Design options for the client are previews, not pages for Google.
+  const isPreview = assetPath.startsWith("/homepage-options/");
+  out = withPageHeaders(out, { noindex: isAdmin || isPreview || assetPath === "/404.html", noStore: isAdmin });
   if (!isAdmin) {
     const headers = new Headers(out.headers);
     headers.set("cache-control", "public, max-age=0, must-revalidate");

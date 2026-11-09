@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 4 · Gig Poster · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f1ebdd;
+    --blue: #2f4bff;
+    --pink: #ff4fae;
+    --yellow: #ffe62e;
+    --ink: #1b1f3b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 18px/1.55 "Archivo", system-ui, sans-serif;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; height: auto; }
+  :focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+  .wrap { width: min(1240px, 100% - 40px); margin-inline: auto; }
+  .poster-type { font-family: "Anton", Impact, sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .005em; line-height: .88; }
+  h2 { margin: 0 0 18px; font-size: clamp(48px, 7vw, 104px); color: var(--blue); }
+  .btn { display: inline-block; padding: 14px 24px; font: 800 17px/1 "Archivo", sans-serif; text-decoration: none; border: 3px solid var(--ink); background: var(--yellow); color: var(--ink); box-shadow: 5px 5px 0 var(--ink); }
+  .btn:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 var(--ink); }
+  .btn.alt { background: var(--paper); }
+
+  /* Nav */
+  .nav .wrap { display: flex; align-items: center; gap: 22px; padding: 16px 0; border-bottom: 3px solid var(--ink); }
+  .nav .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 800 18px/1 "Archivo", sans-serif; }
+  .nav .brand img { width: 44px; height: 44px; }
+  .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 600; }
+  .nav ul a { text-decoration: none; }
+  .nav ul a:hover { color: var(--blue); }
+  .nav .btn { box-shadow: 3px 3px 0 var(--ink); padding: 11px 18px; }
+
+  /* Poster hero */
+  .hero { padding: 34px 0 60px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: stretch; }
+  .headline { position: relative; margin: 0; font-size: clamp(76px, 11.4vw, 176px); }
+  .headline .b { position: relative; display: block; color: var(--blue); mix-blend-mode: multiply; }
+  .headline .p { position: absolute; inset: 0; color: var(--pink); mix-blend-mode: multiply; transform: translate(6px, 5px); }
+  .headline .p span, .headline .b span { display: block; }
+  .bill { margin-top: 26px; display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-weight: 600; font-size: 19px; }
+  .bill dt { font: 400 26px/1 "Anton", sans-serif; text-transform: uppercase; color: var(--pink); mix-blend-mode: multiply; }
+  .bill dd { margin: 0; align-self: center; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 30px; }
+  .duotone { position: relative; min-height: 520px; background: var(--pink); overflow: hidden; border: 3px solid var(--ink); }
+  .duotone img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; filter: grayscale(1) contrast(1.35) brightness(1.05); mix-blend-mode: multiply; }
+  .duotone::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 1.5px 1.5px, rgba(47,75,255,.55) 1.4px, transparent 1.6px) 0 0 / 6px 6px; mix-blend-mode: multiply; }
+  .duotone .sticker { position: absolute; z-index: 2; right: 18px; bottom: 18px; width: 150px; height: 150px; border-radius: 50%; background: var(--yellow); border: 3px solid var(--ink); display: grid; place-items: center; text-align: center; font: 400 26px/1 "Anton", sans-serif; text-transform: uppercase; transform: rotate(-10deg); }
+
+  /* Setlist */
+  .setlist { padding: 70px 0; border-top: 3px solid var(--ink); }
+  .setlist ol { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 60px; }
+  .setlist li { break-inside: avoid; display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 14px 0; border-bottom: 2px dashed rgba(27,31,59,.35); }
+  .setlist li b { font: 400 30px/1 "Anton", sans-serif; text-transform: uppercase; color: var(--pink); mix-blend-mode: multiply; }
+  .setlist li span { font-weight: 800; font-size: 20px; }
+  .setlist li em { display: block; font-style: normal; font-weight: 400; }
+  .setlist li.is-today { background: var(--yellow); }
+
+  /* Shows */
+  .shows { padding: 70px 0; background: var(--blue); color: var(--paper); }
+  .shows h2 { color: var(--yellow); }
+  .tickets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 10px; }
+  .ticket { position: relative; display: grid; grid-template-columns: 96px 1fr; background: var(--paper); color: var(--ink); min-height: 120px; }
+  .ticket .date { display: grid; place-content: center; text-align: center; border-right: 3px dashed var(--blue); padding: 10px; }
+  .ticket .date b { display: block; font: 400 44px/1 "Anton", sans-serif; }
+  .ticket .date small { font-weight: 800; text-transform: uppercase; font-size: 14px; color: var(--pink); }
+  .ticket .what { padding: 16px; }
+  .ticket .what strong { display: block; font-size: 20px; line-height: 1.2; }
+  .ticket .what span { font-size: 15px; }
+  .shows .note { margin-top: 22px; }
+
+  /* Fuel */
+  .fuel { padding: 70px 0; }
+  .fuel .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; }
+  .fuel h3 { margin: 0 0 8px; font: 400 32px/1 "Anton", sans-serif; text-transform: uppercase; color: var(--pink); mix-blend-mode: multiply; }
+  .fuel ul { margin: 0; padding: 0; list-style: none; font-weight: 600; }
+  .fuel li { padding: 6px 0; border-bottom: 2px solid rgba(27,31,59,.15); }
+  .fuel .pics { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
+  .fuel .pics img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border: 3px solid var(--ink); }
+
+  /* Venue */
+  .venue { padding: 70px 0 40px; border-top: 3px solid var(--ink); }
+  .venue .grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 34px; }
+  .venue h3 { margin: 0 0 8px; font: 400 26px/1 "Anton", sans-serif; text-transform: uppercase; color: var(--blue); }
+  .venue p { margin: 0 0 4px; }
+  .venue blockquote { margin: 0; font-size: 22px; font-weight: 600; }
+  .venue blockquote footer { font-size: 15px; font-weight: 400; margin-top: 8px; }
+  .venue .actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 36px; }
+  footer.site { padding: 26px 0 40px; font-size: 15px; }
+  footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 20px; border-top: 3px solid var(--ink); padding-top: 18px; }
+
+  @media (max-width: 960px) {
+    .nav ul { display: none; }
+    .nav .btn { margin-left: auto; }
+    .hero .wrap { grid-template-columns: 1fr; }
+    .duotone { min-height: 380px; order: -1; }
+    .setlist ol { columns: 1; }
+    .tickets, .fuel .grid, .venue .grid { grid-template-columns: 1fr; }
+    .fuel .pics { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) { .nav .brand span { display: none; } .duotone .sticker { width: 118px; height: 118px; font-size: 21px; } }
+</style>
+<script src="shared.js" defer></script>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+    <ul>
+      <li><a href="../events.html">Lineup</a></li>
+      <li><a href="../menu.html">Menu</a></li>
+      <li><a href="../happy-hour.html">Happy hour</a></li>
+      <li><a href="../private-events.html">Private events</a></li>
+      <li><a href="#venue">Venue info</a></li>
+    </ul>
+    <a class="btn" href="../order.html">Order online</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-label="Live music at Whistle Stop">
+    <div class="wrap">
+      <div>
+        <h1 class="headline poster-type"><span class="b"><span>Live on</span><span>Main</span><span>Street</span></span><span class="p" aria-hidden="true"><span>Live on</span><span>Main</span><span>Street</span></span></h1>
+        <dl class="bill">
+          <dt>Fri &amp; Sat</dt><dd>Local artists on the patio stage, 6:30–9:30 PM</dd>
+          <dt>Tuesday</dt><dd>Open Mic Night, 6:30–9:30 PM</dd>
+          <dt>Thursday</dt><dd>TB Guitar Guild &amp; Tampa Bay Ukulele Society jams, monthly</dd>
+        </dl>
+        <div class="hero-actions"><a class="btn" href="#shows">See who's playing</a><a class="btn alt" href="../menu.html">Food &amp; drinks</a></div>
+      </div>
+      <div class="duotone">
+        <img src="../assets/gallery/WSRocker-768.webp" alt="A guitarist playing on the Whistle Stop stage" width="768" height="768">
+        <div class="sticker">Whistle<br>Stop<br>Grill &amp; Bar</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="setlist" aria-labelledby="sl">
+    <div class="wrap">
+      <h2 id="sl" class="poster-type">The weekly setlist</h2>
+      <ol>
+        <li data-ws-day="1"><b>Mon</b><span>Martini Monday &amp; Taco Night<em>Half-off martinis, 2-for-$6 tacos, 4 PM–close</em></span></li>
+        <li data-ws-day="2"><b>Tue</b><span>Open Mic Night<em>6:30–9:30 PM, happy hour 4 PM–close</em></span></li>
+        <li data-ws-day="3"><b>Wed</b><span>Cornhole Wednesdays<em>From 6 PM, happy hour 4 PM–close</em></span></li>
+        <li data-ws-day="4"><b>Thu</b><span>Guitar Guild &amp; Ukulele Jam<em>3rd and 4th Thursdays</em></span></li>
+        <li data-ws-day="5"><b>Fri</b><span>Live music<em>6:30–9:30 PM</em></span></li>
+        <li data-ws-day="6"><b>Sat</b><span>Live music<em>6:30–9:30 PM</em></span></li>
+        <li data-ws-day="0"><b>Sun</b><span>Breakfast Bloody Mary Sunday<em>$5 mimosas and Bloody Marys</em></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="shows" id="shows" aria-labelledby="sh">
+    <div class="wrap">
+      <h2 id="sh" class="poster-type">Coming up</h2>
+      <div class="tickets" id="tickets"><p>Loading the lineup…</p></div>
+      <p class="note">Weekend acts are posted each week. <a href="../events.html">See the full calendar</a> or follow along on <a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a>.</p>
+    </div>
+  </section>
+
+  <section class="fuel" aria-labelledby="fu">
+    <div class="wrap">
+      <h2 id="fu" class="poster-type">Before the encore</h2>
+      <div class="grid">
+        <div><h3>Shareables</h3><ul><li>Fancy Fried Green Tomatoes</li><li>Whistle Stop Wings</li><li>Smoked Fish Spread</li><li>Southern Sampler</li></ul></div>
+        <div><h3>Mains</h3><ul><li>Original Whistle Stop Burger</li><li>Fresh Grouper Sandwich</li><li>Baja Fish or Shrimp Tacos</li><li>12 oz Rib Eye Steak</li></ul></div>
+        <div><h3>The bar</h3><ul><li>18 drafts, flights available</li><li>Frozen Painkiller</li><li>Old Florida Mule</li><li>Safety Harbor Sangria</li></ul></div>
+      </div>
+      <div class="pics">
+        <img src="../assets/gallery/WSFood-560.webp" alt="A Whistle Stop basket with fries" loading="lazy" width="560" height="746">
+        <img src="../assets/gallery/WSGoodTimes-560.webp" alt="Friends at a table full of food at Whistle Stop" loading="lazy" width="560" height="560">
+      </div>
+    </div>
+  </section>
+
+  <section class="venue" id="venue" aria-labelledby="ve">
+    <div class="wrap">
+      <h2 id="ve" class="poster-type">Venue info</h2>
+      <div class="grid">
+        <div><h3>Whistle Stop Grill &amp; Bar</h3><p>915 Main Street, Safety Harbor, FL 34695</p><p><a href="tel:+17277261956">(727) 726-1956</a></p><p data-ws="status">Open daily from 11 AM</p></div>
+        <div><h3>Doors</h3><p>Sun–Thu 11 AM–9 PM</p><p>Fri–Sat 11 AM–10 PM</p><p>Happy hour daily 4–7 PM</p></div>
+        <blockquote>“Great spot to relax and listen to local music. Food and service were amazing.”<footer>Greg Bell on Google · rated 4.4 overall</footer></blockquote>
+      </div>
+      <div class="actions"><a class="btn" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Directions</a><a class="btn alt" href="../private-events.html">Book the patio</a><a class="btn alt" href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a></div>
+    </div>
+  </section>
+</main>
+<footer class="site"><div class="wrap"><span>Old Florida / New Vibe · Safety Harbor since 1995</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div></footer>
+<script>
+  // Real upcoming dated events from the site's own events data.
+  (async () => {
+    const box = document.getElementById("tickets");
+    try {
+      const data = await (await fetch("../data/events.json", { cache: "no-cache" })).json();
+      const today = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
+      const fmtTime = (t) => { if (!t) return ""; const [h, m] = t.split(":").map(Number); return `${h % 12 || 12}${m ? ":" + String(m).padStart(2, "0") : ""} ${h < 12 ? "AM" : "PM"}`; };
+      const shows = (data.performances || []).filter((p) => p.date >= today).sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime)).slice(0, 6);
+      if (!shows.length) { box.innerHTML = "<p>New acts are posted every week. See the full calendar below.</p>"; return; }
+      box.innerHTML = "";
+      for (const s of shows) {
+        const d = new Date(s.date + "T12:00:00");
+        const el = document.createElement("article");
+        el.className = "ticket";
+        el.innerHTML = `<div class="date"><small>${d.toLocaleDateString("en-US", { month: "short" })}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString("en-US", { weekday: "short" })}</small></div><div class="what"><strong></strong><span>${fmtTime(s.startTime)}${s.endTime ? "–" + fmtTime(s.endTime) : ""}</span></div>`;
+        el.querySelector("strong").textContent = s.title;
+        box.appendChild(el);
+      }
+    } catch (e) {
+      box.innerHTML = '<p><a href="../events.html">See the events calendar</a></p>';
+    }
+  })();
+</script>
+</body>
+</html>

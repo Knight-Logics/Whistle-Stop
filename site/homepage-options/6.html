@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 6 · A Day on the Patio · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #dbeff7;
+    --gold: #ffd56b;
+    --palm: #1f5f47;
+    --dusk: #2b2d5c;
+    --ink: #1b2a33;
+    --white: #ffffff;
+    --bg: var(--sky);
+    --fg: var(--ink);
+    --accent: var(--palm);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; color: var(--ink); background: #fbfcf8; font: 400 18px/1.6 "Figtree", system-ui, sans-serif; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; height: auto; }
+  :focus-visible { outline: 3px solid #ff8f73; outline-offset: 3px; }
+  .wrap { width: min(1200px, 100% - 40px); margin-inline: auto; }
+  h1, h2, h3 { font-family: "Young Serif", Georgia, serif; font-weight: 400; margin: 0; }
+  h2 { font-size: clamp(36px, 4.4vw, 56px); line-height: 1.05; margin-bottom: 14px; }
+  .btn { display: inline-block; padding: 14px 24px; border-radius: 999px; font-weight: 700; text-decoration: none; background: var(--palm); color: #fff; }
+  .btn:hover { background: #174a37; }
+  .btn.soft { background: rgba(255,255,255,.7); color: var(--ink); }
+
+  /* Hero with time of day */
+  .day { background: var(--bg); color: var(--fg); transition: background-color .6s ease, color .6s ease; }
+  .day[data-slot="0"] { --bg: #dbeff7; --fg: #1b2a33; --accent: #1f5f47; }
+  .day[data-slot="1"] { --bg: #ffe39a; --fg: #2b2210; --accent: #a4570c; }
+  .day[data-slot="2"] { --bg: #ffb48f; --fg: #2a1712; --accent: #8c2f17; }
+  .day[data-slot="3"] { --bg: #3b3a78; --fg: #fbf6ee; --accent: #ffd56b; }
+  .day[data-slot="4"] { --bg: #1d2048; --fg: #f3f0ff; --accent: #9fe0c8; }
+  .nav .wrap { display: flex; align-items: center; gap: 22px; padding: 18px 0; }
+  .nav .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; }
+  .nav .brand img { width: 46px; height: 46px; border-radius: 12px; }
+  .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 600; }
+  .nav ul a { text-decoration: none; }
+  .nav ul a:hover { text-decoration: underline; text-underline-offset: 5px; }
+  .hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 50px; align-items: center; padding: 30px 0 40px; }
+  .hero h1 { font-size: clamp(48px, 6.4vw, 92px); line-height: .98; }
+  .hero .lede { margin: 18px 0 0; font-size: 20px; max-width: 36ch; }
+  .slot-text { margin-top: 28px; min-height: 120px; }
+  .slot-text .time { font-weight: 700; color: var(--accent); font-size: 18px; transition: color .6s; }
+  .slot-text h3 { font-size: clamp(30px, 3vw, 42px); margin: 4px 0 6px; }
+  .slot-text p { margin: 0; max-width: 40ch; }
+  .photo { position: relative; aspect-ratio: 4 / 5; border-radius: 200px 200px 24px 24px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,.18); }
+  .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .6s ease; }
+  .photo img.on { opacity: 1; }
+  .rail { position: relative; padding: 18px 0 46px; }
+  .rail ol { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); list-style: none; margin: 0; padding: 0; }
+  .rail ol::before { content: ""; position: absolute; left: 10%; right: 10%; top: 21px; height: 3px; background: currentColor; opacity: .25; }
+  .rail button { position: relative; display: grid; justify-items: center; gap: 8px; width: 100%; padding: 0; background: none; border: 0; color: inherit; font: 600 16px/1.2 "Figtree", sans-serif; cursor: pointer; }
+  .rail button i { width: 44px; height: 44px; border-radius: 50%; background: var(--bg); border: 3px solid currentColor; transition: background-color .6s, transform .2s; }
+  .rail button[aria-selected="true"] i { background: var(--accent); border-color: var(--accent); transform: scale(1.12); }
+  .rail button small { font-weight: 400; opacity: .8; }
+
+  /* Sections */
+  section { padding: 90px 0; }
+  .today { background: #fff; }
+  .today .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+  .tonight { padding: 30px 32px; border-radius: 28px; background: var(--sky); }
+  .tonight b { color: var(--palm); }
+  .tonight h3 { font-size: 36px; margin: 6px 0; }
+  .week { list-style: none; margin: 0; padding: 0; }
+  .week li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid #e3e7e1; }
+  .week li span:last-child { color: #5b6a63; white-space: nowrap; }
+  .week li.is-today { font-weight: 700; color: var(--palm); }
+
+  .eat .grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 24px; margin-top: 28px; }
+  .eat figure { margin: 0; }
+  .eat figure img { width: 100%; height: 340px; object-fit: cover; border-radius: 26px; }
+  .eat figure:first-child img { border-radius: 26px 120px 26px 26px; }
+  .eat figcaption { margin-top: 12px; }
+  .eat figcaption h3 { font-size: 26px; }
+  .eat figcaption p { margin: 4px 0 0; color: #4f5d57; }
+
+  .story { background: var(--palm); color: #f2f8f4; }
+  .story .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .story img { width: 100%; border-radius: 26px; }
+  .story blockquote { margin: 28px 0 0; padding-left: 20px; border-left: 3px solid var(--gold); font-family: "Young Serif", serif; font-size: 23px; line-height: 1.4; }
+  .story blockquote footer { font: 400 15px/1.4 "Figtree", sans-serif; margin-top: 8px; opacity: .85; }
+
+  .visit .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 24px; }
+  .visit h3 { font-size: 24px; margin-bottom: 6px; color: var(--palm); }
+  .visit p { margin: 0; }
+  .visit .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+  .visit .actions .soft { background: var(--sky); }
+  footer.site { padding: 28px 0 40px; border-top: 1px solid #e3e7e1; color: #5b6a63; font-size: 15px; }
+  footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; }
+
+  @media (prefers-reduced-motion: reduce) { .day, .photo img, .slot-text .time, .rail button i { transition: none; } }
+  @media (max-width: 960px) {
+    .nav ul { display: none; }
+    .nav .btn { margin-left: auto; }
+    .hero, .today .grid, .story .grid { grid-template-columns: 1fr; }
+    .photo { max-width: 520px; width: 100%; justify-self: center; aspect-ratio: 4 / 3; border-radius: 140px 140px 20px 20px; }
+    .eat .grid, .visit .grid { grid-template-columns: 1fr; }
+    .rail ol { grid-template-columns: repeat(5, minmax(64px, 1fr)); }
+    .rail button { font-size: 13px; }
+    .rail button small { display: none; }
+  }
+  @media (max-width: 520px) { .nav .brand span { display: none; } }
+</style>
+<script src="shared.js" defer></script>
+</head>
+<body>
+<div class="day" id="day" data-slot="0">
+  <header class="nav">
+    <div class="wrap">
+      <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="46" height="46"><span>Whistle Stop Grill &amp; Bar</span></a>
+      <ul>
+        <li><a href="../menu.html">Menu</a></li>
+        <li><a href="../events.html">Events</a></li>
+        <li><a href="../happy-hour.html">Happy hour</a></li>
+        <li><a href="../private-events.html">Private events</a></li>
+        <li><a href="#visit">Visit</a></li>
+      </ul>
+      <a class="btn" href="../order.html">Order online</a>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1>Spend the whole day on Main Street</h1>
+        <p class="lede">An open-air, dog-friendly patio in downtown Safety Harbor, from a long lunch to the last song of the night.</p>
+        <div class="slot-text" aria-live="polite">
+          <div class="time" id="slot-time"></div>
+          <h3 id="slot-title"></h3>
+          <p id="slot-body"></p>
+        </div>
+      </div>
+      <div class="photo" id="photo">
+        <img src="../assets/gallery/WSFood4.webp" alt="A wrap with seasoned fries for lunch" width="1080" height="1080">
+        <img src="../assets/gallery/WSDrinks-560.webp" alt="Friends toasting at happy hour" width="560" height="384" loading="lazy">
+        <img src="../assets/gallery/WSCornHole-768.webp" alt="Cornhole boards out by the sign" width="768" height="768" loading="lazy">
+        <img src="../assets/gallery/WSRocker-768.webp" alt="A guitarist on the patio stage" width="768" height="768" loading="lazy">
+        <img src="../assets/gallery/WSLounge-560.webp" alt="The patio lounge under string lights" width="560" height="747" loading="lazy">
+      </div>
+    </div>
+    <div class="rail">
+      <ol role="tablist" aria-label="Times of day">
+        <li><button role="tab" data-i="0"><i></i>Lunch<small>11 AM</small></button></li>
+        <li><button role="tab" data-i="1"><i></i>Happy hour<small>4 PM</small></button></li>
+        <li><button role="tab" data-i="2"><i></i>Games<small>6 PM</small></button></li>
+        <li><button role="tab" data-i="3"><i></i>Live music<small>6:30 PM</small></button></li>
+        <li><button role="tab" data-i="4"><i></i>Last call<small>9–10 PM</small></button></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="today">
+    <div class="wrap grid">
+      <div>
+        <h2>Today at Whistle Stop</h2>
+        <div class="tonight"><b data-ws="weekday">Today</b><h3 data-ws="tonight">Daily specials</h3><p><span data-ws="tonight-time"></span>. <span data-ws="tonight-detail"></span></p><p data-ws="status" style="font-weight:700">Open daily from 11 AM</p></div>
+      </div>
+      <ul class="week" aria-label="The week">
+        <li data-ws-day="1"><span>Martini Monday &amp; Taco Night</span><span>Mon, 4 PM–close</span></li>
+        <li data-ws-day="2"><span>Open Mic Night</span><span>Tue, 6:30 PM</span></li>
+        <li data-ws-day="3"><span>Cornhole Wednesdays</span><span>Wed, 6 PM</span></li>
+        <li data-ws-day="4"><span>Guitar Guild &amp; Ukulele Jam</span><span>3rd &amp; 4th Thu</span></li>
+        <li data-ws-day="5"><span>Live music</span><span>Fri, 6:30 PM</span></li>
+        <li data-ws-day="6"><span>Live music</span><span>Sat, 6:30 PM</span></li>
+        <li data-ws-day="0"><span>Breakfast Bloody Mary Sunday</span><span>Sun, 11 AM</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="eat">
+    <div class="wrap">
+      <h2>Real. Good. Food.</h2>
+      <p>Florida comfort food, fresh Gulf fish and a full bar with 18 taps.</p>
+      <div class="grid">
+        <figure><img src="../assets/gallery/WSFood2-768.webp" alt="A plate from the kitchen with fresh vegetables" loading="lazy" width="768" height="1024"><figcaption><h3>From the Gulf</h3><p>Fresh Grouper Sandwich, Blue Crab Cakes, Baja Fish or Shrimp Tacos</p></figcaption></figure>
+        <figure><img src="../assets/gallery/WSFood3-768.webp" alt="A loaded hot dog with onion straws and fries" loading="lazy" width="768" height="960"><figcaption><h3>Comfort classics</h3><p>Fancy Fried Green Tomatoes, the Original Whistle Stop Burger</p></figcaption></figure>
+        <figure><img src="../assets/gallery/WSBar-768.webp" alt="Bartenders mixing drinks" loading="lazy" width="768" height="768"><figcaption><h3>At the bar</h3><p>Key Lime Martini, Old Florida Mule, Safety Harbor Sangria</p></figcaption></figure>
+      </div>
+      <p style="margin-top:30px"><a class="btn" href="../menu.html">See the full menu</a></p>
+    </div>
+  </section>
+
+  <section class="story">
+    <div class="wrap grid">
+      <img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building" loading="lazy" width="988" height="415">
+      <div>
+        <h2>From drive-in window to Main Street patio</h2>
+        <p>This corner was Frostee Harbor, Jane and Henry Fox's ice cream stand, for more than 35 years. Dawn bought it in 1995 and again with Patrick in 2000. Today it seats more than 100, and Henry's milkshakes are still on the menu.</p>
+        <blockquote>“Great spot to relax and listen to local music. Food and service were amazing.”<footer>Greg Bell, Google review. Rated 4.4 on Google.</footer></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit" id="visit">
+    <div class="wrap">
+      <h2>Come find the patio</h2>
+      <div class="grid">
+        <div><h3>Address</h3><p>915 Main Street<br>Safety Harbor, FL 34695</p></div>
+        <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM<br>Fri–Sat 11 AM–10 PM</p></div>
+        <div><h3>Happy hour</h3><p>Daily 4–7 PM<br>Tue &amp; Wed 4 PM–close</p></div>
+        <div><h3>Call</h3><p><a href="tel:+17277261956">(727) 726-1956</a></p></div>
+      </div>
+      <div class="actions"><a class="btn" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Get directions</a><a class="btn soft" href="../private-events.html">Host your party here</a><a class="btn soft" href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a></div>
+    </div>
+  </section>
+</main>
+<footer class="site"><div class="wrap"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe since 1995</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div></footer>
+<script>
+  const slots = [
+    { time: "11 AM", title: "Lunch on the patio", body: "Burgers, Gulf fish and salads in the open air. Ask about today's food and drink specials." },
+    { time: "4 to 7 PM", title: "Happy hour", body: "Every day. Tuesdays and Wednesdays it runs from 4 PM to close." },
+    { time: "From 6 PM", title: "Games and theme nights", body: "Cornhole on Wednesdays, Martini Monday and Taco Night, open mic on Tuesdays." },
+    { time: "6:30 to 9:30 PM", title: "Live music", body: "Local artists on the patio stage every Friday and Saturday." },
+    { time: "9 PM Sun–Thu, 10 PM Fri–Sat", title: "Last call", body: "One more round in the lounge before the lights go down." },
+  ];
+  const day = document.getElementById("day");
+  const imgs = [...document.querySelectorAll("#photo img")];
+  const tabs = [...document.querySelectorAll(".rail button")];
+  function pick(i, focus) {
+    day.dataset.slot = i;
+    imgs.forEach((im, k) => im.classList.toggle("on", k === i));
+    tabs.forEach((t, k) => { t.setAttribute("aria-selected", String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+    document.getElementById("slot-time").textContent = slots[i].time;
+    document.getElementById("slot-title").textContent = slots[i].title;
+    document.getElementById("slot-body").textContent = slots[i].body;
+    if (focus) tabs[i].focus();
+  }
+  tabs.forEach((t, i) => t.addEventListener("click", () => pick(i)));
+  document.querySelector(".rail ol").addEventListener("keydown", (e) => {
+    const cur = tabs.findIndex((t) => t.getAttribute("aria-selected") === "true");
+    if (e.key === "ArrowRight") pick((cur + 1) % tabs.length, true);
+    if (e.key === "ArrowLeft") pick((cur + tabs.length - 1) % tabs.length, true);
+  });
+  // Open on the part of the day it is right now in Safety Harbor.
+  const now = new Date();
+  const h = Number(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "numeric", hour12: false }).format(now)) % 24;
+  const wd = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" }).format(now);
+  const musicNight = wd === "Fri" || wd === "Sat";
+  pick(h >= 21 || h < 4 ? 4 : h >= 18 ? (musicNight ? 3 : 2) : h >= 16 ? 1 : 0);
+</script>
+</body>
+</html>

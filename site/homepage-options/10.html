@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 10 · Seven Nights · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1d1b35;
+    --paper: #ffffff;
+    --mist: #f1f0f6;
+    --mon: #5b2a86; --tue: #b8327a; --wed: #e2564b; --thu: #ee8424; --fri: #e9ad00; --sat: #8fbf2f; --sun: #1c968c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 18px/1.6 "Public Sans", system-ui, sans-serif; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; height: auto; }
+  :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .wrap { width: min(1240px, 100% - 40px); margin-inline: auto; }
+  .tall { font-family: "Big Shoulders Display", Impact, sans-serif; }
+  h2 { margin: 0 0 14px; font: 800 clamp(42px, 5.4vw, 76px)/.95 "Big Shoulders Display", sans-serif; }
+  .btn { display: inline-block; padding: 14px 24px; border-radius: 10px; background: var(--ink); color: #fff; font-weight: 700; text-decoration: none; }
+  .btn.light { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+
+  /* Header */
+  .nav .wrap { display: flex; align-items: center; gap: 22px; padding: 16px 0; }
+  .nav .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; }
+  .nav .brand img { width: 44px; height: 44px; }
+  .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 600; }
+  .nav ul a { text-decoration: none; }
+  .nav ul a:hover { text-decoration: underline; text-underline-offset: 5px; }
+  .intro .wrap { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 18px 40px; padding: 18px 0 26px; }
+  .intro h1 { margin: 0; font: 900 clamp(54px, 8vw, 124px)/.85 "Big Shoulders Display", sans-serif; letter-spacing: -.01em; }
+  .intro p { margin: 0; max-width: 40ch; }
+  .intro .status { font-weight: 700; }
+
+  /* Seven columns */
+  .week { display: flex; height: min(76vh, 680px); min-height: 520px; }
+  .day { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; color: #fff; transition: flex-grow .5s ease; }
+  .day[aria-expanded="true"] { flex-grow: 7; }
+  .day button { position: absolute; inset: 0; width: 100%; background: none; border: 0; color: inherit; cursor: pointer; padding: 0; text-align: left; }
+  .day .name { position: absolute; left: 50%; bottom: 26px; writing-mode: vertical-rl; transform: translateX(-50%) rotate(180deg); white-space: nowrap; font: 800 clamp(30px, 3vw, 44px)/1 "Big Shoulders Display", sans-serif; transition: opacity .3s; }
+  .day[aria-expanded="true"] .name { opacity: 0; }
+  .day .open { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .35s ease .15s; }
+  .day[aria-expanded="true"] .open { opacity: 1; visibility: visible; }
+  .day .open .txt { position: absolute; left: 0; bottom: 0; width: min(500px, 100%); padding: clamp(22px, 2.6vw, 40px); background: var(--c); display: flex; flex-direction: column; z-index: 1; }
+  .day .open .when { font-weight: 700; opacity: .9; }
+  .day .open h3 { margin: 6px 0 10px; font: 900 clamp(46px, 5.4vw, 88px)/.9 "Big Shoulders Display", sans-serif; }
+  .day .open p { margin: 0; max-width: 34ch; font-size: 19px; }
+  .day .open .tonight-tag { display: inline-block; align-self: start; margin-bottom: 14px; padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,.22); font-weight: 700; font-size: 15px; }
+  .day .open figure { margin: 0; position: absolute; inset: 0; }
+  .day .open figure img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .day { background: var(--c); }
+  .d1 { --c: var(--mon); } .d2 { --c: var(--tue); } .d3 { --c: var(--wed); } .d4 { --c: var(--thu); }
+  .d5 { --c: var(--fri); color: var(--ink); } .d6 { --c: var(--sat); color: var(--ink); } .d0 { --c: var(--sun); }
+  .d5 .tonight-tag, .d6 .tonight-tag { background: rgba(29,27,53,.12); }
+  @media (prefers-reduced-motion: reduce) { .day, .day .open, .day .name { transition: none; } }
+
+  .hh { background: var(--ink); color: #fff; }
+  .hh .wrap { display: flex; flex-wrap: wrap; gap: 8px 30px; justify-content: space-between; padding: 16px 0; font-weight: 600; }
+  .hh b { color: var(--fri); }
+
+  /* Below */
+  section { padding: 90px 0; }
+  .eat .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 26px; }
+  .eat .item { border-top: 8px solid var(--c); padding-top: 14px; }
+  .eat .item h3 { margin: 0 0 6px; font: 800 30px/1 "Big Shoulders Display", sans-serif; }
+  .eat .item p { margin: 0; color: #4b4a63; }
+  .eat .photos { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 34px; }
+  .eat .photos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; }
+
+  .story { background: var(--mist); }
+  .story .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .story img { width: 100%; border-radius: 12px; }
+  .story blockquote { margin: 26px 0 0; font: 800 30px/1.1 "Big Shoulders Display", sans-serif; }
+  .story blockquote footer { margin-top: 8px; font: 400 15px/1.4 "Public Sans", sans-serif; color: #4b4a63; }
+
+  .visit .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 20px; }
+  .visit h3 { margin: 0 0 6px; font: 800 26px/1 "Big Shoulders Display", sans-serif; }
+  .visit p { margin: 0; }
+  .visit .actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .bar7 { display: flex; height: 10px; }
+  .bar7 i { flex: 1; }
+  footer.site { padding: 24px 0 40px; color: #4b4a63; font-size: 15px; }
+  footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; }
+
+  @media (max-width: 900px) {
+    .nav ul { display: none; }
+    .nav .btn { margin-left: auto; }
+    .week { flex-direction: column; height: auto; min-height: 0; }
+    .day { flex: none; height: 64px; transition: height .45s ease; }
+    .day[aria-expanded="true"] { height: 520px; }
+    .day .name { left: 20px; bottom: auto; top: 50%; writing-mode: horizontal-tb; transform: translateY(-50%); }
+    .day button::after { content: "+"; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font: 600 30px/1 "Public Sans", sans-serif; }
+    .day[aria-expanded="true"] button::after { content: none; }
+    .day[aria-expanded="true"] .name { opacity: 0; }
+    .eat .grid { grid-template-columns: 1fr 1fr; }
+    .story .grid, .visit .grid { grid-template-columns: 1fr; }
+    .eat .photos { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px) { .nav .brand span { display: none; } .eat .grid { grid-template-columns: 1fr; } }
+</style>
+<script src="shared.js" defer></script>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+    <ul>
+      <li><a href="../menu.html">Menu</a></li>
+      <li><a href="../events.html">Calendar</a></li>
+      <li><a href="../happy-hour.html">Happy hour</a></li>
+      <li><a href="../private-events.html">Private events</a></li>
+      <li><a href="#visit">Visit</a></li>
+    </ul>
+    <a class="btn" href="../order.html">Order online</a>
+  </div>
+</header>
+
+<div class="intro">
+  <div class="wrap">
+    <h1>Seven nights on Main Street</h1>
+    <div><p>Every night of the week has its own thing at Whistle Stop, Safety Harbor's open-air grill and bar since 1995.</p><p class="status" data-ws="status">Open daily from 11 AM</p></div>
+  </div>
+</div>
+
+<main>
+  <div class="week" id="week" role="list">
+    <div class="day d1" data-day="1" role="listitem"><button aria-label="Monday: Martini Monday and Taco Night"><span class="name">Monday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Monday, 4 PM to close</span><h3>Martini Monday &amp; Taco Night</h3><p>Half-off martinis and 2-for-$6 tacos. Words &amp; Wine book club meets the 3rd Monday.</p></div><figure><img src="../assets/gallery/WSBar.webp" alt="Bartenders pouring cocktails at the bar" loading="lazy" width="1080" height="1080"></figure></div></div>
+    <div class="day d2" data-day="2" role="listitem"><button aria-label="Tuesday: Open Mic Night"><span class="name">Tuesday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Tuesday, 6:30 to 9:30 PM</span><h3>Open Mic Night</h3><p>Local talent takes the stage. Happy hour runs 4 PM to close.</p></div><figure><img src="../assets/gallery/WSRocker2.webp" alt="A singer with a guitar at the microphone" loading="lazy" width="447" height="447"></figure></div></div>
+    <div class="day d3" data-day="3" role="listitem"><button aria-label="Wednesday: Cornhole"><span class="name">Wednesday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Wednesday, from 6 PM</span><h3>Cornhole Wednesdays</h3><p>Every Wednesday at 6 PM, with happy hour from 4 PM to close.</p></div><figure><img src="../assets/gallery/WSCornHole.webp" alt="Cornhole boards set up by the Whistle Stop sign" loading="lazy" width="1080" height="1080"></figure></div></div>
+    <div class="day d4" data-day="4" role="listitem"><button aria-label="Thursday: Guitar Guild and Ukulele Jam"><span class="name">Thursday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">3rd and 4th Thursdays</span><h3>Guitar Guild &amp; Ukulele Jam</h3><p>TB Guitar Guild on the 3rd Thursday, 6–9 PM. Tampa Bay Ukulele Society open jam on the 4th, 6:30–9:30 PM.</p></div><figure><img src="../assets/gallery/WSRocker.webp" alt="A guitarist playing on the patio" loading="lazy" width="1080" height="1080"></figure></div></div>
+    <div class="day d5" data-day="5" role="listitem"><button aria-label="Friday: Live music"><span class="name">Friday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Friday, 6:30 to 9:30 PM</span><h3>Live music</h3><p>Local artists on the patio stage. Happy hour 4–7 PM first.</p></div><figure><img src="../assets/gallery/WSGoodTimes.webp" alt="Friends at a table in the busy bar room" loading="lazy" width="1080" height="1080"></figure></div></div>
+    <div class="day d6" data-day="6" role="listitem"><button aria-label="Saturday: Live music"><span class="name">Saturday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Saturday, 6:30 to 9:30 PM</span><h3>Live music</h3><p>Another night of local artists, open till 10 PM.</p></div><figure><img src="../assets/gallery/WSDrinks.webp" alt="A long table of friends raising their glasses" loading="lazy" width="1280" height="878"></figure></div></div>
+    <div class="day d0" data-day="0" role="listitem"><button aria-label="Sunday: Breakfast Bloody Mary Sunday"><span class="name">Sunday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Today</span><span class="when">Sunday, from 11 AM</span><h3>Bloody Mary Sunday</h3><p>$5 mimosas and Bloody Marys with brunch on the patio.</p></div><figure><img src="../assets/gallery/WSDrinks2.webp" alt="A long table on the open-air patio by day" loading="lazy" width="810" height="1280"></figure></div></div>
+  </div>
+  <div class="hh"><div class="wrap"><span><b>Happy hour</b> every day 4–7 PM</span><span>Tuesday &amp; Wednesday: 4 PM to close</span><span>Daily drink &amp; food specials from 11 AM</span></div></div>
+
+  <section class="eat" aria-labelledby="et">
+    <div class="wrap">
+      <h2 id="et">Real. Good. Food.</h2>
+      <div class="grid">
+        <div class="item" style="--c: var(--wed)"><h3>Starters</h3><p>Fancy Fried Green Tomatoes, Smoked Fish Spread, Blue Crab Cakes</p></div>
+        <div class="item" style="--c: var(--thu)"><h3>Handhelds</h3><p>Original Whistle Stop Burger, Crab &amp; Shrimp Burger, Fresh Grouper Sandwich</p></div>
+        <div class="item" style="--c: var(--sun)"><h3>Plates</h3><p>Balsamic Glazed Salmon, 12 oz Rib Eye, Baja Fish or Shrimp Tacos</p></div>
+        <div class="item" style="--c: var(--tue)"><h3>Bar &amp; sweets</h3><p>18 taps, Key Lime Martini, milkshakes and Key Lime Pie</p></div>
+      </div>
+      <div class="photos">
+        <img src="../assets/gallery/WSFood2-480.webp" alt="A plate from the kitchen with fresh vegetables" loading="lazy" width="480" height="640">
+        <img src="../assets/gallery/WSFood3-480.webp" alt="A loaded hot dog with onion straws and fries" loading="lazy" width="480" height="600">
+        <img src="../assets/gallery/WSBar-480.webp" alt="Bartenders pouring cocktails" loading="lazy" width="480" height="480">
+      </div>
+      <p style="margin-top:28px"><a class="btn" href="../menu.html">See the full menu</a> <a class="btn light" href="../order.html">Order for pickup</a></p>
+    </div>
+  </section>
+
+  <section class="story" aria-labelledby="st">
+    <div class="wrap grid">
+      <img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building" loading="lazy" width="988" height="415">
+      <div>
+        <h2 id="st">A Main Street landmark</h2>
+        <p>The corner was Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand, for more than 35 years. Dawn bought it in 1995 and again with Patrick in 2000. Henry's milkshakes are still on the menu.</p>
+        <blockquote>“Love the hometown atmosphere! Whistle Stop is one of our favorites!”<footer>Shannon Schafer, Google review · 4.4 on Google</footer></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit" id="visit" aria-labelledby="vi">
+    <div class="wrap">
+      <h2 id="vi">Find us</h2>
+      <div class="grid">
+        <div><h3>Address</h3><p>915 Main Street<br>Safety Harbor, FL 34695</p></div>
+        <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM<br>Fri–Sat 11 AM–10 PM</p></div>
+        <div><h3>Call</h3><p><a href="tel:+17277261956">(727) 726-1956</a></p></div>
+      </div>
+      <div class="actions"><a class="btn" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Get directions</a><a class="btn light" href="../private-events.html">Plan a private event</a><a class="btn light" href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a></div>
+    </div>
+  </section>
+</main>
+<div class="bar7" aria-hidden="true"><i style="background:var(--mon)"></i><i style="background:var(--tue)"></i><i style="background:var(--wed)"></i><i style="background:var(--thu)"></i><i style="background:var(--fri)"></i><i style="background:var(--sat)"></i><i style="background:var(--sun)"></i></div>
+<footer class="site"><div class="wrap"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div></footer>
+<script>
+  const days = [...document.querySelectorAll(".day")];
+  function open(day) {
+    days.forEach((d) => {
+      const on = d === day;
+      d.setAttribute("aria-expanded", String(on));
+      d.querySelector("button").setAttribute("aria-expanded", String(on));
+      d.querySelector("button").tabIndex = 0;
+    });
+  }
+  days.forEach((d) => d.querySelector("button").addEventListener("click", () => open(d)));
+  const todayIdx = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" }).format(new Date()));
+  const today = days.find((d) => Number(d.dataset.day) === todayIdx) || days[0];
+  today.querySelector(".tonight-tag").hidden = false;
+  open(today);
+</script>
+</body>
+</html>
