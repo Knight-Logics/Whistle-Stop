@@ -1,0 +1,97 @@
+{
+  "source": "Dawn Pendola, email 2026-11-09, attachment Main Menu Edited Copy of Final june 17_24.pdf",
+  "status": "Working copy. Dawn said it is labeled final but still needs edits.",
+  "happyHour": "4–7",
+  "wheelSpins": ["4:30", "8:30"],
+  "groups": [
+    {
+      "id": "small-plates",
+      "name": "Small plates",
+      "items": [
+        {"id": "fgt", "name": "WS Fried Green Tomatoes", "price": "$12", "detail": "Bacon crumbles, diced red tomato, goat cheese, cilantro, house made ranch."},
+        {"id": "wings", "name": "Whistle Stop Wings", "price": "$16", "detail": "Made to order, with celery and house made blue cheese. Buffalo, honey sriracha, or Harbor Q hot BBQ."},
+        {"id": "fritters", "name": "Florida Real Corn Fritters", "price": "$12", "detail": "Guest favorite, with house made sriracha mayo."},
+        {"id": "pickles", "name": "Love Pickles?", "price": "$12", "detail": "Lightly floured and flash fried, with house made ranch."},
+        {"id": "cauliflower", "name": "Buffalo Cauliflower Bites", "price": "$12", "detail": "Celery, carrots, and house made blue cheese."},
+        {"id": "buffalo-shrimp", "name": "Buffalo Style Shrimp", "price": "$14", "detail": "Celery and house made blue cheese."},
+        {"id": "onions", "name": "Frizzled Onions", "price": "$10", "detail": "Thinly sliced, fried golden, with sriracha aioli."},
+        {"id": "fish-spread", "name": "Smoked Fish Spread", "price": "$14", "detail": "Smoked mahi mahi, made locally."},
+        {"id": "sprouts", "name": "WS Brussel Sprouts", "price": "$11", "detail": "Tossed with bacon, parmesan, and lemon."},
+        {"id": "chips", "name": "Whistle Stop Chips", "price": "$14", "detail": "Seasoned and grilled, with pico de gallo and a lemon wedge."},
+        {"id": "ahi-plate", "name": "Ahi Tuna Plate", "price": "$18", "detail": "Sesame encrusted, seared rare, with sliced cukes and cusabi sauce."}
+      ]
+    },
+    {
+      "id": "handhelds",
+      "name": "Burgers and handhelds",
+      "note": "Served with your choice of one side.",
+      "items": [
+        {"id": "original", "name": "Original Whistle Stop Burger", "price": "$17", "detail": "Fried green tomato, provolone, onion, and house made garlic aioli."},
+        {"id": "grouper-sandwich", "name": "Fresh Gulf Grouper Sandwich", "price": "Market price", "detail": "Lettuce, tomato, red onion, and house made tartar. Blackened, grilled, or fried."},
+        {"id": "bacon-cheese", "name": "Bacon & Cheese Please", "price": "$17", "detail": "Crispy bacon, cheddar, onion, lettuce, and tomato."},
+        {"id": "po-boy", "name": "Shrimp Po Boy", "price": "$17", "detail": "Blackened or grilled shrimp, kale, feta, greek dressing, and remoulade."},
+        {"id": "black-blue-burger", "name": "Black & Blue Burger", "price": "$17", "detail": "Blackened angus beef, onion, tomato, and blue cheese crumbles."},
+        {"id": "cilantro-chicken", "name": "WS Cilantro Ranch Chicken Sandwich", "price": "$16", "detail": "Grilled chicken, bacon, cheddar, tomato, and house made cilantro ranch.", "extra": "Avocado, add $2"},
+        {"id": "bbq-burger", "name": "BBQ Burger", "price": "$17", "detail": "Bacon, frizzled onions, cheddar, and Harbor Q BBQ sauce."},
+        {"id": "steak-sandwich", "name": "Steak Sandwich", "price": "$19.90", "detail": "NY strip on a hoagie roll with grilled onions, portobello, and provolone.", "extra": "Black & blue, add $2"},
+        {"id": "salmon-blt", "name": "Salmon BLT", "price": "$18", "detail": "Grilled or blackened salmon, bacon, lettuce, tomato, and house made garlic aioli."},
+        {"id": "pulled-pork", "name": "Pulled Pork Sandwich", "price": "$16", "detail": "House roasted pork, pickles, and Harbor Q BBQ sauce."},
+        {"id": "hemp-burger", "name": "Black Bean Hemp Burger", "price": "$16", "detail": "Made in house, on brioche with avocado, cucumber, tomato, and cusabi dressing."},
+        {"id": "spicy-wrap", "name": "WS Spicy Chicken Wrap", "price": "$16", "detail": "Grilled chicken, goat cheese, cucumber, red onion, garbanzo beans, roasted red peppers, and buffalo sauce."},
+        {"id": "blfgt", "name": "BLFGT", "price": "$14", "detail": "BLT on ciabatta with fried green tomato and house made garlic aioli."},
+        {"id": "florida-club", "name": "Florida Club Wrap", "price": "$16", "detail": "Angus beef, bacon, avocado, tomato, and house made blue cheese dressing."},
+        {"id": "buffalo-wrap", "name": "Buffalo Style Chicken Wrap", "price": "$16", "detail": "Breaded chicken tenders, cabbage, tomato, buffalo sauce, and shredded cheese."}
+      ]
+    },
+    {
+      "id": "salads",
+      "name": "Salads",
+      "items": [
+        {"id": "cobb", "name": "915 Main St Cobb Salad", "price": "$16", "detail": "Greens, chicken, tomato, egg, avocado, bacon, blue cheese crumbles, and house made blue cheese dressing."},
+        {"id": "ahi-salad", "name": "Seared Ahi Tuna Salad", "price": "$18", "detail": "Sesame crust, seared rare, greens, cucumber, avocado, frizzled onions, wasabi, pickled ginger, and cusabi dressing."},
+        {"id": "med-salad", "name": "Chopped Mediterranean Salad", "price": "$16", "detail": "Greens, grilled chicken, beets, feta, cucumber, tomato, red onion, garbanzo beans, kalamata olives, pepperoncini, pita chips, and greek dressing.", "extra": "With grilled shrimp $17 · with grilled salmon $18"},
+        {"id": "steak-salad", "name": "Black & Blue Steak Salad", "price": "$18.90", "detail": "Blackened strip steak, greens and arugula, tomato, red onion, blue cheese crumbles, and balsamic vinaigrette."},
+        {"id": "kale-caesar", "name": "Kale Caesar Salad with Grilled Chicken", "price": "$16", "detail": "Romaine and kale, Caesar dressing, parmesan, and croutons.", "extra": "With grilled shrimp $17 · with grilled salmon $18"}
+      ]
+    },
+    {
+      "id": "flatbreads",
+      "name": "Flatbreads and tacos",
+      "items": [
+        {"id": "veggie-garden", "name": "Veggie Garden", "price": "$15", "detail": "Grilled zucchini and yellow squash, red pepper, mushrooms, goat cheese, arugula, and balsamic glaze."},
+        {"id": "harbor-tacos", "name": "Harbor Fish or Shrimp Tacos", "price": "$15 cod · $17 shrimp", "detail": "Marinated cabbage, shredded cheese, house made remoulade, black beans and rice."},
+        {"id": "uptown-chicken", "name": "Uptown Chicken", "price": "$16", "detail": "Grilled chicken, roasted red pepper, onions, blue cheese crumbles, and balsamic glaze."},
+        {"id": "steak-tacos", "name": "Steak Tacos", "price": "$19.90", "detail": "Strip steak, cojita cheese, pickled onion, cilantro ranch, black beans and rice."},
+        {"id": "faroe-flat", "name": "Faroe Island Grilled Salmon", "price": "$18", "detail": "Blackened salmon, kale slaw, feta, cucumber, tomato, pepperoncini, and tzatziki."},
+        {"id": "mojo-tacos", "name": "Mojo Pork Tacos", "price": "$16", "detail": "Roasted pork, spring mix, avocado, cojita cheese, cilantro lime vinaigrette, black beans and rice."},
+        {"id": "steak-flatbread", "name": "Sliced Steak & Arugula Flatbread", "price": "$18.90", "detail": "Strip steak, arugula, house made horseradish sauce, and parmesan."}
+      ]
+    },
+    {
+      "id": "plates",
+      "name": "Large plates and bowls",
+      "items": [
+        {"id": "goodness", "name": "Bowl of Goodness", "price": "$16", "detail": "Quinoa, kale, feta, cucumber, kalamata olives, pepperoncini, grilled chicken, and greek dressing.", "extra": "With grilled shrimp $17 · with grilled salmon $18"},
+        {"id": "grouper", "name": "Fresh Gulf Grouper", "price": "Market price", "detail": "Grilled vegetables, black beans and rice, and house made tartar. Blackened, grilled, or fried."},
+        {"id": "pbr", "name": "PBR Bowl", "price": "$16", "detail": "Roasted pork, black beans and rice, cojita cheese, and cilantro lime vinaigrette."},
+        {"id": "fish-chips", "name": "Fish & Chips", "price": "$16", "detail": "North Atlantic cod in a locally brewed lager batter, with real good french fries."},
+        {"id": "faroe", "name": "Faroe Island Salmon", "price": "$21", "detail": "Blackened salmon fillet, grilled vegetables, and basmati rice."},
+        {"id": "taco-bowl", "name": "Harbor Fish or Shrimp Taco Bowl", "price": "$16 cod · $17 shrimp", "detail": "Black beans and rice, marinated cabbage, shredded cheese, remoulade, cilantro, and tortilla chips."},
+        {"id": "steak-frites", "name": "Steak Frites", "price": "$22.90", "detail": "Strip steak, seared to order, with real good fries."},
+        {"id": "mac", "name": "Smoked Gouda Mac N' Cheese & Grilled Chicken", "price": "$16", "detail": "Cavatappi, smoked gouda, provolone, bacon, and scallions.", "extra": "With grilled shrimp $17 · with grilled salmon $18"}
+      ]
+    },
+    {
+      "id": "sides",
+      "name": "Side dishes",
+      "note": "No prices were printed for these sides.",
+      "items": [
+        {"id": "fries", "name": "Real Good French Fries", "price": "", "detail": ""},
+        {"id": "sweet-fries", "name": "Sweet Potato Fries", "price": "", "detail": ""},
+        {"id": "vegetables", "name": "Grilled Vegetables", "price": "", "detail": ""},
+        {"id": "beans", "name": "Black Beans & Rice", "price": "", "detail": ""},
+        {"id": "slaw", "name": "Tangy Coleslaw", "price": "", "detail": ""}
+      ]
+    }
+  ]
+}

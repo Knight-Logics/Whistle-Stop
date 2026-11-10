@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 22 · Warm Week · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
+<style>
+  .intro .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; align-items: end; padding-bottom: 22px; }
+  .intro h1 { margin: 0; font-size: clamp(46px, 6vw, 78px); max-width: 14ch; }
+  .intro p { margin: 0; max-width: 36ch; }
+  .week { display: flex; min-height: 560px; }
+  .day { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; color: #fffaf3; background: var(--c); transition: flex-grow .45s ease; }
+  .day:has(button[aria-expanded="true"]) { flex-grow: 6.5; }
+  .day button { position: absolute; inset: 0; width: 100%; border: 0; background: none; color: inherit; cursor: pointer; padding: 0; text-align: left; }
+  .day .name { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%) rotate(180deg); writing-mode: vertical-rl; font-family: Calistoga, Georgia, serif; font-size: 28px; }
+  .day:has(button[aria-expanded="true"]) .name { opacity: 0; }
+  .day .open { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
+  .day:has(button[aria-expanded="true"]) .open { opacity: 1; visibility: visible; }
+  .day .txt { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px; background: linear-gradient(0deg, rgba(0,0,0,.55), transparent); z-index: 1; }
+  .day h3 { margin: 0 0 6px; font-size: clamp(32px, 4vw, 52px); }
+  .day p { margin: 0; max-width: 36ch; }
+  .day img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .d1 { --c: #8c4a32; } .d2 { --c: #c46b3a; } .d3 { --c: #a33b32; } .d4 { --c: #c9842a; }
+  .d5 { --c: #e2b15a; color: #3a2a22; } .d6 { --c: #6d8f62; color: #1d2418; } .d0 { --c: #3d6b5a; }
+  .picks { padding: 64px 0 10px; }
+  .picks h2 { margin: 0 0 18px; font-size: clamp(36px, 5vw, 56px); }
+  .picks .plates { grid-template-columns: repeat(4, 1fr); }
+  @media (prefers-reduced-motion: reduce) { .day { transition: none; } }
+  @media (max-width: 800px) {
+    .week { flex-direction: column; min-height: 0; }
+    .day { flex: none; height: 64px; }
+    .day:has(button[aria-expanded="true"]) { height: 420px; }
+    .picks .plates { grid-template-columns: 1fr; }
+    .day .name { left: 18px; top: 18px; bottom: auto; writing-mode: horizontal-tb; transform: none; }
+  }
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+  <ul><li><a href="#menu">Menu</a></li><li><a href="../events.html">Calendar</a></li><li><a href="#visit">Visit</a></li></ul>
+  <a class="btn" href="../order.html">Order online</a>
+</div></header>
+<div class="intro"><div class="wrap">
+  <h1>Seven warm nights</h1>
+  <p>Every night has its own thing, in patio colors. <span class="status" data-ws="status">Open daily from 11 AM</span></p>
+</div></div>
+<main>
+  <div class="week" id="week">
+    <div class="day d1" data-day="1"><button type="button" aria-expanded="false" aria-label="Monday"><span class="name">Monday</span></button><div class="open"><img src="../assets/gallery/WSBar-560.webp" alt="Bartenders pouring at the bar" width="560" height="560"><div class="txt"><h3>Martini Monday &amp; Taco Night</h3><p>4 PM to close. Half-off martinis and 2-for-$6 tacos.</p></div></div></div>
+    <div class="day d2" data-day="2"><button type="button" aria-expanded="false" aria-label="Tuesday"><span class="name">Tuesday</span></button><div class="open"><img src="../assets/gallery/WSRocker-560.webp" alt="A guitarist on the patio" width="560" height="560"><div class="txt"><h3>Open Mic Night</h3><p>6:30 to 9:30 PM. Happy hour runs to close.</p></div></div></div>
+    <div class="day d3" data-day="3"><button type="button" aria-expanded="false" aria-label="Wednesday"><span class="name">Wednesday</span></button><div class="open"><img src="../assets/gallery/WSCornHole-560.webp" alt="Cornhole boards by the Whistle Stop sign" width="560" height="560"><div class="txt"><h3>Cornhole Wednesdays</h3><p>From 6 PM. Happy hour runs to close.</p></div></div></div>
+    <div class="day d4" data-day="4"><button type="button" aria-expanded="false" aria-label="Thursday"><span class="name">Thursday</span></button><div class="open"><img src="../assets/gallery/WSRocker2.webp" alt="A singer with a guitar" width="447" height="447"><div class="txt"><h3>Guitar Guild &amp; Ukulele Jam</h3><p>3rd Thursday 6–9. 4th Thursday 6:30–9:30.</p></div></div></div>
+    <div class="day d5" data-day="5"><button type="button" aria-expanded="true" aria-label="Friday"><span class="name">Friday</span></button><div class="open"><img src="../assets/gallery/WSGoodTimes-560.webp" alt="Friends at a table in the bar" width="560" height="560"><div class="txt"><h3>Live music</h3><p>6:30 to 9:30 PM on the patio.</p></div></div></div>
+    <div class="day d6" data-day="6"><button type="button" aria-expanded="false" aria-label="Saturday"><span class="name">Saturday</span></button><div class="open"><img src="../assets/gallery/WSDrinks-560.webp" alt="Friends raising glasses" width="560" height="560"><div class="txt"><h3>Live music</h3><p>6:30 to 9:30 PM. Kitchen open until 10.</p></div></div></div>
+    <div class="day d0" data-day="0"><button type="button" aria-expanded="false" aria-label="Sunday"><span class="name">Sunday</span></button><div class="open"><img src="../assets/gallery/WSDrinks2.webp" alt="A long table on the patio by day" width="810" height="1280"><div class="txt"><h3>Bloody Mary Sunday</h3><p>$5 mimosas and Bloody Marys from 11 AM.</p></div></div></div>
+  </div>
+  <section class="picks"><div class="wrap">
+    <h2>A few plates from the working menu</h2>
+    <div class="plates">
+      <article class="plate" data-plate="wings"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="cobb"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="harbor-tacos"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="faroe"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+    </div>
+  </div></section>
+  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
+  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
+</main>
+<script src="shared.js"></script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
+<script>
+document.querySelectorAll(".day button").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll(".day button").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+    btn.setAttribute("aria-expanded", "true");
+  });
+});
+var today = new Date().getDay();
+var match = document.querySelector('.day[data-day="' + today + '"] button');
+if (match) match.click();
+</script>
+</body>
+</html>

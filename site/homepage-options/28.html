@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 28 · Quiet After Dark · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
+<style>
+  .night { position: relative; min-height: 78svh; display: grid; align-items: end; overflow: hidden; color: #f6efe4; }
+  .night img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .night .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,20,16,.2), rgba(10,20,16,.78)); }
+  .night .wrap { position: relative; z-index: 1; padding-bottom: 48px; }
+  .night h1 { margin: 8px 0; font-size: clamp(48px, 7vw, 92px); max-width: 10ch; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #f0c27a; box-shadow: 0 0 10px #f0c27a; display: inline-block; }
+  .below { padding: 48px 0; }
+  .below .wrap { display: grid; grid-template-columns: .9fr 1.1fr; gap: 28px; }
+  @media (max-width: 800px) { .below .wrap { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-theme="night">
+<header class="nav"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+  <ul><li><a href="#menu">Menu</a></li><li><a href="../events.html">Live music</a></li><li><a href="#visit">Visit</a></li></ul>
+  <a class="btn" href="../order.html">Order online</a>
+</div></header>
+<main>
+  <section class="night" aria-labelledby="h1">
+    <img class="drift" src="../assets/gallery/WSLounge-560.webp" alt="The covered patio lounge at night" width="560" height="560">
+    <div class="shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <p><i class="dot breathe"></i> <span class="status" data-ws="status">Open daily from 11 AM</span></p>
+      <h1 id="h1">Old Florida, after dark</h1>
+      <p class="lede">A quieter patio night. Music Friday and Saturday, 6:30 to 9:30.</p>
+    </div>
+  </section>
+  <section class="below"><div class="wrap">
+    <div>
+      <h2>This week</h2>
+      <ul class="nights" data-warm-nights></ul>
+    </div>
+    <div class="plates">
+      <article class="plate" data-plate="original"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="salmon-blt"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="ahi-salad"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="steak-flatbread"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+    </div>
+  </div></section>
+  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
+  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
+</main>
+<script src="shared.js"></script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
+</body>
+</html>

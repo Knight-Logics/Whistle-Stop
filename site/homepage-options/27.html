@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 27 · Kitchen Window · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
+<style>
+  .window { padding: 10px 0 10px; }
+  .shots { display: grid; grid-template-columns: 1.2fr .8fr .8fr; gap: 12px; }
+  .shots figure { margin: 0; position: relative; }
+  .shots img { width: 100%; height: 320px; object-fit: cover; border-radius: 18px; }
+  .shots figcaption { margin-top: 8px; font-weight: 800; }
+  .window h1 { margin: 18px 0 8px; font-size: clamp(42px, 6vw, 70px); }
+  @media (max-width: 800px) { .shots { grid-template-columns: 1fr; } .shots img { height: 220px; } }
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+  <ul><li><a href="#menu">Menu</a></li><li><a href="../events.html">This week</a></li><li><a href="#visit">Visit</a></li></ul>
+  <a class="btn" href="../order.html">Order online</a>
+</div></header>
+<main>
+  <section class="window" aria-labelledby="h1"><div class="wrap">
+    <div class="shots">
+      <figure><img src="../assets/gallery/WSFood-560.webp" alt="A plate from the Whistle Stop kitchen" width="560" height="560"><figcaption>From the kitchen</figcaption></figure>
+      <figure><img src="../assets/gallery/WSFood2-480.webp" alt="A plate with fresh vegetables" width="480" height="640"><figcaption>On the table</figcaption></figure>
+      <figure><img src="../assets/gallery/WSBar-480.webp" alt="Bartenders pouring cocktails" width="480" height="480"><figcaption>At the bar</figcaption></figure>
+    </div>
+    <h1 id="h1">Look, then order</h1>
+    <p class="lede">Photos from the restaurant. Prices from the working menu sit next to them, not on top of the pictures.</p>
+    <div class="plates">
+      <article class="plate" data-plate="grouper"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="fish-chips"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="steak-tacos"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+    </div>
+  </div></section>
+  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
+  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
+</main>
+<script src="shared.js"></script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
+</body>
+</html>

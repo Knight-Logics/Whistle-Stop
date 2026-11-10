@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 30 · House Favorites · Whistle Stop Grill &amp; Bar</title>
+<base target="_top">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
+<style>
+  .house { padding: 20px 0 10px; }
+  .house .wrap { display: grid; grid-template-columns: .85fr 1.15fr; gap: 28px; align-items: center; }
+  .house img { width: 100%; border-radius: 18px; }
+  .house h1 { margin: 8px 0 8px; font-size: clamp(42px, 5vw, 68px); }
+  .card { background: var(--card); border-radius: 22px; padding: 8px 22px 12px; }
+  @media (max-width: 800px) { .house .wrap { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+  <ul><li><a href="#menu">Full menu</a></li><li><a href="../about.html">Our story</a></li><li><a href="#visit">Visit</a></li></ul>
+  <a class="btn" href="../order.html">Order online</a>
+</div></header>
+<main>
+  <section class="house" aria-labelledby="h1"><div class="wrap">
+    <div>
+      <img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building" width="988" height="415">
+      <p class="status" data-ws="status">Open daily from 11 AM</p>
+      <h1 id="h1">House favorites</h1>
+      <p class="lede">Eight plates from the working menu, at the size you'd read at the table.</p>
+    </div>
+    <div class="card">
+      <div class="item" data-plate="fgt"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="fish-spread"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="original"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="blfgt"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="grouper-sandwich"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="harbor-tacos"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="faroe"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="steak-frites"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+    </div>
+  </div></section>
+  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
+  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
+</main>
+<script src="shared.js"></script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
+</body>
+</html>
