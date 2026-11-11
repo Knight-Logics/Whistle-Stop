@@ -10,10 +10,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="warm.css">
+<link rel="stylesheet" href="wind.css">
 <style>
-  .house { padding: 20px 0 10px; }
-  .house .wrap { display: grid; grid-template-columns: .85fr 1.15fr; gap: 28px; align-items: center; }
-  .house img { width: 100%; border-radius: 18px; }
+  .art-hero { margin: 0; }
+  .house { padding: 28px 0 10px; }
+  .house .wrap { display: grid; grid-template-columns: .8fr 1.2fr; gap: 28px; align-items: center; }
   .house h1 { margin: 8px 0 8px; font-size: clamp(42px, 5vw, 68px); }
   .card { background: var(--card); border-radius: 22px; padding: 8px 22px 12px; }
   @media (max-width: 800px) { .house .wrap { grid-template-columns: 1fr; } }
@@ -26,9 +27,11 @@
   <a class="btn" href="../order.html">Order online</a>
 </div></header>
 <main>
+  <section class="art-hero" aria-label="Old Florida, fresh vibe">
+    <div class="breeze" data-breeze="../assets/gallery/ws-old-florida-hero.jpg?v=2" data-breeze-alt="Whistle Stop Grill and Bar at sunset, with the patio, string lights, and palms"></div>
+  </section>
   <section class="house" aria-labelledby="h1"><div class="wrap">
     <div>
-      <img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building" width="988" height="415">
       <p class="status" data-ws="status">Open daily from 11 AM</p>
       <h1 id="h1">House favorites</h1>
       <p class="lede">Eight plates from the working menu, at the size you'd read at the table.</p>
@@ -47,6 +50,7 @@
   <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
   <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
 </main>
+<script src="wind.js"></script>
 <script src="shared.js"></script>
 <script src="dawn-menu.js"></script>
 <script src="warm.js"></script>
