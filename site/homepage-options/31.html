@@ -12,7 +12,6 @@
   <link rel="preload" href="assets/gallery/WSSunset-480.webp" as="image" type="image/webp" fetchpriority="high" />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <link rel="stylesheet" href="css/main.css?v=43" />
-  <link rel="stylesheet" href="homepage-options/wind.css">
   <link rel="preload" href="css/reviews.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <style>
     .hero .reveal,
@@ -31,6 +30,7 @@
     .hero-art .hero-bg { position: relative; inset: auto; width: 100%; }
     .hero-art .hero-overlay, .hero-art .hero-aside { display: none; }
     .hero-art .hero-content { position: relative; z-index: 2; padding-top: 1.5rem; }
+    .hero-art .hero-still { display: block; width: 100%; height: auto; }
   </style>
   <link rel="icon" href="assets/logo.webp" type="image/webp" />
   <link rel="icon" href="assets/logo.png" type="image/png" />
@@ -268,7 +268,7 @@
 
   <main>
     <section class="hero hero-art" data-hero="index">
-      <div class="hero-bg breeze" data-breeze="assets/gallery/ws-old-florida-hero.jpg?v=2" data-breeze-alt="Whistle Stop Grill and Bar at sunset, with the patio, string lights, and palms"></div>
+      <div class="hero-bg"><img class="hero-still" src="assets/gallery/ws-old-florida-hero.jpg?v=3" alt="Whistle Stop Grill and Bar at sunset, with the patio, string lights, and palms" width="1024" height="515"></div>
       <div class="hero-overlay" aria-hidden="true"></div>
       <div class="container hero-aside">
         <div class="hero-social-float" data-include="partials/header-socials.html"></div>
@@ -429,7 +429,6 @@
   <footer class="site-footer" data-include="partials/footer.html"></footer>
   <nav class="mobile-cta" data-include="partials/mobile-cta.html"></nav>
 
-  <script src="homepage-options/wind.js"></script>
   <script src="js/config-store.js?v=32"></script>
   <script src="js/site-apply.js?v=11"></script>
   <script src="js/includes.js" defer></script>
