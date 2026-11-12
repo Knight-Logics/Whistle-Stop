@@ -8,31 +8,22 @@
 <base target="_top">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Lilita+One&family=Nunito:wght@400;600;700;800&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="warm.css">
 <style>
-  .bar30 { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 18px; height: 78px; padding: 0 28px; background: #0b0b0b; color: #fff; font-family: Outfit, Nunito, sans-serif; }
-  .brand30 { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; }
-  .brand30 svg { width: 44px; height: 44px; flex: none; }
-  .lockup { display: flex; flex-direction: column; line-height: 1; }
-  .lockup strong { font-family: "Lilita One", Nunito, sans-serif; font-weight: 400; font-size: 30px; letter-spacing: .01em; }
-  .lockup i { display: block; height: 3px; margin: 4px 0 5px; border-radius: 2px; background: #e4c15a; }
-  .lockup em { font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
-  .bar30 nav { display: flex; gap: 26px; margin-left: auto; }
-  .bar30 nav a { color: #fff; text-decoration: none; font-weight: 700; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; }
-  .bar30 nav a:hover { color: #e4c15a; }
-  .order30 { margin-left: 8px; padding: 10px 18px; border: 2px solid #e4c15a; border-radius: 999px; color: #f4e7b4; font-weight: 800; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
-  .order30:hover { background: #e4c15a; color: #111; }
-  .stage30 { min-height: calc(100svh - 78px); background: #101510; display: flex; align-items: flex-start; justify-content: center; }
-  .art-hero { width: min(100%, calc((100svh - 78px) * 1024 / 515)); margin: 0; }
+  .stage30 { min-height: 100svh; background: #070707; display: flex; align-items: center; justify-content: center; }
+  .art-hero { position: relative; width: min(100%, calc(100svh * 1672 / 941)); margin: 0; }
   .art-hero img { display: block; width: 100%; height: auto; max-width: none; }
-  @media (max-width: 860px) {
-    .bar30 { flex-wrap: wrap; height: auto; min-height: 0; padding: 12px 16px; }
-    .bar30 nav { order: 3; width: 100%; margin: 0; justify-content: space-between; gap: 10px; overflow-x: auto; }
-    .order30 { margin-left: auto; }
-    .stage30 { min-height: calc(100svh - 132px); }
-    .art-hero { width: min(100%, calc((100svh - 132px) * 1024 / 515)); }
-  }
+  .hitnav { position: absolute; left: 0; right: 0; top: 0; height: 10.63%; }
+  .hitnav a { position: absolute; top: 0; bottom: 0; color: transparent; }
+  .hitnav a:focus-visible { outline: 2px solid #e4c15a; outline-offset: -3px; }
+  .hitnav .logo { left: 2%; width: 27%; }
+  .hitnav .menu { left: 33.5%; width: 7%; }
+  .hitnav .events { left: 42.5%; width: 8%; }
+  .hitnav .gatherings { left: 52.5%; width: 12.5%; }
+  .hitnav .about { left: 67%; width: 7%; }
+  .hitnav .visit { left: 76.5%; width: 6%; }
+  .hitnav .order { left: 85.5%; width: 13%; }
   .house { padding: 28px 0 10px; }
   .house .wrap { display: grid; grid-template-columns: .8fr 1.2fr; gap: 28px; align-items: center; }
   .house h1 { margin: 8px 0 8px; font-size: clamp(42px, 5vw, 68px); }
@@ -41,24 +32,19 @@
 </style>
 </head>
 <body>
-<header class="bar30">
-  <a class="brand30" href="../index.html">
-    <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 8h36L28 28v8h6v4H14v-4h6v-8L6 8z" fill="#d6f25c"/><path d="M18 16c6 2 10 2 14-1" fill="none" stroke="#0b0b0b" stroke-width="1.6" stroke-linecap="round" opacity=".45"/></svg>
-    <span class="lockup"><strong>Whistle Stop</strong><i></i><em>Grill &amp; Bar</em></span>
-  </a>
-  <nav aria-label="Primary">
-    <a href="../menu.html">Menu</a>
-    <a href="../events.html">Events</a>
-    <a href="../private-events.html">Gatherings</a>
-    <a href="../about.html">About</a>
-    <a href="#visit">Visit</a>
-  </nav>
-  <a class="order30" href="../order.html">Order online</a>
-</header>
 <main>
   <div class="stage30">
   <section class="art-hero" aria-label="Old Florida, fresh vibe">
-    <img src="../assets/gallery/ws-old-florida-hero.jpg?v=4" alt="Whistle Stop Grill and Bar at sunset, with the patio, string lights, and palms" width="1024" height="515">
+    <img src="../assets/gallery/ws-home-page.png?v=5" alt="Whistle Stop Grill and Bar at sunset, with the patio, string lights, and palms" width="1672" height="941">
+    <nav class="hitnav" aria-label="Primary">
+      <a class="logo" href="../index.html">Whistle Stop Grill &amp; Bar</a>
+      <a class="menu" href="../menu.html">Menu</a>
+      <a class="events" href="../events.html">Events</a>
+      <a class="gatherings" href="../private-events.html">Gatherings</a>
+      <a class="about" href="../about.html">About</a>
+      <a class="visit" href="#visit">Visit</a>
+      <a class="order" href="../order.html">Order online</a>
+    </nav>
   </section>
   </div>
   <section class="house" aria-labelledby="h1"><div class="wrap">
