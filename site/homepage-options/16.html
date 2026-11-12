@@ -30,6 +30,8 @@
     .hero-art .hero-bg { position: relative; inset: auto; width: min(100%, calc((100svh - var(--header-h)) * 1024 / 511)); height: auto; margin-inline: auto; z-index: 0; background: transparent; }
     .hero-art .hero-bg .hero-still { display: block; width: 100%; height: auto; max-width: none; object-fit: contain; }
     .hero-art .hero-content { position: absolute; z-index: 2; top: var(--header-h); bottom: 0; left: 0; right: 0; width: min(1180px, calc(100% - 2rem)); margin-inline: auto; display: flex; flex-direction: column; justify-content: center; padding-top: 0; }
+    .hero-art h1 { font-size: clamp(2.7rem, 6.2vw, 4.6rem); line-height: 0.92; max-width: 12em; }
+    .hero-art .hero-title-rest { display: block; margin-top: 0.55rem; font-size: clamp(1.15rem, 2.1vw, 1.55rem); line-height: 1.15; letter-spacing: 0.04em; color: var(--cream); }
     .hero-art .hero-plate { position: absolute; z-index: 3; top: 48%; right: calc((min(1180px, 100vw - 2rem) - min(100vw, (100svh - var(--header-h)) * 1024 / 511)) / 2 + 1.25rem); transform: translateY(-50%); width: min(248px, 26vw); margin: 0; display: flex; flex-direction: column; align-items: stretch; gap: 0.65rem; }
     .hero-art .hero-content { padding-right: min(300px, 34%); }
     .hero-plate-stage { position: relative; aspect-ratio: 1; border-radius: 18px; overflow: hidden; background: #141414; border: 2px solid rgba(244, 239, 228, 0.4); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45); }
@@ -296,10 +298,8 @@
       </div>
       <div class="container hero-content">
         <p class="hero-eyebrow reveal visible" data-hero-eyebrow>915 Main Street · Safety Harbor, FL</p>
-        <h1 class="reveal stagger-1 visible">
-          <span class="hero-title"><span data-hero-title-1>Whistle Stop</span><br /><span data-hero-title-2>Grill &amp; Bar</span></span>
-          <span class="hero-tagline" data-hero-tagline>Old Florida / New Vibe</span>
-        </h1>
+        <h1 class="reveal stagger-1 visible">Whistle Stop Grill &amp; Bar <span class="hero-title-rest">| Live Music &amp; Dining in Safety Harbor</span></h1>
+        <p class="hero-tagline reveal stagger-2 visible" data-hero-tagline>Old Florida / New Vibe</p>
         <p class="lead reveal stagger-3 visible" data-hero-lead>
           Real. Good. Food. Since 1995 — open-air dining, 18 taps, live local music, and a dog-friendly patio in the heart of downtown Safety Harbor.
         </p>
