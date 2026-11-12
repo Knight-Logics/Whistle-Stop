@@ -4,275 +4,88 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 6 · Scroll the Patio · Whistle Stop Grill &amp; Bar</title>
+<title>Option 6 · Warm Week · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Libre+Franklin:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
 <style>
-  :root { --sea: #003b46; --deep: #002a33; --aqua: #2ec4b6; --sun: #ffbf1f; --hib: #ff3d6e; --white: #ffffff; --ink: #062026; }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--sea); color: var(--white); font: 400 18px/1.55 "Libre Franklin", system-ui, sans-serif; overflow-x: clip; }
-  a { color: inherit; }
-  img, svg { display: block; max-width: 100%; }
-  img { height: auto; }
-  :focus-visible { outline: 3px solid var(--sun); outline-offset: 4px; }
-  h1, h2, h3 { font-family: "Anton", Impact, sans-serif; font-weight: 400; margin: 0; line-height: .95; text-transform: uppercase; letter-spacing: .005em; }
-  .wrap { width: min(1240px, 100% - 40px); margin-inline: auto; }
-  .btn { display: inline-flex; align-items: center; padding: 15px 26px; border-radius: 999px; background: var(--sun); color: var(--ink); font-weight: 800; text-decoration: none; transition: background .3s, color .3s, translate .3s cubic-bezier(.2,.7,.2,1); }
-  .btn:hover { background: var(--white); }
-  .btn.line { background: transparent; color: var(--white); box-shadow: inset 0 0 0 2px var(--white); }
-  .btn.line:hover { background: var(--white); color: var(--ink); }
-
-  .moving [data-split] .w { display: inline-block; opacity: 0; transform: translateY(110%); clip-path: inset(0 0 0 0); }
-  .moving [data-split].in .w { animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--wi) * 80ms + .1s); }
-  @keyframes rise { to { opacity: 1; transform: none; } }
-
-  .nav { position: fixed; inset: 0 0 auto; z-index: 20; transition: background .3s; }
-  .nav.solid { background: rgba(0,42,51,.92); backdrop-filter: blur(8px); }
-  .nav .wrap { display: flex; align-items: center; gap: 24px; height: 76px; }
-  .nav .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 800; }
-  .nav .brand img { width: 44px; height: 44px; }
-  .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 600; }
-  .nav ul a { text-decoration: none; }
-  .nav ul a:hover { color: var(--sun); }
-  .nav .btn { padding: 10px 18px; }
-
-  /* photo carousel that turns with scroll */
-  .spin { position: relative; height: 320vh; }
-  .spin .pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center; background: radial-gradient(70% 60% at 50% 55%, #0a5664, var(--sea) 60%, var(--deep)); }
-  .giant { position: absolute; inset: -8vh 0 8vh; display: grid; place-items: center; font: 400 clamp(120px, 24vw, 380px)/.8 "Anton", sans-serif; color: rgba(255,191,31,.92); letter-spacing: var(--ls, -.01em); white-space: nowrap; user-select: none; text-transform: uppercase; }
-  .scene3d { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 40%; }
-  .cyl { --pw: 220px; --ph: 270px; --n: 12; --r: calc(var(--n) * (var(--pw) + 26px) / 6.2832); position: absolute; left: 50%; top: 41%; transform-style: preserve-3d; transform: translateZ(calc(var(--r) * -1 + 120px)) rotateX(-8deg) rotateY(var(--a, 0deg)) scale(var(--s, 1)); }
-  .panel { position: absolute; left: calc(var(--pw) / -2); top: calc(var(--ph) / -2); width: var(--pw); height: var(--ph); transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--r)); backface-visibility: hidden; border-radius: 18px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.45); }
-  .panel img { width: 100%; height: 100%; object-fit: cover; }
-  .spin .copy { position: absolute; left: 0; right: 0; bottom: 7vh; z-index: 3; }
-  .spin .copy .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px 40px; }
-  .spin h1 { font-size: clamp(40px, 4.6vw, 70px); max-width: 22ch; text-shadow: 0 6px 30px rgba(0,0,0,.5); }
-  .spin p { margin: 12px 0 0; max-width: 40ch; color: #d6eef0; text-shadow: 0 2px 12px rgba(0,0,0,.6); }
-  .spin .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-  .spin .shade { position: absolute; inset: auto 0 0; height: 50%; background: linear-gradient(0deg, rgba(0,42,51,.95), transparent); z-index: 2; pointer-events: none; }
-  .meter { position: absolute; right: 22px; top: 50%; translate: 0 -50%; width: 4px; height: 160px; border-radius: 2px; background: rgba(255,255,255,.2); z-index: 3; }
-  .meter i { position: absolute; left: 0; right: 0; top: 0; height: calc(var(--p, 0) * 100%); background: var(--sun); border-radius: 2px; }
-
-  /* coverflow of plates */
-  .flow { position: relative; height: 340vh; }
-  .flow .pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--bg, #e8452c); transition: background .6s; }
-  .flow .back { position: absolute; left: 0; right: 0; top: 12vh; text-align: center; font: 400 clamp(90px, 17vw, 270px)/.85 "Anton", sans-serif; text-transform: uppercase; color: rgba(255,255,255,.18); white-space: nowrap; transition: opacity .3s; }
-  .flow .head { position: absolute; left: 0; right: 0; top: 96px; z-index: 3; }
-  .flow .head h2 { font-size: clamp(36px, 4vw, 58px); color: var(--white); text-shadow: 0 3px 0 rgba(0,0,0,.15); }
-  .flow .head p { margin: 6px 0 0; color: rgba(255,255,255,.9); font-weight: 600; }
-  .deck { position: absolute; left: 50%; top: 56%; width: 0; height: 0; perspective: 1400px; }
-  .pcard { --w: 300px; position: absolute; left: calc(var(--w) / -2); top: -220px; width: var(--w); height: 440px; border-radius: 26px; background: var(--white); color: var(--ink); text-decoration: none; display: flex; flex-direction: column; padding: 22px 24px 24px; box-shadow: 0 30px 60px rgba(0,0,0,.25); transform-style: preserve-3d; will-change: transform; }
-  .pcard .art { height: 150px; display: grid; place-items: center; border-radius: 18px; background: color-mix(in srgb, var(--c) 18%, #fff); margin-bottom: 14px; }
-  .pcard .art svg { height: 160px; margin-top: -24px; filter: drop-shadow(0 12px 10px rgba(0,0,0,.2)); }
-  .pcard h3 { font-size: 34px; color: var(--ink); }
-  .pcard .meta { font-weight: 800; color: var(--c); margin: 4px 0 8px; font-size: 15px; filter: brightness(.8); }
-  .pcard ul { list-style: none; padding: 0; margin: 0; font-size: 15px; }
-  .pcard li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-top: 1px solid #e3ecee; }
-  .pcard li b { white-space: nowrap; }
-  .pcard .go { margin-top: auto; align-self: flex-start; padding: 11px 18px; border-radius: 999px; background: var(--ink); color: var(--white); font-weight: 800; font-size: 15px; transition: background .3s; }
-  .pcard.center .go { background: var(--hib); }
-  .flow .order { position: absolute; left: 50%; bottom: 5vh; translate: -50% 0; z-index: 3; }
-  .dots { position: absolute; left: 50%; bottom: calc(5vh + 70px); translate: -50% 0; display: flex; gap: 8px; z-index: 3; }
-  .dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.45); transition: width .3s, background .3s; }
-  .dots i.on { width: 26px; border-radius: 4px; background: var(--white); }
-
-  /* week */
-  .week { padding: 120px 0; background: var(--deep); overflow: hidden; }
-  .week .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 40px; }
-  .week h2 { font-size: clamp(48px, 6vw, 96px); color: var(--sun); }
-  .week .head p { margin: 0; max-width: 40ch; color: #cfe4e7; }
-  .row7 { display: grid; grid-template-columns: 200px 1fr auto; gap: 24px; align-items: baseline; padding: 18px 0; border-top: 1px solid rgba(255,255,255,.14); }
-  .row7 b { font: 400 clamp(36px, 4vw, 58px)/1 "Anton", sans-serif; text-transform: uppercase; color: var(--white); }
-  .row7 span { font-size: 22px; font-weight: 800; }
-  .row7 small { color: #9fc4c9; font-size: 16px; }
-  .row7.is-today b, .row7.is-today span { color: var(--hib); }
-  .moving .row7[data-reveal] { opacity: 0; transform: translateX(calc(var(--dir) * 120px)); transition: opacity .7s, transform 1s cubic-bezier(.2,.8,.2,1); }
-  .moving .row7[data-reveal].in { opacity: 1; transform: none; }
-
-  .visit { padding: 100px 0 50px; }
-  .visit .grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 40px; }
-  .visit h2 { font-size: clamp(44px, 5vw, 80px); color: var(--white); }
-  .visit h3 { font-size: 24px; margin-bottom: 8px; color: var(--sun); }
-  .visit p { margin: 0 0 4px; color: #d6eef0; }
-  .visit .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 70px; color: #9fc4c9; font-size: 15px; }
-
-  @media (max-width: 900px) {
-    .nav ul { display: none; }
-    .nav .btn { margin-left: auto; }
-    .spin { height: 260vh; }
-    .cyl { --pw: 140px; --ph: 180px; top: 33%; transform: translateZ(calc(var(--r) * -1 + 40px)) rotateX(-8deg) rotateY(var(--a, 0deg)) scale(var(--s, 1)); }
-    .scene3d { perspective: 900px; }
-    .spin .copy { bottom: 4vh; }
-    .spin h1 { font-size: 36px; }
-    .spin p { font-size: 16px; }
-    .meter { display: none; }
-    .giant { inset: 0; font-size: 30vw; align-items: start; padding-top: 13vh; }
-    .flow { height: 300vh; }
-    .pcard { --w: 250px; height: 390px; top: -190px; padding: 18px; }
-    .pcard .art { height: 120px; }
-    .pcard .art svg { height: 130px; }
-    .pcard h3 { font-size: 28px; }
-    .pcard li { font-size: 13px; }
-    .flow .head { top: 84px; }
-    .deck { top: 58%; }
-    .row7 { grid-template-columns: 1fr; gap: 2px; }
-    .visit .grid { grid-template-columns: 1fr; }
+  .intro .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; align-items: end; padding-bottom: 22px; }
+  .intro h1 { margin: 0; font-size: clamp(46px, 6vw, 78px); max-width: 14ch; }
+  .intro p { margin: 0; max-width: 36ch; }
+  .week { display: flex; min-height: 560px; }
+  .day { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; color: #fffaf3; background: var(--c); transition: flex-grow .45s ease; }
+  .day:has(button[aria-expanded="true"]) { flex-grow: 6.5; }
+  .day button { position: absolute; inset: 0; width: 100%; border: 0; background: none; color: inherit; cursor: pointer; padding: 0; text-align: left; }
+  .day .name { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%) rotate(180deg); writing-mode: vertical-rl; font-family: Calistoga, Georgia, serif; font-size: 28px; }
+  .day:has(button[aria-expanded="true"]) .name { opacity: 0; }
+  .day .open { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
+  .day:has(button[aria-expanded="true"]) .open { opacity: 1; visibility: visible; }
+  .day .txt { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px; background: linear-gradient(0deg, rgba(0,0,0,.55), transparent); z-index: 1; }
+  .day h3 { margin: 0 0 6px; font-size: clamp(32px, 4vw, 52px); }
+  .day p { margin: 0; max-width: 36ch; }
+  .day img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .d1 { --c: #8c4a32; } .d2 { --c: #c46b3a; } .d3 { --c: #a33b32; } .d4 { --c: #c9842a; }
+  .d5 { --c: #e2b15a; color: #3a2a22; } .d6 { --c: #6d8f62; color: #1d2418; } .d0 { --c: #3d6b5a; }
+  .picks { padding: 64px 0 10px; }
+  .picks h2 { margin: 0 0 18px; font-size: clamp(36px, 5vw, 56px); }
+  .picks .plates { grid-template-columns: repeat(4, 1fr); }
+  @media (prefers-reduced-motion: reduce) { .day { transition: none; } }
+  @media (max-width: 800px) {
+    .week { flex-direction: column; min-height: 0; }
+    .day { flex: none; height: 64px; }
+    .day:has(button[aria-expanded="true"]) { height: 420px; }
+    .picks .plates { grid-template-columns: 1fr; }
+    .day .name { left: 18px; top: 18px; bottom: auto; writing-mode: horizontal-tb; transform: none; }
   }
-  @media (max-width: 520px) { .nav .brand span { display: none; } }
-  /* reduce motion: no pinned scroll effects, the plates become a plain grid */
-  .still .spin { height: 100vh; height: 100svh; }
-  .still .flow { height: auto; }
-  .still .flow .pin { position: relative; height: auto; padding: 110px 0 70px; }
-  .still .flow .head, .still .flow .order { position: static; translate: none; }
-  .still .flow .head { margin-bottom: 30px; }
-  .still .flow .order { display: table; margin: 30px auto 0; }
-  .still .flow .back, .still .dots { display: none; }
-  .still .deck { position: static; width: min(1240px, 100% - 40px); height: auto; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-  .still .pcard { position: relative; left: auto; top: auto; width: auto; transform: none !important; opacity: 1 !important; }
-  @media (max-height: 700px) and (min-width: 901px) { .pcard { height: 400px; top: -200px; } .pcard .art { height: 120px; } }
 </style>
 </head>
 <body>
-<header class="nav" id="nav">
-  <div class="wrap">
-    <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
-    <ul>
-      <li><a href="../menu.html">Menu</a></li>
-      <li><a href="../events.html">Live music</a></li>
-      <li><a href="../happy-hour.html">Happy hour</a></li>
-      <li><a href="../private-events.html">Private events</a></li>
-      <li><a href="#visit">Visit</a></li>
-    </ul>
-    <a class="btn" href="../order.html">Order online</a>
-  </div>
-</header>
-
+<header class="nav"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+  <ul><li><a href="#menu">Menu</a></li><li><a href="../events.html">Calendar</a></li><li><a href="#visit">Visit</a></li></ul>
+  <a class="btn" href="../order.html">Order online</a>
+</div></header>
+<div class="intro"><div class="wrap">
+  <h1>Seven warm nights</h1>
+  <p>Every night has its own thing, in patio colors. <span class="status" data-ws="status">Open daily from 11 AM</span></p>
+</div></div>
 <main>
-  <section class="spin" id="spin" aria-labelledby="h1">
-    <div class="pin">
-      <div class="giant" id="giant" aria-hidden="true">915 Main</div>
-      <div class="scene3d" aria-hidden="true"><div class="cyl" id="cyl"></div></div>
-      <div class="shade" aria-hidden="true"></div>
-      <div class="meter" aria-hidden="true"><i id="meter"></i></div>
-      <div class="copy">
-        <div class="wrap">
-          <div>
-            <h1 id="h1" class="in" data-split>Safety Harbor's open-air grill and bar</h1>
-            <p>On Main Street since 1995. Burgers, Gulf grouper, 18 taps, live music Friday and Saturday, and a patio where dogs are welcome.</p>
-          </div>
-          <div class="ctas"><a class="btn" href="#plates">Pick a plate</a><a class="btn line" href="../order.html">Order online</a></div>
-        </div>
-      </div>
+  <div class="week" id="week">
+    <div class="day d1" data-day="1"><button type="button" aria-expanded="false" aria-label="Monday"><span class="name">Monday</span></button><div class="open"><img src="../assets/gallery/WSBar-560.webp" alt="Bartenders pouring at the bar" width="560" height="560"><div class="txt"><h3>Martini Monday &amp; Taco Night</h3><p>4 PM to close. Half-off martinis and 2-for-$6 tacos.</p></div></div></div>
+    <div class="day d2" data-day="2"><button type="button" aria-expanded="false" aria-label="Tuesday"><span class="name">Tuesday</span></button><div class="open"><img src="../assets/gallery/WSRocker-560.webp" alt="A guitarist on the patio" width="560" height="560"><div class="txt"><h3>Open Mic Night</h3><p>6:30 to 9:30 PM. Happy hour runs to close.</p></div></div></div>
+    <div class="day d3" data-day="3"><button type="button" aria-expanded="false" aria-label="Wednesday"><span class="name">Wednesday</span></button><div class="open"><img src="../assets/gallery/WSCornHole-560.webp" alt="Cornhole boards by the Whistle Stop sign" width="560" height="560"><div class="txt"><h3>Cornhole Wednesdays</h3><p>From 6 PM. Happy hour runs to close.</p></div></div></div>
+    <div class="day d4" data-day="4"><button type="button" aria-expanded="false" aria-label="Thursday"><span class="name">Thursday</span></button><div class="open"><img src="../assets/gallery/WSRocker2.webp" alt="A singer with a guitar" width="447" height="447"><div class="txt"><h3>Guitar Guild &amp; Ukulele Jam</h3><p>3rd Thursday 6–9. 4th Thursday 6:30–9:30.</p></div></div></div>
+    <div class="day d5" data-day="5"><button type="button" aria-expanded="true" aria-label="Friday"><span class="name">Friday</span></button><div class="open"><img src="../assets/gallery/WSGoodTimes-560.webp" alt="Friends at a table in the bar" width="560" height="560"><div class="txt"><h3>Live music</h3><p>6:30 to 9:30 PM on the patio.</p></div></div></div>
+    <div class="day d6" data-day="6"><button type="button" aria-expanded="false" aria-label="Saturday"><span class="name">Saturday</span></button><div class="open"><img src="../assets/gallery/WSDrinks-560.webp" alt="Friends raising glasses" width="560" height="560"><div class="txt"><h3>Live music</h3><p>6:30 to 9:30 PM. Kitchen open until 10.</p></div></div></div>
+    <div class="day d0" data-day="0"><button type="button" aria-expanded="false" aria-label="Sunday"><span class="name">Sunday</span></button><div class="open"><img src="../assets/gallery/WSDrinks2.webp" alt="A long table on the patio by day" width="810" height="1280"><div class="txt"><h3>Bloody Mary Sunday</h3><p>$5 mimosas and Bloody Marys from 11 AM.</p></div></div></div>
+  </div>
+  <section class="picks"><div class="wrap">
+    <h2>A few plates from the working menu</h2>
+    <div class="plates">
+      <article class="plate" data-plate="wings"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="cobb"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="harbor-tacos"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="faroe"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
     </div>
-  </section>
-
-  <section class="flow" id="plates" aria-labelledby="fh">
-    <div class="pin" id="flowpin">
-      <div class="back" id="backword" aria-hidden="true">Burgers</div>
-      <div class="head"><div class="wrap"><h2 id="fh">Pick a plate</h2><p>Keep scrolling to flip through the menu. Tap a card to open that section.</p></div></div>
-      <div class="deck" id="deck"></div>
-      <div class="dots" id="dots" aria-hidden="true"></div>
-      <a class="btn order" href="../order.html">Order for pickup</a>
-    </div>
-  </section>
-
-  <section class="week" aria-labelledby="wh">
-    <div class="wrap">
-      <div class="head"><h2 id="wh" data-split>Seven nights a week</h2><p>Happy hour every day 4–7 PM, and until close on Tuesday and Wednesday.</p></div>
-      <div id="rows"></div>
-    </div>
-  </section>
-
-  <section class="visit" id="visit" aria-labelledby="vh">
-    <div class="wrap">
-      <div class="grid">
-        <div>
-          <h2 id="vh">915 Main Street</h2>
-          <p>Safety Harbor, FL 34695</p>
-          <div class="ctas"><a class="btn" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Get directions</a><a class="btn line" href="tel:+17277261956">(727) 726-1956</a></div>
-        </div>
-        <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM</p><p>Fri–Sat 11 AM–10 PM</p></div>
-        <div><h3>Since 1995</h3><p>This corner was Frostee Harbor, a drive-in ice cream stand, for more than 35 years. Henry's milkshakes are still on the menu.</p></div>
-      </div>
-      <div class="foot"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a> &nbsp; <a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div>
-    </div>
-  </section>
+  </div></section>
+  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
+  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
 </main>
-
 <script src="shared.js"></script>
-<script src="food.js"></script>
-<script src="fx.js"></script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const { cats, art } = WSFOOD;
-  const nav = document.getElementById("nav");
-  addEventListener("scroll", () => nav.classList.toggle("solid", scrollY > 30), { passive: true });
-
-  /* ---- the photo carousel */
-  const P = "../assets/gallery/";
-  const photos = [["WSDrinks3.webp", "Friends at a long table on the patio"], ["WSRocker-560.webp", "A guitarist on the patio stage"], ["WSFood-560.webp", "A plate from the kitchen"], ["WSGoodTimes-560.webp", "A full bar room on a busy night"], ["WSCornHole-560.webp", "Cornhole boards by the sign"], ["WSBar-560.webp", "Bartenders pouring cocktails"], ["WSSunset-560.webp", "The Whistle Stop sign at sunset"], ["WSLounge-560.webp", "The patio lounge"], ["WSFood4.webp", "A wrap and fries"], ["WSWorkers.webp", "Two staff members with drinks"], ["WSDrinks2.webp", "A daytime crowd on the patio"], ["WSRocker2.webp", "A singer at the microphone"]];
-  const cyl = document.getElementById("cyl");
-  cyl.innerHTML = photos.map(([f, alt], i) => `<div class="panel" style="--i:${i}"><img src="${P + f}" alt="" loading="${i < 6 ? "eager" : "lazy"}" width="560" height="560"></div>`).join("");
-  const giant = document.getElementById("giant"), meter = document.getElementById("meter");
-  let spinP = 0, spinOn = true;
-  new IntersectionObserver(([e]) => (spinOn = e.isIntersecting)).observe(document.querySelector(".spin .pin"));
-  const paintSpin = (t = 0) => {
-    const a = spinP * 300 + t * 5;
-    cyl.style.setProperty("--a", (-a).toFixed(2) + "deg");
-    cyl.style.setProperty("--s", (1 + spinP * 0.18).toFixed(3));
-    giant.style.setProperty("--ls", (-0.01 + spinP * 0.08).toFixed(3) + "em");
-    meter.style.setProperty("--p", spinP.toFixed(3));
-  };
-  FX.progress(document.getElementById("spin"), "pin", (p) => { spinP = p; if (FX.reduce) paintSpin(); });
-  paintSpin();
-  FX.loop((t) => { if (spinOn) paintSpin(t); });
-
-  /* ---- the coverflow */
-  const deck = document.getElementById("deck"), flow = document.getElementById("plates"), pin = document.getElementById("flowpin");
-  const backword = document.getElementById("backword"), dots = document.getElementById("dots");
-  deck.innerHTML = cats.map((c, i) => `
-    <a class="pcard" href="${c.href}" style="--c:${c.color}" data-i="${i}">
-      <span class="art">${art(c.art)}</span>
-      <h3>${c.name}</h3><span class="meta">${c.count}, from ${c.from}</span>
-      <ul>${c.picks.map(([n, p]) => `<li><span>${n}</span><b>${p}</b></li>`).join("")}</ul>
-      <span class="go">${c.cta}</span>
-    </a>`).join("");
-  dots.innerHTML = cats.map(() => "<i></i>").join("");
-  const cards = [...deck.children], dotEls = [...dots.children], N = cards.length;
-  let center = -1;
-  function paintFlow(p) {
-    const c = p * (N - 1);
-    const sp = Math.min(innerWidth * 0.27, 330);
-    cards.forEach((el, i) => {
-      const d = i - c, ad = Math.abs(d);
-      const rot = -Math.max(-1.4, Math.min(1.4, d)) * 42;
-      el.style.transform = `translateX(${(d * sp * (ad > 1 ? 0.85 : 1)).toFixed(1)}px) translateZ(${(-ad * 160).toFixed(1)}px) rotateY(${rot.toFixed(2)}deg) scale(${(1 - Math.min(ad, 3) * 0.06).toFixed(3)})`;
-      el.style.zIndex = String(100 - Math.round(ad * 10));
-      el.style.opacity = ad > 3.2 ? "0" : String(Math.min(1, 1.2 - ad * 0.12));
-    });
-    const k = Math.round(c);
-    if (k !== center) {
-      center = k;
-      cards.forEach((el, i) => el.classList.toggle("center", i === k));
-      dotEls.forEach((el, i) => el.classList.toggle("on", i === k));
-      pin.style.setProperty("--bg", cats[k].color);
-      backword.textContent = cats[k].name;
-    }
-  }
-  if (!FX.reduce) { FX.progress(flow, "pin", (p) => paintFlow(FX.smooth(0.04, 0.96, p))); paintFlow(0); }
-  else pin.style.setProperty("--bg", cats[0].color);
-  const scrollToCard = (i) => { const top = flow.getBoundingClientRect().top + scrollY; const span = flow.offsetHeight - innerHeight; scrollTo({ top: top + span * (0.04 + (i / (N - 1)) * 0.92), behavior: FX.reduce ? "auto" : "smooth" }); };
-  deck.addEventListener("click", (e) => { const a = e.target.closest(".pcard"); if (!a || FX.reduce) return; const i = Number(a.dataset.i); if (i !== center) { e.preventDefault(); scrollToCard(i); } });
-  cards.forEach((el, i) => el.addEventListener("focus", () => { if (!FX.reduce && i !== center) scrollToCard(i); }));
-
-  /* ---- the week */
-  const today = WS.today().dayIndex;
-  document.getElementById("rows").innerHTML = [1, 2, 3, 4, 5, 6, 0].map((d, i) => { const w = WS.WEEK[d]; return `<div class="row7${d === today ? " is-today" : ""}" data-reveal style="--dir:${i % 2 ? 1 : -1}"><b>${w.day}</b><span>${w.title}</span><small>${w.time}</small></div>`; }).join("");
-  document.querySelectorAll(".row7, .week h2").forEach(FX.reveal);
+document.querySelectorAll(".day button").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll(".day button").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+    btn.setAttribute("aria-expanded", "true");
+  });
 });
+var today = new Date().getDay();
+var match = document.querySelector('.day[data-day="' + today + '"] button');
+if (match) match.click();
 </script>
 </body>
 </html>

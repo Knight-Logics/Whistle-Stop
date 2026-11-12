@@ -4,65 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 11 · Harbor Sky · Whistle Stop Grill &amp; Bar</title>
+<title>Option 11 · Kitchen Window · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
-<link rel="stylesheet" href="kit.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,760&family=Outfit:wght@400;600;750&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
 <style>
-  body { --hot: #e25b2a; --paper: #c9e7ff; --ink: #163024; font-family: Outfit, system-ui, sans-serif; }
-  h1, h2, .tonight .big { font-family: Fraunces, Georgia, serif; }
-  .hero { position: relative; height: 220vh; background: linear-gradient(#8fd0ff 0%, #f7d7a2 62%, #6ea34a 100%); }
-  .hero .pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
-  .copy { position: relative; z-index: 2; width: min(640px, calc(100% - 48px)); margin: 0; padding: 22vh 0 0 7vw; }
-  .copy .kicker { letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 750; color: #1d4a32; }
-  h1 { margin: 8px 0 12px; font-size: clamp(52px, 7vw, 92px); line-height: .92; font-weight: 760; color: #123024; text-shadow: 0 2px 0 rgba(255,255,255,.35); }
-  .lede { font-size: 20px; max-width: 36ch; color: #1d3b2c; }
-  .ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
-  .status { font-weight: 750; }
-  .sun-note { position: absolute; right: 7vw; bottom: 12vh; z-index: 2; font-weight: 750; background: rgba(255,255,255,.55); padding: 10px 14px; border-radius: 999px; }
-  @media (max-width: 700px) { .sun-note { display: none; } .copy { padding-top: 18vh; } }
+  .window { padding: 10px 0 10px; }
+  .shots { display: grid; grid-template-columns: 1.2fr .8fr .8fr; gap: 12px; }
+  .shots figure { margin: 0; position: relative; }
+  .shots img { width: 100%; height: 320px; object-fit: cover; border-radius: 18px; }
+  .shots figcaption { margin-top: 8px; font-weight: 800; }
+  .window h1 { margin: 18px 0 8px; font-size: clamp(42px, 6vw, 70px); }
+  @media (max-width: 800px) { .shots { grid-template-columns: 1fr; } .shots img { height: 220px; } }
 </style>
 </head>
 <body>
 <header class="nav"><div class="wrap">
   <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
-  <ul><li><a href="../menu.html">Menu</a></li><li><a href="../events.html">This week</a></li><li><a href="../happy-hour.html">Happy hour</a></li><li><a href="#visit">Visit</a></li></ul>
+  <ul><li><a href="#menu">Menu</a></li><li><a href="../events.html">This week</a></li><li><a href="#visit">Visit</a></li></ul>
   <a class="btn" href="../order.html">Order online</a>
 </div></header>
 <main>
-  <section class="hero" id="sky-scroll" aria-labelledby="h1">
-    <div class="pin">
-      <canvas id="sky" aria-hidden="true"></canvas>
-      <div class="copy">
-        <div class="kicker">Safety Harbor · open air</div>
-        <h1 id="h1" data-split>Birds over the patio.</h1>
-        <p class="lede">Wind in the oaks, sun on the glass, and a grill at 915 Main Street. Burgers, Gulf seafood, 18 taps and live music on the patio.</p>
-        <div class="ctas"><a class="btn" href="../menu.html">See the menu</a><a class="btn line" href="../events.html">This week</a></div>
-        <p class="status" data-ws="status">Open daily from 11 AM</p>
-      </div>
-      <div class="sun-note" id="sun-note">Scroll and the afternoon moves</div>
+  <section class="window" aria-labelledby="h1"><div class="wrap">
+    <div class="shots">
+      <figure><img src="../assets/gallery/WSFood-560.webp" alt="A plate from the Whistle Stop kitchen" width="560" height="560"><figcaption>From the kitchen</figcaption></figure>
+      <figure><img src="../assets/gallery/WSFood2-480.webp" alt="A plate with fresh vegetables" width="480" height="640"><figcaption>On the table</figcaption></figure>
+      <figure><img src="../assets/gallery/WSBar-480.webp" alt="Bartenders pouring cocktails" width="480" height="480"><figcaption>At the bar</figcaption></figure>
     </div>
-  </section>
-  <div id="rest"></div>
+    <h1 id="h1">Look, then order</h1>
+    <p class="lede">Photos from the restaurant. Prices from the working menu sit next to them, not on top of the pictures.</p>
+    <div class="plates">
+      <article class="plate" data-plate="grouper"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="fish-chips"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="steak-tacos"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+    </div>
+  </div></section>
+  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
+  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
 </main>
 <script src="shared.js"></script>
-<script src="food.js"></script>
-<script src="fx.js"></script>
-<script src="kit.js"></script>
-<script src="sky.js"></script>
-<script>
-(function () {
-  var sky = WSSky.attach(document.getElementById("sky"), { birds: 9, trees: true, sun: true, gleam: true, leaves: true, gusts: true });
-  var note = document.getElementById("sun-note");
-  FX.progress(document.getElementById("sky-scroll"), "pin", function (p) {
-    sky.setSun(0.16 + p * 0.42);
-    sky.setWind(0.7 + p * 1.1);
-    if (note) note.style.opacity = String(1 - p * 1.4);
-  });
-})();
-</script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
 </body>
 </html>

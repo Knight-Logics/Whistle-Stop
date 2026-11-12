@@ -4,215 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 9 · Big Type · Whistle Stop Grill &amp; Bar</title>
+<title>Option 9 · Table for Two · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
 <style>
-  :root {
-    --grape: #4a1ea6;
-    --grape-deep: #200b4d;
-    --lime: #c9f24a;
-    --white: #ffffff;
-    --lilac: #d9cdf7;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--grape); color: var(--white); font: 400 18px/1.6 "Manrope", system-ui, sans-serif; }
-  a { color: inherit; }
-  img { display: block; max-width: 100%; height: auto; }
-  :focus-visible { outline: 3px solid var(--lime); outline-offset: 4px; }
-  .wrap { width: min(1320px, 100% - 40px); margin-inline: auto; }
-  .ub { font-family: "Unbounded", sans-serif; }
-  .btn { display: inline-block; padding: 15px 26px; border-radius: 14px; background: var(--lime); color: var(--grape-deep); font: 800 17px/1 "Manrope", sans-serif; text-decoration: none; }
-  .btn:hover { background: #dcff73; }
-  .btn.line { background: transparent; color: var(--white); box-shadow: inset 0 0 0 2px var(--white); }
-
-  /* Nav */
-  .nav .wrap { display: flex; align-items: center; gap: 20px; padding: 18px 0; }
-  .nav .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 17px/1 "Unbounded", sans-serif; }
-  .nav .brand img { width: 46px; height: 46px; }
-  .nav .right { margin-left: auto; display: flex; align-items: center; gap: 18px; }
-  .nav .right .open { color: var(--lilac); font-weight: 600; }
-
-  /* Hero type */
-  .hero { padding: 20px 0 50px; }
-  .shout { margin: 0; font: 900 clamp(64px, 14.5vw, 232px)/.86 "Unbounded", sans-serif; letter-spacing: -.045em; color: var(--lime); }
-  .shout span { display: block; }
-  .shout .pic { display: inline-block; vertical-align: middle; width: 1.6em; height: .74em; margin: 0 .06em .08em; border-radius: .4em; overflow: hidden; }
-  .shout .pic img { width: 100%; height: 100%; object-fit: cover; }
-  .hero .row { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-top: 34px; }
-  .hero .row p { margin: 0; max-width: 46ch; font-size: 21px; color: var(--lilac); }
-  .hero .row p strong { color: var(--white); }
-  .hero .actions { display: flex; flex-wrap: wrap; gap: 12px; }
-
-  /* Week strip */
-  .strip { background: var(--lime); color: var(--grape-deep); overflow: hidden; }
-  .strip ul { display: flex; gap: 0; margin: 0; padding: 0; list-style: none; width: max-content; }
-  .strip li { display: flex; gap: 14px; align-items: baseline; padding: 18px 34px; border-right: 2px solid rgba(32,11,77,.25); white-space: nowrap; font-weight: 600; }
-  .strip li b { font: 700 20px/1 "Unbounded", sans-serif; }
-  .strip li.is-today { background: var(--grape-deep); color: var(--lime); }
-  @media (prefers-reduced-motion: no-preference) {
-    .strip ul { animation: slide 48s linear infinite; }
-    .strip:hover ul, .strip:focus-within ul { animation-play-state: paused; }
-    @keyframes slide { to { transform: translateX(-50%); } }
-  }
-
-  /* Big index */
-  .index { padding: 90px 0; position: relative; }
-  .index ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid rgba(255,255,255,.25); }
-  .index li { border-bottom: 2px solid rgba(255,255,255,.25); }
-  .index a { display: grid; grid-template-columns: 1fr minmax(220px, 34%); gap: 24px; align-items: center; padding: 20px 0; text-decoration: none; }
-  .index a strong { font: 700 clamp(40px, 6.4vw, 104px)/1 "Unbounded", sans-serif; letter-spacing: -.035em; transition: color .2s; }
-  .index a span { color: var(--lilac); font-size: 18px; }
-  .index a:hover strong, .index a:focus-visible strong { color: var(--lime); }
-  .peek { position: absolute; z-index: 3; width: 260px; aspect-ratio: 4/5; border-radius: 22px; overflow: hidden; pointer-events: none; opacity: 0; transform: rotate(-4deg) scale(.96); transition: opacity .2s, transform .2s; }
-  .peek.on { opacity: 1; transform: rotate(-4deg) scale(1); }
-  .peek img { width: 100%; height: 100%; object-fit: cover; }
-
-  /* Facts in big type */
-  .facts { background: var(--grape-deep); padding: 90px 0; }
-  .facts .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-  .facts h2 { margin: 0 0 10px; font: 700 clamp(30px, 3.2vw, 46px)/1.05 "Unbounded", sans-serif; color: var(--lime); letter-spacing: -.02em; }
-  .facts p { margin: 0; color: var(--lilac); }
-  .quote { margin: 70px 0 0; font: 500 clamp(26px, 3.4vw, 48px)/1.2 "Unbounded", sans-serif; letter-spacing: -.02em; max-width: 26ch; }
-  .quote footer { margin-top: 16px; font: 600 16px/1.4 "Manrope", sans-serif; color: var(--lilac); }
-
-  /* Food grid */
-  .eat { padding: 90px 0; }
-  .eat .grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 240px 240px; gap: 16px; }
-  .eat .grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; }
-  .eat .grid .big { grid-row: span 2; }
-  .eat .grid .txt { grid-column: span 2; background: var(--lime); color: var(--grape-deep); border-radius: 22px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between; }
-  .eat .grid .txt h2 { margin: 0; font: 700 clamp(26px, 2.6vw, 38px)/1.05 "Unbounded", sans-serif; letter-spacing: -.02em; }
-  .eat .grid .txt p { margin: 0; font-weight: 600; }
-
-  /* Visit */
-  .visit { padding: 0 0 90px; }
-  .visit .card { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 30px; padding: 40px; border-radius: 28px; background: var(--white); color: var(--grape-deep); }
-  .visit h2 { margin: 0; font: 700 clamp(32px, 3.6vw, 52px)/1 "Unbounded", sans-serif; letter-spacing: -.03em; color: var(--grape); }
-  .visit h3 { margin: 0 0 6px; font: 700 16px/1.2 "Unbounded", sans-serif; }
-  .visit p { margin: 0; }
-  .visit .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
-  .visit .btn.line { color: var(--grape); box-shadow: inset 0 0 0 2px var(--grape); }
-  footer.site { padding: 0 0 40px; color: var(--lilac); font-size: 15px; }
-  footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; }
-
-  @media (max-width: 960px) {
-    .nav .right .open { display: none; }
-    .hero .row { grid-template-columns: 1fr; }
-    .index a { grid-template-columns: 1fr; gap: 4px; }
-    .peek { display: none; }
-    .facts .grid { grid-template-columns: 1fr; }
-    .eat .grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
-    .eat .grid .big { grid-row: auto; grid-column: span 2; height: 280px; }
-    .eat .grid img { height: 200px; }
-    .visit .card { grid-template-columns: 1fr; padding: 28px; }
-  }
-  @media (max-width: 520px) { .nav .brand span { display: none; } }
+  .split { display: grid; grid-template-columns: 1.05fr .95fr; min-height: calc(100svh - 76px); }
+  .photo { position: relative; overflow: hidden; min-height: 420px; }
+  .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .copy { padding: 48px 6vw 40px; display: flex; flex-direction: column; justify-content: center; }
+  .copy h1 { margin: 0 0 10px; font-size: clamp(42px, 5vw, 68px); }
+  .rows { margin-top: 18px; }
+  .rows .item { background: transparent; }
+  @media (max-width: 800px) { .split { grid-template-columns: 1fr; } .photo { min-height: 280px; } .photo img { position: relative; height: 280px; } }
 </style>
-<script src="shared.js" defer></script>
 </head>
 <body>
-<header class="nav">
-  <div class="wrap">
-    <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="46" height="46"><span>Whistle Stop</span></a>
-    <div class="right"><span class="open" data-ws="status">Open daily 11 AM</span><a class="btn" href="../order.html">Order online</a></div>
-  </div>
-</header>
-
+<header class="nav"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
+  <ul><li><a href="#menu">Menu</a></li><li><a href="../events.html">This week</a></li><li><a href="#visit">Visit</a></li></ul>
+  <a class="btn" href="../order.html">Order online</a>
+</div></header>
 <main>
-  <section class="hero" aria-label="Welcome">
-    <div class="wrap">
-      <h1 class="shout"><span>Real.</span><span>Good<span class="pic" aria-hidden="true"><img src="../assets/gallery/WSFood3-480.webp" alt="" width="480" height="600"></span>.</span><span>Food.</span></h1>
-      <div class="row">
-        <p><strong>Whistle Stop Grill &amp; Bar</strong> has been Safety Harbor's spot for cold drinks, Florida comfort food and local music since 1995. Old Florida, new vibe, 915 Main Street.</p>
-        <div class="actions"><a class="btn" href="../menu.html">See the menu</a><a class="btn line" href="../events.html">This week</a></div>
+  <section class="split" aria-labelledby="h1">
+    <div class="photo"><img class="drift" src="../assets/gallery/WSDrinks.webp" alt="Friends raising glasses at a long table" width="1280" height="878"></div>
+    <div class="copy">
+      <p class="status" data-ws="status">Open daily from 11 AM</p>
+      <h1 id="h1">Pull up a chair</h1>
+      <p class="lede">Tonight is <span data-ws="tonight">Live music</span>, <span data-ws="tonight-time"></span>. Prices are from the working menu.</p>
+      <div class="rows">
+        <div class="item" data-plate="original"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div><p class="item-detail" data-field="detail"></p></div>
+        <div class="item" data-plate="blfgt"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div><p class="item-detail" data-field="detail"></p></div>
+        <div class="item" data-plate="fish-spread"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div><p class="item-detail" data-field="detail"></p></div>
+        <div class="item" data-plate="harbor-tacos"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div><p class="item-detail" data-field="detail"></p></div>
+        <div class="item" data-plate="cobb"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div><p class="item-detail" data-field="detail"></p></div>
+        <div class="item" data-plate="mac"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div><p class="item-detail" data-field="detail"></p></div>
       </div>
     </div>
   </section>
-
-  <div class="strip" aria-label="Every week at Whistle Stop">
-    <ul>
-      <li data-ws-day="1"><b>Mon</b>Martini Monday &amp; Taco Night</li>
-      <li data-ws-day="2"><b>Tue</b>Open Mic Night, happy hour till close</li>
-      <li data-ws-day="3"><b>Wed</b>Cornhole from 6 PM</li>
-      <li data-ws-day="4"><b>Thu</b>Guitar Guild &amp; Ukulele Jam, monthly</li>
-      <li data-ws-day="5"><b>Fri</b>Live music 6:30–9:30</li>
-      <li data-ws-day="6"><b>Sat</b>Live music 6:30–9:30</li>
-      <li data-ws-day="0"><b>Sun</b>$5 mimosas &amp; Bloody Marys</li>
-      <li aria-hidden="true"><b>Mon</b>Martini Monday &amp; Taco Night</li>
-      <li aria-hidden="true"><b>Tue</b>Open Mic Night, happy hour till close</li>
-      <li aria-hidden="true"><b>Wed</b>Cornhole from 6 PM</li>
-      <li aria-hidden="true"><b>Thu</b>Guitar Guild &amp; Ukulele Jam, monthly</li>
-      <li aria-hidden="true"><b>Fri</b>Live music 6:30–9:30</li>
-      <li aria-hidden="true"><b>Sat</b>Live music 6:30–9:30</li>
-      <li aria-hidden="true"><b>Sun</b>$5 mimosas &amp; Bloody Marys</li>
-    </ul>
-  </div>
-
-  <nav class="index" aria-label="Explore">
-    <div class="wrap">
-      <ul>
-        <li><a href="../menu.html" data-peek="../assets/gallery/WSFood2-480.webp"><strong>Menu</strong><span>Fried green tomatoes, Gulf grouper, burgers and Key lime pie</span></a></li>
-        <li><a href="../events.html" data-peek="../assets/gallery/WSRocker-480.webp"><strong>Live music</strong><span>Local artists on the patio stage, Friday and Saturday nights</span></a></li>
-        <li><a href="../happy-hour.html" data-peek="../assets/gallery/WSBar-480.webp"><strong>Happy hour</strong><span>4–7 PM daily, 4 PM to close on Tuesdays and Wednesdays</span></a></li>
-        <li><a href="../private-events.html" data-peek="../assets/gallery/WSGoodTimes-400.webp"><strong>Parties</strong><span>Birthdays, reunions and team dinners for 100+ guests</span></a></li>
-        <li><a href="../order.html" data-peek="../assets/gallery/WSFood-400.webp"><strong>Order</strong><span>Pickup, delivery and gift cards</span></a></li>
-      </ul>
-    </div>
-    <div class="peek" id="peek" aria-hidden="true"><img alt="" src="../assets/gallery/WSFood2-480.webp"></div>
-  </nav>
-
-  <section class="facts" aria-label="Good to know">
-    <div class="wrap">
-      <div class="grid">
-        <div><h2>18 taps, one full bar</h2><p>Drafts, flights and cocktails like the Key Lime Martini and Green Tomato Bloody Mary.</p></div>
-        <div><h2>Open air, dogs welcome</h2><p>A dog-friendly patio in downtown Safety Harbor, with a lounge for the evening.</p></div>
-        <div><h2>Shakes since the drive-in</h2><p>This was Frostee Harbor for 35-plus years. Henry's milkshakes are still on the menu.</p></div>
-      </div>
-      <blockquote class="quote">“Great drinks, good food, better spot to watch the Rays and Lightning game!”<footer>Daniel Spisak, Google review · Whistle Stop is rated 4.4 on Google</footer></blockquote>
-    </div>
-  </section>
-
-  <section class="eat" aria-label="From the kitchen">
-    <div class="wrap">
-      <div class="grid">
-        <img class="big" src="../assets/gallery/WSGoodTimes-560.webp" alt="Friends at a table full of food" loading="lazy" width="560" height="560">
-        <img src="../assets/gallery/WSFood4.webp" alt="A wrap with seasoned fries" loading="lazy" width="1080" height="1080">
-        <img src="../assets/gallery/WSDrinks-400.webp" alt="A table of friends toasting" loading="lazy" width="400" height="275">
-        <div class="txt"><h2>Made for the table, not the photo.</h2><p>Burgers, baskets and Gulf fish from 11 AM. <a href="../menu.html">See everything</a></p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="visit" id="visit" aria-labelledby="vh">
-    <div class="wrap">
-      <div class="card">
-        <div><h2 id="vh">915 Main Street</h2><p style="margin-top:10px">Safety Harbor, FL 34695</p><div class="actions"><a class="btn" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Directions</a><a class="btn line" href="tel:+17277261956">(727) 726-1956</a></div></div>
-        <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM<br>Fri–Sat 11 AM–10 PM</p></div>
-        <div><h3>Since 1995</h3><p>Owned by Dawn &amp; Patrick Pendola. <a href="../about.html">Our story</a></p><h3 style="margin-top:16px">Gift cards</h3><p><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Send one online</a></p></div>
-      </div>
-    </div>
-  </section>
+  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
+  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
 </main>
-<footer class="site"><div class="wrap"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div></footer>
-<script>
-  // A photo follows the pointer over the big links (desktop only).
-  const peek = document.getElementById("peek");
-  const pimg = peek.querySelector("img");
-  const nav = document.querySelector(".index");
-  if (matchMedia("(hover: hover) and (min-width: 961px)").matches) {
-    nav.querySelectorAll("a[data-peek]").forEach((a) => {
-      a.addEventListener("mouseenter", () => { pimg.src = a.dataset.peek; peek.classList.add("on"); });
-      a.addEventListener("mouseleave", () => peek.classList.remove("on"));
-    });
-    nav.addEventListener("mousemove", (e) => {
-      const r = nav.getBoundingClientRect();
-      peek.style.left = `${Math.min(r.width - 280, e.clientX - r.left + 30)}px`;
-      peek.style.top = `${e.clientY - r.top - 160}px`;
-    });
-  }
-</script>
+<script src="shared.js"></script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
 </body>
 </html>

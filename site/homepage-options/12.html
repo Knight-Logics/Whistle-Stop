@@ -4,74 +4,57 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 12 · Incoming Train · Whistle Stop Grill &amp; Bar</title>
+<title>Option 12 · Quiet After Dark · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
-<link rel="stylesheet" href="kit.css">
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
 <style>
-  body { --paper: #efe4cf; --ink: #24180f; --hot: #c83b24; font-family: "Libre Franklin", system-ui, sans-serif; }
-  .run { height: 210vh; background: linear-gradient(#f3d7a4, #8fb4d8 42%, #6f8f4a); }
-  .run .pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
-  .skyline { position: absolute; inset: auto 0 18% 0; height: 90px; background: repeating-linear-gradient(90deg, #234 0 18px, transparent 18px 70px); opacity: .25; }
-  .copy { position: relative; z-index: 3; padding: 18vh 7vw 0; max-width: 680px; }
-  h1 { margin: 0 0 10px; font-size: clamp(48px, 7vw, 88px); line-height: .9; letter-spacing: -.04em; }
-  .tracks { position: absolute; left: 0; right: 0; bottom: 14%; height: 14px; background: repeating-linear-gradient(90deg, #5c4632 0 28px, transparent 28px 36px), linear-gradient(#3a2a1c, #3a2a1c); background-size: auto, 100% 6px; background-repeat: repeat, no-repeat; background-position: center, center; }
-  .train { position: absolute; bottom: calc(14% + 10px); left: var(--x, 80%); z-index: 2; display: flex; align-items: flex-end; filter: drop-shadow(0 12px 0 rgba(0,0,0,.15)); transition: filter .2s; }
-  .engine, .car { position: relative; }
-  .engine { width: 150px; height: 78px; background: #c83b24; border-radius: 16px 28px 8px 8px; }
-  .engine:before { content: ""; position: absolute; left: -36px; bottom: 8px; width: 42px; height: 36px; background: #2b2b2b; border-radius: 8px 0 0 8px; }
-  .stack { position: absolute; right: 22px; top: -22px; width: 18px; height: 26px; background: #222; border-radius: 3px; }
-  .puff { position: absolute; right: 8px; top: -46px; width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.8); animation: puff 1.4s ease-out infinite; }
-  .puff:nth-child(2) { animation-delay: .4s; right: 22px; }
-  .puff:nth-child(3) { animation-delay: .8s; right: -2px; }
-  @keyframes puff { from { transform: translateY(0) scale(.4); opacity: .9; } to { transform: translateY(-36px) scale(1.6); opacity: 0; } }
-  .car { width: 108px; height: 64px; margin-left: 8px; background: #f4e2b0; border: 3px solid #24180f; border-radius: 8px; }
-  .wheel { position: absolute; bottom: -12px; width: 24px; height: 24px; border-radius: 50%; background: radial-gradient(circle at 50% 50%, #d8d2c4 0 4px, #222 5px); animation: spin .45s linear infinite; }
-  .engine .wheel:first-of-type { left: 18px; } .engine .wheel:last-of-type { right: 16px; }
-  .car .wheel { left: 14px; } .car .wheel + .wheel { left: auto; right: 14px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .lights { position: absolute; top: 22%; left: 50%; transform: translateX(-50%); display: flex; gap: 28px; z-index: 3; }
-  .lights i { width: 22px; height: 22px; border-radius: 50%; background: #3a120c; box-shadow: 0 0 0 4px #24180f; }
-  html.moving .lights i:first-child { animation: blink .6s steps(1) infinite; }
-  html.moving .lights i:last-child { animation: blink .6s steps(1) infinite .3s; }
-  @keyframes blink { 50% { background: #ff2a1a; box-shadow: 0 0 18px #ff2a1a; } }
-  html.still .wheel, html.still .puff { animation: none; }
+  .night { position: relative; min-height: 78svh; display: grid; align-items: end; overflow: hidden; color: #f6efe4; }
+  .night img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .night .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,20,16,.2), rgba(10,20,16,.78)); }
+  .night .wrap { position: relative; z-index: 1; padding-bottom: 48px; }
+  .night h1 { margin: 8px 0; font-size: clamp(48px, 7vw, 92px); max-width: 10ch; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #f0c27a; box-shadow: 0 0 10px #f0c27a; display: inline-block; }
+  .below { padding: 48px 0; }
+  .below .wrap { display: grid; grid-template-columns: .9fr 1.1fr; gap: 28px; }
+  @media (max-width: 800px) { .below .wrap { grid-template-columns: 1fr; } }
 </style>
 </head>
-<body>
+<body data-theme="night">
 <header class="nav"><div class="wrap">
   <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
-  <ul><li><a href="../menu.html">Menu</a></li><li><a href="../events.html">This week</a></li><li><a href="#visit">Visit</a></li></ul>
+  <ul><li><a href="#menu">Menu</a></li><li><a href="../events.html">Live music</a></li><li><a href="#visit">Visit</a></li></ul>
   <a class="btn" href="../order.html">Order online</a>
 </div></header>
 <main>
-  <section class="run" id="run" aria-labelledby="h1">
-    <div class="pin">
-      <div class="lights" aria-hidden="true"><i></i><i></i></div>
-      <div class="copy">
-        <h1 id="h1" data-split>All aboard Main Street.</h1>
-        <p>The whistle still means pull over. Burgers from $8.90, 18 taps, and a patio that fills up when the music starts.</p>
-        <p data-ws="status">Open daily from 11 AM</p>
-      </div>
-      <div class="skyline" aria-hidden="true"></div>
-      <div class="train" id="train" aria-hidden="true">
-        <div class="engine"><i class="stack"></i><i class="puff"></i><i class="puff"></i><i class="puff"></i><i class="wheel"></i><i class="wheel"></i></div>
-        <div class="car"><i class="wheel"></i><i class="wheel"></i></div>
-        <div class="car"><i class="wheel"></i><i class="wheel"></i></div>
-      </div>
-      <div class="tracks" aria-hidden="true"></div>
+  <section class="night" aria-labelledby="h1">
+    <img class="drift" src="../assets/gallery/WSLounge-560.webp" alt="The covered patio lounge at night" width="560" height="560">
+    <div class="shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <p><i class="dot breathe"></i> <span class="status" data-ws="status">Open daily from 11 AM</span></p>
+      <h1 id="h1">Old Florida, after dark</h1>
+      <p class="lede">A quieter patio night. Music Friday and Saturday, 6:30 to 9:30.</p>
     </div>
   </section>
-  <div id="rest"></div>
+  <section class="below"><div class="wrap">
+    <div>
+      <h2>This week</h2>
+      <ul class="nights" data-warm-nights></ul>
+    </div>
+    <div class="plates">
+      <article class="plate" data-plate="original"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="salmon-blt"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="ahi-salad"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+      <article class="plate" data-plate="steak-flatbread"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
+    </div>
+  </div></section>
+  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
+  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
 </main>
 <script src="shared.js"></script>
-<script src="food.js"></script>
-<script src="fx.js"></script>
-<script src="kit.js"></script>
-<script>
-FX.progress(document.getElementById("run"), "pin", function (p) {
-  document.getElementById("train").style.setProperty("--x", ((1 - p) * 110 - 8).toFixed(1) + "%");
-});
-</script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
 </body>
 </html>

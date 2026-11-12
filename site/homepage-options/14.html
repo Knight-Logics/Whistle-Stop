@@ -4,56 +4,79 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 14 · Spotlight · Whistle Stop Grill &amp; Bar</title>
+<title>Option 14 · House Favorites · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
-<link rel="stylesheet" href="kit.css">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
 <style>
-  body { --paper: #120c18; --ink: #f7f1ff; --hot: #ff4d8d; --card: #24182e; --line: rgba(255,255,255,.12); --muted: #d7cbe4; font-family: Outfit, system-ui, sans-serif; }
-  h1, h2, .tonight .big { font-family: Oswald, sans-serif; letter-spacing: .01em; text-transform: uppercase; }
-  .btn { color: #fff; } .btn.line { color: #fff; }
-  .stage { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: hidden; background: #07040c; }
-  .photo { position: absolute; inset: 0; }
-  .photo img { width: 100%; height: 100%; object-fit: cover; opacity: .72; animation: ken 16s ease-in-out infinite alternate; }
-  @keyframes ken { to { transform: scale(1.08) translate3d(-2%, -1%, 0); } }
-  .spot { position: absolute; top: -10%; width: 46%; height: 140%; background: linear-gradient(rgba(255,220,140,.05), rgba(255,210,120,.38)); clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%); transform-origin: top center; mix-blend-mode: screen; }
-  .spot.a { left: 4%; animation: sweep 5.5s ease-in-out infinite alternate; }
-  .spot.b { right: 0; animation: sweep 7s ease-in-out infinite alternate-reverse; filter: hue-rotate(40deg); }
-  @keyframes sweep { to { transform: rotate(16deg); } }
-  .eq { position: absolute; left: 6vw; bottom: 18vh; display: flex; align-items: flex-end; gap: 5px; height: 70px; z-index: 2; }
-  .eq i { width: 7px; height: 100%; background: #ff4d8d; transform-origin: bottom; animation: eq .7s ease-in-out infinite alternate; display: block; }
-  .eq i:nth-child(2n) { animation-duration: .5s; background: #ffd36a; }
-  .eq i:nth-child(3n) { animation-duration: .9s; }
-  @keyframes eq { from { transform: scaleY(.15); } to { transform: scaleY(1); } }
-  .copy { position: relative; z-index: 2; padding: 0 7vw 12vh; max-width: 760px; }
-  h1 { margin: 0 0 8px; font-size: clamp(56px, 9vw, 110px); line-height: .86; }
-  html.still .photo img, html.still .spot, html.still .eq i { animation: none; }
+  .bar30 { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 22px; height: 86px; padding: 0 28px; background: #070707; }
+  .brand30 { display: flex; align-items: center; height: 100%; }
+  .brand30 img { display: block; height: 64px; width: auto; }
+  .bar30 nav { display: flex; gap: 26px; margin-left: auto; }
+  .bar30 nav a { color: #fff; text-decoration: none; font-family: Outfit, Nunito, sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; }
+  .bar30 nav a:hover { color: #d6f25c; }
+  .order30 { padding: 10px 18px; border: 2px solid #d6e24a; border-radius: 999px; color: #f3e7a8; font-family: Outfit, Nunito, sans-serif; font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+  .order30:hover { background: #d6e24a; color: #111; }
+  .stage30 { min-height: calc(100svh - 86px); background: #070707; display: flex; align-items: flex-start; justify-content: center; }
+  .art-hero { width: min(100%, calc((100svh - 86px) * 1672 / 841)); margin: 0; }
+  .art-hero img { display: block; width: 100%; height: auto; max-width: none; }
+  @media (max-width: 860px) {
+    .bar30 { flex-wrap: wrap; height: auto; padding: 10px 16px; }
+    .brand30 img { height: 52px; }
+    .bar30 nav { order: 3; width: 100%; margin: 0; justify-content: space-between; gap: 12px; overflow-x: auto; }
+    .order30 { margin-left: auto; }
+    .stage30 { min-height: calc(100svh - 140px); }
+    .art-hero { width: min(100%, calc((100svh - 140px) * 1672 / 841)); }
+  }
+  .house { padding: 28px 0 10px; }
+  .house .wrap { display: grid; grid-template-columns: .8fr 1.2fr; gap: 28px; align-items: center; }
+  .house h1 { margin: 8px 0 8px; font-size: clamp(42px, 5vw, 68px); }
+  .card { background: var(--card); border-radius: 22px; padding: 8px 22px 12px; }
+  @media (max-width: 800px) { .house .wrap { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<header class="nav"><div class="wrap">
-  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
-  <ul><li><a href="../events.html">Live music</a></li><li><a href="../menu.html">Menu</a></li><li><a href="#visit">Visit</a></li></ul>
-  <a class="btn" href="../order.html">Order online</a>
-</div></header>
+<header class="bar30">
+  <a class="brand30" href="../index.html" aria-label="Whistle Stop Grill &amp; Bar"><img src="../assets/gallery/ws-logo-header.png?v=7" alt="" width="487" height="106"></a>
+  <nav aria-label="Primary">
+    <a href="../menu.html">Menu</a>
+    <a href="../events.html">Events</a>
+    <a href="../private-events.html">Gatherings</a>
+    <a href="../about.html">About</a>
+    <a href="#visit">Visit</a>
+  </nav>
+  <a class="order30" href="../order.html">Order online</a>
+</header>
 <main>
-  <section class="stage" aria-labelledby="h1">
-    <div class="photo"><img src="../assets/gallery/WSRocker-560.webp" alt="" width="560" height="560"></div>
-    <div class="spot a" aria-hidden="true"></div>
-    <div class="spot b" aria-hidden="true"></div>
-    <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="copy">
-      <h1 id="h1" data-split>The patio is the stage.</h1>
-      <p>Live music Friday and Saturday, 6:30 to 9:30 PM. Open mic on Tuesday. Happy hour starts at 4.</p>
-      <p><a class="btn" href="../events.html">See this week</a></p>
-      <p data-ws="status">Open daily from 11 AM</p>
-    </div>
+  <div class="stage30">
+  <section class="art-hero" aria-label="Old Florida, fresh vibe">
+    <img src="../assets/gallery/ws-home-page-scene.png?v=6" alt="Whistle Stop Grill and Bar at sunset, with the patio, string lights, and palms" width="1672" height="841">
   </section>
-  <div id="rest"></div>
+  </div>
+  <section class="house" aria-labelledby="h1"><div class="wrap">
+    <div>
+      <p class="status" data-ws="status">Open daily from 11 AM</p>
+      <h1 id="h1">House favorites</h1>
+      <p class="lede">Eight plates from the working menu, at the size you'd read at the table.</p>
+    </div>
+    <div class="card">
+      <div class="item" data-plate="fgt"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="fish-spread"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="original"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="blfgt"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="grouper-sandwich"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="harbor-tacos"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="faroe"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+      <div class="item" data-plate="steak-frites"><div class="item-name" data-field="name"></div><div class="item-price" data-field="price"></div></div>
+    </div>
+  </div></section>
+  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
+  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
 </main>
 <script src="shared.js"></script>
-<script src="food.js"></script>
-<script src="fx.js"></script>
-<script src="kit.js"></script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
 </body>
 </html>

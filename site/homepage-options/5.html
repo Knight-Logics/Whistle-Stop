@@ -4,322 +4,208 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 5 · Spin for Dinner · Whistle Stop Grill &amp; Bar</title>
+<title>Option 5 · Seven Nights · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --ocean: #1149c9; --deep: #0b2f86; --sun: #ffd21f; --tang: #ff6b1a; --white: #ffffff; --ink: #0d1a3a; --pink: #ff4f8b; }
+  :root {
+    --ink: #1d1b35;
+    --paper: #ffffff;
+    --mist: #f1f0f6;
+    --mon: #5b2a86; --tue: #b8327a; --wed: #e2564b; --thu: #ee8424; --fri: #e9ad00; --sat: #8fbf2f; --sun: #1c968c;
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--ocean); color: var(--white); font: 400 18px/1.55 "Archivo", system-ui, sans-serif; overflow-x: clip; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 18px/1.6 "Public Sans", system-ui, sans-serif; }
   a { color: inherit; }
-  img, svg { display: block; max-width: 100%; }
-  img { height: auto; }
-  :focus-visible { outline: 3px solid var(--sun); outline-offset: 4px; }
-  h1, h2, h3 { font-family: "Bungee", Impact, sans-serif; font-weight: 400; margin: 0; line-height: 1; }
+  img { display: block; max-width: 100%; height: auto; }
+  :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
   .wrap { width: min(1240px, 100% - 40px); margin-inline: auto; }
-  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 12px; background: var(--sun); color: var(--ink); font-weight: 800; text-decoration: none; border: 0; cursor: pointer; font-size: 17px; box-shadow: 0 6px 0 #c99c00; transition: translate .15s, box-shadow .15s; }
-  .btn:hover { translate: 0 -2px; box-shadow: 0 8px 0 #c99c00; }
-  .btn:active { translate: 0 4px; box-shadow: 0 2px 0 #c99c00; }
-  .btn.alt { background: var(--white); box-shadow: 0 6px 0 #9fb4e6; }
-  .btn.alt:hover { box-shadow: 0 8px 0 #9fb4e6; }
-  .btn.hot { background: var(--tang); color: var(--white); box-shadow: 0 6px 0 #b8430a; }
+  .tall { font-family: "Big Shoulders Display", Impact, sans-serif; }
+  h2 { margin: 0 0 14px; font: 800 clamp(42px, 5.4vw, 76px)/.95 "Big Shoulders Display", sans-serif; }
+  .btn { display: inline-block; padding: 14px 24px; border-radius: 10px; background: var(--ink); color: #fff; font-weight: 700; text-decoration: none; }
+  .btn.light { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
 
-  .moving [data-split] .w { display: inline-block; opacity: 0; transform: translateY(80%) rotateX(90deg); transform-origin: 50% 100%; }
-  .moving [data-split].in .w { animation: flipUp .7s cubic-bezier(.3,1.5,.5,1) forwards; animation-delay: calc(var(--wi) * 100ms + .1s); }
-  @keyframes flipUp { to { opacity: 1; transform: none; } }
-
-  .nav .wrap { display: flex; align-items: center; gap: 24px; height: 84px; }
-  .nav .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 800; }
-  .nav .brand img { width: 46px; height: 46px; }
+  /* Header */
+  .nav .wrap { display: flex; align-items: center; gap: 22px; padding: 16px 0; }
+  .nav .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; }
+  .nav .brand img { width: 44px; height: 44px; }
   .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 600; }
   .nav ul a { text-decoration: none; }
-  .nav ul a:hover { color: var(--sun); }
-  .nav .btn { padding: 10px 18px; font-size: 16px; box-shadow: 0 4px 0 #c99c00; }
+  .nav ul a:hover { text-decoration: underline; text-underline-offset: 5px; }
+  .intro .wrap { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 18px 40px; padding: 18px 0 26px; }
+  .intro h1 { margin: 0; font: 900 clamp(54px, 8vw, 124px)/.85 "Big Shoulders Display", sans-serif; letter-spacing: -.01em; }
+  .intro p { margin: 0; max-width: 40ch; }
+  .intro .status { font-weight: 700; }
 
-  /* hero */
-  .hero { position: relative; padding: 30px 0 90px; overflow: hidden; isolation: isolate; }
-  .rays { position: absolute; left: 70%; top: 55%; width: 170vmax; aspect-ratio: 1; translate: -50% -50%; z-index: -1; background: repeating-conic-gradient(rgba(255,255,255,.07) 0 8deg, transparent 8deg 16deg); border-radius: 50%; }
-  .moving .rays { animation: spin 80s linear infinite; }
-  @keyframes spin { to { rotate: 360deg; } }
-  .hero .grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 50px; align-items: center; }
-  .hero h1 { font-size: clamp(50px, 6.2vw, 96px); text-shadow: 0 6px 0 var(--deep); }
-  .hero h1 .y { color: var(--sun); }
-  .hero .lede { font-size: 20px; max-width: 34ch; margin: 24px 0 30px; color: #dfe8ff; }
-  .hero .ctas { display: flex; flex-wrap: wrap; gap: 14px; }
-  .status { margin-top: 24px; font-weight: 600; color: #dfe8ff; }
+  /* Seven columns */
+  .week { display: flex; height: min(76vh, 680px); min-height: 520px; }
+  .day { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; color: #fff; transition: flex-grow .5s ease; }
+  .day[aria-expanded="true"] { flex-grow: 7; }
+  .day button { position: absolute; inset: 0; width: 100%; background: none; border: 0; color: inherit; cursor: pointer; padding: 0; text-align: left; }
+  .day .name { position: absolute; left: 50%; bottom: 26px; writing-mode: vertical-rl; transform: translateX(-50%) rotate(180deg); white-space: nowrap; font: 800 clamp(30px, 3vw, 44px)/1 "Big Shoulders Display", sans-serif; transition: opacity .3s; }
+  .day[aria-expanded="true"] .name { opacity: 0; }
+  .day .open { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .35s ease .15s; }
+  .day[aria-expanded="true"] .open { opacity: 1; visibility: visible; }
+  .day .open .txt { position: absolute; left: 0; bottom: 0; width: min(500px, 100%); padding: clamp(22px, 2.6vw, 40px); background: var(--c); display: flex; flex-direction: column; z-index: 1; }
+  .day .open .when { font-weight: 700; opacity: .9; }
+  .day .open h3 { margin: 6px 0 10px; font: 900 clamp(46px, 5.4vw, 88px)/.9 "Big Shoulders Display", sans-serif; }
+  .day .open p { margin: 0; max-width: 34ch; font-size: 19px; }
+  .day .open .tonight-tag { display: inline-block; align-self: start; margin-bottom: 14px; padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,.22); font-weight: 700; font-size: 15px; }
+  .day .open figure { margin: 0; position: absolute; inset: 0; }
+  .day .open figure img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .day { background: var(--c); }
+  .d1 { --c: var(--mon); } .d2 { --c: var(--tue); } .d3 { --c: var(--wed); } .d4 { --c: var(--thu); }
+  .d5 { --c: var(--fri); color: var(--ink); } .d6 { --c: var(--sat); color: var(--ink); } .d0 { --c: var(--sun); }
+  .d5 .tonight-tag, .d6 .tonight-tag { background: rgba(29,27,53,.12); }
+  @media (prefers-reduced-motion: reduce) { .day, .day .open, .day .name { transition: none; } }
 
-  /* the machine */
-  .machine { --fh: 96px; --rw: 188px; position: relative; justify-self: center; padding: 26px 26px 30px; border-radius: 36px; background: linear-gradient(180deg, #ff8a3c, var(--tang) 40%, #e2520b); box-shadow: 0 14px 0 #a83b06, 0 40px 80px rgba(0,0,0,.35), inset 0 3px 0 rgba(255,255,255,.4); }
-  .marquee { position: absolute; inset: 10px; border-radius: 28px; pointer-events: none; }
-  .bulb { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: #fff6c2; box-shadow: 0 0 8px #ffe36b; }
-  .moving .bulb { animation: chase 1.2s steps(1) infinite; animation-delay: calc(var(--k) * -.1s); }
-  @keyframes chase { 0% { background: #fff6c2; box-shadow: 0 0 12px 3px #ffe36b; } 50% { background: #b85b18; box-shadow: none; } }
-  .sign { position: relative; text-align: center; margin: 4px 30px 18px; padding: 12px 18px 10px; border-radius: 16px; background: var(--ink); color: var(--sun); font: 400 28px/1 "Bungee", sans-serif; letter-spacing: .02em; box-shadow: inset 0 0 0 3px var(--sun); text-shadow: 0 0 14px rgba(255,210,31,.7); }
-  .sign small { display: block; font: 600 13px/1.2 "Archivo", sans-serif; color: #ffe9a3; margin-top: 6px; letter-spacing: 0; text-shadow: none; }
-  .window { position: relative; display: flex; gap: 12px; padding: 14px; border-radius: 20px; background: var(--ink); box-shadow: inset 0 6px 18px rgba(0,0,0,.6); }
-  .window::after { content: ""; position: absolute; inset: 14px; border-radius: 12px; pointer-events: none; background: linear-gradient(180deg, rgba(13,26,58,.85) 0%, rgba(13,26,58,0) 32%, rgba(13,26,58,0) 68%, rgba(13,26,58,.85) 100%); }
-  .payline { position: absolute; left: 4px; right: 4px; top: 50%; height: 3px; margin-top: -1.5px; background: var(--pink); box-shadow: 0 0 10px var(--pink); z-index: 2; opacity: .85; }
-  .payline::before, .payline::after { content: ""; position: absolute; top: 50%; translate: 0 -50%; border: 9px solid transparent; }
-  .payline::before { left: -4px; border-left-color: var(--pink); }
-  .payline::after { right: -4px; border-right-color: var(--pink); }
-  .reel { position: relative; width: var(--rw); height: calc(var(--fh) * 2.5); overflow: hidden; border-radius: 12px; background: #fdf8ec; perspective: 700px; }
-  .drum { position: absolute; left: 0; right: 0; top: 50%; height: var(--fh); margin-top: calc(var(--fh) / -2); transform-style: preserve-3d; transform: translateZ(calc(var(--fh) / -0.82843)) rotateX(var(--a, 0deg)); transition: transform var(--dur, 2s) cubic-bezier(.12,.8,.24,1.05); }
-  .face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6px 10px; backface-visibility: hidden; transform: rotateX(calc(var(--i) * 45deg)) translateZ(calc(var(--fh) / 0.82843)); background: #fdf8ec; color: var(--ink); border-block: 1px solid #eadfc3; }
-  .face b { font-weight: 800; font-size: 15px; line-height: 1.15; }
-  .face span { font: 400 20px/1 "Bungee", sans-serif; color: var(--tang); margin-top: 4px; }
-  .face:nth-child(even) span { color: var(--ocean); }
-  .labels { display: flex; gap: 12px; padding: 12px 14px 0; }
-  .labels span { width: var(--rw); text-align: center; font-weight: 800; color: var(--ink); font-size: 15px; }
-  .lever { position: absolute; right: -40px; top: 120px; width: 34px; height: 170px; border: 0; padding: 0; background: none; cursor: pointer; }
-  .lever .base { position: absolute; left: -6px; bottom: -18px; width: 40px; height: 54px; border-radius: 10px; background: #7d8aa8; box-shadow: inset 0 -6px 0 rgba(0,0,0,.25); }
-  .lever .arm { position: absolute; left: 12px; bottom: 10px; width: 10px; height: 150px; border-radius: 5px; background: linear-gradient(90deg, #c9d1e3, #8892ab); transform-origin: 50% 100%; transition: transform .45s cubic-bezier(.3,1.6,.5,1); }
-  .lever .arm::before { content: ""; position: absolute; left: 50%; top: -22px; width: 40px; height: 40px; margin-left: -20px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ff8fb4, var(--pink) 50%, #c21d58); box-shadow: 0 6px 12px rgba(0,0,0,.3); }
-  .lever.pulled .arm { transform: scaleY(-.55); transition-duration: .18s; }
-  .result { margin-top: 18px; padding: 16px 18px; border-radius: 18px; background: var(--white); color: var(--ink); box-shadow: 0 6px 0 rgba(0,0,0,.18); min-height: 120px; }
-  .result h3 { font-size: 18px; color: var(--tang); }
-  .result ul { list-style: none; padding: 0; margin: 10px 0 12px; display: grid; gap: 6px; }
-  .result li { display: grid; grid-template-columns: 38px 1fr auto; gap: 10px; align-items: center; font-weight: 600; font-size: 16px; }
-  .result li svg { width: 38px; height: 38px; }
-  .result li b { font: 400 16px/1 "Bungee", sans-serif; color: var(--ocean); }
-  .result .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
-  .result .btn { padding: 10px 16px; font-size: 15px; }
-  .moving .result.pop { animation: pop .5s cubic-bezier(.3,1.7,.5,1); }
-  @keyframes pop { from { transform: scale(.92); } }
-  #confetti { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+  .hh { background: var(--ink); color: #fff; }
+  .hh .wrap { display: flex; flex-wrap: wrap; gap: 8px 30px; justify-content: space-between; padding: 16px 0; font-weight: 600; }
+  .hh b { color: var(--fri); }
 
-  /* tokens */
-  .tokens { background: var(--sun); color: var(--ink); padding: 100px 0 110px; }
-  .tokens h2 { font-size: clamp(40px, 5vw, 76px); }
-  .tokens .sub { margin: 16px 0 50px; max-width: 48ch; font-size: 19px; }
-  .coins { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 36px 20px; }
-  .coin { display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; perspective: 800px; }
-  .coin .disc { width: 160px; height: 160px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 60%, #fff), var(--c) 55%, color-mix(in srgb, var(--c) 70%, #000)); box-shadow: 0 8px 0 color-mix(in srgb, var(--c) 55%, #000), 0 18px 30px rgba(13,26,58,.25), inset 0 0 0 8px rgba(255,255,255,.25); transition: transform .9s cubic-bezier(.3,1.2,.5,1); }
-  .coin .disc svg { width: 70%; filter: drop-shadow(0 6px 6px rgba(0,0,0,.25)); }
-  .moving .coin .bob { animation: bob 2.6s ease-in-out infinite; animation-delay: calc(var(--i) * -.3s); }
-  @keyframes bob { 50% { transform: translateY(-12px); } }
-  .coin:hover .disc, .coin:focus-visible .disc { transform: rotateY(360deg); }
-  .coin h3 { font-size: 22px; margin-top: 22px; }
-  .coin p { margin: 6px 0 0; font-weight: 600; font-size: 15px; }
-  .coin .go { margin-top: 8px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
+  /* Below */
+  section { padding: 90px 0; }
+  .eat .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 26px; }
+  .eat .item { border-top: 8px solid var(--c); padding-top: 14px; }
+  .eat .item h3 { margin: 0 0 6px; font: 800 30px/1 "Big Shoulders Display", sans-serif; }
+  .eat .item p { margin: 0; color: #4b4a63; }
+  .eat .photos { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 34px; }
+  .eat .photos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; }
 
-  /* week marquee */
-  .week { padding: 90px 0 30px; overflow: hidden; }
-  .week h2 { font-size: clamp(36px, 4.4vw, 64px); }
-  .week .hh { margin: 14px 0 34px; color: #dfe8ff; }
-  .track { display: flex; gap: 16px; width: max-content; padding: 10px 0 40px; }
-  .moving .track { animation: slide 50s linear infinite; }
-  .track:hover { animation-play-state: paused; }
-  @keyframes slide { to { transform: translateX(-50%); } }
-  .night { width: 300px; padding: 24px; border-radius: 22px; background: var(--deep); box-shadow: 0 8px 0 #07205c; }
-  .night b { display: block; font: 400 34px/1 "Bungee", sans-serif; color: var(--sun); }
-  .night span { display: block; font-weight: 800; font-size: 19px; margin-top: 10px; }
-  .night small { display: block; color: #c9d6ff; font-size: 15px; margin-top: 4px; }
-  .night.is-today { background: var(--pink); box-shadow: 0 8px 0 #b3184f; }
-  .night.is-today b { color: var(--white); }
+  .story { background: var(--mist); }
+  .story .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .story img { width: 100%; border-radius: 12px; }
+  .story blockquote { margin: 26px 0 0; font: 800 30px/1.1 "Big Shoulders Display", sans-serif; }
+  .story blockquote footer { margin-top: 8px; font: 400 15px/1.4 "Public Sans", sans-serif; color: #4b4a63; }
 
-  .visit { padding: 70px 0 50px; }
-  .visit .grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 40px; padding: 40px; border-radius: 30px; background: var(--white); color: var(--ink); box-shadow: 0 10px 0 #9fb4e6; }
-  .visit h2 { font-size: clamp(32px, 3.6vw, 52px); color: var(--ocean); }
-  .visit h3 { font-size: 20px; margin-bottom: 8px; color: var(--tang); }
-  .visit p { margin: 0 0 4px; }
-  .visit .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
-  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 40px; font-size: 15px; color: #dfe8ff; }
+  .visit .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 20px; }
+  .visit h3 { margin: 0 0 6px; font: 800 26px/1 "Big Shoulders Display", sans-serif; }
+  .visit p { margin: 0; }
+  .visit .actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .bar7 { display: flex; height: 10px; }
+  .bar7 i { flex: 1; }
+  footer.site { padding: 24px 0 40px; color: #4b4a63; font-size: 15px; }
+  footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; }
 
-  @media (max-width: 1000px) {
+  @media (max-width: 900px) {
     .nav ul { display: none; }
     .nav .btn { margin-left: auto; }
-    .hero .grid { grid-template-columns: 1fr; gap: 40px; }
-    .machine { --fh: 80px; --rw: calc((min(100vw, 1000px) - 40px - 24px - 16px - 12px) / 3); padding: 18px 12px 20px; border-radius: 28px; justify-self: stretch; }
-    .window { gap: 6px; padding: 8px; }
-    .window::after { inset: 8px; }
-    .labels { gap: 6px; padding: 10px 8px 0; }
-    .face { padding: 4px 6px; }
-    .face b { font-size: 12px; }
-    .face span { font-size: 15px; }
-    .labels span { font-size: 12px; }
-    .sign { font-size: 20px; margin: 4px 10px 14px; }
-    .lever { display: none; }
-    .visit .grid { grid-template-columns: 1fr; padding: 28px; }
+    .week { flex-direction: column; height: auto; min-height: 0; }
+    .day { flex: none; height: 64px; transition: height .45s ease; }
+    .day[aria-expanded="true"] { height: 520px; }
+    .day .name { left: 20px; bottom: auto; top: 50%; writing-mode: horizontal-tb; transform: translateY(-50%); }
+    .day button::after { content: "+"; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font: 600 30px/1 "Public Sans", sans-serif; }
+    .day[aria-expanded="true"] button::after { content: none; }
+    .day[aria-expanded="true"] .name { opacity: 0; }
+    .eat .grid { grid-template-columns: 1fr 1fr; }
+    .story .grid, .visit .grid { grid-template-columns: 1fr; }
+    .eat .photos { grid-template-columns: 1fr 1fr; }
   }
-  @media (max-width: 520px) { .hero h1 { font-size: 42px; } .hero .lede { font-size: 17px; margin: 16px 0 20px; } .hero .ctas .btn { padding: 12px 16px; font-size: 16px; } .status { display: none; } .nav .brand span { display: none; } .night { width: 240px; } .coins { grid-template-columns: 1fr 1fr; } .coin .disc { width: 130px; height: 130px; } }
+  @media (max-width: 520px) { .nav .brand span { display: none; } .eat .grid { grid-template-columns: 1fr; } }
 </style>
+<script src="shared.js" defer></script>
 </head>
 <body>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="46" height="46"><span>Whistle Stop Grill &amp; Bar</span></a>
+    <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
     <ul>
       <li><a href="../menu.html">Menu</a></li>
-      <li><a href="../events.html">This week</a></li>
+      <li><a href="../events.html">Calendar</a></li>
       <li><a href="../happy-hour.html">Happy hour</a></li>
-      <li><a href="../private-events.html">Parties</a></li>
+      <li><a href="../private-events.html">Private events</a></li>
       <li><a href="#visit">Visit</a></li>
     </ul>
     <a class="btn" href="../order.html">Order online</a>
   </div>
 </header>
 
+<div class="intro">
+  <div class="wrap">
+    <h1>Seven nights on Main Street</h1>
+    <div><p>Every night of the week has its own thing at Whistle Stop, Safety Harbor's open-air grill and bar since 1995.</p><p class="status" data-ws="status">Open daily from 11 AM</p></div>
+  </div>
+</div>
+
 <main>
-  <section class="hero" aria-labelledby="h1">
-    <div class="rays" aria-hidden="true"></div>
-    <canvas id="confetti" aria-hidden="true"></canvas>
-    <div class="wrap grid">
-      <div>
-        <h1 id="h1" class="in" data-split>Can't decide? <span class="y">Spin for dinner.</span></h1>
-        <p class="lede">Spin the reels and they pick a starter, a main and something to sip from the real Whistle Stop menu. Don't like it? Spin again.</p>
-        <div class="ctas"><button class="btn hot" id="spinBtn" type="button">Spin the reels</button><a class="btn alt" href="../menu.html">See the full menu</a></div>
-        <p class="status" data-ws="status">Open daily from 11 AM</p>
-      </div>
-      <div class="machine" id="machine">
-        <div class="marquee" id="marquee" aria-hidden="true"></div>
-        <div class="sign">Whistle Stop<small>915 Main Street, Safety Harbor</small></div>
-        <div class="window" aria-hidden="true">
-          <div class="payline"></div>
-          <div class="reel"><div class="drum" id="r0"></div></div>
-          <div class="reel"><div class="drum" id="r1"></div></div>
-          <div class="reel"><div class="drum" id="r2"></div></div>
-        </div>
-        <div class="labels" aria-hidden="true"><span>Starter</span><span>Main</span><span>Sip or sweet</span></div>
-        <button class="lever" id="lever" type="button" aria-label="Pull the lever to spin"><span class="base"></span><span class="arm"></span></button>
-        <div class="result" id="result" aria-live="polite"></div>
-      </div>
-    </div>
-  </section>
+  <div class="week" id="week" role="list">
+    <div class="day d1" data-day="1" role="listitem"><button aria-label="Monday: Martini Monday and Taco Night"><span class="name">Monday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Monday, 4 PM to close</span><h3>Martini Monday &amp; Taco Night</h3><p>Half-off martinis and 2-for-$6 tacos. Words &amp; Wine book club meets the 3rd Monday.</p></div><figure><img src="../assets/gallery/WSBar.webp" alt="Bartenders pouring cocktails at the bar" loading="lazy" width="1080" height="1080"></figure></div></div>
+    <div class="day d2" data-day="2" role="listitem"><button aria-label="Tuesday: Open Mic Night"><span class="name">Tuesday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Tuesday, 6:30 to 9:30 PM</span><h3>Open Mic Night</h3><p>Local talent takes the stage. Happy hour runs 4 PM to close.</p></div><figure><img src="../assets/gallery/WSRocker2.webp" alt="A singer with a guitar at the microphone" loading="lazy" width="447" height="447"></figure></div></div>
+    <div class="day d3" data-day="3" role="listitem"><button aria-label="Wednesday: Cornhole"><span class="name">Wednesday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Wednesday, from 6 PM</span><h3>Cornhole Wednesdays</h3><p>Every Wednesday at 6 PM, with happy hour from 4 PM to close.</p></div><figure><img src="../assets/gallery/WSCornHole.webp" alt="Cornhole boards set up by the Whistle Stop sign" loading="lazy" width="1080" height="1080"></figure></div></div>
+    <div class="day d4" data-day="4" role="listitem"><button aria-label="Thursday: Guitar Guild and Ukulele Jam"><span class="name">Thursday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">3rd and 4th Thursdays</span><h3>Guitar Guild &amp; Ukulele Jam</h3><p>TB Guitar Guild on the 3rd Thursday, 6–9 PM. Tampa Bay Ukulele Society open jam on the 4th, 6:30–9:30 PM.</p></div><figure><img src="../assets/gallery/WSRocker.webp" alt="A guitarist playing on the patio" loading="lazy" width="1080" height="1080"></figure></div></div>
+    <div class="day d5" data-day="5" role="listitem"><button aria-label="Friday: Live music"><span class="name">Friday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Friday, 6:30 to 9:30 PM</span><h3>Live music</h3><p>Local artists on the patio stage. Happy hour 4–7 PM first.</p></div><figure><img src="../assets/gallery/WSGoodTimes.webp" alt="Friends at a table in the busy bar room" loading="lazy" width="1080" height="1080"></figure></div></div>
+    <div class="day d6" data-day="6" role="listitem"><button aria-label="Saturday: Live music"><span class="name">Saturday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Tonight</span><span class="when">Saturday, 6:30 to 9:30 PM</span><h3>Live music</h3><p>Another night of local artists, open till 10 PM.</p></div><figure><img src="../assets/gallery/WSDrinks.webp" alt="A long table of friends raising their glasses" loading="lazy" width="1280" height="878"></figure></div></div>
+    <div class="day d0" data-day="0" role="listitem"><button aria-label="Sunday: Breakfast Bloody Mary Sunday"><span class="name">Sunday</span></button>
+      <div class="open"><div class="txt"><span class="tonight-tag" hidden>Today</span><span class="when">Sunday, from 11 AM</span><h3>Bloody Mary Sunday</h3><p>$5 mimosas and Bloody Marys with brunch on the patio.</p></div><figure><img src="../assets/gallery/WSDrinks2.webp" alt="A long table on the open-air patio by day" loading="lazy" width="810" height="1280"></figure></div></div>
+  </div>
+  <div class="hh"><div class="wrap"><span><b>Happy hour</b> every day 4–7 PM</span><span>Tuesday &amp; Wednesday: 4 PM to close</span><span>Daily drink &amp; food specials from 11 AM</span></div></div>
 
-  <section class="tokens" aria-labelledby="th">
+  <section class="eat" aria-labelledby="et">
     <div class="wrap">
-      <h2 id="th" data-split>Or go straight to it</h2>
-      <p class="sub">Pick a token and jump to that part of the menu.</p>
-      <div class="coins" id="coins"></div>
-    </div>
-  </section>
-
-  <section class="week" aria-labelledby="wh">
-    <div class="wrap">
-      <h2 id="wh">Every night on Main Street</h2>
-      <p class="hh">Happy hour every day 4–7 PM, and until close on Tuesday and Wednesday.</p>
-    </div>
-    <div class="track" id="track"></div>
-  </section>
-
-  <section class="visit" id="visit" aria-labelledby="vh">
-    <div class="wrap">
+      <h2 id="et">Real. Good. Food.</h2>
       <div class="grid">
-        <div>
-          <h2 id="vh">915 Main Street</h2>
-          <p>Safety Harbor, FL 34695</p>
-          <div class="ctas"><a class="btn hot" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Get directions</a><a class="btn" href="tel:+17277261956">(727) 726-1956</a></div>
-        </div>
-        <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM</p><p>Fri–Sat 11 AM–10 PM</p></div>
-        <div><h3>Delivery too</h3><p>Order pickup from us, or delivery through Uber Eats, DoorDash and Grubhub.</p><p><a href="../order.html">Ordering options</a></p></div>
+        <div class="item" style="--c: var(--wed)"><h3>Starters</h3><p>Fancy Fried Green Tomatoes, Smoked Fish Spread, Blue Crab Cakes</p></div>
+        <div class="item" style="--c: var(--thu)"><h3>Handhelds</h3><p>Original Whistle Stop Burger, Crab &amp; Shrimp Burger, Fresh Grouper Sandwich</p></div>
+        <div class="item" style="--c: var(--sun)"><h3>Plates</h3><p>Balsamic Glazed Salmon, 12 oz Rib Eye, Baja Fish or Shrimp Tacos</p></div>
+        <div class="item" style="--c: var(--tue)"><h3>Bar &amp; sweets</h3><p>18 taps, Key Lime Martini, milkshakes and Key Lime Pie</p></div>
       </div>
-      <div class="foot"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a> &nbsp; <a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div>
+      <div class="photos">
+        <img src="../assets/gallery/WSFood2-480.webp" alt="A plate from the kitchen with fresh vegetables" loading="lazy" width="480" height="640">
+        <img src="../assets/gallery/WSFood3-480.webp" alt="A loaded hot dog with onion straws and fries" loading="lazy" width="480" height="600">
+        <img src="../assets/gallery/WSBar-480.webp" alt="Bartenders pouring cocktails" loading="lazy" width="480" height="480">
+      </div>
+      <p style="margin-top:28px"><a class="btn" href="../menu.html">See the full menu</a> <a class="btn light" href="../order.html">Order for pickup</a></p>
+    </div>
+  </section>
+
+  <section class="story" aria-labelledby="st">
+    <div class="wrap grid">
+      <img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building" loading="lazy" width="988" height="415">
+      <div>
+        <h2 id="st">A Main Street landmark</h2>
+        <p>The corner was Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand, for more than 35 years. Dawn bought it in 1995 and again with Patrick in 2000. Henry's milkshakes are still on the menu.</p>
+        <blockquote>“Love the hometown atmosphere! Whistle Stop is one of our favorites!”<footer>Shannon Schafer, Google review · 4.4 on Google</footer></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit" id="visit" aria-labelledby="vi">
+    <div class="wrap">
+      <h2 id="vi">Find us</h2>
+      <div class="grid">
+        <div><h3>Address</h3><p>915 Main Street<br>Safety Harbor, FL 34695</p></div>
+        <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM<br>Fri–Sat 11 AM–10 PM</p></div>
+        <div><h3>Call</h3><p><a href="tel:+17277261956">(727) 726-1956</a></p></div>
+      </div>
+      <div class="actions"><a class="btn" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL">Get directions</a><a class="btn light" href="../private-events.html">Plan a private event</a><a class="btn light" href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a></div>
     </div>
   </section>
 </main>
-
-<script src="shared.js"></script>
-<script src="food.js"></script>
-<script src="fx.js"></script>
+<div class="bar7" aria-hidden="true"><i style="background:var(--mon)"></i><i style="background:var(--tue)"></i><i style="background:var(--wed)"></i><i style="background:var(--thu)"></i><i style="background:var(--fri)"></i><i style="background:var(--sat)"></i><i style="background:var(--sun)"></i></div>
+<footer class="site"><div class="wrap"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div></footer>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const { cats, art, order, menu } = WSFOOD;
-  const M = "../menu.html#";
-  /* Every face is a real item at its menu price (market-price items are left off the reels). */
-  const REELS = [
-    [["Fancy Fried Green Tomatoes", "$6.90"], ["Blue Crab Cakes", "$11.90"], ["Southern Sampler", "$10.90"], ["Whistle Stop Wings", "$9.90"], ["Smoked Fish Spread", "$7.90"], ["Corn Fritters", "$4.90"], ["Fried Dill Pickles", "$4.90"], ["Potato Skins", "$10"]].map((x) => [...x, "fgt", M + "main-menu-small-plates"]),
-    [["Original Whistle Stop Burger", "$8.90", "burger", "burgers"], ["Baja Fish or Shrimp Tacos", "$11.90", "taco", "large-plates"], ["BLFGT, The Ultimate BLT", "$8.90", "sandwich", "sandwiches"], ["Santa Fe Burger", "$9.90", "burger", "burgers"], ["Cobb Salad", "$11.90", "salad", "salads"], ["Pork Tacos", "$10.90", "taco", "large-plates"], ["Crab & Shrimp Burger", "$11.90", "burger", "burgers"], ["Florida Club Wrap", "$10.90", "sandwich", "sandwiches"]].map(([n, p, a, c]) => [n, p, a, M + "main-menu-" + c]),
-    [["Key Lime Martini", "$10", "martini", "seasonal-seasonal-sips"], ["Milkshakes & Malts", "$4.20", "shake", "main-menu-desserts"], ["Old Florida Mule", "$9", "highball", "bar-cocktails"], ["Beer Flights", "$14", "beer", "bar-beer"], ["Key Lime Pie", "$4.90", "pie", "main-menu-desserts"], ["Safety Harbor Sunset", "$9", "highball", "bar-cocktails"], ["Domestic Drafts", "$4.50", "beer", "bar-beer"], ["Green Tomato Bloody Mary", "$10", "highball", "bar-cocktails"]].map(([n, p, a, c]) => [n, p, a, M + c]),
-  ];
-  const drums = REELS.map((items, r) => {
-    const el = document.getElementById("r" + r);
-    el.innerHTML = items.map(([n, p], i) => `<div class="face" style="--i:${i}"><b>${n}</b><span>${p}</span></div>`).join("");
-    el.style.setProperty("--dur", (1.7 + r * 0.5) + "s");
-    return { el, a: 0, k: 0 };
-  });
-  const setA = (d, a) => { d.a = a; d.el.style.setProperty("--a", a + "deg"); };
-  /* face i faces you when the drum is turned to -i*45deg */
-  const pick = [Math.floor(Math.random() * 8), Math.floor(Math.random() * 8), Math.floor(Math.random() * 8)];
-  drums.forEach((d, r) => { d.el.style.transition = "none"; setA(d, -pick[r] * 45); d.k = pick[r]; requestAnimationFrame(() => (d.el.style.transition = "")); });
-
-  const result = document.getElementById("result");
-  function showResult() {
-    const rows = drums.map((d, r) => REELS[r][d.k]);
-    result.innerHTML = `<h3>Tonight's pick</h3><ul>${rows.map(([n, p, a]) => `<li>${art(a)}<span>${n}</span><b>${p}</b></li>`).join("")}</ul>
-      <div class="ctas"><a class="btn hot" href="${order}">Order this for pickup</a><a class="btn alt" href="${rows[1][3]}">See it on the menu</a></div>`;
-    result.classList.remove("pop"); void result.offsetWidth; result.classList.add("pop");
-  }
-  showResult();
-
-  let spinning = false;
-  const lever = document.getElementById("lever");
-  function spin() {
-    if (spinning) return;
-    spinning = true;
-    lever.classList.add("pulled"); setTimeout(() => lever.classList.remove("pulled"), 260);
-    let longest = 0;
-    drums.forEach((d, r) => {
-      let k; do { k = Math.floor(Math.random() * 8); } while (k === d.k && Math.random() < 0.7);
-      d.k = k;
-      const turns = FX.reduce ? 0 : 2 + r;
-      const base = d.a - 360 * turns;
-      const final = base - ((((base + k * 45) % 360) + 360) % 360);
-      setA(d, final);
-      longest = Math.max(longest, FX.reduce ? 0 : (1.7 + r * 0.5) * 1000);
+  const days = [...document.querySelectorAll(".day")];
+  function open(day) {
+    days.forEach((d) => {
+      const on = d === day;
+      d.setAttribute("aria-expanded", String(on));
+      d.querySelector("button").setAttribute("aria-expanded", String(on));
+      d.querySelector("button").tabIndex = 0;
     });
-    setTimeout(() => { spinning = false; showResult(); burst(); }, longest + 80);
   }
-  document.getElementById("spinBtn").addEventListener("click", spin);
-  lever.addEventListener("click", spin);
-  if (!FX.reduce) setTimeout(spin, 1200);
-
-  /* marquee bulbs around the cabinet */
-  const mq = document.getElementById("marquee");
-  function bulbs() {
-    const w = mq.clientWidth, h = mq.clientHeight, gap = 30, pts = [];
-    for (let x = 18; x <= w - 18; x += gap) pts.push([x, 0]);
-    for (let y = 18; y <= h - 18; y += gap) pts.push([w, y]);
-    for (let x = w - 18; x >= 18; x -= gap) pts.push([x, h]);
-    for (let y = h - 18; y >= 18; y -= gap) pts.push([0, y]);
-    mq.innerHTML = pts.map(([x, y], k) => `<i class="bulb" style="left:${x}px;top:${y}px;--k:${k % 12}"></i>`).join("");
-  }
-  bulbs(); addEventListener("resize", bulbs);
-  new ResizeObserver(bulbs).observe(document.getElementById("machine"));
-
-  /* confetti */
-  const cv = document.getElementById("confetti"), cx = cv.getContext("2d");
-  let bits = [], running = false;
-  function burst() {
-    if (FX.reduce) return;
-    const r = cv.getBoundingClientRect(), m = document.getElementById("machine").getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
-    cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0);
-    const ox = m.left - r.left + m.width / 2, oy = m.top - r.top + m.height * 0.35;
-    const cols = ["#ffd21f", "#ff4f8b", "#ffffff", "#ff6b1a", "#7fe0ff"];
-    for (let i = 0; i < 140; i++) { const a = Math.random() * Math.PI * 2, s = 4 + Math.random() * 9; bits.push({ x: ox, y: oy, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 6, r: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.4, w: 6 + Math.random() * 6, h: 4 + Math.random() * 6, c: cols[i % cols.length], life: 1 }); }
-    if (!running) { running = true; requestAnimationFrame(tick); }
-  }
-  function tick() {
-    cx.clearRect(0, 0, cv.width, cv.height);
-    bits = bits.filter((b) => b.life > 0);
-    for (const b of bits) { b.vy += 0.32; b.vx *= 0.985; b.x += b.vx; b.y += b.vy; b.r += b.vr; b.life -= 0.009; cx.save(); cx.globalAlpha = Math.max(0, Math.min(1, b.life * 2)); cx.translate(b.x, b.y); cx.rotate(b.r); cx.fillStyle = b.c; cx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h); cx.restore(); }
-    if (bits.length) requestAnimationFrame(tick); else running = false;
-  }
-
-  /* tokens */
-  document.getElementById("coins").innerHTML = cats.map((c, i) => `
-    <a class="coin" href="${c.href}" style="--c:${c.color};--i:${i}">
-      <span class="bob"><span class="disc">${art(c.art)}</span></span>
-      <h3>${c.name}</h3><p>${c.count}, from ${c.from}</p><span class="go">${c.cta}</span>
-    </a>`).join("");
-
-  /* the week */
-  const today = WS.today().dayIndex;
-  const nights = [1, 2, 3, 4, 5, 6, 0].map((d) => { const w = WS.WEEK[d]; return `<div class="night${d === today ? " is-today" : ""}"><b>${w.day}</b><span>${w.title}</span><small>${w.time}</small></div>`; }).join("");
-  document.getElementById("track").innerHTML = nights + nights.replace(/class="night/g, 'aria-hidden="true" class="night');
-  document.querySelectorAll(".tokens h2").forEach(FX.reveal);
-});
+  days.forEach((d) => d.querySelector("button").addEventListener("click", () => open(d)));
+  const todayIdx = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short" }).format(new Date()));
+  const today = days.find((d) => Number(d.dataset.day) === todayIdx) || days[0];
+  today.querySelector(".tonight-tag").hidden = false;
+  open(today);
 </script>
 </body>
 </html>
