@@ -4,234 +4,243 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 2 · Stack It Up · Whistle Stop Grill &amp; Bar</title>
+<title>Option 2 · Spin the Menu · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --mustard: #ffc928; --ketchup: #e8402a; --pickle: #4f9d2d; --espresso: #24150d; --white: #fffdf7; --ink: #24150d; }
+  :root { --deep: #062b2f; --sea: #0d4a4c; --gold: #f2c46d; --coral: #ff7f61; --foam: #eaf5f0; --muted: #a9c7c0; }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--mustard); color: var(--ink); font: 400 18px/1.55 "Work Sans", system-ui, sans-serif; overflow-x: clip; }
+  body { margin: 0; background: var(--deep); color: var(--foam); font: 400 18px/1.6 "Figtree", system-ui, sans-serif; overflow-x: clip; }
   a { color: inherit; }
   img, svg { display: block; max-width: 100%; }
   img { height: auto; }
-  :focus-visible { outline: 3px solid var(--espresso); outline-offset: 3px; }
-  h1, h2, h3 { font-family: "Bowlby One", Impact, sans-serif; font-weight: 400; margin: 0; line-height: .92; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; margin: 0; letter-spacing: -.02em; }
   .wrap { width: min(1240px, 100% - 40px); margin-inline: auto; }
-  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 999px; background: var(--white); color: var(--espresso); border: 3px solid var(--espresso); font-weight: 700; text-decoration: none; box-shadow: 0 5px 0 var(--espresso); transition: translate .25s cubic-bezier(.2,.7,.2,1), box-shadow .2s, background .2s; }
-  .btn:hover { box-shadow: 0 8px 0 var(--espresso); }
-  .btn:active { box-shadow: 0 1px 0 var(--espresso); }
-  .btn.hot { background: var(--ketchup); color: #fff; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 999px; border: 1px solid rgba(234,245,240,.5); color: var(--foam); text-decoration: none; font-weight: 600; transition: background .3s, color .3s, border-color .3s, translate .3s cubic-bezier(.2,.7,.2,1); backdrop-filter: blur(6px); background: rgba(6,43,47,.25); }
+  .btn:hover { background: var(--foam); color: var(--deep); }
+  .btn.gold { background: var(--gold); border-color: var(--gold); color: var(--deep); }
+  .btn.gold:hover { background: #ffd98f; }
 
-  /* word-by-word headline: each word drops and lands */
-  .moving [data-split] .w { display: inline-block; opacity: 0; transform: translateY(-1.2em) rotate(-8deg); }
-  .moving [data-split].in .w { animation: drop .8s cubic-bezier(.3,1.6,.5,1) forwards; animation-delay: calc(var(--wi) * 110ms + .15s); }
-  @keyframes drop { to { opacity: 1; transform: none; } }
+  /* words condense out of the mist */
+  .moving [data-split] .w { display: inline-block; opacity: .1; filter: blur(14px); transform: translateY(.35em) rotateX(-60deg); transform-origin: 50% 100%; }
+  .moving [data-split].in .w { animation: mist 1.3s cubic-bezier(.16,.8,.2,1) forwards; animation-delay: calc(var(--wi) * 90ms + .2s); }
+  @keyframes mist { to { opacity: 1; filter: blur(0); transform: none; } }
 
-  /* nav */
-  .nav { position: fixed; inset: 0 0 auto; z-index: 20; transition: background .3s, box-shadow .3s; }
-  .nav.solid { background: var(--mustard); box-shadow: 0 2px 0 var(--espresso); }
-  .nav .wrap { display: flex; align-items: center; gap: 24px; height: 72px; }
-  .nav .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; }
+  .nav { position: absolute; inset: 0 0 auto; z-index: 10; }
+  .nav .wrap { display: flex; align-items: center; gap: 26px; height: 84px; }
+  .nav .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600; }
   .nav .brand img { width: 46px; height: 46px; }
-  .nav ul { display: flex; gap: 22px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 600; }
-  .nav ul a { text-decoration: none; }
-  .nav ul a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
-  .nav .btn { padding: 10px 18px; box-shadow: 0 3px 0 var(--espresso); }
+  .nav ul { display: flex; gap: 24px; margin: 0 0 0 auto; padding: 0; list-style: none; }
+  .nav ul a { text-decoration: none; opacity: .85; }
+  .nav ul a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 6px; }
+  .nav .btn { padding: 10px 20px; }
 
-  /* the build */
-  .build { position: relative; height: 250vh; }
-  .pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: 20px; padding: 80px max(20px, (100vw - 1240px) / 2) 30px; }
-  .sun { position: absolute; left: 62%; top: 52%; width: 120vmin; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: repeating-conic-gradient(from 0deg, #ffd65a 0 10deg, #ffc928 10deg 20deg); opacity: .9; z-index: 0; }
-  .moving .sun { animation: spin 60s linear infinite; }
-  @keyframes spin { to { rotate: 360deg; } }
-  .copy { position: relative; z-index: 2; }
-  .copy h1 { font-size: clamp(54px, 7.4vw, 118px); letter-spacing: -.01em; color: var(--espresso); }
-  .copy h1 .red { color: var(--ketchup); }
-  .copy .lede { max-width: 30ch; margin: 22px 0 26px; font-size: 20px; }
-  .copy .lede b { font-weight: 700; }
-  .ctas { display: flex; flex-wrap: wrap; gap: 14px; }
-  .status { margin: 22px 0 0; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-  .status::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--espresso); }
-  .status.is-open::before { background: var(--pickle); box-shadow: 0 0 0 0 rgba(79,157,45,.6); }
-  .moving .status.is-open::before { animation: ping 1.8s infinite; }
-  @keyframes ping { 70% { box-shadow: 0 0 0 12px rgba(79,157,45,0); } 100% { box-shadow: 0 0 0 0 rgba(79,157,45,0); } }
+  /* hero scene */
+  .hero { position: relative; min-height: 100vh; min-height: 100svh; overflow: hidden; display: flex; align-items: center; isolation: isolate; }
+  .scene { position: absolute; inset: -6%; z-index: -3; }
+  .scene img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; transform: scale(var(--kb, 1)); }
+  .moving .scene img { animation: kb 18s cubic-bezier(.2,.6,.2,1) both; }
+  @keyframes kb { from { transform: scale(1.18); } to { transform: scale(1.02); } }
+  .leak { position: absolute; inset: 0; z-index: -2; background: radial-gradient(40% 50% at var(--lx, 70%) 40%, rgba(255,150,80,.45), transparent 70%); mix-blend-mode: screen; }
+  .moving .leak { animation: leak 12s ease-in-out infinite alternate; }
+  @keyframes leak { from { --lx: 62%; opacity: .7; } to { --lx: 82%; opacity: 1; } }
+  @property --lx { syntax: "<percentage>"; inherits: false; initial-value: 70%; }
+  .shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(4,28,31,.92) 0%, rgba(4,28,31,.7) 34%, rgba(4,28,31,.1) 62%), linear-gradient(0deg, var(--deep) 0%, transparent 30%); }
+  #motes { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 60px; align-items: center; padding: 120px 0 90px; }
+  .hero h1 { font-size: clamp(50px, 6.4vw, 100px); line-height: 1; max-width: 12ch; }
+  .hero p.lede { font-size: 20px; max-width: 40ch; color: #d4e6e0; margin: 26px 0 32px; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 14px; }
+  .tonight { perspective: 1200px; }
+  .tonight .card { --rx: 0deg; --ry: 0deg; padding: 30px; border-radius: 22px; background: rgba(6,43,47,.55); border: 1px solid rgba(242,196,109,.4); backdrop-filter: blur(14px); transform: rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .6s cubic-bezier(.2,.7,.2,1); box-shadow: 0 30px 60px rgba(0,0,0,.35); }
+  .tonight.tilting .card { transition: transform .1s linear; }
+  .moving .tonight { animation: cardIn 1.6s 1s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes cardIn { from { opacity: 0; transform: translate3d(60px, 30px, 0) rotateY(-28deg); } }
+  .tonight .when { color: var(--gold); font-weight: 600; }
+  .tonight h2 { font-size: 34px; line-height: 1.08; margin: 8px 0 10px; }
+  .tonight p { margin: 0 0 18px; color: #cfe2dc; font-size: 16px; }
+  .tonight .status { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--foam); margin-bottom: 0; padding-top: 16px; border-top: 1px solid rgba(234,245,240,.18); }
+  .tonight .status::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+  .tonight .status.is-open::before { background: #7fe0a8; box-shadow: 0 0 12px #7fe0a8; }
 
-  .stage { position: relative; z-index: 1; height: 100%; min-height: 360px; perspective: 1400px; }
-  .burger { position: absolute; left: 40%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
-  .narrow .burger { left: 50%; }
-  .layer { position: absolute; left: 0; top: 0; transform-origin: 50% 50%; will-change: transform; filter: drop-shadow(0 10px 8px rgba(36,21,13,.18)); }
-  .layer svg { width: 100%; height: 100%; }
-  .moving .layer.drop { animation: stackIn .7s cubic-bezier(.3,1.5,.55,1) both; animation-delay: calc(var(--k) * 120ms + .35s); }
-  @keyframes stackIn { from { translate: 0 -110vh; } }
-  .callout { position: absolute; left: 40%; top: 50%; display: flex; align-items: center; gap: 10px; white-space: nowrap; font-weight: 700; font-size: 17px; opacity: 0; pointer-events: none; }
-  .narrow .callout { left: 50%; }
-  .callout i { display: block; height: 3px; width: 44px; background: var(--espresso); border-radius: 2px; }
-  .callout span { background: var(--white); border: 3px solid var(--espresso); padding: 6px 12px; border-radius: 999px; box-shadow: 0 3px 0 var(--espresso); }
-  .callout.l { flex-direction: row-reverse; }
-  .narrow .callout i { display: none; }
-  .narrow .callout span { padding: 2px 10px; font-size: 13px; border-width: 2px; box-shadow: 0 2px 0 var(--espresso); }
-  .price-tag { position: absolute; right: 6%; top: 10%; width: 150px; height: 150px; border-radius: 50%; background: var(--ketchup); color: #fff; display: grid; place-content: center; text-align: center; border: 4px solid var(--espresso); box-shadow: 0 6px 0 var(--espresso); rotate: 12deg; z-index: 3; }
-  .price-tag b { display: block; font: 400 40px/1 "Bowlby One", sans-serif; }
-  .price-tag small { font-weight: 700; font-size: 14px; line-height: 1.2; }
-  .moving .price-tag { animation: stamp .6s cubic-bezier(.3,1.7,.5,1) 1.6s both; }
-  @keyframes stamp { from { scale: 2.4; opacity: 0; rotate: -20deg; } }
-  .bit { position: absolute; z-index: 1; pointer-events: none; }
-  .bit.seed { width: 18px; height: 9px; border-radius: 50%; background: #fff4d8; box-shadow: 0 2px 0 rgba(36,21,13,.25); }
-  .bit.pickle { width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle, #cfe58a 0 30%, #8dbb3c 31% 62%, #4f8a24 63%); box-shadow: 0 3px 0 rgba(36,21,13,.25); }
-  .bit.tom { width: 46px; height: 46px; border-radius: 50%; background: radial-gradient(circle, #ff8a6a 0 22%, #e8402a 23% 70%, #b92a18 71%); }
-  .moving .bit { animation: bob var(--t, 5s) ease-in-out infinite alternate; }
-  @keyframes bob { to { transform: translateY(-22px) rotate(25deg); } }
-  .hint { position: absolute; left: 50%; bottom: 18px; translate: -50% 0; z-index: 3; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-  .hint i { width: 22px; height: 34px; border: 3px solid var(--espresso); border-radius: 12px; position: relative; }
-  .hint i::after { content: ""; position: absolute; left: 50%; top: 6px; width: 4px; height: 7px; margin-left: -2px; border-radius: 2px; background: var(--espresso); }
-  .moving .hint i::after { animation: wheel 1.4s infinite; }
-  @keyframes wheel { to { transform: translateY(10px); opacity: 0; } }
+  /* the menu ring */
+  .ringsec { position: relative; overflow: hidden; isolation: isolate; padding: 76px 0 90px; background: radial-gradient(ellipse 80% 60% at 50% 45%, #145a58 0%, #0a3a3c 45%, var(--deep) 100%); }
+  .aurora { position: absolute; inset: -40% -10% auto; height: 140%; z-index: -1; background: conic-gradient(from 200deg at 50% 50%, transparent, rgba(242,196,109,.16), rgba(255,127,97,.16), rgba(80,190,170,.14), transparent 70%); filter: blur(60px); }
+  .moving .aurora { animation: aur 24s linear infinite; }
+  @keyframes aur { to { transform: rotate(360deg); } }
+  .ringhead { text-align: center; max-width: 720px; margin: 0 auto; padding: 0 20px; }
+  .ringhead h2 { font-size: clamp(46px, 5.4vw, 84px); line-height: 1; }
+  .ringhead p { color: var(--muted); margin: 14px 0 0; }
+  .stage { --cw: 196px; --gap: 36px; --n: 9; --r: calc(var(--n) * (var(--cw) + var(--gap)) / 6.2832); position: relative; height: calc(var(--cw) * 1.42 + 200px); perspective: 2000px; perspective-origin: 50% -10%; cursor: grab; touch-action: pan-y; user-select: none; margin-top: 10px; }
+  .stage.dragging { cursor: grabbing; }
+  .ring { position: absolute; left: 50%; top: 70px; transform-style: preserve-3d; transform: translateZ(calc(var(--r) * -1 + 200px)) rotateX(-10deg) rotateY(var(--angle, 0deg)); }
+  .item { position: absolute; left: calc(var(--cw) / -2); top: 0; width: var(--cw); height: calc(var(--cw) * 1.42); transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--r)); text-decoration: none; }
+  .face { position: absolute; inset: 0; border-radius: 16px; backface-visibility: hidden; transition: transform .6s cubic-bezier(.2,.7,.2,1), box-shadow .6s; overflow: hidden; }
+  .front { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 14px; text-align: center; background: linear-gradient(170deg, color-mix(in srgb, var(--c) 82%, #fff) 0%, var(--c) 45%, color-mix(in srgb, var(--c) 55%, #000) 100%); color: #13201f; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+  .front .art { position: absolute; left: 8%; right: 8%; top: 6%; filter: drop-shadow(0 12px 10px rgba(0,0,0,.3)); }
+  .front b { font: 600 23px/1.05 "Fraunces", serif; }
+  .front small { font-weight: 700; font-size: 13px; margin-top: 4px; opacity: .8; }
+  .back { transform: rotateY(180deg); background: repeating-linear-gradient(45deg, #0b4244 0 10px, #0d4a4c 10px 20px); box-shadow: inset 0 0 0 1px rgba(242,196,109,.3); display: grid; place-items: center; }
+  .back img { width: 56px; opacity: .6; }
+  .item::after { content: ""; position: absolute; left: -12%; right: -12%; top: calc(100% + 14px); height: 24px; background: radial-gradient(closest-side, rgba(0,0,0,.55), transparent); transform: rotateX(90deg); }
+  .item.isfront .front { transform: translateZ(40px) translateY(-16px); box-shadow: 0 0 0 2px var(--gold), 0 0 50px rgba(242,196,109,.45); }
+  .sheen { position: absolute; inset: -20% -60%; background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,.5) 50%, transparent 58%); transform: translateX(-70%); pointer-events: none; mix-blend-mode: overlay; }
+  .moving .item.isfront .sheen { animation: sheen 5s ease-in-out infinite; }
+  @keyframes sheen { 0%, 55% { transform: translateX(-70%); } 80%, 100% { transform: translateX(70%); } }
+  .floor { position: absolute; left: 50%; top: calc(var(--cw) * 1.42 + 100px); width: min(1400px, 120vw); height: 240px; translate: -50% -50%; background: radial-gradient(ellipse at center, rgba(242,196,109,.25), rgba(242,196,109,.06) 38%, transparent 68%); transform: rotateX(78deg); filter: blur(6px); pointer-events: none; }
+  .caption { display: grid; grid-template-columns: auto minmax(0, 620px) auto; justify-content: center; align-items: center; gap: 34px; padding: 0 20px; margin-top: 10px; text-align: center; position: relative; z-index: 2; }
+  .caption .pane { transition: opacity .35s, transform .35s; }
+  .caption .pane.swap { opacity: 0; transform: translateY(10px); }
+  .caption h3 { font-size: clamp(34px, 3.6vw, 52px); line-height: 1.05; }
+  .caption .line { color: #cfe2dc; margin: 10px auto 14px; max-width: 46ch; }
+  .caption ul { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 10px; padding: 0; margin: 0 0 22px; }
+  .caption li { padding: 6px 14px; border-radius: 999px; background: rgba(234,245,240,.08); border: 1px solid rgba(234,245,240,.16); font-size: 15px; }
+  .caption li b { color: var(--gold); font-weight: 600; margin-left: 6px; }
+  .caption .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .arrow { width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(234,245,240,.35); background: rgba(234,245,240,.05); color: var(--foam); cursor: pointer; display: grid; place-items: center; transition: border-color .3s, color .3s, scale .3s; }
+  .arrow:hover { border-color: var(--gold); color: var(--gold); scale: 1.08; }
+  .arrow svg { width: 20px; height: 20px; }
 
-  /* ticker */
-  .tickwrap { position: relative; z-index: 3; overflow: hidden; padding: 22px 0; margin: -36px 0 -22px; }
-  .ticker { background: var(--ketchup); color: #fff; border-block: 3px solid var(--espresso); overflow: hidden; padding: 16px 0; transform: rotate(-1.5deg); margin: 0 -24px; }
-  .ticker .track { display: flex; width: max-content; gap: 0; font: 400 26px/1 "Bowlby One", sans-serif; }
-  .moving .ticker .track { animation: tick 60s linear infinite; }
-  .ticker:hover .track { animation-play-state: paused; }
-  .ticker .track span { display: inline-flex; align-items: center; gap: 22px; padding-right: 22px; white-space: nowrap; }
-  .ticker .track span::after { content: ""; width: 14px; height: 8px; border-radius: 50%; background: var(--mustard); }
-  .ticker .track b { color: var(--mustard); font-weight: 400; }
-  @keyframes tick { to { transform: translateX(-50%); } }
+  /* story */
+  .story { padding: 130px 0; background: linear-gradient(180deg, var(--deep), #0a3437); }
+  .story .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 70px; align-items: center; }
+  .story .photo { perspective: 1400px; }
+  .story .photo img { width: 100%; border-radius: 18px; box-shadow: 0 40px 80px rgba(0,0,0,.45); transform-origin: 0% 50%; transform: rotateY(var(--sw, 0deg)) translateZ(var(--sz, 0px)); }
+  .story h2 { font-size: clamp(40px, 4.4vw, 68px); line-height: 1.02; }
+  .story p { color: #cfe2dc; }
+  .steps { list-style: none; padding: 0; margin: 30px 0 0; display: grid; gap: 16px; }
+  .steps li { display: grid; grid-template-columns: 110px 1fr; gap: 18px; align-items: baseline; padding-top: 16px; border-top: 1px solid rgba(234,245,240,.14); }
+  .steps b { font: 600 30px/1 "Fraunces", serif; color: var(--gold); }
+  .moving .steps li[data-reveal] { opacity: 0; transform: translateX(-30px); transition: opacity .8s, transform .9s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i) * 140ms); }
+  .moving .steps li[data-reveal].in { opacity: 1; transform: none; }
 
-  /* cravings */
-  .crave { background: var(--espresso); color: var(--white); padding: 120px 0 110px; position: relative; }
-  .crave h2 { font-size: clamp(48px, 6.2vw, 96px); color: var(--mustard); max-width: 12ch; }
-  .crave .sub { max-width: 46ch; margin: 18px 0 50px; color: #f1e3cf; }
-  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
-  .card { --rx: 0deg; --ry: 0deg; position: relative; perspective: 900px; }
-  .card .in3d { position: relative; height: 100%; display: flex; flex-direction: column; padding: 150px 26px 26px; border-radius: 26px; background: var(--c); color: var(--espresso); border: 3px solid #000; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .5s cubic-bezier(.2,.7,.2,1); box-shadow: 0 8px 0 #000; }
-  .card.tilting .in3d { transition: transform .08s linear; }
-  .card .art { position: absolute; left: 50%; top: -34px; width: 190px; margin-left: -95px; transform: translateZ(70px); filter: drop-shadow(0 18px 14px rgba(0,0,0,.35)); }
-  .moving .card .art svg { animation: hover 3.2s ease-in-out infinite alternate; animation-delay: calc(var(--i) * -.4s); }
-  @keyframes hover { to { transform: translateY(-10px) rotate(-4deg); } }
-  .card .glare { position: absolute; inset: 0; border-radius: 23px; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255,255,255,.45), transparent 55%); opacity: 0; transition: opacity .3s; pointer-events: none; }
-  .card.tilting .glare { opacity: 1; }
-  .card h3 { font-size: 32px; transform: translateZ(30px); }
-  .card .meta { font-weight: 700; margin: 6px 0 12px; transform: translateZ(24px); }
-  .card ul { list-style: none; padding: 0; margin: 0 0 20px; transform: translateZ(18px); }
-  .card li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 2px dashed rgba(0,0,0,.25); font-size: 16px; }
-  .card li b { white-space: nowrap; }
-  .card .go { margin-top: auto; align-self: flex-start; transform: translateZ(40px); padding: 11px 18px; box-shadow: 0 4px 0 #000; border-color: #000; }
-  .moving .card[data-reveal] { opacity: 0; transform: translateY(60px) rotateX(-35deg); transform-origin: 50% 100%; transition: opacity .7s, transform .9s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) % 3 * 120ms); }
-  .moving .card[data-reveal].in { opacity: 1; transform: none; }
+  /* reviews fan */
+  .reviews { padding: 110px 0 130px; text-align: center; }
+  .reviews h2 { font-size: clamp(38px, 4vw, 60px); }
+  .reviews .score { color: var(--muted); margin: 10px 0 50px; }
+  .fan { display: flex; justify-content: center; perspective: 1400px; }
+  .fan blockquote { width: 340px; margin: 0 -14px; padding: 30px; border-radius: 20px; background: var(--foam); color: #13201f; text-align: left; box-shadow: 0 30px 60px rgba(0,0,0,.35); transition: transform 1.1s cubic-bezier(.2,.7,.2,1); font: 400 21px/1.35 "Fraunces", serif; }
+  .fan blockquote footer { margin-top: 16px; font: 600 15px/1.4 "Figtree", sans-serif; color: #3d5552; }
+  .fan blockquote:nth-child(1) { transform: rotate(-7deg) translateY(16px); }
+  .fan blockquote:nth-child(2) { transform: translateY(-10px); z-index: 1; }
+  .fan blockquote:nth-child(3) { transform: rotate(7deg) translateY(16px); }
+  .moving .fan:not(.in) blockquote { transform: translateY(160px) rotateX(50deg) scale(.9); opacity: 0; }
+  .moving .fan blockquote { transition: transform 1.1s cubic-bezier(.2,.7,.2,1), opacity .8s; }
+  .moving .fan blockquote:nth-child(2) { transition-delay: .12s; }
+  .moving .fan blockquote:nth-child(3) { transition-delay: .24s; }
+  .fan blockquote:hover { transform: translateY(-24px) rotate(0deg) !important; z-index: 2; }
 
-  /* week */
-  .week { padding: 110px 0; }
-  .week h2 { font-size: clamp(44px, 5.6vw, 84px); }
-  .tonight { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: end; margin-bottom: 40px; }
-  .tonight .big { font: 400 clamp(34px, 4vw, 58px)/1 "Bowlby One", sans-serif; color: var(--ketchup); margin: 12px 0 10px; }
-  .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; }
-  .day { background: var(--white); border: 3px solid var(--espresso); border-radius: 18px; padding: 16px 14px; box-shadow: 0 5px 0 var(--espresso); transition: translate .3s cubic-bezier(.3,1.6,.5,1); }
-  .day:hover { translate: 0 -6px; }
-  .day b { display: block; font: 400 22px/1 "Bowlby One", sans-serif; }
-  .day span { display: block; font-size: 15px; margin-top: 8px; line-height: 1.35; }
-  .day.is-today { background: var(--ketchup); color: #fff; }
-  .moving .day[data-reveal] { opacity: 0; translate: 0 40px; transition: opacity .5s, translate .6s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--i) * 70ms); }
-  .moving .day[data-reveal].in { opacity: 1; translate: 0 0; }
+  .visit { padding: 100px 0 50px; border-top: 1px solid rgba(234,245,240,.12); }
+  .visit .grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 40px; }
+  .visit h2 { font-size: clamp(38px, 4vw, 60px); line-height: 1.02; }
+  .visit h3 { font-size: 22px; margin-bottom: 8px; color: var(--gold); }
+  .visit p { margin: 0 0 4px; color: #d4e6e0; }
+  .visit .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 70px; color: var(--muted); font-size: 15px; }
 
-  .visit { background: var(--white); border-top: 3px solid var(--espresso); padding: 100px 0 60px; }
-  .visit .grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 40px; align-items: start; }
-  .visit h2 { font-size: clamp(40px, 5vw, 72px); }
-  .visit h3 { font-size: 22px; margin-bottom: 8px; }
-  .visit p { margin: 0 0 6px; }
-  .visit .ctas { margin-top: 26px; }
-  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 70px; font-size: 15px; }
-
-  .still .build { height: 100vh; height: 100svh; }
-  @media (max-width: 960px) {
+  @media (max-width: 900px) {
     .nav ul { display: none; }
     .nav .btn { margin-left: auto; }
-    .build { height: 210vh; }
-    .pin { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding-top: 84px; gap: 0; }
-    .copy h1 { font-size: clamp(42px, 11vw, 70px); }
-    .copy .lede { display: none; }
-    .copy h1 { margin-bottom: 14px; }
-    .copy .status { display: none; }
-    .ctas { gap: 10px; }
-    .btn { padding: 11px 16px; font-size: 16px; }
-    .price-tag { width: 84px; height: 84px; right: 0; top: auto; bottom: 3%; }
-    .price-tag b { font-size: 24px; }
-    .price-tag small { font-size: 10px; }
-    .callout { font-size: 13px; }
-    .callout i { width: 26px; }
-    .cards { grid-template-columns: 1fr 1fr; gap: 60px 18px; }
-    .tonight { grid-template-columns: 1fr; gap: 10px; }
-    .days { grid-template-columns: repeat(2, 1fr); }
+    .hero .wrap { grid-template-columns: 1fr; gap: 34px; padding: 110px 0 70px; }
+    .shade { background: linear-gradient(180deg, rgba(4,28,31,.5) 0%, rgba(4,28,31,.82) 55%, var(--deep) 100%); }
+    .stage { --cw: 110px; --gap: 18px; perspective: 1100px; height: calc(var(--cw) * 1.42 + 200px); }
+    .ring { top: 80px; transform: translateZ(calc(var(--r) * -1 + 60px)) rotateX(-10deg) rotateY(var(--angle, 0deg)); }
+    .front b { font-size: 15px; }
+    .front small { font-size: 11px; }
+    .item.isfront .front { transform: translateZ(24px) translateY(-10px); }
+    .caption { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; margin-top: -20px; }
+    .arrow { width: 44px; height: 44px; }
+    .story .grid { grid-template-columns: 1fr; gap: 40px; }
+    .fan { flex-direction: column; align-items: center; gap: 16px; }
+    .fan blockquote { width: min(360px, 100%); margin: 0; }
     .visit .grid { grid-template-columns: 1fr; }
   }
-  @media (max-width: 620px) {
-    .cards { grid-template-columns: 1fr; gap: 70px; }
-    .nav .brand span { display: none; }
-    .hint { display: none; }
-  }
+  @media (max-width: 520px) { .nav .brand span { display: none; } .steps li { grid-template-columns: 80px 1fr; } .caption li { font-size: 14px; } }
 </style>
 </head>
 <body>
-<header class="nav" id="nav">
+<header class="nav">
   <div class="wrap">
     <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="46" height="46"><span>Whistle Stop Grill &amp; Bar</span></a>
     <ul>
       <li><a href="../menu.html">Menu</a></li>
-      <li><a href="../events.html">This week</a></li>
+      <li><a href="../events.html">Live music</a></li>
       <li><a href="../happy-hour.html">Happy hour</a></li>
-      <li><a href="../private-events.html">Parties</a></li>
+      <li><a href="../private-events.html">Private events</a></li>
       <li><a href="#visit">Visit</a></li>
     </ul>
-    <a class="btn hot" href="../order.html" data-magnetic>Order online</a>
+    <a class="btn gold" href="../order.html" data-magnetic>Order online</a>
   </div>
 </header>
 
 <main>
-  <section class="build" id="build" aria-labelledby="h1">
-    <div class="pin">
-      <div class="sun" aria-hidden="true"></div>
-      <div class="copy">
-        <h1 id="h1" class="in" data-split>The Original, <span class="red">stacked.</span></h1>
-        <p class="lede">The <b>Original Whistle Stop Burger</b> comes with a fried green tomato, provolone, onion and aioli. It's one of nine burgers on Main Street.</p>
-        <div class="ctas">
-          <a class="btn hot" href="../menu.html#main-menu-burgers" data-magnetic>See all 9 burgers</a>
-          <a class="btn" href="../order.html" data-magnetic>Order for pickup</a>
+  <section class="hero" aria-labelledby="h1">
+    <div class="scene" id="scene"><img src="../assets/gallery/WSSunset.webp" alt="" width="964" height="1280" fetchpriority="high"></div>
+    <div class="leak" aria-hidden="true"></div>
+    <canvas id="motes" aria-hidden="true"></canvas>
+    <div class="shade" aria-hidden="true"></div>
+    <div class="wrap">
+      <div>
+        <h1 id="h1" class="in" data-split>Sunsets, shakes and live music on Main Street</h1>
+        <p class="lede">Whistle Stop Grill &amp; Bar is Safety Harbor's open-air grill and bar under the oaks, on this corner since 1995.</p>
+        <div class="ctas"><a class="btn gold" href="#menu-ring" data-magnetic>Spin the menu</a><a class="btn" href="../order.html" data-magnetic>Order for pickup</a></div>
+      </div>
+      <aside class="tonight" data-tilt="8" aria-label="Tonight at Whistle Stop">
+        <div class="card">
+          <div class="when"><span data-ws="weekday">Today</span>, <span data-ws="tonight-time"></span></div>
+          <h2 data-ws="tonight">Live music</h2>
+          <p data-ws="tonight-detail"></p>
+          <a class="btn" href="../events.html">This week's lineup</a>
+          <p class="status" data-ws="status">Open daily from 11 AM</p>
         </div>
-        <p class="status" data-ws="status">Open daily from 11 AM</p>
-      </div>
-      <div class="stage" id="stage" aria-hidden="true">
-        <div class="price-tag"><b>$8.90</b><small>The Original<br>Whistle Stop</small></div>
-        <div class="burger" id="burger"></div>
-      </div>
-      <div class="hint" aria-hidden="true"><i></i>Scroll to take it apart</div>
+      </aside>
     </div>
   </section>
 
-  <div class="tickwrap"><div class="ticker" aria-label="A few things on the menu"><div class="track" id="ticker"></div></div></div>
-
-  <section class="crave" aria-labelledby="ch">
-    <div class="wrap">
-      <h2 id="ch" data-split>What are you craving?</h2>
-      <p class="sub">Nine ways to eat and drink at Whistle Stop. Pick one and jump straight to that part of the menu.</p>
-      <div class="cards" id="cards"></div>
+  <section class="ringsec" id="menu-ring" aria-labelledby="rh">
+    <div class="aurora" aria-hidden="true"></div>
+    <div class="ringhead">
+      <h2 id="rh" data-split>Spin the menu</h2>
+      <p>Drag, swipe or use the arrows. Every card opens that part of the menu.</p>
+    </div>
+    <div class="stage" id="stage" tabindex="0" aria-label="Menu categories, use the left and right arrow keys to turn">
+      <div class="floor" aria-hidden="true"></div>
+      <div class="ring" id="ring"></div>
+    </div>
+    <div class="caption">
+      <button class="arrow" id="prev" type="button" aria-label="Previous category"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 4 7 10l6 6"/></svg></button>
+      <div class="pane" id="pane" aria-live="polite"></div>
+      <button class="arrow" id="next" type="button" aria-label="Next category"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 4 6 6-6 6"/></svg></button>
     </div>
   </section>
 
-  <section class="week" aria-labelledby="wh">
-    <div class="wrap">
-      <div class="tonight">
-        <div>
-          <h2 id="wh">Something every night</h2>
-        </div>
-        <div>
-          <p class="big" data-ws="tonight">Live music</p>
-          <p><b data-ws="tonight-time"></b> <span data-ws="tonight-detail"></span></p>
-        </div>
+  <section class="story" aria-labelledby="sh">
+    <div class="wrap grid">
+      <div class="photo" id="photo"><img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building on Main Street" loading="lazy" width="988" height="415"></div>
+      <div>
+        <h2 id="sh" data-split>From cones and car-hop trays to Friday-night bands</h2>
+        <p>Regulars still call it "the Whistle Stop," and visitors find it the same way: walking downtown Safety Harbor and following the sound of laughter from the patio.</p>
+        <ol class="steps">
+          <li data-reveal style="--i:0"><b>35+ years</b><span>Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand, is a Safety Harbor landmark.</span></li>
+          <li data-reveal style="--i:1"><b>1995</b><span>Dawn buys the corner. "Purchasing it not once, but twice!"</span></li>
+          <li data-reveal style="--i:2"><b>Today</b><span>A full kitchen, a full bar with 18 taps, and Henry's milkshakes still on the menu.</span></li>
+        </ol>
       </div>
-      <div class="days" id="days"></div>
+    </div>
+  </section>
+
+  <section class="reviews" aria-labelledby="rv">
+    <div class="wrap">
+      <h2 id="rv">What regulars say</h2>
+      <p class="score">4.4 stars from more than 2,000 Google reviews</p>
+      <div class="fan" id="fan">
+        <blockquote>"Great spot to relax and listen to local music. Food and service were amazing."<footer>Greg Bell, Google review</footer></blockquote>
+        <blockquote>"Excellent fried green tomatoes, great service with a hometown vibe."<footer>Karl Sauer, Google review</footer></blockquote>
+        <blockquote>"Amazing experience beginning at the hostess stand. The best food and vibes!"<footer>Eric Fenech, Google review</footer></blockquote>
+      </div>
     </div>
   </section>
 
@@ -239,14 +248,13 @@
     <div class="wrap">
       <div class="grid">
         <div>
-          <h2 id="vh">915 Main Street</h2>
-          <p>Safety Harbor, FL 34695</p>
-          <div class="ctas"><a class="btn hot" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL" data-magnetic>Get directions</a><a class="btn" href="tel:+17277261956" data-magnetic>(727) 726-1956</a></div>
+          <h2 id="vh">915 Main Street, Safety Harbor</h2>
+          <div class="ctas"><a class="btn gold" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL" data-magnetic>Get directions</a><a class="btn" href="tel:+17277261956">(727) 726-1956</a></div>
         </div>
         <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM</p><p>Fri–Sat 11 AM–10 PM</p><p>Happy hour daily 4–7 PM</p></div>
-        <div><h3>Since 1995</h3><p>Before that, this corner was Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand. Henry's milkshakes are still on the menu.</p><p><a href="../about.html">Our story</a> · <a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a></p></div>
+        <div><h3>Around the corner</h3><p>Steps from the Safety Harbor marina and Philippe Park. Dogs are welcome on the covered patio.</p></div>
       </div>
-      <div class="foot"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div>
+      <div class="foot"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a> &nbsp; <a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div>
     </div>
   </section>
 </main>
@@ -256,134 +264,100 @@
 <script src="fx.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const { cats, art, layers } = WSFOOD;
-  const nav = document.getElementById("nav");
-  addEventListener("scroll", () => nav.classList.toggle("solid", scrollY > 40), { passive: true });
+  const { cats, art, order } = WSFOOD;
+  const N = cats.length, STEP = 360 / N;
 
-  /* ---- the burger: seven real layers, stacked from the bottom bun up */
-  const order = [
-    ["topBun"], ["aioli", "Aioli", "r"], ["onion", "Onion", "r"], ["fgt", "Fried green tomato", "r"],
-    ["provolone", "Provolone", "r"], ["patty"], ["bottomBun"],
-  ];
-  const burger = document.getElementById("burger");
-  const stage = document.getElementById("stage");
-  const parts = order.map(([key, label, side], i) => {
-    const L = layers[key]();
-    const el = document.createElement("div");
-    el.className = "layer drop";
-    el.style.setProperty("--k", order.length - 1 - i);
-    el.innerHTML = L.svg;
-    burger.append(el);
-    let call = null;
-    if (label) {
-      call = document.createElement("div");
-      call.className = "callout " + side;
-      call.innerHTML = `<i></i><span>${label}</span>`;
-      stage.append(call);
+  /* ---- hero: pointer parallax on the scene + drifting warm motes */
+  const scene = document.getElementById("scene");
+  if (FX.fine && !FX.reduce) {
+    let tx = 0, ty = 0, x = 0, y = 0;
+    addEventListener("pointermove", (e) => { tx = (e.clientX / innerWidth - 0.5) * -26; ty = (e.clientY / innerHeight - 0.5) * -18; });
+    FX.loop(() => { x += (tx - x) * 0.05; y += (ty - y) * 0.05; scene.style.transform = `translate3d(${x.toFixed(2)}px, ${(y + scrollY * 0.18).toFixed(2)}px, 0)`; });
+  }
+  const cv = document.getElementById("motes"), cx = cv.getContext("2d");
+  let motes = [];
+  function sizeMotes() {
+    const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
+    cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0);
+    motes = Array.from({ length: Math.round(r.width / 22) }, () => ({ x: Math.random() * r.width, y: Math.random() * r.height, r: 0.6 + Math.random() * 2.2, s: 6 + Math.random() * 18, p: Math.random() * 6.28, a: 0.25 + Math.random() * 0.5 }));
+  }
+  sizeMotes(); addEventListener("resize", sizeMotes);
+  let heroOn = true;
+  new IntersectionObserver(([e]) => (heroOn = e.isIntersecting)).observe(cv);
+  FX.loop((t, dt) => {
+    if (!heroOn) return;
+    const w = cv.clientWidth, h = cv.clientHeight;
+    cx.clearRect(0, 0, w, h);
+    for (const m of motes) {
+      m.y -= m.s * dt; m.x += Math.sin(t * 0.6 + m.p) * 0.25;
+      if (m.y < -10) { m.y = h + 10; m.x = Math.random() * w; }
+      const tw = 0.6 + 0.4 * Math.sin(t * 2 + m.p);
+      cx.beginPath(); cx.fillStyle = `rgba(255,214,150,${(m.a * tw).toFixed(3)})`; cx.arc(m.x, m.y, m.r, 0, 6.283); cx.fill();
     }
-    return { el, h: L.h, call, side };
-  });
-  setTimeout(() => parts.forEach((p) => p.el.classList.remove("drop")), 2200);
-
-  // floating bits
-  const bits = [["seed", 8, 20, 4], ["pickle", 86, 18, 6], ["tom", 10, 76, 5.5], ["seed", 92, 62, 3.6], ["pickle", 20, 40, 7], ["seed", 74, 86, 4.4], ["tom", 88, 40, 6.2]];
-  const bitEls = bits.map(([k, x, y, t], i) => {
-    const b = document.createElement("i");
-    b.className = "bit " + k;
-    b.style.cssText = `left:${x}%;top:${y}%;--t:${t}s;animation-delay:${-i * 0.7}s`;
-    b.dataset.depth = (0.4 + (i % 3) * 0.35).toFixed(2);
-    stage.append(b);
-    return b;
   });
 
-  let S = 2, explode = 0, rx = 0, ry = 0, trx = 0, try_ = 0, narrow = false, inView = true;
-  let GAPU = 30; // exploded gap in layer units (wider on phones so the labels fit between layers)
-  function layout() {
-    const r = stage.getBoundingClientRect();
-    narrow = r.width < 620;
-    GAPU = narrow ? 48 : 30;
-    stage.classList.toggle("narrow", narrow);
-    const stackU = parts.reduce((a, p) => a + p.h, 0) - 6 * 4;
-    parts.forEach((p) => { if (p.call) { p.cw = p.call.offsetWidth; p.ch = p.call.offsetHeight; } });
-    const maxCall = Math.max(...parts.filter((p) => p.call).map((p) => p.cw));
-    const room = narrow ? r.width * 0.8 / 2 : Math.min(r.width * 0.4, r.width * 0.6 - maxCall - 20);
-    S = Math.max(0.8, Math.min(room / 98, (r.height * 0.84) / (stackU + 6 * GAPU), 2.4));
-    parts.forEach((p) => { p.el.style.width = 200 * S + "px"; p.el.style.height = p.h * S + "px"; p.el.style.marginLeft = -100 * S + "px"; });
-    paint();
+  /* ---- the ring */
+  const ring = document.getElementById("ring"), stage = document.getElementById("stage"), pane = document.getElementById("pane");
+  ring.innerHTML = cats.map((c, i) => `
+    <a class="item" href="${c.href}" style="--i:${i};--c:${c.color}" aria-label="${c.name}, ${c.count}, from ${c.from}" data-i="${i}">
+      <span class="face front"><span class="art">${art(c.art)}</span><b>${c.name}</b><small>from ${c.from}</small><span class="sheen"></span></span>
+      <span class="face back"><img src="../assets/logo-160.webp" alt="" width="56" height="56"></span>
+    </a>`).join("");
+  const items = [...ring.children];
+  let angle = 0, vel = 0, target = null, dragging = false, moved = 0, lastX = 0, hover = false, idle = !FX.reduce, front = -1;
+  const frontIndex = () => ((Math.round(-angle / STEP) % N) + N) % N;
+  function caption(i) {
+    const c = cats[i];
+    pane.classList.add("swap");
+    setTimeout(() => {
+      pane.innerHTML = `<h3>${c.name}</h3><p class="line">${c.line}</p>
+        <ul>${c.picks.map(([n, p]) => `<li>${n}<b>${p}</b></li>`).join("")}</ul>
+        <div class="ctas"><a class="btn gold" href="${c.href}">${c.cta}</a><a class="btn" href="${order}">Order online</a></div>`;
+      pane.classList.remove("swap");
+    }, front === -1 ? 0 : 180);
   }
   function paint() {
-    const e = FX.reduce ? 0.85 : explode;
-    const total = parts.reduce((a, p) => a + p.h, 0) - 6 * 4 + 6 * GAPU * e;
-    let y = -total / 2;
-    parts.forEach((p, i) => {
-      const mid = y + p.h / 2;
-      const wob = (i % 2 ? 1 : -1) * 5 * e;
-      const z = (3 - i) * 26 * e;
-      p.el.style.transform = `translate3d(0, ${(y * S).toFixed(1)}px, ${z.toFixed(1)}px) rotate(${wob.toFixed(2)}deg)`;
-      if (p.call) {
-        const show = FX.smooth(0.45, 0.8, e);
-        p.call.style.opacity = show.toFixed(3);
-        if (narrow) {
-          const gy = (y + p.h - 4 + (GAPU * e) / 2) * S;
-          p.call.style.transform = `translate(${(-p.cw / 2).toFixed(1)}px, ${(gy - p.ch / 2).toFixed(1)}px) scale(${(0.6 + 0.4 * show).toFixed(3)})`;
-        } else {
-          const dir = p.side === "r" ? 1 : -1;
-          const x = dir * (100 * S * 0.98 + 10);
-          p.call.style.transform = `translate(${(p.side === "r" ? x : x - p.cw).toFixed(1)}px, ${(mid * S - p.ch / 2).toFixed(1)}px) translateX(${(dir * (1 - show) * 30).toFixed(1)}px)`;
-        }
-      }
-      y += p.h - 4 + GAPU * e;
-    });
-    burger.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+    ring.style.setProperty("--angle", angle.toFixed(2) + "deg");
+    const f = frontIndex();
+    if (f !== front) { items.forEach((el, i) => el.classList.toggle("isfront", i === f)); caption(f); front = f; }
   }
-  layout();
-  addEventListener("resize", layout);
-  const hint = document.querySelector(".hint");
-  FX.progress(document.getElementById("build"), "pin", (p) => { explode = FX.ease(FX.smooth(0.04, 0.62, p)); hint.style.opacity = (1 - explode * 2.5).toFixed(2); paint(); });
-  if (FX.fine && !FX.reduce) {
-    stage.closest(".pin").addEventListener("pointermove", (e) => {
-      const r = stage.getBoundingClientRect();
-      try_ = ((e.clientX - r.left) / r.width - 0.5) * 26;
-      trx = -((e.clientY - r.top) / r.height - 0.5) * 16;
-      bitEls.forEach((b) => (b.style.translate = `${(try_ * b.dataset.depth * 1.4).toFixed(1)}px ${(-trx * b.dataset.depth * 1.6).toFixed(1)}px`));
-    });
-  }
-  new IntersectionObserver(([e]) => (inView = e.isIntersecting)).observe(stage);
-  FX.loop((t) => {
-    if (!inView) return;
-    const k = 0.08;
-    rx += (trx + Math.sin(t * 0.9) * 3 - rx) * k;
-    ry += (try_ + Math.sin(t * 0.6) * 8 - ry) * k;
+  const goTo = (i) => { const cur = -angle / STEP; let d = ((i - cur) % N + N) % N; if (d > N / 2) d -= N; target = angle - d * STEP; idle = false; };
+  document.getElementById("prev").onclick = () => goTo(frontIndex() - 1);
+  document.getElementById("next").onclick = () => goTo(frontIndex() + 1);
+  stage.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") { goTo(frontIndex() - 1); e.preventDefault(); } if (e.key === "ArrowRight") { goTo(frontIndex() + 1); e.preventDefault(); } });
+  stage.addEventListener("pointerenter", () => (hover = true));
+  stage.addEventListener("pointerleave", () => (hover = false));
+  stage.addEventListener("pointerdown", (e) => { dragging = true; moved = 0; lastX = e.clientX; vel = 0; target = null; idle = false; stage.classList.add("dragging"); stage.setPointerCapture(e.pointerId); });
+  stage.addEventListener("pointermove", (e) => { if (!dragging) return; const dx = e.clientX - lastX; lastX = e.clientX; moved += Math.abs(dx); angle += dx * 0.28; vel = dx * 0.28; paint(); });
+  const release = () => { if (!dragging) return; dragging = false; stage.classList.remove("dragging"); };
+  stage.addEventListener("pointerup", release); stage.addEventListener("pointercancel", release);
+  ring.addEventListener("click", (e) => {
+    const a = e.target.closest(".item");
+    if (!a) return;
+    if (moved > 6) { e.preventDefault(); return; }
+    const i = Number(a.dataset.i);
+    if (i !== frontIndex()) { e.preventDefault(); goTo(i); }
+  });
+  paint();
+  let ringOn = true;
+  new IntersectionObserver(([e]) => (ringOn = e.isIntersecting)).observe(stage);
+  FX.loop((t, dt) => {
+    if (!ringOn || dragging) return;
+    if (target !== null) { angle += (target - angle) * Math.min(1, dt * 7); if (Math.abs(target - angle) < 0.05) { angle = target; target = null; } }
+    else if (Math.abs(vel) > 0.05) { angle += vel; vel *= 0.93; if (Math.abs(vel) <= 0.05) target = -Math.round(-angle / STEP) * STEP; }
+    else if (idle && !hover) angle -= dt * 7;
     paint();
   });
 
-  /* ---- ticker: real menu items and prices */
-  const items = cats.flatMap((c) => c.picks);
-  const html = items.map(([n, p]) => `<span>${n} <b>${p}</b></span>`).join("");
-  document.getElementById("ticker").innerHTML = html + html.replace(/<span>/g, '<span aria-hidden="true">');
-
-  /* ---- craving cards */
-  document.getElementById("cards").innerHTML = cats.map((c, i) => `
-    <article class="card" data-reveal data-tilt="9" style="--c:${c.color};--i:${i}">
-      <div class="in3d">
-        <div class="art">${art(c.art)}</div>
-        <h3>${c.name}</h3>
-        <p class="meta">${c.count}, from ${c.from}</p>
-        <ul>${c.picks.map(([n, p]) => `<li><span>${n}</span><b>${p}</b></li>`).join("")}</ul>
-        <a class="btn go" href="${c.href}">${c.cta}</a>
-        <span class="glare"></span>
-      </div>
-    </article>`).join("");
-
-  /* ---- the week */
-  const today = WS.today().dayIndex;
-  const order7 = [1, 2, 3, 4, 5, 6, 0];
-  document.getElementById("days").innerHTML = order7.map((d, i) => {
-    const w = WS.WEEK[d];
-    return `<div class="day${d === today ? " is-today" : ""}" data-reveal style="--i:${i}"><b>${w.short}</b><span>${w.title}</span></div>`;
-  }).join("");
-  document.querySelectorAll("#cards [data-reveal], #days [data-reveal], .crave h2").forEach(FX.reveal);
-  document.querySelectorAll("#cards [data-tilt]").forEach((el) => FX.tilt(el, 9));
+  /* ---- story photo swings open as it scrolls in */
+  const photo = document.querySelector("#photo img");
+  FX.progress(document.getElementById("photo"), "pass", (p) => {
+    const k = FX.reduce ? 1 : FX.ease(FX.smooth(0.05, 0.5, p));
+    photo.style.setProperty("--sw", ((1 - k) * 48).toFixed(2) + "deg");
+    photo.style.setProperty("--sz", ((1 - k) * -120).toFixed(1) + "px");
+  });
+  FX.reveal(document.getElementById("fan"));
+  document.querySelectorAll(".ringhead h2, .story h2").forEach(FX.reveal);
 });
 </script>
 </body>

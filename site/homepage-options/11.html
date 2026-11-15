@@ -4,48 +4,54 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 11 · Kitchen Window · Whistle Stop Grill &amp; Bar</title>
-<base target="_top">
+<title>Option 11 · Music Night · Whistle Stop Grill &amp; Bar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="warm.css">
-<style>
-  .window { padding: 10px 0 10px; }
-  .shots { display: grid; grid-template-columns: 1.2fr .8fr .8fr; gap: 12px; }
-  .shots figure { margin: 0; position: relative; }
-  .shots img { width: 100%; height: 320px; object-fit: cover; border-radius: 18px; }
-  .shots figcaption { margin-top: 8px; font-weight: 800; }
-  .window h1 { margin: 18px 0 8px; font-size: clamp(42px, 6vw, 70px); }
-  @media (max-width: 800px) { .shots { grid-template-columns: 1fr; } .shots img { height: 220px; } }
-</style>
+<link rel="stylesheet" href="next.css">
 </head>
 <body>
-<header class="nav"><div class="wrap">
-  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
-  <ul><li><a href="#menu">Menu</a></li><li><a href="../events.html">This week</a></li><li><a href="#visit">Visit</a></li></ul>
-  <a class="btn" href="../order.html">Order online</a>
-</div></header>
-<main>
-  <section class="window" aria-labelledby="h1"><div class="wrap">
-    <div class="shots">
-      <figure><img src="../assets/gallery/WSFood-560.webp" alt="A plate from the Whistle Stop kitchen" width="560" height="560"><figcaption>From the kitchen</figcaption></figure>
-      <figure><img src="../assets/gallery/WSFood2-480.webp" alt="A plate with fresh vegetables" width="480" height="640"><figcaption>On the table</figcaption></figure>
-      <figure><img src="../assets/gallery/WSBar-480.webp" alt="Bartenders pouring cocktails" width="480" height="480"><figcaption>At the bar</figcaption></figure>
+<header class="top">
+  <span class="brand"><img src="../assets/gallery/ws-logo-header.png?v=7" alt="Whistle Stop Grill and Bar" width="487" height="106"></span>
+  <nav>
+    <a href="#menu">Menu</a>
+    <a href="../events.html">Events</a>
+    <a href="../private-events.html">Gatherings</a>
+    <a href="#visit">Visit</a>
+  </nav>
+  <a class="order" href="../order.html">Order now</a>
+</header>
+<section class="stage cover">
+  <img class="fill" src="../assets/gallery/WSRocker2.webp" alt="">
+  <div class="veil"></div>
+  <div class="copy">
+    <p class="eyebrow">Tonight · <span data-ws="tonight">Live music</span></p>
+    <h1>Whistle Stop Grill &amp; Bar <span>| Live Music &amp; Dining in Safety Harbor</span></h1>
+    <h2>On the patio this week</h2>
+    <ul class="chips">
+      <li><b>Friday</b><span>Live music · 6:30–9:30</span></li>
+      <li><b>Saturday</b><span>Live music · 6:30–9:30</span></li>
+      <li><b>Tuesday</b><span>Open mic · 6:30–9:30</span></li>
+    </ul>
+    <p class="lead"><span data-ws="tonight-detail">Local artists on the patio stage.</span></p>
+    <div class="actions">
+      <a class="btn" href="tel:+17277261956">Let us know you're coming</a>
+      <a class="btn line" href="../events.html">See the calendar</a>
     </div>
-    <h1 id="h1">Look, then order</h1>
-    <p class="lede">Photos from the restaurant. Prices from the working menu sit next to them, not on top of the pictures.</p>
-    <div class="plates">
-      <article class="plate" data-plate="grouper"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
-      <article class="plate" data-plate="fish-chips"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
-      <article class="plate" data-plate="steak-tacos"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
-    </div>
-  </div></section>
-  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
-  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
-</main>
+  </div>
+</section>
+<section class="menu-sec" id="menu" data-warm-menu>
+  <div class="wrap">
+    <h2>The menu</h2>
+    <p class="menu-note"></p>
+    <div class="groups"></div>
+  </div>
+</section>
+<footer class="visit" id="visit"><div class="wrap" data-warm-visit></div></footer>
 <script src="shared.js"></script>
 <script src="dawn-menu.js"></script>
 <script src="warm.js"></script>
+<script src="next.js"></script>
 </body>
 </html>

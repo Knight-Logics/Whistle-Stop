@@ -4,161 +4,123 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 3 · Spin the Menu · Whistle Stop Grill &amp; Bar</title>
+<title>Option 3 · Patio After Dark · Whistle Stop Grill &amp; Bar</title>
 <base target="_top">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root { --deep: #062b2f; --sea: #0d4a4c; --gold: #f2c46d; --coral: #ff7f61; --foam: #eaf5f0; --muted: #a9c7c0; }
+  :root { --night: #0a1d1a; --leaf: #12352c; --bulb: #ffcf6e; --coral: #ff7a59; --mint: #9fe0c3; --text: #f5f0e6; --muted: #a8bdb5; }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--deep); color: var(--foam); font: 400 18px/1.6 "Figtree", system-ui, sans-serif; overflow-x: clip; }
+  body { margin: 0; background: var(--night); color: var(--text); font: 400 18px/1.6 "Bricolage Grotesque", system-ui, sans-serif; overflow-x: clip; }
   a { color: inherit; }
   img, svg { display: block; max-width: 100%; }
   img { height: auto; }
-  :focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
-  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; margin: 0; letter-spacing: -.02em; }
+  :focus-visible { outline: 3px solid var(--bulb); outline-offset: 4px; }
+  h1, h2, h3 { margin: 0; font-weight: 800; letter-spacing: -.03em; line-height: .95; }
   .wrap { width: min(1240px, 100% - 40px); margin-inline: auto; }
-  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px; border-radius: 999px; border: 1px solid rgba(234,245,240,.5); color: var(--foam); text-decoration: none; font-weight: 600; transition: background .3s, color .3s, border-color .3s, translate .3s cubic-bezier(.2,.7,.2,1); backdrop-filter: blur(6px); background: rgba(6,43,47,.25); }
-  .btn:hover { background: var(--foam); color: var(--deep); }
-  .btn.gold { background: var(--gold); border-color: var(--gold); color: var(--deep); }
-  .btn.gold:hover { background: #ffd98f; }
+  .btn { display: inline-flex; align-items: center; padding: 15px 26px; border-radius: 14px; background: var(--bulb); color: #1d1406; font-weight: 800; text-decoration: none; box-shadow: 0 0 0 0 rgba(255,207,110,.0); transition: box-shadow .4s, background .3s, translate .3s cubic-bezier(.2,.7,.2,1); }
+  .btn:hover { box-shadow: 0 0 40px 6px rgba(255,207,110,.45); }
+  .btn.ghost { background: transparent; color: var(--text); box-shadow: inset 0 0 0 2px rgba(245,240,230,.6); }
+  .btn.ghost:hover { box-shadow: inset 0 0 0 2px var(--bulb), 0 0 30px rgba(255,207,110,.25); color: var(--bulb); }
 
-  /* words condense out of the mist */
-  .moving [data-split] .w { display: inline-block; opacity: .1; filter: blur(14px); transform: translateY(.35em) rotateX(-60deg); transform-origin: 50% 100%; }
-  .moving [data-split].in .w { animation: mist 1.3s cubic-bezier(.16,.8,.2,1) forwards; animation-delay: calc(var(--wi) * 90ms + .2s); }
-  @keyframes mist { to { opacity: 1; filter: blur(0); transform: none; } }
+  .moving [data-split] .w { display: inline-block; opacity: 0; transform: translateY(.6em) scale(.9); filter: blur(8px); }
+  .moving [data-split].in .w { animation: glowIn 1.1s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--wi) * 120ms + .3s); }
+  @keyframes glowIn { 60% { text-shadow: 0 0 30px rgba(255,207,110,.9); } to { opacity: 1; transform: none; filter: blur(0); text-shadow: 0 0 0 rgba(255,207,110,0); } }
 
   .nav { position: absolute; inset: 0 0 auto; z-index: 10; }
-  .nav .wrap { display: flex; align-items: center; gap: 26px; height: 84px; }
+  .nav .wrap { display: flex; align-items: center; gap: 24px; height: 84px; }
   .nav .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600; }
   .nav .brand img { width: 46px; height: 46px; }
-  .nav ul { display: flex; gap: 24px; margin: 0 0 0 auto; padding: 0; list-style: none; }
+  .nav ul { display: flex; gap: 24px; margin: 0 0 0 auto; padding: 0; list-style: none; font-weight: 600; }
   .nav ul a { text-decoration: none; opacity: .85; }
-  .nav ul a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 6px; }
-  .nav .btn { padding: 10px 20px; }
+  .nav ul a:hover { opacity: 1; color: var(--bulb); }
+  .nav .btn { padding: 10px 18px; }
 
-  /* hero scene */
-  .hero { position: relative; min-height: 100vh; min-height: 100svh; overflow: hidden; display: flex; align-items: center; isolation: isolate; }
-  .scene { position: absolute; inset: -6%; z-index: -3; }
-  .scene img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; transform: scale(var(--kb, 1)); }
-  .moving .scene img { animation: kb 18s cubic-bezier(.2,.6,.2,1) both; }
-  @keyframes kb { from { transform: scale(1.18); } to { transform: scale(1.02); } }
-  .leak { position: absolute; inset: 0; z-index: -2; background: radial-gradient(40% 50% at var(--lx, 70%) 40%, rgba(255,150,80,.45), transparent 70%); mix-blend-mode: screen; }
-  .moving .leak { animation: leak 12s ease-in-out infinite alternate; }
-  @keyframes leak { from { --lx: 62%; opacity: .7; } to { --lx: 82%; opacity: 1; } }
-  @property --lx { syntax: "<percentage>"; inherits: false; initial-value: 70%; }
-  .shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(4,28,31,.92) 0%, rgba(4,28,31,.7) 34%, rgba(4,28,31,.1) 62%), linear-gradient(0deg, var(--deep) 0%, transparent 30%); }
-  #motes { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
-  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 60px; align-items: center; padding: 120px 0 90px; }
-  .hero h1 { font-size: clamp(50px, 6.4vw, 100px); line-height: 1; max-width: 12ch; }
-  .hero p.lede { font-size: 20px; max-width: 40ch; color: #d4e6e0; margin: 26px 0 32px; }
-  .hero .ctas { display: flex; flex-wrap: wrap; gap: 14px; }
-  .tonight { perspective: 1200px; }
-  .tonight .card { --rx: 0deg; --ry: 0deg; padding: 30px; border-radius: 22px; background: rgba(6,43,47,.55); border: 1px solid rgba(242,196,109,.4); backdrop-filter: blur(14px); transform: rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .6s cubic-bezier(.2,.7,.2,1); box-shadow: 0 30px 60px rgba(0,0,0,.35); }
-  .tonight.tilting .card { transition: transform .1s linear; }
-  .moving .tonight { animation: cardIn 1.6s 1s cubic-bezier(.2,.7,.2,1) both; }
-  @keyframes cardIn { from { opacity: 0; transform: translate3d(60px, 30px, 0) rotateY(-28deg); } }
-  .tonight .when { color: var(--gold); font-weight: 600; }
-  .tonight h2 { font-size: 34px; line-height: 1.08; margin: 8px 0 10px; }
-  .tonight p { margin: 0 0 18px; color: #cfe2dc; font-size: 16px; }
-  .tonight .status { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--foam); margin-bottom: 0; padding-top: 16px; border-top: 1px solid rgba(234,245,240,.18); }
-  .tonight .status::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
-  .tonight .status.is-open::before { background: #7fe0a8; box-shadow: 0 0 12px #7fe0a8; }
+  /* the living patio */
+  .hero { position: relative; height: 100vh; height: 100svh; min-height: 600px; overflow: hidden; }
+  #patio { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero .fade { position: absolute; inset: auto 0 0; height: 45%; background: linear-gradient(0deg, var(--night), transparent); pointer-events: none; }
+  .hero .copy { position: absolute; left: 0; right: 0; bottom: 9vh; z-index: 2; }
+  .hero h1 { font-size: clamp(64px, 10vw, 168px); max-width: 9ch; text-shadow: 0 6px 40px rgba(0,0,0,.5); }
+  .hero .row { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 24px 40px; margin-top: 26px; }
+  .hero p { margin: 0; max-width: 42ch; font-size: 20px; color: #e9e3d6; text-shadow: 0 2px 16px rgba(0,0,0,.6); }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .chip { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px; padding: 8px 16px 8px 12px; border-radius: 999px; background: rgba(10,29,26,.6); border: 1px solid rgba(255,207,110,.35); backdrop-filter: blur(8px); font-weight: 600; font-size: 16px; }
+  .chip i { width: 10px; height: 10px; border-radius: 50%; background: var(--bulb); box-shadow: 0 0 10px var(--bulb); }
+  .moving .chip i { animation: flick 2.4s infinite; }
+  @keyframes flick { 0%, 100% { opacity: 1; } 47% { opacity: 1; } 50% { opacity: .3; } 53% { opacity: 1; } }
 
-  /* the menu ring */
-  .ringsec { position: relative; overflow: hidden; isolation: isolate; padding: 76px 0 90px; background: radial-gradient(ellipse 80% 60% at 50% 45%, #145a58 0%, #0a3a3c 45%, var(--deep) 100%); }
-  .aurora { position: absolute; inset: -40% -10% auto; height: 140%; z-index: -1; background: conic-gradient(from 200deg at 50% 50%, transparent, rgba(242,196,109,.16), rgba(255,127,97,.16), rgba(80,190,170,.14), transparent 70%); filter: blur(60px); }
-  .moving .aurora { animation: aur 24s linear infinite; }
-  @keyframes aur { to { transform: rotate(360deg); } }
-  .ringhead { text-align: center; max-width: 720px; margin: 0 auto; padding: 0 20px; }
-  .ringhead h2 { font-size: clamp(46px, 5.4vw, 84px); line-height: 1; }
-  .ringhead p { color: var(--muted); margin: 14px 0 0; }
-  .stage { --cw: 196px; --gap: 36px; --n: 9; --r: calc(var(--n) * (var(--cw) + var(--gap)) / 6.2832); position: relative; height: calc(var(--cw) * 1.42 + 200px); perspective: 2000px; perspective-origin: 50% -10%; cursor: grab; touch-action: pan-y; user-select: none; margin-top: 10px; }
-  .stage.dragging { cursor: grabbing; }
-  .ring { position: absolute; left: 50%; top: 70px; transform-style: preserve-3d; transform: translateZ(calc(var(--r) * -1 + 200px)) rotateX(-10deg) rotateY(var(--angle, 0deg)); }
-  .item { position: absolute; left: calc(var(--cw) / -2); top: 0; width: var(--cw); height: calc(var(--cw) * 1.42); transform-style: preserve-3d; transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--r)); text-decoration: none; }
-  .face { position: absolute; inset: 0; border-radius: 16px; backface-visibility: hidden; transition: transform .6s cubic-bezier(.2,.7,.2,1), box-shadow .6s; overflow: hidden; }
-  .front { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 14px; text-align: center; background: linear-gradient(170deg, color-mix(in srgb, var(--c) 82%, #fff) 0%, var(--c) 45%, color-mix(in srgb, var(--c) 55%, #000) 100%); color: #13201f; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
-  .front .art { position: absolute; left: 8%; right: 8%; top: 6%; filter: drop-shadow(0 12px 10px rgba(0,0,0,.3)); }
-  .front b { font: 600 23px/1.05 "Fraunces", serif; }
-  .front small { font-weight: 700; font-size: 13px; margin-top: 4px; opacity: .8; }
-  .back { transform: rotateY(180deg); background: repeating-linear-gradient(45deg, #0b4244 0 10px, #0d4a4c 10px 20px); box-shadow: inset 0 0 0 1px rgba(242,196,109,.3); display: grid; place-items: center; }
-  .back img { width: 56px; opacity: .6; }
-  .item::after { content: ""; position: absolute; left: -12%; right: -12%; top: calc(100% + 14px); height: 24px; background: radial-gradient(closest-side, rgba(0,0,0,.55), transparent); transform: rotateX(90deg); }
-  .item.isfront .front { transform: translateZ(40px) translateY(-16px); box-shadow: 0 0 0 2px var(--gold), 0 0 50px rgba(242,196,109,.45); }
-  .sheen { position: absolute; inset: -20% -60%; background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,.5) 50%, transparent 58%); transform: translateX(-70%); pointer-events: none; mix-blend-mode: overlay; }
-  .moving .item.isfront .sheen { animation: sheen 5s ease-in-out infinite; }
-  @keyframes sheen { 0%, 55% { transform: translateX(-70%); } 80%, 100% { transform: translateX(70%); } }
-  .floor { position: absolute; left: 50%; top: calc(var(--cw) * 1.42 + 100px); width: min(1400px, 120vw); height: 240px; translate: -50% -50%; background: radial-gradient(ellipse at center, rgba(242,196,109,.25), rgba(242,196,109,.06) 38%, transparent 68%); transform: rotateX(78deg); filter: blur(6px); pointer-events: none; }
-  .caption { display: grid; grid-template-columns: auto minmax(0, 620px) auto; justify-content: center; align-items: center; gap: 34px; padding: 0 20px; margin-top: 10px; text-align: center; position: relative; z-index: 2; }
-  .caption .pane { transition: opacity .35s, transform .35s; }
-  .caption .pane.swap { opacity: 0; transform: translateY(10px); }
-  .caption h3 { font-size: clamp(34px, 3.6vw, 52px); line-height: 1.05; }
-  .caption .line { color: #cfe2dc; margin: 10px auto 14px; max-width: 46ch; }
-  .caption ul { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 10px; padding: 0; margin: 0 0 22px; }
-  .caption li { padding: 6px 14px; border-radius: 999px; background: rgba(234,245,240,.08); border: 1px solid rgba(234,245,240,.16); font-size: 15px; }
-  .caption li b { color: var(--gold); font-weight: 600; margin-left: 6px; }
-  .caption .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-  .arrow { width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(234,245,240,.35); background: rgba(234,245,240,.05); color: var(--foam); cursor: pointer; display: grid; place-items: center; transition: border-color .3s, color .3s, scale .3s; }
-  .arrow:hover { border-color: var(--gold); color: var(--gold); scale: 1.08; }
-  .arrow svg { width: 20px; height: 20px; }
+  /* tonight + equalizer */
+  .tonight { padding: 110px 0; }
+  .tonight .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .eq { display: flex; align-items: end; gap: 8px; height: 220px; padding: 20px; border-radius: 26px; background: radial-gradient(120% 90% at 50% 100%, rgba(255,122,89,.25), transparent 70%), var(--leaf); }
+  .eq i { flex: 1; height: var(--h); border-radius: 6px 6px 2px 2px; background: linear-gradient(0deg, var(--coral), var(--bulb)); transform-origin: 50% 100%; }
+  .moving .eq i { animation: eq var(--d) ease-in-out infinite alternate; animation-delay: var(--o); }
+  @keyframes eq { 0% { transform: scaleY(.18); } 100% { transform: scaleY(1); } }
+  .tonight h2 { font-size: clamp(44px, 5.4vw, 86px); }
+  .tonight .big { font-size: clamp(30px, 3vw, 44px); font-weight: 800; color: var(--bulb); margin: 18px 0 6px; line-height: 1.05; }
+  .tonight .t { color: var(--muted); margin: 0 0 22px; }
+  .nights { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 2px; }
+  .nights li { display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(245,240,230,.12); }
+  .nights li b { color: var(--mint); }
+  .nights li.is-today b, .nights li.is-today span { color: var(--bulb); }
 
-  /* story */
-  .story { padding: 130px 0; background: linear-gradient(180deg, var(--deep), #0a3437); }
-  .story .grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 70px; align-items: center; }
-  .story .photo { perspective: 1400px; }
-  .story .photo img { width: 100%; border-radius: 18px; box-shadow: 0 40px 80px rgba(0,0,0,.45); transform-origin: 0% 50%; transform: rotateY(var(--sw, 0deg)) translateZ(var(--sz, 0px)); }
-  .story h2 { font-size: clamp(40px, 4.4vw, 68px); line-height: 1.02; }
-  .story p { color: #cfe2dc; }
-  .steps { list-style: none; padding: 0; margin: 30px 0 0; display: grid; gap: 16px; }
-  .steps li { display: grid; grid-template-columns: 110px 1fr; gap: 18px; align-items: baseline; padding-top: 16px; border-top: 1px solid rgba(234,245,240,.14); }
-  .steps b { font: 600 30px/1 "Fraunces", serif; color: var(--gold); }
-  .moving .steps li[data-reveal] { opacity: 0; transform: translateX(-30px); transition: opacity .8s, transform .9s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i) * 140ms); }
-  .moving .steps li[data-reveal].in { opacity: 1; transform: none; }
+  /* coasters */
+  .coasters { overflow-x: clip; padding: 110px 0 120px; background: radial-gradient(70% 50% at 50% 0%, rgba(255,207,110,.08), transparent), var(--night); }
+  .coasters h2 { font-size: clamp(44px, 5.4vw, 86px); max-width: 14ch; }
+  .coasters .sub { color: var(--muted); max-width: 48ch; margin: 16px 0 50px; }
+  .table { display: grid; grid-template-columns: repeat(3, 1fr); gap: 46px 30px; justify-items: center; }
+  .coaster { --size: min(320px, 82vw); width: var(--size); height: var(--size); perspective: 1000px; cursor: pointer; rotate: var(--tilt); }
+  .coaster .flip { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.3,1.3,.5,1); }
+  .coaster.flipped .flip { transform: rotateY(180deg); }
+  @media (hover: hover) { .coaster:hover .flip, .coaster:focus-within .flip { transform: rotateY(180deg); } }
+  .coaster .face { position: absolute; inset: 0; border-radius: 50%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 14%; }
+  .coaster .front { background: radial-gradient(circle, transparent 0 60%, rgba(0,0,0,.12) 60.5% 61.5%, transparent 62%), var(--c); color: #1a1408; box-shadow: 0 18px 40px rgba(0,0,0,.45), inset 0 0 0 10px rgba(255,255,255,.18); }
+  .coaster .front .art { width: 56%; filter: drop-shadow(0 10px 10px rgba(0,0,0,.3)); }
+  .coaster .front h3 { font-size: 28px; margin-top: 8px; }
+  .coaster .front small { font-weight: 600; font-size: 15px; }
+  .coaster .back { transform: rotateY(180deg); background: #f5f0e6; color: #1a1408; box-shadow: 0 18px 40px rgba(0,0,0,.45), inset 0 0 0 10px var(--c); padding: 15%; }
+  .coaster .back ul { list-style: none; padding: 0; margin: 0 0 12px; font-size: 15px; line-height: 1.35; width: 100%; }
+  .coaster .back li { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px dashed rgba(26,20,8,.2); }
+  .coaster .back li b { white-space: nowrap; }
+  .coaster .back .btn { padding: 9px 16px; font-size: 15px; border-radius: 999px; background: #1a1408; color: var(--bulb); }
+  .moving .coaster[data-reveal] { opacity: 0; transform: translateY(-120px) rotate(-40deg) scale(1.2); transition: opacity .5s, transform 1s cubic-bezier(.3,1.4,.5,1); transition-delay: calc(var(--i) * 90ms); }
+  .moving .coaster[data-reveal].in { opacity: 1; transform: none; }
 
-  /* reviews fan */
-  .reviews { padding: 110px 0 130px; text-align: center; }
-  .reviews h2 { font-size: clamp(38px, 4vw, 60px); }
-  .reviews .score { color: var(--muted); margin: 10px 0 50px; }
-  .fan { display: flex; justify-content: center; perspective: 1400px; }
-  .fan blockquote { width: 340px; margin: 0 -14px; padding: 30px; border-radius: 20px; background: var(--foam); color: #13201f; text-align: left; box-shadow: 0 30px 60px rgba(0,0,0,.35); transition: transform 1.1s cubic-bezier(.2,.7,.2,1); font: 400 21px/1.35 "Fraunces", serif; }
-  .fan blockquote footer { margin-top: 16px; font: 600 15px/1.4 "Figtree", sans-serif; color: #3d5552; }
-  .fan blockquote:nth-child(1) { transform: rotate(-7deg) translateY(16px); }
-  .fan blockquote:nth-child(2) { transform: translateY(-10px); z-index: 1; }
-  .fan blockquote:nth-child(3) { transform: rotate(7deg) translateY(16px); }
-  .moving .fan:not(.in) blockquote { transform: translateY(160px) rotateX(50deg) scale(.9); opacity: 0; }
-  .moving .fan blockquote { transition: transform 1.1s cubic-bezier(.2,.7,.2,1), opacity .8s; }
-  .moving .fan blockquote:nth-child(2) { transition-delay: .12s; }
-  .moving .fan blockquote:nth-child(3) { transition-delay: .24s; }
-  .fan blockquote:hover { transform: translateY(-24px) rotate(0deg) !important; z-index: 2; }
+  /* photos that slide with scroll */
+  .reel { padding: 40px 0 110px; overflow: hidden; }
+  .reel .row { display: flex; gap: 18px; width: max-content; will-change: transform; }
+  .reel .row + .row { margin-top: 18px; }
+  .reel img { width: 300px; height: 220px; object-fit: cover; border-radius: 16px; }
+  .reel .row:nth-child(2) img { width: 260px; height: 200px; }
 
-  .visit { padding: 100px 0 50px; border-top: 1px solid rgba(234,245,240,.12); }
+  .visit { padding: 110px 0 50px; border-top: 1px solid rgba(245,240,230,.12); position: relative; }
   .visit .grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 40px; }
-  .visit h2 { font-size: clamp(38px, 4vw, 60px); line-height: 1.02; }
-  .visit h3 { font-size: 22px; margin-bottom: 8px; color: var(--gold); }
-  .visit p { margin: 0 0 4px; color: #d4e6e0; }
+  .visit h2 { font-size: clamp(40px, 4.6vw, 72px); }
+  .visit h3 { font-size: 22px; margin-bottom: 8px; color: var(--bulb); letter-spacing: 0; }
+  .visit p { margin: 0 0 4px; color: #ddd6c8; }
   .visit .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
   .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 70px; color: var(--muted); font-size: 15px; }
 
   @media (max-width: 900px) {
     .nav ul { display: none; }
     .nav .btn { margin-left: auto; }
-    .hero .wrap { grid-template-columns: 1fr; gap: 34px; padding: 110px 0 70px; }
-    .shade { background: linear-gradient(180deg, rgba(4,28,31,.5) 0%, rgba(4,28,31,.82) 55%, var(--deep) 100%); }
-    .stage { --cw: 110px; --gap: 18px; perspective: 1100px; height: calc(var(--cw) * 1.42 + 200px); }
-    .ring { top: 80px; transform: translateZ(calc(var(--r) * -1 + 60px)) rotateX(-10deg) rotateY(var(--angle, 0deg)); }
-    .front b { font-size: 15px; }
-    .front small { font-size: 11px; }
-    .item.isfront .front { transform: translateZ(24px) translateY(-10px); }
-    .caption { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; margin-top: -20px; }
-    .arrow { width: 44px; height: 44px; }
-    .story .grid { grid-template-columns: 1fr; gap: 40px; }
-    .fan { flex-direction: column; align-items: center; gap: 16px; }
-    .fan blockquote { width: min(360px, 100%); margin: 0; }
+    .tonight .grid { grid-template-columns: 1fr; gap: 40px; }
+    .eq { height: 150px; order: 2; }
+    .table { grid-template-columns: 1fr 1fr; gap: 26px 14px; }
+    .coaster { --size: min(260px, 44vw); }
+    .coaster .front h3 { font-size: 19px; }
+    .coaster .front small { font-size: 12px; }
+    .coaster .back { padding: 13%; }
+    .coaster .back ul { font-size: 11px; margin-bottom: 6px; }
+    .coaster .back li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .coaster .back .btn { padding: 6px 10px; font-size: 12px; }
+    .reel img { width: 200px; height: 150px; }
+    .reel .row:nth-child(2) img { width: 180px; height: 140px; }
     .visit .grid { grid-template-columns: 1fr; }
   }
-  @media (max-width: 520px) { .nav .brand span { display: none; } .steps li { grid-template-columns: 80px 1fr; } .caption li { font-size: 14px; } }
+  @media (max-width: 520px) { .nav .brand span { display: none; } .hero p { font-size: 17px; } }
 </style>
 </head>
 <body>
@@ -172,89 +134,63 @@
       <li><a href="../private-events.html">Private events</a></li>
       <li><a href="#visit">Visit</a></li>
     </ul>
-    <a class="btn gold" href="../order.html" data-magnetic>Order online</a>
+    <a class="btn" href="../order.html" data-magnetic>Order online</a>
   </div>
 </header>
 
 <main>
   <section class="hero" aria-labelledby="h1">
-    <div class="scene" id="scene"><img src="../assets/gallery/WSSunset.webp" alt="" width="964" height="1280" fetchpriority="high"></div>
-    <div class="leak" aria-hidden="true"></div>
-    <canvas id="motes" aria-hidden="true"></canvas>
-    <div class="shade" aria-hidden="true"></div>
-    <div class="wrap">
-      <div>
-        <h1 id="h1" class="in" data-split>Sunsets, shakes and live music on Main Street</h1>
-        <p class="lede">Whistle Stop Grill &amp; Bar is Safety Harbor's open-air grill and bar under the oaks, on this corner since 1995.</p>
-        <div class="ctas"><a class="btn gold" href="#menu-ring" data-magnetic>Spin the menu</a><a class="btn" href="../order.html" data-magnetic>Order for pickup</a></div>
-      </div>
-      <aside class="tonight" data-tilt="8" aria-label="Tonight at Whistle Stop">
-        <div class="card">
-          <div class="when"><span data-ws="weekday">Today</span>, <span data-ws="tonight-time"></span></div>
-          <h2 data-ws="tonight">Live music</h2>
-          <p data-ws="tonight-detail"></p>
-          <a class="btn" href="../events.html">This week's lineup</a>
-          <p class="status" data-ws="status">Open daily from 11 AM</p>
+    <canvas id="patio" aria-hidden="true"></canvas>
+    <div class="fade" aria-hidden="true"></div>
+    <div class="copy">
+      <div class="wrap">
+        <span class="chip"><i></i><span data-ws="status">Open daily from 11 AM</span></span>
+        <h1 id="h1" class="in" data-split>Old Florida. New vibe.</h1>
+        <div class="row">
+          <p>An open-air grill and bar under the oaks on Main Street in Safety Harbor. Live music on the patio Friday and Saturday, 6:30 to 9:30.</p>
+          <div class="ctas"><a class="btn" href="#coasters" data-magnetic>Pick your plate</a><a class="btn ghost" href="../events.html" data-magnetic>See who's playing</a></div>
         </div>
-      </aside>
+      </div>
     </div>
   </section>
 
-  <section class="ringsec" id="menu-ring" aria-labelledby="rh">
-    <div class="aurora" aria-hidden="true"></div>
-    <div class="ringhead">
-      <h2 id="rh" data-split>Spin the menu</h2>
-      <p>Drag, swipe or use the arrows. Every card opens that part of the menu.</p>
-    </div>
-    <div class="stage" id="stage" tabindex="0" aria-label="Menu categories, use the left and right arrow keys to turn">
-      <div class="floor" aria-hidden="true"></div>
-      <div class="ring" id="ring"></div>
-    </div>
-    <div class="caption">
-      <button class="arrow" id="prev" type="button" aria-label="Previous category"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 4 7 10l6 6"/></svg></button>
-      <div class="pane" id="pane" aria-live="polite"></div>
-      <button class="arrow" id="next" type="button" aria-label="Next category"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 4 6 6-6 6"/></svg></button>
-    </div>
-  </section>
-
-  <section class="story" aria-labelledby="sh">
+  <section class="tonight" aria-labelledby="th">
     <div class="wrap grid">
-      <div class="photo" id="photo"><img src="../assets/original-whistle-stop.webp" alt="The red-roofed Whistle Stop building on Main Street" loading="lazy" width="988" height="415"></div>
       <div>
-        <h2 id="sh" data-split>From cones and car-hop trays to Friday-night bands</h2>
-        <p>Regulars still call it "the Whistle Stop," and visitors find it the same way: walking downtown Safety Harbor and following the sound of laughter from the patio.</p>
-        <ol class="steps">
-          <li data-reveal style="--i:0"><b>35+ years</b><span>Frostee Harbor, Jane and Henry Fox's drive-in ice cream stand, is a Safety Harbor landmark.</span></li>
-          <li data-reveal style="--i:1"><b>1995</b><span>Dawn buys the corner. "Purchasing it not once, but twice!"</span></li>
-          <li data-reveal style="--i:2"><b>Today</b><span>A full kitchen, a full bar with 18 taps, and Henry's milkshakes still on the menu.</span></li>
-        </ol>
+        <h2 id="th" data-split>Tonight on the patio</h2>
+        <p class="big" data-ws="tonight">Live music</p>
+        <p class="t"><span data-ws="tonight-time"></span>. <span data-ws="tonight-detail"></span></p>
+        <a class="btn ghost" href="../events.html">Full calendar</a>
+        <ul class="nights" id="nights"></ul>
       </div>
+      <div class="eq" id="eq" aria-hidden="true"></div>
     </div>
   </section>
 
-  <section class="reviews" aria-labelledby="rv">
+  <section class="coasters" id="coasters" aria-labelledby="ch">
     <div class="wrap">
-      <h2 id="rv">What regulars say</h2>
-      <p class="score">4.4 stars from more than 2,000 Google reviews</p>
-      <div class="fan" id="fan">
-        <blockquote>"Great spot to relax and listen to local music. Food and service were amazing."<footer>Greg Bell, Google review</footer></blockquote>
-        <blockquote>"Excellent fried green tomatoes, great service with a hometown vibe."<footer>Karl Sauer, Google review</footer></blockquote>
-        <blockquote>"Amazing experience beginning at the hostess stand. The best food and vibes!"<footer>Eric Fenech, Google review</footer></blockquote>
-      </div>
+      <h2 id="ch" data-split>Flip a coaster, pick a plate</h2>
+      <p class="sub">Each coaster flips over to show a few favorites and a link straight to that part of the menu.</p>
+      <div class="table" id="table"></div>
     </div>
+  </section>
+
+  <section class="reel" aria-label="Photos from the patio">
+    <div class="row" id="row1"></div>
+    <div class="row" id="row2"></div>
   </section>
 
   <section class="visit" id="visit" aria-labelledby="vh">
     <div class="wrap">
       <div class="grid">
         <div>
-          <h2 id="vh">915 Main Street, Safety Harbor</h2>
-          <div class="ctas"><a class="btn gold" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL" data-magnetic>Get directions</a><a class="btn" href="tel:+17277261956">(727) 726-1956</a></div>
+          <h2 id="vh">Follow the string lights to 915 Main Street</h2>
+          <div class="ctas"><a class="btn" href="https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL" data-magnetic>Get directions</a><a class="btn ghost" href="tel:+17277261956">(727) 726-1956</a></div>
         </div>
         <div><h3>Hours</h3><p>Sun–Thu 11 AM–9 PM</p><p>Fri–Sat 11 AM–10 PM</p><p>Happy hour daily 4–7 PM</p></div>
-        <div><h3>Around the corner</h3><p>Steps from the Safety Harbor marina and Philippe Park. Dogs are welcome on the covered patio.</p></div>
+        <div><h3>The patio</h3><p>Covered, with fans, and dogs are welcome. 18 taps and a full bar.</p><p><a href="../private-events.html">Plan a party</a></p></div>
       </div>
-      <div class="foot"><span>Whistle Stop Grill &amp; Bar · Old Florida / New Vibe</span><span><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a> &nbsp; <a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div>
+      <div class="foot"><span>Whistle Stop Grill &amp; Bar · Safety Harbor, FL 34695</span><span><a href="https://order.toasttab.com/egift/whistle-stop-grill-bar">Gift cards</a> &nbsp; <a href="https://www.facebook.com/Whistlestopgrillandbar915">Facebook</a> &nbsp; <a href="https://www.instagram.com/whistlestop_grill/">Instagram</a></span></div>
     </div>
   </section>
 </main>
@@ -264,100 +200,125 @@
 <script src="fx.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const { cats, art, order } = WSFOOD;
-  const N = cats.length, STEP = 360 / N;
+  const { cats, art } = WSFOOD;
 
-  /* ---- hero: pointer parallax on the scene + drifting warm motes */
-  const scene = document.getElementById("scene");
-  if (FX.fine && !FX.reduce) {
-    let tx = 0, ty = 0, x = 0, y = 0;
-    addEventListener("pointermove", (e) => { tx = (e.clientX / innerWidth - 0.5) * -26; ty = (e.clientY / innerHeight - 0.5) * -18; });
-    FX.loop(() => { x += (tx - x) * 0.05; y += (ty - y) * 0.05; scene.style.transform = `translate3d(${x.toFixed(2)}px, ${(y + scrollY * 0.18).toFixed(2)}px, 0)`; });
-  }
-  const cv = document.getElementById("motes"), cx = cv.getContext("2d");
-  let motes = [];
-  function sizeMotes() {
+  /* ---- the living patio: sky, stars, oaks, swaying palms, string lights and fireflies */
+  const cv = document.getElementById("patio"), c = cv.getContext("2d");
+  let W = 0, H = 0, stars = [], flies = [], oaks = [], strands = [], wind = 0, windT = 0, shift = 0;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  function build() {
     const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
-    cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0);
-    motes = Array.from({ length: Math.round(r.width / 22) }, () => ({ x: Math.random() * r.width, y: Math.random() * r.height, r: 0.6 + Math.random() * 2.2, s: 6 + Math.random() * 18, p: Math.random() * 6.28, a: 0.25 + Math.random() * 0.5 }));
+    W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; c.setTransform(d, 0, 0, d, 0, 0);
+    stars = Array.from({ length: Math.round(W / 9) }, () => ({ x: rnd(0, W), y: rnd(0, H * 0.55), r: rnd(0.4, 1.4), p: rnd(0, 6.28) }));
+    flies = Array.from({ length: Math.round(W / 38) }, () => ({ x: rnd(0, W), y: rnd(H * 0.35, H), vx: rnd(-8, 8), vy: rnd(-6, 6), p: rnd(0, 6.28), r: rnd(1.4, 3.2) }));
+    oaks = []; for (let x = -60; x < W + 60; x += rnd(50, 90)) oaks.push({ x, r: rnd(60, 120), y: H * rnd(0.7, 0.78) });
+    strands = [
+      { y0: H * 0.06, y1: H * 0.16, sag: H * 0.16, n: Math.round(W / 46), p: 0 },
+      { y0: H * 0.2, y1: H * 0.1, sag: H * 0.13, n: Math.round(W / 52), p: 1.7 },
+      { y0: H * 0.02, y1: H * 0.3, sag: H * 0.1, n: Math.round(W / 60), p: 3.1 },
+    ];
+    strands.forEach((s) => (s.bulbs = Array.from({ length: s.n }, () => ({ f: rnd(0, 6.28), k: rnd(0.75, 1) }))));
   }
-  sizeMotes(); addEventListener("resize", sizeMotes);
+  function palm(x, base, h, lean, sway, scale) {
+    c.save(); c.translate(x, base);
+    const topX = lean + sway * 0.6, topY = -h;
+    c.strokeStyle = "#04100d"; c.lineCap = "round";
+    c.lineWidth = 14 * scale; c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(lean * 0.2, -h * 0.55, topX, topY); c.stroke();
+    c.lineWidth = 9 * scale; c.beginPath(); c.moveTo(lean * 0.1, -h * 0.4); c.quadraticCurveTo(lean * 0.3, -h * 0.75, topX, topY); c.stroke();
+    c.translate(topX, topY);
+    const fronds = 9;
+    for (let i = 0; i < fronds; i++) {
+      const a = -Math.PI / 2 + (i - (fronds - 1) / 2) * 0.42 + sway * 0.004 * (i % 2 ? 1 : 0.7);
+      const len = (110 + (i % 3) * 20) * scale;
+      const ex = Math.cos(a) * len, ey = Math.sin(a) * len * 0.55 + len * 0.45;
+      const mx = Math.cos(a) * len * 0.55, my = Math.sin(a) * len * 0.5 - 18 * scale;
+      c.fillStyle = "#04100d"; c.beginPath(); c.moveTo(0, 0);
+      c.quadraticCurveTo(mx, my - 10 * scale, ex, ey);
+      c.quadraticCurveTo(mx, my + 12 * scale, 0, 0); c.fill();
+    }
+    c.restore();
+  }
+  function draw(t) {
+    windT += ((wind || 0) - windT) * 0.03;
+    const sky = c.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, "#061226"); sky.addColorStop(0.45, "#0e2a3a"); sky.addColorStop(0.72, "#3a2b45"); sky.addColorStop(0.86, "#8a4a4a"); sky.addColorStop(1, "#0a1d1a");
+    c.fillStyle = sky; c.fillRect(0, 0, W, H);
+    for (const s of stars) { c.globalAlpha = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.6 + s.p)); c.fillStyle = "#fff"; c.fillRect(s.x, s.y + shift * 0.1, s.r, s.r); }
+    c.globalAlpha = 1;
+    const mx = W * 0.82, my = H * 0.2 + shift * 0.15;
+    const mg = c.createRadialGradient(mx, my, 0, mx, my, 120); mg.addColorStop(0, "rgba(255,240,210,.35)"); mg.addColorStop(1, "rgba(255,240,210,0)");
+    c.fillStyle = mg; c.fillRect(mx - 120, my - 120, 240, 240);
+    c.fillStyle = "#fff4dc"; c.beginPath(); c.arc(mx, my, 26, 0, 6.283); c.fill();
+    c.fillStyle = "#06140f";
+    for (const o of oaks) { c.beginPath(); c.arc(o.x + windT * 0.08, o.y + shift * 0.3, o.r, 0, 6.283); c.fill(); }
+    c.fillRect(0, H * 0.78 + shift * 0.3, W, H);
+    const sway = Math.sin(t * 0.9) * 18 + windT;
+    palm(W * 0.08, H + 10 + shift * 0.5, H * 0.72, 40, sway, Math.max(0.7, W / 1500));
+    palm(W * 0.92, H + 10 + shift * 0.5, H * 0.62, -60, Math.sin(t * 0.8 + 1) * 16 + windT, Math.max(0.6, W / 1700));
+    palm(W * 0.77, H + 10 + shift * 0.5, H * 0.46, -20, Math.sin(t * 1.1 + 2) * 12 + windT, Math.max(0.5, W / 2100));
+    for (const s of strands) {
+      const swing = Math.sin(t * 0.8 + s.p) * 6 + windT * 0.12;
+      c.strokeStyle = "rgba(20,14,8,.9)"; c.lineWidth = 1.5; c.beginPath();
+      const pt = (u) => { const x = u * W; const y = s.y0 + (s.y1 - s.y0) * u + Math.sin(u * Math.PI) * (s.sag + swing) + shift * 0.2; return [x, y]; };
+      for (let k = 0; k <= 40; k++) { const [x, y] = pt(k / 40); k ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.stroke();
+      s.bulbs.forEach((b, i) => {
+        const u = (i + 0.5) / s.n; const [x, y] = pt(u);
+        const fl = b.k * (0.82 + 0.18 * Math.sin(t * 3 + b.f)) * (Math.sin(t * 0.7 + b.f * 3) > 0.985 ? 0.35 : 1);
+        const g = c.createRadialGradient(x, y + 6, 0, x, y + 6, 26); g.addColorStop(0, `rgba(255,207,110,${0.55 * fl})`); g.addColorStop(1, "rgba(255,207,110,0)");
+        c.fillStyle = g; c.fillRect(x - 26, y - 20, 52, 52);
+        c.fillStyle = `rgba(255,${Math.round(214 + 30 * fl)},${Math.round(140 + 60 * fl)},${0.65 + 0.35 * fl})`; c.beginPath(); c.ellipse(x, y + 6, 3.4, 5, 0, 0, 6.283); c.fill();
+      });
+    }
+    for (const f of flies) {
+      f.x += (f.vx + Math.sin(t + f.p) * 6 + windT * 0.2) * 0.016; f.y += (f.vy + Math.cos(t * 0.8 + f.p) * 5) * 0.016;
+      if (f.x < -10) f.x = W + 10; if (f.x > W + 10) f.x = -10; if (f.y < H * 0.3) f.vy = Math.abs(f.vy); if (f.y > H) f.vy = -Math.abs(f.vy);
+      const a = 0.5 + 0.5 * Math.sin(t * 2.4 + f.p);
+      const g = c.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 5); g.addColorStop(0, `rgba(220,255,160,${0.9 * a})`); g.addColorStop(1, "rgba(220,255,160,0)");
+      c.fillStyle = g; c.fillRect(f.x - f.r * 5, f.y - f.r * 5, f.r * 10, f.r * 10);
+    }
+  }
+  build(); draw(0);
+  addEventListener("resize", () => { build(); draw(performance.now() / 1000); });
+  if (FX.fine) addEventListener("pointermove", (e) => (wind = (e.clientX / innerWidth - 0.5) * 50));
   let heroOn = true;
   new IntersectionObserver(([e]) => (heroOn = e.isIntersecting)).observe(cv);
-  FX.loop((t, dt) => {
-    if (!heroOn) return;
-    const w = cv.clientWidth, h = cv.clientHeight;
-    cx.clearRect(0, 0, w, h);
-    for (const m of motes) {
-      m.y -= m.s * dt; m.x += Math.sin(t * 0.6 + m.p) * 0.25;
-      if (m.y < -10) { m.y = h + 10; m.x = Math.random() * w; }
-      const tw = 0.6 + 0.4 * Math.sin(t * 2 + m.p);
-      cx.beginPath(); cx.fillStyle = `rgba(255,214,150,${(m.a * tw).toFixed(3)})`; cx.arc(m.x, m.y, m.r, 0, 6.283); cx.fill();
-    }
+  FX.progress(document.querySelector(".hero"), "pass", (p, r) => { shift = Math.max(0, -r.top) * 0.35; if (FX.reduce) draw(0); });
+  FX.loop((t) => { if (heroOn) draw(t); });
+
+  /* ---- equalizer and the week */
+  document.getElementById("eq").innerHTML = Array.from({ length: 28 }, (_, i) => `<i style="--h:${Math.round(40 + Math.abs(Math.sin(i * 1.7)) * 60)}%;--d:${(0.35 + (i * 37 % 10) / 22).toFixed(2)}s;--o:${(-(i * 0.13)).toFixed(2)}s"></i>`).join("");
+  const today = WS.today().dayIndex;
+  document.getElementById("nights").innerHTML = [1, 2, 3, 4, 5, 6, 0].map((d) => `<li${d === today ? ' class="is-today"' : ""}><b>${WS.WEEK[d].short}</b><span>${WS.WEEK[d].title}</span></li>`).join("");
+
+  /* ---- coasters */
+  const tilts = [-6, 4, -3, 7, -5, 3, -8, 5, -2];
+  document.getElementById("table").innerHTML = cats.map((k, i) => `
+    <div class="coaster" data-reveal tabindex="0" role="group" aria-label="${k.name}" style="--c:${k.color};--tilt:${tilts[i]}deg;--i:${i}">
+      <div class="flip">
+        <div class="face front"><div class="art">${art(k.art)}</div><h3>${k.name}</h3><small>${k.count}, from ${k.from}</small></div>
+        <div class="face back"><ul>${k.picks.map(([n, p]) => `<li><span>${n}</span><b>${p}</b></li>`).join("")}</ul><a class="btn" href="${k.href}">${k.cta}</a></div>
+      </div>
+    </div>`).join("");
+  document.querySelectorAll(".coaster").forEach((el) => {
+    FX.reveal(el);
+    el.addEventListener("click", (e) => { if (!e.target.closest("a")) el.classList.toggle("flipped"); });
+    el.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target === el) el.classList.toggle("flipped"); });
   });
 
-  /* ---- the ring */
-  const ring = document.getElementById("ring"), stage = document.getElementById("stage"), pane = document.getElementById("pane");
-  ring.innerHTML = cats.map((c, i) => `
-    <a class="item" href="${c.href}" style="--i:${i};--c:${c.color}" aria-label="${c.name}, ${c.count}, from ${c.from}" data-i="${i}">
-      <span class="face front"><span class="art">${art(c.art)}</span><b>${c.name}</b><small>from ${c.from}</small><span class="sheen"></span></span>
-      <span class="face back"><img src="../assets/logo-160.webp" alt="" width="56" height="56"></span>
-    </a>`).join("");
-  const items = [...ring.children];
-  let angle = 0, vel = 0, target = null, dragging = false, moved = 0, lastX = 0, hover = false, idle = !FX.reduce, front = -1;
-  const frontIndex = () => ((Math.round(-angle / STEP) % N) + N) % N;
-  function caption(i) {
-    const c = cats[i];
-    pane.classList.add("swap");
-    setTimeout(() => {
-      pane.innerHTML = `<h3>${c.name}</h3><p class="line">${c.line}</p>
-        <ul>${c.picks.map(([n, p]) => `<li>${n}<b>${p}</b></li>`).join("")}</ul>
-        <div class="ctas"><a class="btn gold" href="${c.href}">${c.cta}</a><a class="btn" href="${order}">Order online</a></div>`;
-      pane.classList.remove("swap");
-    }, front === -1 ? 0 : 180);
-  }
-  function paint() {
-    ring.style.setProperty("--angle", angle.toFixed(2) + "deg");
-    const f = frontIndex();
-    if (f !== front) { items.forEach((el, i) => el.classList.toggle("isfront", i === f)); caption(f); front = f; }
-  }
-  const goTo = (i) => { const cur = -angle / STEP; let d = ((i - cur) % N + N) % N; if (d > N / 2) d -= N; target = angle - d * STEP; idle = false; };
-  document.getElementById("prev").onclick = () => goTo(frontIndex() - 1);
-  document.getElementById("next").onclick = () => goTo(frontIndex() + 1);
-  stage.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") { goTo(frontIndex() - 1); e.preventDefault(); } if (e.key === "ArrowRight") { goTo(frontIndex() + 1); e.preventDefault(); } });
-  stage.addEventListener("pointerenter", () => (hover = true));
-  stage.addEventListener("pointerleave", () => (hover = false));
-  stage.addEventListener("pointerdown", (e) => { dragging = true; moved = 0; lastX = e.clientX; vel = 0; target = null; idle = false; stage.classList.add("dragging"); stage.setPointerCapture(e.pointerId); });
-  stage.addEventListener("pointermove", (e) => { if (!dragging) return; const dx = e.clientX - lastX; lastX = e.clientX; moved += Math.abs(dx); angle += dx * 0.28; vel = dx * 0.28; paint(); });
-  const release = () => { if (!dragging) return; dragging = false; stage.classList.remove("dragging"); };
-  stage.addEventListener("pointerup", release); stage.addEventListener("pointercancel", release);
-  ring.addEventListener("click", (e) => {
-    const a = e.target.closest(".item");
-    if (!a) return;
-    if (moved > 6) { e.preventDefault(); return; }
-    const i = Number(a.dataset.i);
-    if (i !== frontIndex()) { e.preventDefault(); goTo(i); }
+  /* ---- photo rows drift in opposite directions as you scroll */
+  const P = "../assets/gallery/";
+  const one = ["WSDrinks3.webp", "WSRocker-560.webp", "WSGoodTimes-560.webp", "WSLounge-560.webp", "WSCornHole-560.webp", "WSWorkers.webp"];
+  const two = ["WSBar-560.webp", "WSDrinks2.webp", "WSFood-560.webp", "WSGirls.webp", "WSDrinks-560.webp", "WSFood4.webp"];
+  const imgs = (list) => [...list, ...list].map((f) => `<img src="${P + f}" alt="" loading="lazy" width="560" height="560">`).join("");
+  const r1 = document.getElementById("row1"), r2 = document.getElementById("row2");
+  r1.innerHTML = imgs(one); r2.innerHTML = imgs(two);
+  FX.progress(document.querySelector(".reel"), "pass", (p) => {
+    const span = r1.scrollWidth / 2;
+    r1.style.transform = `translateX(${(-p * span * 0.6).toFixed(1)}px)`;
+    r2.style.transform = `translateX(${(-span * 0.6 + p * span * 0.6).toFixed(1)}px)`;
   });
-  paint();
-  let ringOn = true;
-  new IntersectionObserver(([e]) => (ringOn = e.isIntersecting)).observe(stage);
-  FX.loop((t, dt) => {
-    if (!ringOn || dragging) return;
-    if (target !== null) { angle += (target - angle) * Math.min(1, dt * 7); if (Math.abs(target - angle) < 0.05) { angle = target; target = null; } }
-    else if (Math.abs(vel) > 0.05) { angle += vel; vel *= 0.93; if (Math.abs(vel) <= 0.05) target = -Math.round(-angle / STEP) * STEP; }
-    else if (idle && !hover) angle -= dt * 7;
-    paint();
-  });
-
-  /* ---- story photo swings open as it scrolls in */
-  const photo = document.querySelector("#photo img");
-  FX.progress(document.getElementById("photo"), "pass", (p) => {
-    const k = FX.reduce ? 1 : FX.ease(FX.smooth(0.05, 0.5, p));
-    photo.style.setProperty("--sw", ((1 - k) * 48).toFixed(2) + "deg");
-    photo.style.setProperty("--sz", ((1 - k) * -120).toFixed(1) + "px");
-  });
-  FX.reveal(document.getElementById("fan"));
-  document.querySelectorAll(".ringhead h2, .story h2").forEach(FX.reveal);
+  document.querySelectorAll(".tonight h2, .coasters h2").forEach(FX.reveal);
 });
 </script>
 </body>

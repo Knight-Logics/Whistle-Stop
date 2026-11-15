@@ -4,57 +4,68 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Option 12 · Quiet After Dark · Whistle Stop Grill &amp; Bar</title>
-<base target="_top">
+<title>Option 12 · Bar Hour · Whistle Stop Grill &amp; Bar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="warm.css">
-<style>
-  .night { position: relative; min-height: 78svh; display: grid; align-items: end; overflow: hidden; color: #f6efe4; }
-  .night img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .night .shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,20,16,.2), rgba(10,20,16,.78)); }
-  .night .wrap { position: relative; z-index: 1; padding-bottom: 48px; }
-  .night h1 { margin: 8px 0; font-size: clamp(48px, 7vw, 92px); max-width: 10ch; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; background: #f0c27a; box-shadow: 0 0 10px #f0c27a; display: inline-block; }
-  .below { padding: 48px 0; }
-  .below .wrap { display: grid; grid-template-columns: .9fr 1.1fr; gap: 28px; }
-  @media (max-width: 800px) { .below .wrap { grid-template-columns: 1fr; } }
-</style>
+<link rel="stylesheet" href="next.css">
 </head>
-<body data-theme="night">
-<header class="nav"><div class="wrap">
-  <a class="brand" href="../index.html"><img src="../assets/logo-160.webp" alt="" width="44" height="44"><span>Whistle Stop Grill &amp; Bar</span></a>
-  <ul><li><a href="#menu">Menu</a></li><li><a href="../events.html">Live music</a></li><li><a href="#visit">Visit</a></li></ul>
-  <a class="btn" href="../order.html">Order online</a>
-</div></header>
-<main>
-  <section class="night" aria-labelledby="h1">
-    <img class="drift" src="../assets/gallery/WSLounge-560.webp" alt="The covered patio lounge at night" width="560" height="560">
-    <div class="shade" aria-hidden="true"></div>
-    <div class="wrap">
-      <p><i class="dot breathe"></i> <span class="status" data-ws="status">Open daily from 11 AM</span></p>
-      <h1 id="h1">Old Florida, after dark</h1>
-      <p class="lede">A quieter patio night. Music Friday and Saturday, 6:30 to 9:30.</p>
+<body>
+<header class="top">
+  <span class="brand"><img src="../assets/gallery/ws-logo-header.png?v=7" alt="Whistle Stop Grill and Bar" width="487" height="106"></span>
+  <nav>
+    <a href="#menu">Menu</a>
+    <a href="../events.html">Events</a>
+    <a href="../private-events.html">Gatherings</a>
+    <a href="#visit">Visit</a>
+  </nav>
+  <a class="order" href="../order.html">Order now</a>
+</header>
+<section class="stage cover">
+  <img class="fill" src="../assets/gallery/WSBar.webp" alt="">
+  <div class="veil"></div>
+  <div class="frame">
+    <div class="copy">
+      <p class="eyebrow">Happy hour 4–7 · 18 taps</p>
+      <h1>Whistle Stop Grill &amp; Bar <span>| Live Music &amp; Dining in Safety Harbor</span></h1>
+      <h2>At the bar</h2>
+      <p class="lead">Tuesday and Wednesday, happy hour runs from 4 to close. The menu is just below.</p>
+      <div class="actions">
+        <a class="btn" href="tel:+17277261956">(727) 726-1956</a>
+        <a class="btn line" href="#menu">View the menu</a>
+      </div>
     </div>
-  </section>
-  <section class="below"><div class="wrap">
-    <div>
-      <h2>This week</h2>
-      <ul class="nights" data-warm-nights></ul>
+    <div class="pours">
+      <article class="pour">
+        <span class="glass martini" aria-hidden="true"></span>
+        <h3>Martinis</h3>
+        <p>Half off Monday, 4 PM to close, with 2 for $6 tacos.</p>
+      </article>
+      <article class="pour">
+        <span class="glass mary" aria-hidden="true"></span>
+        <h3>Bloody Marys</h3>
+        <p>$5 on Sunday from 11 AM, with mimosas.</p>
+      </article>
+      <article class="pour">
+        <span class="glass tap" aria-hidden="true"></span>
+        <h3>18 taps</h3>
+        <p>Happy hour every day, 4 to 7.</p>
+      </article>
     </div>
-    <div class="plates">
-      <article class="plate" data-plate="original"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
-      <article class="plate" data-plate="salmon-blt"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
-      <article class="plate" data-plate="ahi-salad"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
-      <article class="plate" data-plate="steak-flatbread"><h3 data-field="name"></h3><p class="detail" data-field="detail"></p><b class="price" data-field="price"></b></article>
-    </div>
-  </div></section>
-  <section class="menu-sec" id="menu" data-warm-menu><div class="wrap"><h2>The working menu</h2><p class="menu-note"></p><div class="groups"></div></div></section>
-  <section class="visit" id="visit"><div class="wrap" data-warm-visit></div></section>
-</main>
+  </div>
+</section>
+<section class="menu-sec" id="menu" data-warm-menu>
+  <div class="wrap">
+    <h2>The menu</h2>
+    <p class="menu-note"></p>
+    <div class="groups"></div>
+  </div>
+</section>
+<footer class="visit" id="visit"><div class="wrap" data-warm-visit></div></footer>
 <script src="shared.js"></script>
 <script src="dawn-menu.js"></script>
 <script src="warm.js"></script>
+<script src="next.js"></script>
 </body>
 </html>
