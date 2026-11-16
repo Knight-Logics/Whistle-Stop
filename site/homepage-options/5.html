@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="assets/gallery/WSSunset-480.webp" as="image" type="image/webp" fetchpriority="high" />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=Lobster&family=Satisfy&family=Source+Sans+3:wght@400;600;700&display=swap" />
   <link rel="stylesheet" href="css/main.css?v=43" />
   <link rel="preload" href="css/reviews.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <style>
@@ -27,11 +27,19 @@
 
   <style>
     .hero-art { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: var(--header-h) 0 0; overflow: hidden; background: #101510; }
-    .hero-art .hero-bg { position: relative; inset: auto; width: min(100%, calc((100svh - var(--header-h)) * 1024 / 511)); height: auto; margin-inline: auto; z-index: 0; background: transparent; }
+    .hero-art .hero-bg { position: relative; inset: auto; width: min(100%, calc((100svh - var(--header-h)) * 1671 / 843)); height: auto; margin-inline: auto; z-index: 0; background: transparent; }
     .hero-art .hero-bg .hero-still { display: block; width: 100%; height: auto; max-width: none; object-fit: contain; }
-    .hero-art .hero-content { position: absolute; z-index: 2; top: var(--header-h); bottom: 0; left: 0; right: 0; width: min(1180px, calc(100% - 2rem)); margin-inline: auto; display: flex; flex-direction: column; justify-content: center; padding-top: 0; }
-    .hero-art h1 { font-size: clamp(2.7rem, 6.2vw, 4.6rem); line-height: 0.92; max-width: 12em; }
-    .hero-art .hero-title-rest { display: block; margin-top: 0.55rem; font-size: clamp(1.15rem, 2.1vw, 1.55rem); line-height: 1.15; letter-spacing: 0.04em; color: var(--cream); }
+    .hero-art .hero-content { position: absolute; z-index: 2; top: var(--header-h); bottom: 0; left: 0; right: 0; width: min(1180px, calc(100% - 2rem)); margin-inline: auto; display: flex; flex-direction: column; justify-content: flex-end; padding-top: 0; padding-bottom: 4.5rem; }
+    .hero-art h1.vibe-lockup { position: absolute; z-index: 3; left: 0; right: 0; top: 8px; width: min(620px, 68vw); margin: 0 auto; text-align: center; line-height: 0.82; font-size: 0; letter-spacing: 0; text-transform: none; transform: none !important; animation: none !important; opacity: 1 !important; }
+    .vibe-palm { display: block; width: 72px; height: 48px; margin: 0 auto -2px; }
+    .vibe-old { display: block; font-family: "Lobster", cursive; font-weight: 400; font-size: clamp(46px, 5vw, 76px); color: #f4e4c4; letter-spacing: 0; text-transform: none; white-space: nowrap; text-shadow: 0 2px 0 rgba(60, 32, 8, 0.28), 0 12px 28px rgba(0, 0, 0, 0.35); }
+    .vibe-swoosh { display: block; width: 86%; height: 18px; margin: -8px auto -4px; }
+    .vibe-fresh { display: block; font-family: "Archivo Black", sans-serif; font-style: italic; font-weight: 400; font-size: clamp(26px, 3vw, 46px); letter-spacing: -0.03em; color: #d6f11f; text-transform: none; white-space: nowrap; text-shadow: 0 8px 18px rgba(0, 0, 0, 0.35); }
+    .vibe-seo { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @media (max-width: 800px) {
+      .hero-art h1.vibe-lockup { position: static; width: min(100%, 420px); margin: 0 0 0.75rem; }
+      .hero-art .hero-content { justify-content: center; padding-bottom: 1.5rem; }
+    }
   </style>
   <link rel="icon" href="assets/logo.webp" type="image/webp" />
   <link rel="icon" href="assets/logo.png" type="image/png" />
@@ -269,15 +277,29 @@
 
   <main>
     <section class="hero hero-art" data-hero="index">
-      <div class="hero-bg"><img class="hero-still" src="assets/gallery/ws-home-page-scene-dawn.webp?v=3" alt="Whistle Stop Grill and Bar at sunset, with the patio, string lights, and palms" width="1024" height="511"></div>
+      <div class="hero-bg"><img class="hero-still" src="assets/gallery/ws-home-page-scene-dawn.webp?v=4" alt="Whistle Stop Grill and Bar at sunset, with the patio, string lights, and palms" width="1671" height="843"></div>
       <div class="hero-overlay" aria-hidden="true"></div>
       <div class="container hero-aside">
         <div class="hero-social-float" data-include="partials/header-socials.html"></div>
       </div>
       <div class="container hero-content">
+        <h1 class="vibe-lockup">
+          <svg class="vibe-palm" viewBox="0 0 80 52" aria-hidden="true">
+            <path fill="#f4e4c4" d="M39 50c-1-8-1-16 1-24 2 6 2 14-1 24z"/>
+            <path fill="#f4e4c4" d="M40 28C28 26 14 28 4 36c8-10 20-14 36-12-1 2-1 4 0 4z"/>
+            <path fill="#f4e4c4" d="M42 26c4-12 14-20 28-24-4 12-12 20-26 24-1 0-2 0-2 0z"/>
+            <path fill="#f4e4c4" d="M38 24C30 12 30 2 36 0c4 10 6 18 10 24-3 0-6 0-8 0z"/>
+            <path fill="#f4e4c4" d="M44 25c10-2 22 1 32 8-12-4-22-4-32-1v-7z"/>
+            <path fill="#f4e4c4" d="M40 23c2-12 6-20 14-23-8 4-14 12-14 22v1z"/>
+          </svg>
+          <span class="vibe-old">Old Florida</span>
+          <svg class="vibe-swoosh" viewBox="0 0 320 28" aria-hidden="true">
+            <path d="M6 18C70 6 180 2 314 16" fill="none" stroke="#c6e23a" stroke-width="7" stroke-linecap="round"/>
+          </svg>
+          <span class="vibe-fresh">fresh vibe</span>
+          <span class="vibe-seo">Whistle Stop Grill &amp; Bar | Live Music &amp; Dining in Safety Harbor</span>
+        </h1>
         <p class="hero-eyebrow reveal visible" data-hero-eyebrow>915 Main Street · Safety Harbor, FL</p>
-        <h1 class="reveal stagger-1 visible">Whistle Stop Grill &amp; Bar <span class="hero-title-rest">| Live Music &amp; Dining in Safety Harbor</span></h1>
-        <p class="hero-tagline reveal stagger-2 visible" data-hero-tagline>Old Florida / New Vibe</p>
         <p class="lead reveal stagger-3 visible" data-hero-lead>
           Real. Good. Food. Since 1995 — open-air dining, 18 taps, live local music, and a dog-friendly patio in the heart of downtown Safety Harbor.
         </p>

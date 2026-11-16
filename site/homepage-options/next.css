@@ -34,7 +34,7 @@
 .stage.contain { display: block; min-height: 0; }
 .stage.contain img.fill {
   position: relative; inset: auto; display: block;
-  width: min(100%, calc((100svh - 150px) * 1024 / 511));
+  width: min(100%, calc((100svh - 150px) * 1671 / 843));
   height: auto; margin-inline: auto; object-fit: fill;
 }
 .stage.contain > .veil,
