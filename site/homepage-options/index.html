@@ -27,7 +27,7 @@
     .bar { height: auto; flex-wrap: wrap; padding: 8px 12px; gap: 6px 12px; }
     .bar h1 { font-size: 14px; }
     .now { margin-left: 0; width: 100%; justify-content: space-between; font-size: 13px; order: 3; }
-    .picks { width: 100%; order: 2; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; padding: 4px 0; }
+    .picks { width: 100%; order: 2; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; padding: 4px 0; }
     .picks button { width: 100%; max-width: 40px; height: auto; aspect-ratio: 1; justify-self: center; padding: 0; font-size: 14px; }
     iframe { top: var(--bar-h, 118px); height: calc(100% - var(--bar-h, 118px)); }
   }
@@ -41,7 +41,7 @@
 </header>
 <iframe id="frame" title="Homepage design preview" src="1.html"></iframe>
 <script>
-  const designs = ["Stack It Up", "Spin the Menu", "Patio After Dark", "House Favorites", "Fresh Vibe", "Order a Plate", "Menu First", "Parallax Menu", "Three Scenes", "Sunset Glass", "Music Night", "Bar Hour", "Center Stage", "Plate Spin", "Lounge Split"];
+  const designs = ["Stack It Up", "Spin the Menu", "Patio After Dark", "House Favorites", "Fresh Vibe", "Order a Plate", "Menu First", "Three Scenes", "Bar Hour", "Center Stage", "Plate Spin", "Lounge Split"];
   const picks = document.getElementById("picks");
   const frame = document.getElementById("frame");
   const nameEl = document.getElementById("now-name");
