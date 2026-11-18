@@ -188,6 +188,15 @@
 .slides[data-on="1"] .slides-bg img:nth-child(2),
 .slides[data-on="2"] .slides-bg img:nth-child(3) { opacity: 1; }
 .slides-bg img:first-child { object-position: 42% 48%; }
+.slides-bg img:nth-child(2),
+.slides-bg img:nth-child(3) {
+  object-fit: contain;
+  object-position: center top;
+}
+.slides[data-on="1"] .veil,
+.slides[data-on="2"] .veil {
+  background: linear-gradient(90deg, rgba(6, 8, 6, .78) 0%, rgba(6, 8, 6, .28) 34%, rgba(6, 8, 6, 0) 62%);
+}
 .panel { animation: rise .5s ease; }
 .cta-card {
   max-width: 420px; margin-left: auto; padding: 22px 20px;
