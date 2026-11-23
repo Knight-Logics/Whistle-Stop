@@ -1,11 +1,11 @@
 /* Order list + Toast online ordering handoff (Toast does not sync external carts) */
 window.WSPickupOrder = (function () {
   const STORAGE_KEY = "ws-pickup-order";
-  const DEFAULT_CHECKOUT_URL = "https://www.whistlestopgrill.com/online-ordering";
+  const DEFAULT_CHECKOUT_URL = "https://www.toasttab.com/whistle-stop-grill-bar-915-main-street/";
   const DEFAULT_PARTNERS = {
     uberEats: "https://www.ubereats.com/store/whistle-stop-grill-%26-bar/zy-ne-DhQW-IryRjRNjCIg",
-    doorDash: "https://www.doordash.com/search?query=Whistle+Stop+Grill+Safety+Harbor",
-    grubhub: "https://www.grubhub.com/search?searchQuery=whistle+stop+grill+safety+harbor",
+    doorDash: "https://www.doordash.com/store/whistle-stop-grill-and-bar-safety-harbor-11f5ecc1-f640-4fbe-b46a-8d5620f68955/",
+    grubhub: "https://www.grubhub.com/restaurant/whistle-stop-grill--bar-safety-harbor-915-main-st-safety-harbor/3153545",
   };
   let resolvedOrderUrl = null;
   let deliveryLinks = { ...DEFAULT_PARTNERS };
@@ -207,8 +207,8 @@ window.WSPickupOrder = (function () {
               <span class="fulfillment-choice__desc">Pay online &amp; pick up at 915 Main Street (~30 min)</span>
             </button>
             <button type="button" class="fulfillment-choice" data-fulfillment-deliver>
-              <span class="fulfillment-choice__title">Delivery</span>
-              <span class="fulfillment-choice__desc">Uber Eats, DoorDash, or Grubhub brings it to you</span>
+              <span class="fulfillment-choice__title">Delivery (Coming Soon)</span>
+              <span class="fulfillment-choice__desc">We&rsquo;re working on implementing online delivery soon</span>
             </button>
           </div>
         </div>
@@ -229,21 +229,13 @@ window.WSPickupOrder = (function () {
         </div>
         <div id="fulfillment-step-delivery" class="fulfillment-step" hidden>
           <button type="button" class="fulfillment-back" data-fulfillment-back>← Back</button>
-          <h2>Choose a delivery partner</h2>
-          <p>Whistle Stop partners with these apps. Menus, fees, delivery zones, and any age-restricted items are controlled by each platform.</p>
+          <h2>Online delivery coming soon</h2>
+          <p>We&rsquo;re working on implementing online delivery soon! In the meantime, you can order direct Pickup on Toast (regular menu prices, no app markup) or call us at <strong>(727) 726-1956</strong>.</p>
           <div id="fulfillment-delivery-items"></div>
-          <div class="fulfillment-partners">
-            <a class="fulfillment-partner" id="fulfillment-uber" target="_blank" rel="noopener noreferrer" href="${escapeHtml(DEFAULT_PARTNERS.uberEats)}">
-              <strong>Uber Eats</strong><span>Order delivery →</span>
-            </a>
-            <a class="fulfillment-partner" id="fulfillment-doordash" target="_blank" rel="noopener noreferrer" href="${escapeHtml(DEFAULT_PARTNERS.doorDash)}">
-              <strong>DoorDash</strong><span>Order delivery →</span>
-            </a>
-            <a class="fulfillment-partner" id="fulfillment-grubhub" target="_blank" rel="noopener noreferrer" href="${escapeHtml(DEFAULT_PARTNERS.grubhub)}">
-              <strong>Grubhub</strong><span>Order delivery →</span>
-            </a>
+          <div class="toast-handoff-actions" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;">
+            <a href="${escapeHtml(DEFAULT_CHECKOUT_URL)}" class="btn btn-primary" id="fulfillment-delivery-pickup-fallback" target="_blank" rel="noopener noreferrer">Order Pickup on Toast</a>
+            <a href="tel:+17277261956" class="btn btn-outline">Call (727) 726-1956</a>
           </div>
-          <p class="toast-handoff-note">Third-party apps add service and delivery fees. Pickup is often fastest on busy nights.</p>
         </div>
       </div>`;
     document.body.appendChild(modal);

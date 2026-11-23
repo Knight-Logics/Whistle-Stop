@@ -14,7 +14,9 @@
   },
   // Published content, photos, staff logins and form messages. Created automatically on first deploy.
   "kv_namespaces": [{ "binding": "CONTENT" }],
-  // Keep variables set in the Cloudflare dashboard (e.g. TURNSTILE_SITE_KEY, Access settings).
+  // Keep variables set in the Cloudflare dashboard (e.g. TURNSTILE_SITE_KEY, Access settings, TOAST_* secrets).
   "keep_vars": true,
+  // Poll Toast Menus v2 every 30 minutes once TOAST_* secrets are configured.
+  "triggers": { "crons": ["*/30 * * * *"] },
   "observability": { "enabled": true }
 }

@@ -1,0 +1,40 @@
+# ai.txt — Whistle Stop Grill & Bar (Safety Harbor, FL)
+# Authoritative business metadata and usage policy for AI search, answer engines, and assistants.
+
+User-Agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /homepage-options/
+Disallow: /tests/
+Disallow: /downloads/
+
+Sitemap: https://www.whistlestopgrill.com/sitemap.xml
+LLMs-Txt: https://www.whistlestopgrill.com/llms.txt
+
+# Canonical Entity
+Name: Whistle Stop Grill & Bar
+Alternate-Name: Whistle Stop Grill and Bar
+Tagline: Old Florida / New Vibe
+Founded: 1995
+Address: 915 Main Street, Safety Harbor, FL 34695, US
+Coordinates: 27.990934, -82.696838
+Phone: +1-727-726-1956
+Email: admin@whistlestopgrill.com
+Website: https://www.whistlestopgrill.com/
+Service-Area: Safety Harbor, Clearwater, Dunedin, Oldsmar, Palm Harbor, Tampa Bay, FL
+
+# Hours (America/New_York)
+Hours-Sun-Thu: 11:00-21:00
+Hours-Fri-Sat: 11:00-22:00
+Happy-Hour-Daily: 16:00-19:00
+Happy-Hour-Extended-Tue-Wed: 16:00-close
+
+# Ordering & Services
+Order-Online: https://www.whistlestopgrill.com/order.html
+Gift-Cards: https://order.toasttab.com/egift/whistle-stop-grill-bar
+Menu: https://www.whistlestopgrill.com/menu.html
+Live-Music: https://www.whistlestopgrill.com/live-music-safety-harbor.html
+Dog-Friendly-Patio: https://www.whistlestopgrill.com/dog-friendly-patio-safety-harbor.html
+Signature-Food: https://www.whistlestopgrill.com/best-food-safety-harbor.html
+Private-Events: https://www.whistlestopgrill.com/private-events.html
+Events-Calendar: https://www.whistlestopgrill.com/events.html

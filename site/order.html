@@ -62,7 +62,7 @@
         "@type": "OrderAction",
         "target": {
           "@type": "EntryPoint",
-          "urlTemplate": "menu.html",
+          "urlTemplate": "https://www.toasttab.com/whistle-stop-grill-bar-915-main-street/",
           "actionPlatform": [
             "https://schema.org/DesktopWebPlatform",
             "https://schema.org/MobileWebPlatform"
@@ -267,47 +267,72 @@
       <div class="container">
         <div class="order-feature reveal">
           <div class="order-feature-copy">
-            <span class="tag">Step 1</span>
-            <h2>Build your order on the menu</h2>
+            <span class="tag">Fastest &middot; No App Markup</span>
+            <h2>Order Pickup Direct on Toast</h2>
             <p style="color:var(--text-muted);margin:0 0 1rem">
-              Add dishes to your list, then checkout — pickup goes through Whistle Stop&rsquo;s online ordering; delivery uses Uber Eats, DoorDash, or Grubhub.
+              Skip third-party delivery fees &mdash; order direct through Whistle Stop&rsquo;s Toast Online Ordering for fast Main Street pickup, or pick Uber Eats, DoorDash, or Grubhub for delivery below.
             </p>
             <ul class="order-checklist">
-              <li>Start on the <strong>menu</strong> — add what you want</li>
-              <li><strong>Pickup</strong> — pay online, collect at 915 Main Street</li>
-              <li><strong>Delivery</strong> — choose a partner app (fees apply)</li>
+              <li><strong>Direct Pickup (Toast)</strong> &mdash; regular menu prices, pay online, pick up at 915 Main St</li>
+              <li><strong>Delivery</strong> &mdash; Uber Eats, DoorDash, or Grubhub straight to your door</li>
+              <li><strong>Browse Menu First</strong> &mdash; explore live kitchen &amp; bar prices before ordering</li>
             </ul>
-            <a href="menu.html" class="btn btn-primary" data-site="links.orderMenu" data-site-attr="href">Browse menu &amp; order</a>
+            <div class="btn-group">
+              <a href="https://www.toasttab.com/whistle-stop-grill-bar-915-main-street/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-site="links.toastCheckout" data-site-attr="href">Order Pickup on Toast &rarr;</a>
+              <a href="menu.html" class="btn btn-outline" data-site="links.orderMenu" data-site-attr="href">Browse Menu</a>
+            </div>
           </div>
           <img src="assets/gallery/WSFood.webp" alt="Whistle Stop food ready for pickup" loading="lazy" width="960" height="1280" />
         </div>
 
         <div class="section-head reveal" style="margin-top:3.5rem">
-          <h2>Delivery partners</h2>
-          <p>Menus, fees, and delivery zones are set on each platform — prices may differ slightly from dining in.</p>
+          <h2>Online delivery</h2>
+          <p>We&rsquo;re working on implementing online delivery soon! Order direct Pickup on Toast above or call (727) 726-1956.</p>
           <div class="divider"></div>
         </div>
 
-        <div class="order-grid reveal">
-          <a class="order-card" href="https://www.ubereats.com/store/whistle-stop-grill-%26-bar/zy-ne-DhQW-IryRjRNjCIg" target="_blank" rel="noopener noreferrer">
-            <span class="order-card-label">Delivery</span>
+        <div class="order-grid reveal" id="delivery-partners-grid">
+          <button type="button" class="order-card" data-delivery-soon="Uber Eats" style="text-align:left;cursor:pointer;font:inherit;">
+            <span class="order-card-label">Coming Soon</span>
             <h3>Uber Eats</h3>
-            <p>915 Main Street · Safety Harbor</p>
-            <span class="order-card-cta">Order on Uber Eats →</span>
-          </a>
-          <a class="order-card" href="https://www.doordash.com/search?query=Whistle+Stop+Grill+Safety+Harbor" target="_blank" rel="noopener noreferrer">
-            <span class="order-card-label">Delivery</span>
+            <p>915 Main Street &middot; Safety Harbor</p>
+            <span class="order-card-cta">Launching soon &rarr;</span>
+          </button>
+          <button type="button" class="order-card" data-delivery-soon="DoorDash" style="text-align:left;cursor:pointer;font:inherit;">
+            <span class="order-card-label">Coming Soon</span>
             <h3>DoorDash</h3>
-            <p>Delivery to Safety Harbor &amp; nearby</p>
-            <span class="order-card-cta">Find on DoorDash →</span>
-          </a>
-          <a class="order-card" href="https://www.grubhub.com/search?searchQuery=whistle+stop+grill+safety+harbor" target="_blank" rel="noopener noreferrer">
-            <span class="order-card-label">Delivery</span>
+            <p>Safety Harbor &amp; nearby delivery</p>
+            <span class="order-card-cta">Launching soon &rarr;</span>
+          </button>
+          <button type="button" class="order-card" data-delivery-soon="Grubhub" style="text-align:left;cursor:pointer;font:inherit;">
+            <span class="order-card-label">Coming Soon</span>
             <h3>Grubhub</h3>
-            <p>Pickup &amp; delivery available</p>
-            <span class="order-card-cta">Find on Grubhub →</span>
-          </a>
+            <p>Safety Harbor &amp; nearby delivery</p>
+            <span class="order-card-cta">Launching soon &rarr;</span>
+          </button>
         </div>
+
+        <div id="delivery-soon-banner" role="status" aria-live="polite" hidden style="margin-top:1rem;padding:1rem 1.25rem;border-radius:14px;background:var(--chalk-mid,#1f1f1f);color:var(--cream,#f4efe4);border:1px solid rgba(184,224,74,.45);text-align:center;">
+          <strong id="delivery-soon-msg">We&rsquo;re working on implementing online delivery soon!</strong>
+          <div style="margin-top:.65rem;display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;">
+            <a href="https://www.toasttab.com/whistle-stop-grill-bar-915-main-street/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:.55rem 1.1rem;">Order Pickup on Toast</a>
+            <a href="tel:+17277261956" class="btn btn-outline" style="padding:.55rem 1.1rem;">Call (727) 726-1956</a>
+          </div>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            var banner = document.getElementById("delivery-soon-banner");
+            var msg = document.getElementById("delivery-soon-msg");
+            document.querySelectorAll("[data-delivery-soon]").forEach(function (btn) {
+              btn.addEventListener("click", function () {
+                var app = btn.getAttribute("data-delivery-soon") || "Online delivery";
+                if (msg) msg.textContent = app + " ordering — we're working on implementing this soon! In the meantime, order direct Pickup on Toast or call (727) 726-1956.";
+                if (banner) { banner.hidden = false; banner.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+              });
+            });
+          });
+        </script>
 
         <p class="reveal order-fine-print">
           Third-party apps add service and delivery fees. For the best experience on busy nights, call ahead for dine-in or use pickup when you can.

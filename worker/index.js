@@ -26,6 +26,7 @@ import {
 } from "./staff.js";
 import { handleFormSubmit, handleListLeads, handleDeleteLead, handleCampaignCount } from "./forms.js";
 import { menuHtml, upcomingEventsHtml } from "./prerender.js";
+import { handleToastStatus, handleToastSync, runToastSync, toastConfigured } from "./toast.js";
 
 const PAGES = [
   "index",
@@ -36,6 +37,9 @@ const PAGES = [
   "private-events",
   "about",
   "contact",
+  "live-music-safety-harbor",
+  "dog-friendly-patio-safety-harbor",
+  "best-food-safety-harbor",
   "campaign",
   "unsubscribe",
   "privacy",
@@ -129,6 +133,11 @@ async function handleAdminApi(request, env, path) {
     if (!isOwner) return errorJson("Only the owner manages staff logins.", 403);
     return handleDeleteUser(env, user, decodeURIComponent(path.slice("/api/admin/users/".length)));
   }
+  if (path === "/api/admin/toast-status" && method === "GET") return handleToastStatus(env);
+  if (path === "/api/admin/toast-sync" && method === "POST") {
+    if (!canPublish(user.role)) return errorJson("Toast sync needs an owner or editor account.", 403);
+    return handleToastSync(request, env, user);
+  }
   return errorJson("Not found.", 404);
 }
 
@@ -207,5 +216,13 @@ export default {
       if (path.startsWith("/api/")) return errorJson("Something went wrong. Try again in a moment.", 500);
       return new Response("Something went wrong. Please refresh.", { status: 500 });
     }
+  },
+  async scheduled(event, env, ctx) {
+    if (!toastConfigured(env)) return;
+    ctx.waitUntil(
+      runToastSync(env, { apply: true, actor: "cron" }).catch((err) => {
+        console.error("toast cron sync failed", err && err.message ? err.message : err);
+      })
+    );
   },
 };

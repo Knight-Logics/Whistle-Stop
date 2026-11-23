@@ -1,77 +1,70 @@
 {
+  "syncedFromToast": "2026-11-23T16:27:18.751+0000",
   "menus": [
     {
       "id": "main-menu",
       "label": "Main Menu",
-      "intro": "Most burgers & sandwiches include a side: fresh fruit, black-eyed pea salad, coleslaw, or black beans & rice. Upgrade sides for $1.",
+      "intro": "Live prices synced from our Whistle Stop kitchen POS. Burgers & sandwiches include a side; dine on the patio or order online.",
       "categories": [
         {
           "id": "small-plates",
           "name": "Small Plates",
           "items": [
             {
-              "name": "Southern Sampler",
-              "desc": "Green tomatoes, fries, dill pickles, corn fritters, chicken tenders.",
-              "price": "$10.90"
-            },
-            {
-              "name": "Fancy Fried Green Tomatoes",
-              "desc": "Goat cheese, chopped red tomatoes, cilantro.",
-              "price": "$6.90"
-            },
-            {
-              "name": "Fried Green Tomatoes",
-              "desc": "Simple, real, good — the Safety Harbor classic.",
-              "price": "$5.90"
-            },
-            {
-              "name": "Ahi Tuna",
-              "desc": "Sesame encrusted, seared, wasabi drizzle.",
-              "price": "$15.90"
-            },
-            {
-              "name": "Blue Crab Cakes",
-              "desc": "Key lime aioli.",
-              "price": "$11.90"
-            },
-            {
-              "name": "Hummus, Fresh Fruit & Veggie Plate",
-              "desc": "Pita, flatbread crackers, cut veggies.",
-              "price": "$9.90"
-            },
-            {
-              "name": "Whistle Stop Wings",
-              "desc": "Your choice of heat — celery & blue cheese.",
-              "price": "$9.90"
-            },
-            {
-              "name": "Buffalo Style Shrimp",
-              "desc": "Blue cheese & celery.",
-              "price": "$8.90"
-            },
-            {
-              "name": "Smoked Fish Spread",
-              "desc": "Made local — tastes like Key West.",
-              "price": "$7.90"
-            },
-            {
               "name": "Corn Fritters",
-              "desc": "Southwest sauce — plenty to share.",
-              "price": "$4.90"
+              "price": "$10",
+              "desc": "Southwest sauce \u2014 plenty to share."
             },
             {
-              "name": "Fried Dill Pickles",
-              "desc": "Crispy & tangy.",
-              "price": "$4.90"
-            },
-            {
-              "name": "WSG&B Potato Chips",
-              "desc": "Fried to order — feta, tomato, tzatziki, balsamic.",
+              "name": "Buffalo Cauliflower",
               "price": "$12"
             },
             {
-              "name": "Potato Skins",
-              "desc": "Melted cheese, bacon, scallions, sour cream.",
+              "name": "Whistle Stop Wings",
+              "price": "$16",
+              "desc": "Made to order, with celery and house made blue cheese. Buffalo, honey sriracha, or Harbor Q hot BBQ."
+            },
+            {
+              "name": "Buffalo Shrimp",
+              "price": "$14"
+            },
+            {
+              "name": "Scallops",
+              "price": "$17"
+            },
+            {
+              "name": "Fried Green Tomatoes",
+              "price": "$12"
+            },
+            {
+              "name": "Fried Pickle Chips",
+              "price": "$10"
+            },
+            {
+              "name": "Smoked Fish Spread",
+              "price": "$14",
+              "desc": "Smoked mahi mahi, made locally."
+            },
+            {
+              "name": "Roasted Brussel Sprouts",
+              "price": "$10"
+            },
+            {
+              "name": "Ahi Tuna",
+              "price": "$18",
+              "desc": "Sesame encrusted, seared, wasabi drizzle."
+            },
+            {
+              "name": "Frizzled Onions",
+              "price": "$9",
+              "desc": "Thinly sliced, fried golden, with sriracha aioli."
+            },
+            {
+              "name": "WSG Chips",
+              "price": "$12"
+            },
+            {
+              "name": "Hummus",
               "price": "$10"
             }
           ]
@@ -79,145 +72,140 @@
         {
           "id": "salads",
           "name": "Salads",
-          "note": "Add grilled salmon $4 · grilled chicken or shrimp $3.50",
           "items": [
             {
-              "name": "Four Seasons Salad",
-              "desc": "Artisan greens, goat cheese, seasonal fruit, nuts, red wine vinaigrette.",
-              "price": "$7.90"
+              "name": "Black & Blue NY Strip Salad",
+              "price": "$18.90"
+            },
+            {
+              "name": "Main Street Cobb Salad",
+              "price": "$16"
+            },
+            {
+              "name": "Mediterranean Salad",
+              "price": "$16"
             },
             {
               "name": "Ahi Tuna Salad",
-              "desc": "Sesame seared ahi, cucumber, avocado, wasabi dressing.",
-              "price": "$10.90"
+              "price": "$18",
+              "desc": "Sesame seared ahi, cucumber, avocado, wasabi dressing."
             },
             {
-              "name": "Caesar Salad",
-              "desc": "Romaine, parmesan, croutons, creamy Caesar.",
-              "price": "$7.90"
-            },
-            {
-              "name": "Black Beans & Greens Salad",
-              "desc": "Avocado, tomato, cilantro lime vinaigrette.",
-              "price": "$8.90"
-            },
-            {
-              "name": "Cobb Salad",
-              "desc": "Avocado, egg, bacon, blue cheese — your choice of dressing.",
-              "price": "$11.90"
-            },
-            {
-              "name": "Main Street Cobb",
-              "desc": "Guest favorite — hearty & shareable.",
-              "price": "MP"
+              "name": "Kale Caesar salad with Chix",
+              "price": "$16"
             }
           ]
         },
         {
           "id": "burgers",
           "name": "Burgers",
-          "note": "Grass-fed beef add $2 · Angus steak burger add $1",
           "items": [
             {
-              "name": "Original Whistle Stop Burger",
-              "desc": "Fried green tomato, provolone, onion, aioli.",
-              "price": "$8.90"
+              "name": "Whistle Stop Burger",
+              "price": "$15"
             },
             {
               "name": "Bacon Cheeseburger",
-              "desc": "Lettuce, tomato, onion, mayo.",
-              "price": "$8.90"
+              "price": "$16",
+              "desc": "Lettuce, tomato, onion, mayo."
             },
             {
               "name": "Black & Blue Burger",
-              "desc": "Blackened, red onion, tomato, blue cheese.",
-              "price": "$8.90"
+              "price": "$15",
+              "desc": "Blackened angus beef, onion, tomato, and blue cheese crumbles."
             },
             {
-              "name": "Santa Fe Burger",
-              "desc": "Jalapeños, provolone, onion ring, avocado, southwest sauce.",
-              "price": "$9.90"
+              "name": "BBQ Burger",
+              "price": "$17",
+              "desc": "Bacon, frizzled onions, cheddar, and Harbor Q BBQ sauce."
             },
             {
-              "name": "Angus Steak Burger",
-              "desc": "Grilled onions & mushrooms.",
-              "price": "$8.90"
+              "name": "Hemp Burger",
+              "price": "$15"
             },
             {
-              "name": "Whistle Stop Grass Fed Beef Burger",
-              "desc": "De Leon Springs cheddar, tomato, onion.",
-              "price": "$10.90"
-            },
-            {
-              "name": "Crab & Shrimp Burger",
-              "desc": "Mango salsa, key lime aioli.",
-              "price": "$11.90"
-            },
-            {
-              "name": "Veggie Burger",
-              "desc": "Organic quinoa oats, provolone, artisan greens, aioli.",
-              "price": "$8.90"
-            },
-            {
-              "name": "Smash Burger Sliders",
-              "desc": "Two sliders, grilled onions, house smash sauce.",
-              "price": "$10"
+              "name": "Cheeseburger",
+              "price": "$15"
             }
           ]
         },
         {
           "id": "sandwiches",
-          "name": "Sandwiches & Wraps",
+          "name": "Sandwiches",
           "items": [
             {
-              "name": "BLFGT — The Ultimate BLT",
-              "desc": "Fried green tomatoes, bacon, artisan lettuce, aioli, fresh baked roll.",
-              "price": "$8.90"
+              "name": "Grouper Sandwich",
+              "price": "$26"
             },
             {
-              "name": "Fresh Grouper Sandwich",
-              "desc": "Blackened or grilled — market price.",
-              "price": "MP"
+              "name": "NY Strip Steak Sandwich",
+              "price": "$19.90"
             },
             {
-              "name": "Kicked Up Grilled Cheese",
-              "desc": "Provolone, goat cheese, grilled green tomatoes, bacon, ciabatta.",
-              "price": "$8.90"
+              "name": "Salmon BLT",
+              "price": "$18",
+              "desc": "Grilled or blackened salmon, bacon, lettuce, tomato, and house made garlic aioli."
             },
             {
-              "name": "Fresh Rib-Eye Steak Sandwich",
-              "desc": "Sautéed onions, mushrooms — black & blue add $1.50.",
-              "price": "$9.90"
+              "name": "Harbor-Q Pork",
+              "price": "$16"
             },
             {
-              "name": "Portabella & Roasted Red Pepper",
-              "desc": "Balsamic mushrooms, goat cheese, ciabatta.",
-              "price": "$8.90"
+              "name": "Shrimp Po Boy",
+              "price": "$17",
+              "desc": "Blackened or grilled shrimp, kale, feta, greek dressing, and remoulade."
             },
             {
-              "name": "BBQ Pork Sandwich",
-              "desc": "Slow roasted in-house BBQ, pickles, fresh baked roll.",
-              "price": "$8.90"
+              "name": "BLFGT",
+              "price": "$14",
+              "desc": "BLT on ciabatta with fried green tomato and house made garlic aioli."
             },
             {
-              "name": "Tilapia Sandwich",
-              "desc": "Grilled, blackened, or fried — lettuce, tomato, onion.",
-              "price": "$8.90"
-            },
+              "name": "Cilantro Ranch Sandwich",
+              "price": "$16"
+            }
+          ]
+        },
+        {
+          "id": "wraps",
+          "name": "Wraps",
+          "items": [
             {
               "name": "Florida Club Wrap",
-              "desc": "Avocado, bacon, lettuce, tomato, blue cheese, whole wheat.",
-              "price": "$10.90"
+              "price": "$16",
+              "desc": "Angus beef, bacon, avocado, tomato, and house made blue cheese dressing."
             },
             {
-              "name": "Spicy Buffalo Chicken Wrap",
-              "desc": "Tenders, buffalo sauce, blue cheese, lettuce, tomato.",
-              "price": "$7.90"
+              "name": "WS Spicy Chicken Wrap",
+              "price": "$16",
+              "desc": "Grilled chicken, goat cheese, cucumber, red onion, garbanzo beans, roasted red peppers, and buffalo sauce."
             },
             {
-              "name": "Chicken Caesar Wrap",
-              "desc": "Served with fries.",
-              "price": "$16"
+              "name": "Buffalo Chicken Wrap",
+              "price": "$15"
+            }
+          ]
+        },
+        {
+          "id": "flatbreads",
+          "name": "Flatbreads",
+          "items": [
+            {
+              "name": "Steak and Arugula Flatbread",
+              "price": "$18.90"
+            },
+            {
+              "name": "Uptown Chicken Flatbread",
+              "price": "$15",
+              "desc": "Roasted red pepper, caramelized onion, blue cheese."
+            },
+            {
+              "name": "Garden Veggie Flatbread",
+              "price": "$14"
+            },
+            {
+              "name": "Faroe Island Grilled Salmon Flatbread",
+              "price": "$18"
             }
           ]
         },
@@ -226,122 +214,224 @@
           "name": "Large Plates",
           "items": [
             {
-              "name": "Fresh Grouper Dinner",
-              "desc": "8 oz Gulf fillet — blackened or grilled, black beans & rice.",
-              "price": "MP"
+              "name": "Grouper Dinner",
+              "price": "$26"
             },
             {
-              "name": "Balsamic Glazed Salmon",
-              "desc": "Grilled fillet, black beans & rice.",
-              "price": "$14.90"
+              "name": "Faroe Island Salmon",
+              "price": "$19",
+              "desc": "Blackened salmon fillet, grilled vegetables, and basmati rice."
             },
             {
-              "name": "12 oz Rib Eye Steak",
-              "desc": "USDA choice hand-cut, Yukon wedges, grilled vegetables.",
-              "price": "$17.90"
+              "name": "Mojo Pork Tacos",
+              "price": "$16",
+              "desc": "Roasted pork, spring mix, avocado, cojita cheese, cilantro lime vinaigrette, black beans and rice."
             },
             {
-              "name": "Baja Fish or Shrimp Tacos",
-              "desc": "Cabbage, cheddar, baja sauce — grouper add $2.50.",
-              "price": "$11.90"
+              "name": "Steak Frites",
+              "price": "$23",
+              "desc": "Strip steak, seared to order, with real good fries."
             },
             {
-              "name": "Pork Tacos",
-              "desc": "Shredded roast pork, avocado, cilantro lime vinaigrette.",
-              "price": "$10.90"
+              "name": "Baja Taco Bowl",
+              "price": "$16"
             },
             {
-              "name": "Veggies, Beans & Rice Bowl",
-              "desc": "Add salmon, shrimp, or chicken $3.50.",
-              "price": "$8.90"
+              "name": "Fish & Chips",
+              "price": "$16",
+              "desc": "North Atlantic cod in a locally brewed lager batter, with real good french fries."
             },
             {
-              "name": "Tilapia Dinner",
-              "desc": "Blackened, fried, or grilled — lemon butter, side salad.",
-              "price": "$10.90"
+              "name": "Smoked Gouda Mac",
+              "price": "$16"
             },
             {
-              "name": "Chicken Scaloppine & Arugula",
-              "desc": "Seared breast, shaved parmesan, grilled vegetables.",
-              "price": "$12.90"
+              "name": "Baja Tacos",
+              "price": "$15"
             },
             {
-              "name": "Uptown Chicken Flatbread",
-              "desc": "Roasted red pepper, caramelized onion, blue cheese.",
-              "price": "$9.90"
+              "name": "PBR Bowl",
+              "price": "$16",
+              "desc": "Roasted pork, black beans and rice, cojita cheese, and cilantro lime vinaigrette."
             },
             {
-              "name": "Steak & Spinach Flatbread",
-              "desc": "Sirloin, mushrooms, spinach, blue cheese crumble.",
-              "price": "$9.90"
+              "name": "Steak Tacos",
+              "price": "$19.90",
+              "desc": "Strip steak, cojita cheese, pickled onion, cilantro ranch, black beans and rice."
+            },
+            {
+              "name": "Bowl of Goodness",
+              "price": "$16",
+              "desc": "Quinoa, kale, feta, cucumber, kalamata olives, pepperoncini, grilled chicken, and greek dressing."
+            },
+            {
+              "name": "Paleo Bowl w Chicken",
+              "price": "$16"
+            },
+            {
+              "name": "Adult Tenders & Fries",
+              "price": "$14"
             }
           ]
         },
         {
-          "id": "kids",
-          "name": "Kids Menu",
-          "note": "Under 10",
+          "id": "sides",
+          "name": "Sides",
           "items": [
             {
-              "name": "Big Kid",
-              "desc": "Chicken tenders, fruit or wedges.",
+              "name": "Fries",
+              "price": "$4.90"
+            },
+            {
+              "name": "Black Beans & Rice",
+              "price": "$4.90"
+            },
+            {
+              "name": "Coleslaw",
+              "price": "$4.90"
+            },
+            {
+              "name": "Grilled Veggies",
+              "price": "$4.90"
+            },
+            {
+              "name": "Sweet Potato Fries",
+              "price": "$4.90"
+            },
+            {
+              "name": "Side Salad",
+              "price": "$4.90"
+            },
+            {
+              "name": "Side Gouda Mac",
+              "price": "$6"
+            }
+          ]
+        },
+        {
+          "id": "kid-s-meals",
+          "name": "Kid's Meals",
+          "items": [
+            {
+              "name": "Kid's Mac & Cheese",
+              "price": "$8"
+            },
+            {
+              "name": "Kid's Hot Dog",
+              "price": "$8.90"
+            },
+            {
+              "name": "Kid's Grilled Cheese",
               "price": "$7.90"
             },
             {
-              "name": "The Best Hot Dog",
-              "desc": "Vienna all beef.",
-              "price": "$5.90"
+              "name": "Kid's Chicken Tenders",
+              "price": "$10"
             },
             {
-              "name": "Grilled Cheese",
-              "desc": "Wheat bread — bacon add $1.50.",
-              "price": "$5.90"
-            },
-            {
-              "name": "Black Beans, Rice & Chicken",
-              "desc": "",
-              "price": "$7.90"
-            },
-            {
-              "name": "Whistle Stop Mac & Cheese",
-              "desc": "Add chicken tenders $3.50 — includes drink & wedges or fruit.",
-              "price": "$5.90"
+              "name": "Kid's Chicken Beans and Rice",
+              "price": "$9.90"
             }
           ]
         },
         {
           "id": "desserts",
-          "name": "Ice Cream & Desserts",
+          "name": "Desserts",
           "items": [
             {
-              "name": "Soft Serve Cone or Cup",
-              "desc": "Vanilla — reg / large.",
-              "price": "$2.70 / $3.50"
+              "name": "Whistle Stop Cheesecake",
+              "price": "$13"
             },
             {
-              "name": "Milkshakes & Malts",
-              "desc": "Vanilla, chocolate, strawberry, coffee, oreo & more.",
-              "price": "$4.20"
-            },
-            {
-              "name": "Bee Charmer Sundae",
-              "desc": "Peaches, honey, cinnamon sugar, whip cream.",
-              "price": "$5.90"
-            },
-            {
-              "name": "Caitlin's Cake Sundae",
-              "desc": "Brownie, hot fudge, caramel, nuts.",
-              "price": "$5.90"
-            },
-            {
-              "name": "Pecan Pie",
-              "desc": "Made local, chocolate drizzle, vanilla ice cream.",
-              "price": "$5.90"
+              "name": "Chocolate Cake",
+              "price": "$11"
             },
             {
               "name": "Key Lime Pie",
-              "desc": "Sweet & tart — Key West style.",
-              "price": "$4.90"
+              "price": "$10",
+              "desc": "Sweet & tart \u2014 Key West style."
+            },
+            {
+              "name": "Regular Cheesecake",
+              "price": "$10"
+            },
+            {
+              "name": "Oreo Cheesecake",
+              "price": "$13"
+            }
+          ]
+        },
+        {
+          "id": "beverages",
+          "name": "Beverages",
+          "items": [
+            {
+              "name": "Sweet Tea",
+              "price": "$2.95"
+            },
+            {
+              "name": "Unsweet Tea",
+              "price": "$2.95"
+            },
+            {
+              "name": "Coke",
+              "price": "$2.95"
+            },
+            {
+              "name": "Coke Zero",
+              "price": "$2.95"
+            },
+            {
+              "name": "Sprite",
+              "price": "$2.95"
+            },
+            {
+              "name": "Fanta",
+              "price": "$2.95"
+            },
+            {
+              "name": "Lemonade",
+              "price": "$2.95"
+            },
+            {
+              "name": "Raspberry Tea",
+              "price": "$2.95"
+            },
+            {
+              "name": "Gingerale",
+              "price": "$2.95"
+            },
+            {
+              "name": "Pineapple Juice",
+              "price": "$2.95"
+            },
+            {
+              "name": "Grapefruit Juice",
+              "price": "$2.95"
+            },
+            {
+              "name": "Cranberry Juice",
+              "price": "$2.95"
+            },
+            {
+              "name": "Orange Juice",
+              "price": "$2.95"
+            },
+            {
+              "name": "Tomato Juice",
+              "price": "$2.95"
+            },
+            {
+              "name": "Coffee",
+              "price": "$2.95"
+            },
+            {
+              "name": "Tea",
+              "price": "$2.95"
+            },
+            {
+              "name": "Milk",
+              "price": "$2.95"
             }
           ]
         }
@@ -349,76 +439,235 @@
     },
     {
       "id": "seasonal",
-      "label": "Seasonal Menu",
-      "intro": "Rotating Gulf-coast favorites and chef specials — ask your server what's fresh today.",
+      "label": "Seasonal & Specials",
+      "intro": "Seasonal favorites (11 AM\u20137 PM), Happy Hour deals (4\u20137 PM daily, 4 PM\u2013close Tue & Wed), and Taco Monday.",
       "categories": [
         {
-          "id": "seasonal-starters",
-          "name": "Seasonal Starters",
+          "id": "seasonal-menu-11-to-7pm",
+          "name": "Seasonal Menu 11 to 7pm",
           "items": [
             {
-              "name": "Watermelon & Feta Salad",
-              "desc": "Mint, balsamic glaze, red onion.",
-              "price": "$8.90"
+              "name": "Classic Quesadilla",
+              "price": "$10.99"
             },
             {
-              "name": "Gulf Shrimp Ceviche",
-              "desc": "Citrus, avocado, tortilla chips.",
-              "price": "$12.90"
+              "name": "Smash Burger",
+              "price": "$10.99"
             },
             {
-              "name": "Summer Corn Chowder",
-              "desc": "Cup or bowl.",
-              "price": "$5.90 / $7.90"
+              "name": "Potato Skins",
+              "price": "$10.99",
+              "desc": "Melted cheese, bacon, scallions, sour cream."
+            },
+            {
+              "name": "Harbor Q Sandwich",
+              "price": "$10.99"
+            },
+            {
+              "name": "Ice Cream Sandwich",
+              "price": "$10.99"
             }
           ]
         },
         {
-          "id": "seasonal-mains",
-          "name": "Seasonal Plates",
+          "id": "happy-hour-food",
+          "name": "Happy Hour Food",
           "items": [
             {
-              "name": "Blackened Scallops",
-              "desc": "Cilantro rice, grilled asparagus, lemon butter.",
-              "price": "$18.90"
+              "name": "HH Fried Mozz",
+              "price": "$8"
             },
             {
-              "name": "Mahi Tacos",
-              "desc": "Slaw, mango salsa, chipotle crema — two or three.",
-              "price": "$12.90 / $15.90"
+              "name": "HH Boneless Wings",
+              "price": "$8"
             },
             {
-              "name": "Peach Glazed Pork Chop",
-              "desc": "Sweet potato mash, seasonal vegetables.",
-              "price": "$16.90"
-            },
-            {
-              "name": "Fish & Chips",
-              "desc": "Beer-battered catch of the day, remoulade.",
-              "price": "MP"
+              "name": "HH Chicken Quesadilla",
+              "price": "$8"
             }
           ]
         },
         {
-          "id": "seasonal-sips",
-          "name": "Seasonal Sips",
-          "orderable": false,
-          "orderNote": "Seasonal drinks are shown for dine-in and ID-verified service only; pickup and delivery ordering uses food items.",
+          "id": "tacos",
+          "name": "Tacos",
           "items": [
             {
-              "name": "Frozen Painkiller",
-              "desc": "Rum, pineapple, coconut, nutmeg.",
-              "price": "$9"
+              "name": "Chicken Tacos",
+              "price": "$6"
             },
             {
-              "name": "Safety Harbor Sangria",
-              "desc": "Red or white — seasonal fruit.",
-              "price": "$8 / $28 pitcher"
+              "name": "Beef Tacos",
+              "price": "$6"
             },
             {
-              "name": "Key Lime Martini",
-              "desc": "House favorite — Martini Monday half-off.",
-              "price": "$10"
+              "name": "Shrimp Tacos",
+              "price": "$6"
+            },
+            {
+              "name": "Fish Tacos",
+              "price": "$6"
+            },
+            {
+              "name": "Black Bean Tacos",
+              "price": "$6"
+            }
+          ]
+        },
+        {
+          "id": "drinks",
+          "name": "Drinks",
+          "items": [
+            {
+              "name": "Chelada",
+              "price": "$5"
+            },
+            {
+              "name": "Michelada",
+              "price": "$5.50"
+            },
+            {
+              "name": "Margarita",
+              "price": "$5"
+            }
+          ]
+        },
+        {
+          "id": "happy-hour-draft-beer",
+          "name": "Happy Hour Draft Beer",
+          "items": [
+            {
+              "name": "Stella Artois",
+              "price": "$5"
+            },
+            {
+              "name": "Sunshine City",
+              "price": "$7"
+            },
+            {
+              "name": "Into the Haze",
+              "price": "$6"
+            },
+            {
+              "name": "Reef Donkey",
+              "price": "$6"
+            },
+            {
+              "name": "Beach Blonde",
+              "price": "$6"
+            },
+            {
+              "name": "Kona Big Wave",
+              "price": "$5"
+            },
+            {
+              "name": "Shade Tree",
+              "price": "$7"
+            },
+            {
+              "name": "Bud Light",
+              "price": "$4"
+            },
+            {
+              "name": "Mich Ultra Draft",
+              "price": "$4"
+            },
+            {
+              "name": "Harbor Lager",
+              "price": "$5"
+            },
+            {
+              "name": "Lou's Gold",
+              "price": "$5"
+            },
+            {
+              "name": "BCBC",
+              "price": "$6"
+            },
+            {
+              "name": "Red Right Return",
+              "price": "$5"
+            },
+            {
+              "name": "Graffiti Orange",
+              "price": "$6"
+            },
+            {
+              "name": "Miller Lite",
+              "price": "$4"
+            },
+            {
+              "name": "Yuengling",
+              "price": "$4"
+            },
+            {
+              "name": "Mango Cart",
+              "price": "$6"
+            },
+            {
+              "name": "My Boy Blue",
+              "price": "$6"
+            }
+          ]
+        },
+        {
+          "id": "happy-hour-wells",
+          "name": "Happy Hour Wells",
+          "items": [
+            {
+              "name": "Vodka",
+              "price": "$3"
+            },
+            {
+              "name": "Gin",
+              "price": "$3"
+            },
+            {
+              "name": "Tequila",
+              "price": "$3"
+            },
+            {
+              "name": "Rum",
+              "price": "$3"
+            },
+            {
+              "name": "Whiskey",
+              "price": "$3"
+            },
+            {
+              "name": "Scotch",
+              "price": "$3"
+            }
+          ]
+        },
+        {
+          "id": "happy-hour-wine",
+          "name": "Happy Hour Wine",
+          "items": [
+            {
+              "name": "House Cab",
+              "price": "$4"
+            },
+            {
+              "name": "House Merlot",
+              "price": "$4"
+            },
+            {
+              "name": "House Chard",
+              "price": "$4"
+            },
+            {
+              "name": "House White Zin",
+              "price": "$3"
+            }
+          ]
+        },
+        {
+          "id": "happy-hour-cocktails",
+          "name": "Happy Hour Cocktails",
+          "items": [
+            {
+              "name": "Margarita",
+              "price": "$5"
             }
           ]
         }
@@ -427,93 +676,928 @@
     {
       "id": "bar",
       "label": "The Bar",
-      "intro": "Full liquor bar · 18 taps · craft cocktails & local beer.",
-      "image": "assets/gallery/WSBar.webp",
-      "orderable": false,
-      "orderNote": "Bar items are shown for dine-in and ID-verified service only; they are not added to pickup or delivery orders.",
+      "intro": "Handcrafted Whistle Stop cocktails, 22 draft & 20 bottle beers, wines, $5 Martini Mondays, and full liquor bar.",
       "categories": [
         {
-          "id": "cocktails",
-          "name": "Hip Sips & Cocktails",
+          "id": "whistle-stop-cocktails",
+          "name": "Whistle Stop Cocktails",
           "items": [
             {
-              "name": "Old Florida Mule",
-              "desc": "Vodka, ginger beer, lime, mint.",
-              "price": "$9"
+              "name": "Natural Rita",
+              "price": "$12"
             },
             {
-              "name": "Safety Harbor Sunset",
-              "desc": "Rum, orange, grenadine, lime.",
-              "price": "$9"
-            },
-            {
-              "name": "Green Tomato Bloody Mary",
-              "desc": "House mix, fried green tomato garnish.",
+              "name": "American Mule",
               "price": "$10"
             },
             {
-              "name": "Martini Menu",
-              "desc": "Classic, dirty, espresso & seasonal — half-off Martini Mondays.",
-              "price": "from $8"
+              "name": "Farmer's South",
+              "price": "$9"
+            },
+            {
+              "name": "Bees Knees",
+              "price": "$10"
+            },
+            {
+              "name": "Cucumber Cooler",
+              "price": "$10"
+            },
+            {
+              "name": "Wicked Tea",
+              "price": "$9"
+            },
+            {
+              "name": "Caribbean Punch",
+              "price": "$9"
+            },
+            {
+              "name": "Spicy Rita",
+              "price": "$10"
+            },
+            {
+              "name": "Toasted Coconut Mojito",
+              "price": "$13"
+            },
+            {
+              "name": "Ravens Hot Peach Marg",
+              "price": "$13"
+            },
+            {
+              "name": "Bulleit Old Fashion",
+              "price": "$12"
+            },
+            {
+              "name": "Dirty Grey Goose",
+              "price": "$12"
+            },
+            {
+              "name": "Jameson Crush",
+              "price": "$12"
+            },
+            {
+              "name": "Skrewball Old Fashion",
+              "price": "$12"
             }
           ]
         },
         {
-          "id": "beer",
-          "name": "Beer · 18 Taps",
+          "id": "classic-cocktails",
+          "name": "Classic Cocktails",
           "items": [
             {
-              "name": "Domestic Drafts",
-              "desc": "Rotating favorites.",
-              "price": "$4.50"
+              "name": "Margarita",
+              "price": "$10"
             },
             {
-              "name": "Craft & Local",
-              "desc": "Florida breweries on rotation.",
-              "price": "$6–8"
+              "name": "Top Shelf Margarita",
+              "price": "$12"
             },
             {
-              "name": "Beer Flights",
-              "desc": "Four 5oz pours — ask what's on today.",
+              "name": "Old Fashioned",
+              "price": "$10"
+            },
+            {
+              "name": "Long Island Iced Tea",
+              "price": "$10"
+            },
+            {
+              "name": "Long Beach Iced Tea",
+              "price": "$10"
+            },
+            {
+              "name": "Mojito",
+              "price": "$8"
+            },
+            {
+              "name": "White Russian",
+              "price": "$10"
+            },
+            {
+              "name": "Black Russian",
+              "price": "$10"
+            },
+            {
+              "name": "Fuzzy Navel",
+              "price": "$8"
+            },
+            {
+              "name": "Mudslide",
+              "price": "$10"
+            },
+            {
+              "name": "shake me a coffee girllll",
+              "price": "$10"
+            },
+            {
+              "name": "Godmother",
+              "price": "$10"
+            },
+            {
+              "name": "Rum Runner",
+              "price": "$12"
+            },
+            {
+              "name": "Tequila Sunrise",
+              "price": "$10"
+            },
+            {
+              "name": "Tequila Sunset",
+              "price": "$10"
+            },
+            {
+              "name": "Bay Breeze",
+              "price": "$8"
+            },
+            {
+              "name": "Mimosa",
+              "price": "$10"
+            },
+            {
+              "name": "Mai Tai",
+              "price": "$10"
+            },
+            {
+              "name": "Tom Collins",
+              "price": "$8"
+            },
+            {
+              "name": "$5 Bloody",
+              "price": "$5"
+            },
+            {
+              "name": "$5 Mimosa",
+              "price": "$5"
+            },
+            {
+              "name": "Irish Coffee",
+              "price": "$10"
+            },
+            {
+              "name": "Cosmo Martini",
+              "price": "$10"
+            }
+          ]
+        },
+        {
+          "id": "shots",
+          "name": "Shots",
+          "items": [
+            {
+              "name": "Green Tea Shot",
+              "price": "$9"
+            },
+            {
+              "name": "White Tea Shot",
+              "price": "$9"
+            },
+            {
+              "name": "Elvis",
+              "price": "$9"
+            },
+            {
+              "name": "Lemon Drop",
+              "price": "$9"
+            },
+            {
+              "name": "Key Lime Shot",
+              "price": "$9"
+            },
+            {
+              "name": "Pickleback",
+              "price": "$9"
+            }
+          ]
+        },
+        {
+          "id": "draft-beer",
+          "name": "Draft Beer",
+          "items": [
+            {
+              "name": "Stella Artois",
+              "price": "$6"
+            },
+            {
+              "name": "Sunshine City",
+              "price": "$8"
+            },
+            {
+              "name": "Into the Haze",
+              "price": "$7"
+            },
+            {
+              "name": "Reef Donkey",
+              "price": "$7"
+            },
+            {
+              "name": "Beach Blonde",
+              "price": "$7"
+            },
+            {
+              "name": "Kona Big Wave",
+              "price": "$6"
+            },
+            {
+              "name": "Shade Tree",
+              "price": "$8"
+            },
+            {
+              "name": "Bud Light",
+              "price": "$5"
+            },
+            {
+              "name": "Mich Ultra Draft",
+              "price": "$5"
+            },
+            {
+              "name": "Harbor Lager",
+              "price": "$6"
+            },
+            {
+              "name": "Lou's Gold",
+              "price": "$6"
+            },
+            {
+              "name": "BCBC",
+              "price": "$7"
+            },
+            {
+              "name": "Red Right Return",
+              "price": "$6"
+            },
+            {
+              "name": "Graffiti Orange",
+              "price": "$7"
+            },
+            {
+              "name": "Miller Lite",
+              "price": "$5"
+            },
+            {
+              "name": "Yuengling",
+              "price": "$5"
+            },
+            {
+              "name": "Beer Flight",
+              "price": "$12"
+            },
+            {
+              "name": "Mango Cart",
+              "price": "$7"
+            },
+            {
+              "name": "My Boy Blue",
+              "price": "$7"
+            },
+            {
+              "name": "Bud light Pitcher",
+              "price": "$14"
+            },
+            {
+              "name": "Miller lite Pitcher",
+              "price": "$14"
+            },
+            {
+              "name": "Yuengling Pitcher",
               "price": "$14"
             }
           ]
         },
         {
-          "id": "wine",
-          "name": "Wine",
+          "id": "bottle-beer",
+          "name": "Bottle Beer",
           "items": [
             {
-              "name": "House Red / White",
-              "desc": "Glass or bottle.",
-              "price": "$7 / $26"
+              "name": "Angry Orchard Btl",
+              "price": "$5.50"
             },
             {
-              "name": "Premium Selections",
-              "desc": "Ask your server for the current list.",
-              "price": "MP"
+              "name": "Corona Extra Btl",
+              "price": "$5"
+            },
+            {
+              "name": "Miller Lite Btl",
+              "price": "$5"
+            },
+            {
+              "name": "Blue Moon Btl",
+              "price": "$5.50"
+            },
+            {
+              "name": "Mich Ultra Btl",
+              "price": "$5"
+            },
+            {
+              "name": "Budweiser Btl",
+              "price": "$4"
+            },
+            {
+              "name": "Corona Premier Btl",
+              "price": "$5"
+            },
+            {
+              "name": "O'Doul's Btl",
+              "price": "$4"
+            },
+            {
+              "name": "Bud Lite Btl",
+              "price": "$4"
+            },
+            {
+              "name": "Guinness",
+              "price": "$6"
+            },
+            {
+              "name": "Jai Alai",
+              "price": "$7"
+            },
+            {
+              "name": "Coors Light Btl",
+              "price": "$4"
+            },
+            {
+              "name": "Heineken Btl",
+              "price": "$5"
+            },
+            {
+              "name": "Heineken Zero Btl",
+              "price": "$5"
+            },
+            {
+              "name": "N\u00dcTRL",
+              "price": "$6"
+            },
+            {
+              "name": "Surf Side",
+              "price": "$6"
+            },
+            {
+              "name": "Athletic",
+              "price": "$8"
+            },
+            {
+              "name": "THC seltzer 5 mg",
+              "price": "$9"
+            },
+            {
+              "name": "THC seltzer 10 mg",
+              "price": "$12"
+            },
+            {
+              "name": "SpikedAid",
+              "price": "$6"
             }
           ]
         },
         {
-          "id": "happy-hour-bar",
-          "name": "Happy Hour",
+          "id": "red-wine",
+          "name": "Red Wine",
           "items": [
             {
-              "name": "Daily Happy Hour",
-              "desc": "4–7 PM · drink & food specials.",
-              "price": ""
+              "name": "House Cab",
+              "price": "$8"
             },
             {
-              "name": "Tuesday Extended",
-              "desc": "4 PM–close.",
-              "price": ""
+              "name": "House Merlot",
+              "price": "$8"
             },
             {
-              "name": "Full details",
-              "desc": "See our happy hour page.",
-              "price": "",
-              "link": "happy-hour.html"
+              "name": "Uppercut",
+              "price": "$9"
+            },
+            {
+              "name": "Sangria",
+              "price": "$8"
+            },
+            {
+              "name": "Siduri Pinot Noir",
+              "price": "$12"
+            },
+            {
+              "name": "Fire Stone Red Blend",
+              "price": "$10"
+            },
+            {
+              "name": "Carmel Road Cab",
+              "price": "$10"
+            },
+            {
+              "name": "Siduri Pinot Noir BOTTLE",
+              "price": "$46"
+            },
+            {
+              "name": "Finca Nuevo Rioja BOTTLE",
+              "price": "$32"
+            },
+            {
+              "name": "Fire Stone Red Blend BOTTLE",
+              "price": "$34"
+            },
+            {
+              "name": "Quest Cab",
+              "price": "$9"
+            }
+          ]
+        },
+        {
+          "id": "white-wine",
+          "name": "White Wine",
+          "items": [
+            {
+              "name": "House Chard",
+              "price": "$8"
+            },
+            {
+              "name": "Prosecco Split",
+              "price": "$8"
+            },
+            {
+              "name": "Mezzacorona",
+              "price": "$8"
+            },
+            {
+              "name": "Matua",
+              "price": "$9"
+            },
+            {
+              "name": "La Crema Chard",
+              "price": "$12"
+            },
+            {
+              "name": "Bieler Rose",
+              "price": "$8"
+            },
+            {
+              "name": "La Crema BOTTLE",
+              "price": "$46"
+            },
+            {
+              "name": "Diatom Chard BOTTLE",
+              "price": "$45"
+            },
+            {
+              "name": "Bieler Rose BOTTLE",
+              "price": "$34"
+            },
+            {
+              "name": "J.LOHR",
+              "price": "$8"
+            },
+            {
+              "name": "Riesling",
+              "price": "$9"
+            }
+          ]
+        },
+        {
+          "id": "martinis",
+          "name": "Martinis",
+          "items": [
+            {
+              "name": "French 75",
+              "price": "$5"
+            },
+            {
+              "name": "Manhattan",
+              "price": "$5"
+            },
+            {
+              "name": "Cosmo",
+              "price": "$5"
+            },
+            {
+              "name": "Gin Situation",
+              "price": "$5"
+            },
+            {
+              "name": "Key Lime Martini",
+              "price": "$5",
+              "desc": "House favorite \u2014 Martini Monday half-off."
+            },
+            {
+              "name": "Lemon Drop",
+              "price": "$5"
+            },
+            {
+              "name": "Frosty Lemon",
+              "price": "$5"
+            },
+            {
+              "name": "Georgia Peach",
+              "price": "$5"
+            },
+            {
+              "name": "Pumpkin Martini",
+              "price": "$5"
+            },
+            {
+              "name": "Dirty Well Martini",
+              "price": "$5"
+            },
+            {
+              "name": "Sugar Cookie Martini",
+              "price": "$5"
+            },
+            {
+              "name": "Pear Monday Martini",
+              "price": "$5"
+            }
+          ]
+        },
+        {
+          "id": "vodka",
+          "name": "Vodka",
+          "items": [
+            {
+              "name": "Vodka",
+              "price": "$6"
+            },
+            {
+              "name": "360 Vodka",
+              "price": "$7"
+            },
+            {
+              "name": "360 Vanilla",
+              "price": "$7"
+            },
+            {
+              "name": "360 Orange",
+              "price": "$7"
+            },
+            {
+              "name": "360 Lemon",
+              "price": "$7"
+            },
+            {
+              "name": "360 Huckleberry",
+              "price": "$7"
+            },
+            {
+              "name": "Deep Eddy",
+              "price": "$8"
+            },
+            {
+              "name": "Dixie Honey",
+              "price": "$9"
+            },
+            {
+              "name": "Crop Cucumber",
+              "price": "$9"
+            },
+            {
+              "name": "Tito's",
+              "price": "$10"
+            },
+            {
+              "name": "Ketel One",
+              "price": "$12"
+            },
+            {
+              "name": "Grey Goose",
+              "price": "$12"
+            },
+            {
+              "name": "Patrona Vodka",
+              "price": "$12"
+            },
+            {
+              "name": "Pear vodka",
+              "price": "$8"
+            }
+          ]
+        },
+        {
+          "id": "tequila",
+          "name": "Tequila",
+          "items": [
+            {
+              "name": "Tequila",
+              "price": "$6"
+            },
+            {
+              "name": "Jalapeno Tequila",
+              "price": "$6"
+            },
+            {
+              "name": "Espolon Reposado",
+              "price": "$10"
+            },
+            {
+              "name": "LALO",
+              "price": "$10"
+            },
+            {
+              "name": "Patron Silver",
+              "price": "$12"
+            },
+            {
+              "name": "Casamigos",
+              "price": "$12"
+            },
+            {
+              "name": "Espolon Blanco",
+              "price": "$10"
+            },
+            {
+              "name": "1800 Silver",
+              "price": "$12"
+            },
+            {
+              "name": "Don Julio",
+              "price": "$14"
+            },
+            {
+              "name": "Musica tequila",
+              "price": "$10"
+            },
+            {
+              "name": "Mezcal",
+              "price": "$10"
+            }
+          ]
+        },
+        {
+          "id": "gin",
+          "name": "Gin",
+          "items": [
+            {
+              "name": "Gin",
+              "price": "$6"
+            },
+            {
+              "name": "Beefeater",
+              "price": "$7"
+            },
+            {
+              "name": "Tanqueray",
+              "price": "$9"
+            },
+            {
+              "name": "Bombay Sapphire",
+              "price": "$9"
+            },
+            {
+              "name": "Farmer's Organic",
+              "price": "$9"
+            },
+            {
+              "name": "Hendrick's",
+              "price": "$10"
+            },
+            {
+              "name": "Spirit of Prohibition",
+              "price": "$10"
+            }
+          ]
+        },
+        {
+          "id": "rum",
+          "name": "Rum",
+          "items": [
+            {
+              "name": "Rum",
+              "price": "$6"
+            },
+            {
+              "name": "Mayer's",
+              "price": "$6"
+            },
+            {
+              "name": "Captain Morgan",
+              "price": "$8"
+            },
+            {
+              "name": "Bacardi",
+              "price": "$8"
+            },
+            {
+              "name": "Sailor Jerry",
+              "price": "$8"
+            },
+            {
+              "name": "Blue Chair Coconut",
+              "price": "$8"
+            },
+            {
+              "name": "Blue Chair Key Lime",
+              "price": "$8"
+            },
+            {
+              "name": "Blue Chair Banana",
+              "price": "$8"
+            },
+            {
+              "name": "Ron Zacapa",
+              "price": "$12"
+            }
+          ]
+        },
+        {
+          "id": "whiskey",
+          "name": "Whiskey",
+          "items": [
+            {
+              "name": "Whiskey",
+              "price": "$6"
+            },
+            {
+              "name": "Seagram's VO",
+              "price": "$7"
+            },
+            {
+              "name": "Jim Beam",
+              "price": "$8"
+            },
+            {
+              "name": "Screwball",
+              "price": "$8"
+            },
+            {
+              "name": "Jack Daniel's",
+              "price": "$8"
+            },
+            {
+              "name": "Jack Daniel's Honey",
+              "price": "$8"
+            },
+            {
+              "name": "Jack Daniel's Fire",
+              "price": "$8"
+            },
+            {
+              "name": "Southern Comfort",
+              "price": "$8"
+            },
+            {
+              "name": "Jack Daniel's Rye",
+              "price": "$8"
+            },
+            {
+              "name": "Maker's Mark",
+              "price": "$10"
+            },
+            {
+              "name": "Jameson",
+              "price": "$9"
+            },
+            {
+              "name": "Crown Royal",
+              "price": "$9"
+            },
+            {
+              "name": "Crown Apple",
+              "price": "$9"
+            },
+            {
+              "name": "Knob Creek",
+              "price": "$10"
+            },
+            {
+              "name": "Basil Hayden",
+              "price": "$13"
+            },
+            {
+              "name": "Fireball",
+              "price": "$8"
+            },
+            {
+              "name": "Bulleit",
+              "price": "$12"
+            },
+            {
+              "name": "Angel Envy",
+              "price": "$13"
+            },
+            {
+              "name": "Ammunition",
+              "price": "$13"
+            },
+            {
+              "name": "Jameson Orange",
+              "price": "$9"
+            }
+          ]
+        },
+        {
+          "id": "scotch",
+          "name": "Scotch",
+          "items": [
+            {
+              "name": "Johnny Walker Red Label",
+              "price": "$9"
+            },
+            {
+              "name": "Johnny Walker Black Label",
+              "price": "$10"
+            },
+            {
+              "name": "Glenfiddich 12 Year",
+              "price": "$12"
+            },
+            {
+              "name": "Glenfiddich 14 Year",
+              "price": "$18"
+            },
+            {
+              "name": "The Balvenie",
+              "price": "$12"
+            },
+            {
+              "name": "Glenlivet 18 Year",
+              "price": "$22"
+            },
+            {
+              "name": "Dewares",
+              "price": "$7"
+            }
+          ]
+        },
+        {
+          "id": "cordials",
+          "name": "Cordials",
+          "items": [
+            {
+              "name": "Triple Sec",
+              "price": "$6"
+            },
+            {
+              "name": "Peach Schnapps",
+              "price": "$6"
+            },
+            {
+              "name": "Sour Apple Schnapps",
+              "price": "$6"
+            },
+            {
+              "name": "Peppermint Schnapps",
+              "price": "$6"
+            },
+            {
+              "name": "Butterscotch Schnapps",
+              "price": "$6"
+            },
+            {
+              "name": "Cr\u00e8me De Cocoa",
+              "price": "$6"
+            },
+            {
+              "name": "Razzmatazz",
+              "price": "$6"
+            },
+            {
+              "name": "Blue Cura\u00e7ao",
+              "price": "$6"
+            },
+            {
+              "name": "Drambuie",
+              "price": "$8"
+            },
+            {
+              "name": "Kahl\u00faa",
+              "price": "$8"
+            },
+            {
+              "name": "Romana",
+              "price": "$8"
+            },
+            {
+              "name": "Romana Black",
+              "price": "$8"
+            },
+            {
+              "name": "Grand Marnier",
+              "price": "$10"
+            },
+            {
+              "name": "Disaronno",
+              "price": "$10"
+            },
+            {
+              "name": "St. Germain",
+              "price": "$10"
+            },
+            {
+              "name": "Solerno",
+              "price": "$10"
+            },
+            {
+              "name": "Villa Masa",
+              "price": "$10"
+            },
+            {
+              "name": "Bailey's",
+              "price": "$8"
+            },
+            {
+              "name": "Sambuca",
+              "price": "$8"
+            },
+            {
+              "name": "Sambuca Black",
+              "price": "$8"
+            },
+            {
+              "name": "Hennessyyy",
+              "price": "$12"
             }
           ]
         }
