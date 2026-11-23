@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Option 15 Â· Main Street Showcase Â· Whistle Stop Grill &amp; Bar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="warm.css">
+<style>
+  :root {
+    --paper: #f6efe4;
+    --card: #fffaf3;
+    --ink: #2c2019;
+    --muted: #69574b;
+    --forest: #1e372a;
+    --amber: #e2a94b;
+    --rust: #bd4c33;
+    --line: rgba(44, 32, 25, .13);
+  }
+  .ms-header {
+    position: sticky; top: 0; z-index: 25;
+    background: rgba(20, 31, 24, .95); backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+  }
+  .ms-header .wrap {
+    display: flex; align-items: center; gap: 18px; min-height: 74px; padding: 8px 0;
+  }
+  .ms-header .brand img { height: 46px; width: auto; }
+  .ms-header nav { display: flex; gap: 20px; margin-left: auto; }
+  .ms-header nav a { color: #f6efe4; text-decoration: none; font-weight: 700; font-size: 15px; }
+  .ms-header nav a:hover { color: var(--amber); }
+  .ms-header .order-pill {
+    padding: 10px 18px; border-radius: 999px; background: var(--amber); color: #1b140d;
+    font-weight: 800; font-size: 14px; text-decoration: none; white-space: nowrap;
+  }
+
+  /* Full-bleed warm sunset hero */
+  .ms-hero {
+    position: relative; min-height: 76svh; display: flex; align-items: flex-end;
+    background: #141f18; color: #f6efe4; overflow: hidden;
+  }
+  .ms-hero-bg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 50% 42%;
+  }
+  .ms-hero-veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(16, 24, 19, .22) 0%, rgba(16, 24, 19, .55) 50%, rgba(16, 24, 19, .92) 100%);
+  }
+  .ms-hero-inner {
+    position: relative; z-index: 2; padding: 90px 0 46px;
+    display: grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: end;
+  }
+  .ms-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: 999px;
+    background: rgba(226, 169, 75, .18); border: 1px solid rgba(226, 169, 75, .5);
+    color: #f6d491; font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .ms-hero h1 {
+    margin: 0 0 10px; font-size: clamp(40px, 5vw, 68px); line-height: 1.02; color: #fffaf3;
+  }
+  .ms-hero h1 span {
+    display: block; margin-top: 8px; font-family: Nunito, sans-serif; font-weight: 700;
+    font-size: clamp(16px, 1.8vw, 21px); color: #f3d285;
+  }
+  .ms-hero .lead { margin: 0 0 22px; font-size: 18px; color: rgba(246, 239, 228, .92); max-width: 48ch; }
+  .ms-hero .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .ms-hero .btn { background: var(--amber); color: #1b140d; }
+  .ms-hero .btn.line { color: #fffaf3; box-shadow: inset 0 0 0 2px rgba(255, 250, 243, .7); }
+
+  /* Tonight glass card */
+  .tonight-card {
+    background: rgba(20, 31, 24, .78); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 250, 243, .18); border-radius: 22px;
+    padding: 22px 24px;
+  }
+  .tonight-card .k { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--amber); margin: 0 0 6px; }
+  .tonight-card h2 { font-size: 26px; margin: 0 0 6px; color: #fffaf3; }
+  .tonight-card p { margin: 0 0 12px; font-size: 15px; color: rgba(246, 239, 228, .88); }
+  .tonight-meta {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding-top: 12px; border-top: 1px solid rgba(255, 250, 243, .15);
+    font-size: 14px; font-weight: 700; color: #f3d285;
+  }
+
+  /* 3-pillar interactive showcase */
+  .pillar-sec { padding: 64px 0; }
+  .pillar-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+  .pillar-tabs button {
+    padding: 12px 20px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); font: 800 15px/1 Nunito, sans-serif;
+    cursor: pointer;
+  }
+  .pillar-tabs button[aria-selected="true"] {
+    background: var(--forest); color: #fffaf3; border-color: var(--forest);
+  }
+  .pillar-panel {
+    display: grid; grid-template-columns: 1fr 1.1fr; gap: 28px; align-items: center;
+    background: var(--card); border-radius: 24px; padding: 28px;
+    box-shadow: 0 14px 36px rgba(44, 32, 25, .08);
+  }
+  .pillar-panel[hidden] { display: none; }
+  .pillar-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pillar-photos img { width: 100%; height: 220px; object-fit: cover; border-radius: 16px; }
+  .pillar-photos img.wide { grid-column: span 2; height: 210px; }
+  .pillar-copy h3 { margin: 0 0 10px; font-size: 34px; }
+  .pillar-copy p { margin: 0 0 16px; color: var(--muted); }
+  .pillar-list { list-style: none; padding: 0; margin: 0 0 20px; }
+  .pillar-list li { padding: 8px 0; border-top: 1px solid var(--line); font-weight: 700; }
+
+  /* Trust bar */
+  .trust-strip {
+    background: var(--forest); color: #fffaf3; padding: 28px 0;
+  }
+  .trust-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center;
+  }
+  .trust-grid strong { display: block; font-family: Calistoga, Georgia, serif; font-size: 30px; color: var(--amber); font-weight: 400; }
+  .trust-grid span { font-size: 14px; color: rgba(255, 250, 243, .86); }
+
+  @media (max-width: 900px) {
+    .ms-header nav { display: none; }
+    .ms-hero-inner, .pillar-panel { grid-template-columns: 1fr; }
+    .trust-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<header class="ms-header">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="../assets/gallery/ws-logo-header.png?v=7" alt="Whistle Stop Grill and Bar" width="487" height="106"></a>
+    <nav aria-label="Main navigation">
+      <a href="#explore">Kitchen, Music &amp; Bar</a>
+      <a href="#menu">Menu</a>
+      <a href="../events.html">Events</a>
+      <a href="../private-events.html">Gatherings</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <a class="order-pill" href="../order.html">Order Online</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="ms-hero">
+    <img class="ms-hero-bg" src="../assets/gallery/ws-home-page-scene-dawn.webp?v=5" alt="Whistle Stop Grill and Bar patio at sunset with palms and fire pit" width="1671" height="843">
+    <div class="ms-hero-veil" aria-hidden="true"></div>
+    <div class="wrap ms-hero-inner">
+      <div>
+        <div class="ms-badge">Old Florida / New Vibe Â· Since 1995</div>
+        <h1>Whistle Stop Grill &amp; Bar <span>Live Music &amp; Dining in Safety Harbor</span></h1>
+        <p class="lead">Open-air patio dining, scratch-made favorites, 18 cold taps, and live local music right at 915 Main Street.</p>
+        <div class="actions">
+          <a class="btn" href="../order.html">Order Online</a>
+          <a class="btn line" href="#menu">View Full Menu</a>
+          <a class="btn line" href="../events.html">Live Music Calendar</a>
+        </div>
+      </div>
+      <aside class="tonight-card" aria-label="Hours and tonight's event">
+        <p class="k" data-ws="status">Open now on Main Street</p>
+        <h2 data-ws="tonight">Live Music &amp; Specials</h2>
+        <p data-ws="tonight-detail">Check out tonight's specials and live local talent on the patio.</p>
+        <div class="tonight-meta">
+          <span>Happy Hour 4â€“7 Daily</span>
+          <a href="tel:+17277261956" style="color:#fffaf3;">(727) 726-1956</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="trust-strip" aria-label="Highlights">
+    <div class="wrap trust-grid">
+      <div><strong>4.4 â˜…</strong><span>2,000+ Google Reviews</span></div>
+      <div><strong>Since '95</strong><span>Safety Harbor Landmark</span></div>
+      <div><strong>18 Taps</strong><span>Craft &amp; Domestic Pours</span></div>
+      <div><strong>7 Days</strong><span>Live Music, Patio &amp; Dogs Welcome</span></div>
+    </div>
+  </section>
+
+  <section class="pillar-sec" id="explore">
+    <div class="wrap">
+      <h2>Pick your vibe</h2>
+      <div class="pillar-tabs" role="tablist" aria-label="Explore Whistle Stop">
+        <button type="button" role="tab" aria-selected="true" data-tab="kitchen">From the Kitchen</button>
+        <button type="button" role="tab" aria-selected="false" data-tab="music">Live Music &amp; Events</button>
+        <button type="button" role="tab" aria-selected="false" data-tab="bar">At the Bar</button>
+      </div>
+
+      <div class="pillar-panel" data-panel="kitchen">
+        <div class="pillar-copy">
+          <h3>Scratch favorites &amp; coastal plates</h3>
+          <p>From fried green tomatoes and Florida corn fritters to fresh Gulf grouper and the Original Whistle Stop Burger â€” dine on the patio or order online.</p>
+          <ul class="pillar-list">
+            <li>WS Fried Green Tomatoes â€” $12</li>
+            <li>Florida Real Corn Fritters â€” $12</li>
+            <li>Original Whistle Stop Burger â€” $17</li>
+          </ul>
+          <a class="btn" href="../order.html">Order Now</a>
+          <a class="btn line" href="#menu" style="margin-left:8px;">Jump to Menu</a>
+        </div>
+        <div class="pillar-photos">
+          <img class="wide" src="../assets/gallery/from-facebook/food/seared-tuna-plate.jpg" alt="Fresh kitchen dish plated with greens">
+          <img src="../assets/gallery/from-facebook/food/two-tacos-in-metal-trays.jpg" alt="Two tacos served with lime">
+          <img src="../assets/gallery/from-facebook/gatherings/long-table-of-guests.jpg" alt="Guests sharing food around a long table">
+        </div>
+      </div>
+
+      <div class="pillar-panel" data-panel="music" hidden>
+        <div class="pillar-copy">
+          <h3>Safety Harbor's patio stage</h3>
+          <p>Live local musicians every Friday and Saturday, Tuesday Open Mic, Wednesday Cornhole, plus monthly Guitar Guild and Ukulele Society jams.</p>
+          <ul class="pillar-list" data-warm-nights></ul>
+          <a class="btn" href="../events.html">Full Events Calendar</a>
+        </div>
+        <div class="pillar-photos">
+          <img class="wide" src="../assets/gallery/from-facebook/music/guitarist-with-red-guitar.jpg" alt="Musician performing live at Whistle Stop">
+          <img src="../assets/gallery/from-facebook/music/friday-band-on-stage.jpg" alt="Friday night live band on stage">
+          <img src="../assets/gallery/from-facebook/scenery/roadside-sign.jpg" alt="Whistle Stop Grill and Bar roadside sign">
+        </div>
+      </div>
+
+      <div class="pillar-panel" data-panel="bar" hidden>
+        <div class="pillar-copy">
+          <h3>18 taps, martinis &amp; Sunday brunch pours</h3>
+          <p>Happy hour runs 4â€“7 PM every day (and 4 PM to close on Tuesdays and Wednesdays), plus half-off Martini Monday and $5 Sunday Bloody Marys.</p>
+          <ul class="pillar-list">
+            <li>Monday: Half-off Martinis + 2-for-$6 Tacos (4 PMâ€“close)</li>
+            <li>Tue &amp; Wed: Extended Happy Hour (4 PMâ€“close)</li>
+            <li>Sunday: $5 Bloody Marys &amp; Mimosas from 11 AM</li>
+          </ul>
+          <a class="btn" href="https://order.toasttab.com/egift/whistle-stop-grill-bar" target="_blank" rel="noopener">Buy an eGift Card</a>
+        </div>
+        <div class="pillar-photos">
+          <img class="wide" src="../assets/gallery/from-facebook/drinks/cocktail-at-the-bar.jpg" alt="Cocktail served at the Whistle Stop bar">
+          <img src="../assets/gallery/from-facebook/drinks/cucumber-martini.jpg" alt="Fresh cucumber martini at the bar">
+          <img src="../assets/gallery/from-facebook/drinks/patio-cocktail.jpg" alt="Patio cocktail in the sun">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu-sec" id="menu" data-warm-menu>
+    <div class="wrap">
+      <h2>The Menu</h2>
+      <p class="menu-note"></p>
+      <div class="groups"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="visit" id="visit"><div class="wrap" data-warm-visit></div></footer>
+<script src="shared.js"></script>
+<script src="dawn-menu.js"></script>
+<script src="warm.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var tabs = document.querySelectorAll("[data-tab]");
+    var panels = document.querySelectorAll("[data-panel]");
+    tabs.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var key = btn.getAttribute("data-tab");
+        tabs.forEach(function (t) { t.setAttribute("aria-selected", String(t === btn)); });
+        panels.forEach(function (p) { p.hidden = p.getAttribute("data-panel") !== key; });
+      });
+    });
+  });
+</script>
+</body>
+</html>
