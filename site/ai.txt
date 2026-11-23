@@ -36,5 +36,8 @@ Menu: https://www.whistlestopgrill.com/menu.html
 Live-Music: https://www.whistlestopgrill.com/live-music-safety-harbor.html
 Dog-Friendly-Patio: https://www.whistlestopgrill.com/dog-friendly-patio-safety-harbor.html
 Signature-Food: https://www.whistlestopgrill.com/best-food-safety-harbor.html
+Weekly-Specials: https://www.whistlestopgrill.com/martini-monday-taco-night-safety-harbor.html
+Third-Friday: https://www.whistlestopgrill.com/third-friday-safety-harbor-dining.html
+Nearby-Cities: https://www.whistlestopgrill.com/restaurants-near-clearwater-dunedin-oldsmar.html
 Private-Events: https://www.whistlestopgrill.com/private-events.html
 Events-Calendar: https://www.whistlestopgrill.com/events.html

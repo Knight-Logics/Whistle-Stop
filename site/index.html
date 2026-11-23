@@ -497,11 +497,11 @@
                     <figcaption><span>Martini Monday</span><span class="sc-price">$5</span></figcaption>
                   </figure>
                   <figure class="sc-card" data-slot="right" data-dish="Patio Cocktails &amp; Sunday Bloody Marys" data-price="$5 Sun">
-                    <img src="assets/gallery/from-facebook/drinks/patio-cocktail.jpg" alt="Chilled handcrafted cocktail on the Whistle Stop patio" width="768" height="960" />
+                    <img src="assets/gallery/from-facebook/drinks/orange-martini.jpg" alt="Chilled handcrafted citrus cocktail at the Whistle Stop bar" width="768" height="960" />
                     <figcaption><span>Patio Cocktails</span><span class="sc-price">$9&ndash;$12</span></figcaption>
                   </figure>
                   <figure class="sc-card" data-slot="left" data-dish="Happy Hour Daily 4-7 PM (20+ Drafts)" data-price="$3 Wells / $5+ Drafts">
-                    <img src="assets/gallery/from-facebook/drinks/cocktail-at-the-bar.jpg" alt="Drinks served at the Whistle Stop bar in Safety Harbor" width="768" height="960" />
+                    <img src="assets/gallery/from-facebook/drinks/yellow-martini-on-the-bar.jpg" alt="Chilled golden cocktail on the Whistle Stop bar in Safety Harbor" width="768" height="960" />
                     <figcaption><span>Happy Hour 4&ndash;7</span><span class="sc-price">$3&ndash;$5</span></figcaption>
                   </figure>
                 </div>
@@ -695,7 +695,19 @@
           </article>
           <article class="card">
             <h3><a href="best-food-safety-harbor.html">Burgers, Grouper &amp; Fried Green Tomatoes</a></h3>
-            <p>Our most-ordered scratch plates with quick online pickup and delivery.</p>
+            <p>Our most-ordered scratch plates with quick online Toast pickup.</p>
+          </article>
+          <article class="card">
+            <h3><a href="martini-monday-taco-night-safety-harbor.html">Martini Monday, Taco Night &amp; Happy Hour</a></h3>
+            <p>$5 house martinis, $6 tacos, daily 4&ndash;7 PM Happy Hour ($3 wells, $4 wine, $5+ drafts), and $5 Sunday Bloody Marys.</p>
+          </article>
+          <article class="card">
+            <h3><a href="third-friday-safety-harbor-dining.html">Third Friday on Main Street</a></h3>
+            <p>Your Main Street home base for drinks, dinner, and live music during Safety Harbor&rsquo;s 3rd Friday street festival.</p>
+          </article>
+          <article class="card">
+            <h3><a href="restaurants-near-clearwater-dunedin-oldsmar.html">10 Min from Clearwater, Dunedin &amp; Oldsmar</a></h3>
+            <p>Easy parking, walkable Main Street vibes, and open-air dining near Safety Harbor Pier &amp; Philippe Park.</p>
           </article>
         </div>
       </div>
@@ -787,7 +799,7 @@
           var menus = Array.isArray(data && data.menus) ? data.menus : [];
           if (!menus.length) return;
           var activeMenuIdx = 0;
-          var activeCatId = "all";
+          var activeCatId = (menus[0].categories && menus[0].categories[0] && menus[0].categories[0].id) || "all";
 
           function render() {
             var menu = menus[activeMenuIdx];
@@ -798,11 +810,14 @@
             }).join("");
 
             var cats = menu.categories || [];
+            if (activeCatId !== "all" && !cats.some(function (c) { return c.id === activeCatId; })) {
+              activeCatId = (cats[0] && cats[0].id) || "all";
+            }
             catsEl.innerHTML =
-              '<button type="button" aria-pressed="' + String(activeCatId === "all") + '" data-hm-cat="all">All (' + cats.length + ")</button>" +
               cats.map(function (c) {
                 return '<button type="button" aria-pressed="' + String(activeCatId === c.id) + '" data-hm-cat="' + esc(c.id) + '">' + esc(c.name) + "</button>";
-              }).join("");
+              }).join("") +
+              '<button type="button" aria-pressed="' + String(activeCatId === "all") + '" data-hm-cat="all">All (' + cats.length + ")</button>";
 
             var visible = activeCatId === "all" ? cats : cats.filter(function (c) { return c.id === activeCatId; });
             gridEl.innerHTML = visible.map(function (c) {
@@ -818,7 +833,8 @@
             var b = e.target.closest("[data-hm-tab]");
             if (!b) return;
             activeMenuIdx = Number(b.getAttribute("data-hm-tab")) || 0;
-            activeCatId = "all";
+            var firstCat = menus[activeMenuIdx] && menus[activeMenuIdx].categories && menus[activeMenuIdx].categories[0];
+            activeCatId = (firstCat && firstCat.id) || "all";
             render();
           });
           catsEl.addEventListener("click", function (e) {
