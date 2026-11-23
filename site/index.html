@@ -136,6 +136,37 @@
       .hero-scenes .sc-card[data-slot="right"] { transform: translateX(82px) translateZ(-40px) rotateY(-30deg) scale(.82); }
       .hero-scenes .spin { height: 236px; }
     }
+    /* Immediate #8-style live Toast menu directly below the hero */
+    .home-menu-sec { padding: 3.5rem 0 4rem; background: #f6efe4; color: #2c2019; }
+    .home-menu-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+    .home-menu-head h2 { margin: 0; font-family: Calistoga, Georgia, serif; font-weight: 400; font-size: clamp(2.1rem, 4vw, 3.2rem); color: #2c2019; }
+    .home-menu-head p { margin: .35rem 0 0; color: #69574b; max-width: 58ch; }
+    .home-menu-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
+    .home-menu-tabs button {
+      border: 1px solid rgba(44, 32, 25, .2); background: #fffaf3; color: #2c2019;
+      padding: 10px 18px; border-radius: 999px; font: 700 15px/1 "Source Sans 3", sans-serif; cursor: pointer;
+    }
+    .home-menu-tabs button[aria-selected="true"] { background: #1e372a; color: #fffaf3; border-color: #1e372a; }
+    .home-menu-cats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+    .home-menu-cats button {
+      border: 1px solid rgba(44, 32, 25, .15); background: transparent; color: #5b493e;
+      padding: 6px 12px; border-radius: 999px; font: 700 13px/1 "Source Sans 3", sans-serif; cursor: pointer;
+    }
+    .home-menu-cats button[aria-pressed="true"] { background: #c4553a; color: #fffaf3; border-color: #c4553a; }
+    .home-menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .home-menu-group {
+      background: #fffaf3; border-radius: 18px; padding: 20px 22px;
+      box-shadow: 0 10px 28px rgba(44, 32, 25, .07);
+    }
+    .home-menu-group h3 { margin: 0 0 8px; font-family: Calistoga, Georgia, serif; font-weight: 400; font-size: 1.6rem; color: #2c2019; }
+    .home-menu-item {
+      display: grid; grid-template-columns: 1fr auto; gap: 3px 14px;
+      padding: 10px 0; border-top: 1px solid rgba(44, 32, 25, .11);
+    }
+    .home-menu-item strong { font-size: 1rem; color: #2c2019; }
+    .home-menu-item .hm-price { font-weight: 800; color: #8c3d2a; white-space: nowrap; }
+    .home-menu-item p { grid-column: 1 / -1; margin: 0; font-size: .92rem; color: #69574b; line-height: 1.35; }
+    @media (max-width: 820px) { .home-menu-grid { grid-template-columns: 1fr; } }
   </style>
   <link rel="icon" href="assets/logo.webp" type="image/webp" />
   <link rel="icon" href="assets/logo.png" type="image/png" />
@@ -389,7 +420,7 @@
       <div class="slides-bg" aria-hidden="true">
         <img src="assets/gallery/ws-home-page-scene-dawn.webp?v=5" alt="" width="1852" height="849" fetchpriority="high" />
         <img src="assets/gallery/WSRocker.webp" alt="" width="1080" height="1080" loading="lazy" />
-        <img src="assets/gallery/WSBar.webp" alt="" width="1080" height="1080" loading="lazy" />
+        <img src="assets/gallery/WSBar.webp?v=2" alt="" width="1200" height="1200" loading="lazy" />
       </div>
       <div class="scene-veil" aria-hidden="true"></div>
       <div class="container hero-aside">
@@ -505,7 +536,7 @@
           <span>Safety Harbor landmark</span>
         </div>
         <div class="stat">
-          <strong>18 Taps</strong>
+          <strong>20+ Taps</strong>
           <span>Craft &amp; domestic beer</span>
         </div>
         <div class="stat">
@@ -514,6 +545,24 @@
         </div>
       </div>
     </div>
+
+    <section class="home-menu-sec" id="menu" aria-label="Whistle Stop Menu">
+      <div class="container">
+        <div class="home-menu-head">
+          <div>
+            <h2>The Menu</h2>
+            <p id="home-menu-intro">Live kitchen &amp; bar prices synced from Whistle Stop&rsquo;s POS. Dine on the Main Street patio or order direct pickup.</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <a href="https://www.toasttab.com/whistle-stop-grill-bar-915-main-street/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-site="links.toastCheckout" data-site-attr="href">Order Pickup on Toast &rarr;</a>
+            <a href="menu.html" class="btn btn-outline" style="color:#2c2019;border-color:#2c2019;">Full Menu Page</a>
+          </div>
+        </div>
+        <div class="home-menu-tabs" id="home-menu-tabs" role="tablist" aria-label="Menu sections"></div>
+        <div class="home-menu-cats" id="home-menu-cats" aria-label="Filter menu categories"></div>
+        <div class="home-menu-grid" id="home-menu-grid"></div>
+      </div>
+    </section>
 
     <section class="section-cream" id="promo-happenings">
       <div class="container">
@@ -718,6 +767,69 @@
       });
       show(0);
       startScenes();
+    })();
+
+    // Render live Toast-synced menu right below the hero (Option #8 immediate-menu flow)
+    (function () {
+      var tabsEl = document.getElementById("home-menu-tabs");
+      var catsEl = document.getElementById("home-menu-cats");
+      var gridEl = document.getElementById("home-menu-grid");
+      var introEl = document.getElementById("home-menu-intro");
+      if (!tabsEl || !catsEl || !gridEl) return;
+
+      function esc(s) {
+        return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+
+      fetch("data/menus.json")
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var menus = Array.isArray(data && data.menus) ? data.menus : [];
+          if (!menus.length) return;
+          var activeMenuIdx = 0;
+          var activeCatId = "all";
+
+          function render() {
+            var menu = menus[activeMenuIdx];
+            if (introEl && menu.intro) introEl.textContent = menu.intro;
+
+            tabsEl.innerHTML = menus.map(function (m, idx) {
+              return '<button type="button" role="tab" aria-selected="' + String(idx === activeMenuIdx) + '" data-hm-tab="' + idx + '">' + esc(m.label) + "</button>";
+            }).join("");
+
+            var cats = menu.categories || [];
+            catsEl.innerHTML =
+              '<button type="button" aria-pressed="' + String(activeCatId === "all") + '" data-hm-cat="all">All (' + cats.length + ")</button>" +
+              cats.map(function (c) {
+                return '<button type="button" aria-pressed="' + String(activeCatId === c.id) + '" data-hm-cat="' + esc(c.id) + '">' + esc(c.name) + "</button>";
+              }).join("");
+
+            var visible = activeCatId === "all" ? cats : cats.filter(function (c) { return c.id === activeCatId; });
+            gridEl.innerHTML = visible.map(function (c) {
+              var rows = (c.items || []).map(function (it) {
+                return '<div class="home-menu-item"><strong>' + esc(it.name) + '</strong><span class="hm-price">' + esc(it.price) + "</span>" +
+                  (it.desc ? "<p>" + esc(it.desc) + "</p>" : "") + "</div>";
+              }).join("");
+              return '<article class="home-menu-group"><h3>' + esc(c.name) + "</h3>" + rows + "</article>";
+            }).join("");
+          }
+
+          tabsEl.addEventListener("click", function (e) {
+            var b = e.target.closest("[data-hm-tab]");
+            if (!b) return;
+            activeMenuIdx = Number(b.getAttribute("data-hm-tab")) || 0;
+            activeCatId = "all";
+            render();
+          });
+          catsEl.addEventListener("click", function (e) {
+            var b = e.target.closest("[data-hm-cat]");
+            if (!b) return;
+            activeCatId = b.getAttribute("data-hm-cat") || "all";
+            render();
+          });
+          render();
+        })
+        .catch(function () {});
     })();
   </script>
 
