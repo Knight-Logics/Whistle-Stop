@@ -284,18 +284,18 @@
       <div class="container">
         <div class="order-feature reveal">
           <div class="order-feature-copy">
-            <span class="tag">Fastest &middot; No App Markup</span>
-            <h2>Order Pickup Direct on Toast</h2>
+            <span class="tag">Online Ordering Launching Soon</span>
+            <h2>Call Ahead for Main Street Pickup</h2>
             <p style="color:var(--text-muted);margin:0 0 1rem">
-              Skip third-party delivery fees &mdash; order direct through Whistle Stop&rsquo;s Toast Online Ordering for fast Main Street pickup, or pick Uber Eats, DoorDash, or Grubhub for delivery below.
+              We&rsquo;re putting the finishing touches on online pickup &amp; delivery ordering. In the meantime, browse our live menu below and call <strong>(727) 726-1956</strong> to place a takeout order directly with the kitchen.
             </p>
             <ul class="order-checklist">
-              <li><strong>Direct Pickup (Toast)</strong> &mdash; regular menu prices, pay online, pick up at 915 Main St</li>
-              <li><strong>Delivery</strong> &mdash; Uber Eats, DoorDash, or Grubhub straight to your door</li>
-              <li><strong>Browse Menu First</strong> &mdash; explore live kitchen &amp; bar prices before ordering</li>
+              <li><strong>Call-In Takeout</strong> &mdash; regular menu prices, no app fees, pick up at 915 Main St</li>
+              <li><strong>Online Pickup &amp; Delivery</strong> &mdash; launching soon once final menu checks wrap up</li>
+              <li><strong>Browse Menu First</strong> &mdash; explore live kitchen &amp; bar prices before calling</li>
             </ul>
             <div class="btn-group">
-              <a href="https://www.toasttab.com/whistle-stop-grill-bar-915-main-street/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" data-site="links.toastCheckout" data-site-attr="href">Order Pickup on Toast &rarr;</a>
+              <a href="tel:+17277261956" class="btn btn-primary">Call (727) 726-1956 to Order</a>
               <a href="menu.html" class="btn btn-outline" data-site="links.orderMenu" data-site-attr="href">Browse Menu</a>
             </div>
           </div>
@@ -304,7 +304,7 @@
 
         <div class="section-head reveal" style="margin-top:3.5rem">
           <h2>Online delivery</h2>
-          <p>We&rsquo;re working on implementing online delivery soon! Order direct Pickup on Toast above or call (727) 726-1956.</p>
+          <p>Online pickup &amp; delivery are launching soon! In the meantime, call (727) 726-1956 to order takeout directly from the kitchen.</p>
           <div class="divider"></div>
         </div>
 
@@ -330,10 +330,10 @@
         </div>
 
         <div id="delivery-soon-banner" role="status" aria-live="polite" hidden style="margin-top:1rem;padding:1rem 1.25rem;border-radius:14px;background:var(--chalk-mid,#1f1f1f);color:var(--cream,#f4efe4);border:1px solid rgba(184,224,74,.45);text-align:center;">
-          <strong id="delivery-soon-msg">We&rsquo;re working on implementing online delivery soon!</strong>
+          <strong id="delivery-soon-msg">We&rsquo;re putting the finishing touches on online ordering!</strong>
           <div style="margin-top:.65rem;display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;">
-            <a href="https://www.toasttab.com/whistle-stop-grill-bar-915-main-street/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding:.55rem 1.1rem;">Order Pickup on Toast</a>
-            <a href="tel:+17277261956" class="btn btn-outline" style="padding:.55rem 1.1rem;">Call (727) 726-1956</a>
+            <a href="tel:+17277261956" class="btn btn-primary" style="padding:.55rem 1.1rem;">Call (727) 726-1956 to Order</a>
+            <a href="menu.html" class="btn btn-outline" style="padding:.55rem 1.1rem;">Browse Full Menu</a>
           </div>
         </div>
 
@@ -344,7 +344,7 @@
             document.querySelectorAll("[data-delivery-soon]").forEach(function (btn) {
               btn.addEventListener("click", function () {
                 var app = btn.getAttribute("data-delivery-soon") || "Online delivery";
-                if (msg) msg.textContent = app + " ordering — we're working on implementing this soon! In the meantime, order direct Pickup on Toast or call (727) 726-1956.";
+                if (msg) msg.textContent = app + " ordering is launching soon! In the meantime, call (727) 726-1956 to place a takeout order directly with the kitchen.";
                 if (banner) { banner.hidden = false; banner.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
               });
             });

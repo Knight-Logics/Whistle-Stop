@@ -203,8 +203,8 @@ window.WSPickupOrder = (function () {
           <div id="fulfillment-totals"></div>
           <div class="fulfillment-choices">
             <button type="button" class="fulfillment-choice" data-fulfillment-pick>
-              <span class="fulfillment-choice__title">Pickup</span>
-              <span class="fulfillment-choice__desc">Pay online &amp; pick up at 915 Main Street (~30 min)</span>
+              <span class="fulfillment-choice__title">Pickup (Call Ahead)</span>
+              <span class="fulfillment-choice__desc">Online pickup launching soon &mdash; call (727) 726-1956</span>
             </button>
             <button type="button" class="fulfillment-choice" data-fulfillment-deliver>
               <span class="fulfillment-choice__title">Delivery (Coming Soon)</span>
@@ -214,27 +214,22 @@ window.WSPickupOrder = (function () {
         </div>
         <div id="fulfillment-step-pickup" class="fulfillment-step" hidden>
           <button type="button" class="fulfillment-back" data-fulfillment-back>← Back</button>
-          <h2>Pickup checkout</h2>
-          <p>Re-add your items on Whistle Stop&rsquo;s online ordering page, pay, and choose a pickup time. Your list below is a helper — carts don&rsquo;t sync automatically.</p>
+          <h2>Call ahead for pickup</h2>
+          <p>Online pickup ordering is launching soon! Use your list below and call <strong>(727) 726-1956</strong> to place your takeout order directly with the kitchen at 915 Main Street.</p>
           <div id="fulfillment-pickup-totals"></div>
           <div id="fulfillment-pickup-items"></div>
-          <ol class="toast-handoff-steps">
-            <li>Open online ordering</li>
-            <li>Re-add items, pay, and pick up at 915 Main Street</li>
-          </ol>
-          <p class="toast-handoff-note">Whistle Stop does not deliver in-house — pickup is the direct restaurant order.</p>
           <div class="toast-handoff-actions">
-            <a href="${escapeHtml(DEFAULT_CHECKOUT_URL)}" class="btn btn-primary" id="fulfillment-pickup-open" target="_blank" rel="noopener noreferrer">Open pickup ordering</a>
+            <a href="tel:+17277261956" class="btn btn-primary" id="fulfillment-pickup-call">Call (727) 726-1956 to Order</a>
           </div>
         </div>
         <div id="fulfillment-step-delivery" class="fulfillment-step" hidden>
           <button type="button" class="fulfillment-back" data-fulfillment-back>← Back</button>
           <h2>Online delivery coming soon</h2>
-          <p>We&rsquo;re working on implementing online delivery soon! In the meantime, you can order direct Pickup on Toast (regular menu prices, no app markup) or call us at <strong>(727) 726-1956</strong>.</p>
+          <p>We&rsquo;re working on implementing online delivery soon! In the meantime, call us directly at <strong>(727) 726-1956</strong> to place a takeout order for pickup at 915 Main Street.</p>
           <div id="fulfillment-delivery-items"></div>
           <div class="toast-handoff-actions" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;">
-            <a href="${escapeHtml(DEFAULT_CHECKOUT_URL)}" class="btn btn-primary" id="fulfillment-delivery-pickup-fallback" target="_blank" rel="noopener noreferrer">Order Pickup on Toast</a>
-            <a href="tel:+17277261956" class="btn btn-outline">Call (727) 726-1956</a>
+            <a href="tel:+17277261956" class="btn btn-primary">Call (727) 726-1956 to Order</a>
+            <a href="menu.html" class="btn btn-outline">Browse Menu</a>
           </div>
         </div>
       </div>`;
