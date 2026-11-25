@@ -190,7 +190,7 @@ export function buildSiteMenusFromToast(raw, existingMenusJson, outOfStockGuids 
       {
         id: "bar",
         label: "The Bar",
-        intro: "Handcrafted Whistle Stop cocktails, 22 draft & 20 bottle beers, wines, $5 Martini Mondays, and full liquor bar.",
+        intro: "Handcrafted Whistle Stop cocktails, 18 taps & rotating craft drafts, bottle beers, wines, $5 Martini Mondays, and full liquor bar.",
         categories: barCats,
       },
     ],

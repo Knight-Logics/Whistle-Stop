@@ -2,23 +2,6 @@
   "timezone": "America/New_York",
   "recurring": [
     {
-      "id": "daily-specials",
-      "title": "Daily Drink & Food Specials",
-      "category": "specials",
-      "summary": "Ask your server for today's specials.",
-      "dayOfWeek": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "startTime": "11:00",
-      "image": "assets/drink-food.webp"
-    },
-    {
       "id": "sunday-breakfast",
       "title": "Breakfast Bloody Mary Sunday",
       "category": "specials",
@@ -33,13 +16,17 @@
       "id": "martini-monday",
       "title": "Martini Monday · Taco Night",
       "category": "specials",
-      "summary": "Half-off martinis & 2-for-$6 tacos, 4 PM–close.",
+      "summary": "$5 house martinis & $6 tacos, 4 PM–close.",
       "dayOfWeek": [
         1
       ],
       "startTime": "16:00",
       "endTime": "22:00",
-      "image": "assets/martini-monday.webp"
+      "image": "assets/martini-monday.webp",
+      "imagePaths": [
+        "assets/martini-monday.webp"
+      ],
+      "excludedPaths": []
     },
     {
       "id": "cornhole-wed",
@@ -174,14 +161,22 @@
       "title": "TB Guitar Guild",
       "startTime": "18:00",
       "endTime": "21:00",
-      "category": "community"
+      "category": "community",
+      "image": "assets/live-music.webp",
+      "imagePaths": [
+        "assets/live-music.webp"
+      ]
     },
     {
       "date": "2026-12-17",
       "title": "TB Guitar Guild",
       "startTime": "18:00",
       "endTime": "21:00",
-      "category": "community"
+      "category": "community",
+      "image": "assets/live-music.webp",
+      "imagePaths": [
+        "assets/live-music.webp"
+      ]
     }
   ]
 }

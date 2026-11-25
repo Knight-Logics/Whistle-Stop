@@ -10,3 +10,4 @@ packaging/
 node_modules/
 .wrangler/
 .dev.vars
+.backups/

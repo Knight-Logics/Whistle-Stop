@@ -3,7 +3,7 @@
     {
       "id": "martini-monday",
       "title": "Martini Monday",
-      "summary": "Half-off martinis & 2-for-$6 tacos, 4 PM–close.",
+      "summary": "$5 house martinis & $6 tacos, 4 PM–close.",
       "tag": "Every Monday",
       "tagClass": "",
       "image": "assets/martini-monday.webp",
@@ -35,7 +35,7 @@
     {
       "id": "martini-monday",
       "title": "Martini Monday · Taco Night",
-      "summary": "Half-off martinis & 2-for-$6 tacos, 4 PM–close.",
+      "summary": "$5 house martinis & $6 tacos, 4 PM–close.",
       "tag": "Every Monday",
       "tagClass": "",
       "image": "assets/martini-monday.webp",
