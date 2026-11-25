@@ -199,7 +199,7 @@ export async function runToastSync(env, { apply = false, actor = "cron" } = {}) 
       error: "Toast secrets not configured (need TOAST_CLIENT_ID, TOAST_CLIENT_SECRET, TOAST_RESTAURANT_GUID).",
     };
   }
-  const existingRaw = env.CONTENT ? await env.CONTENT.get("data:menus.json") : null;
+  const existingRaw = env.CONTENT ? await env.CONTENT.get("data:data/menus.json") : null;
   const existing = existingRaw ? JSON.parse(existingRaw) : null;
   const raw = await fetchToastMenus(env);
   const siteMenus = buildSiteMenusFromToast(raw, existing);
@@ -221,7 +221,7 @@ export async function runToastSync(env, { apply = false, actor = "cron" } = {}) 
     await env.CONTENT.put("toast:last_sync", JSON.stringify(summary));
     if (apply) {
       // Writes directly into the live KV menus key served at /data/menus.json
-      await env.CONTENT.put("data:menus.json", JSON.stringify(siteMenus));
+      await env.CONTENT.put("data:data/menus.json", JSON.stringify(siteMenus));
     }
     return { ok: true, summary };
   }
