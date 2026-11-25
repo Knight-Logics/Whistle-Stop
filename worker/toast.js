@@ -53,17 +53,35 @@ async function getToastToken(env) {
 
 export async function fetchToastMenus(env) {
   const { host, token } = await getToastToken(env);
-  const res = await fetch(`${host}/menus/v2/menus`, {
-    headers: {
-      authorization: `Bearer ${token}`,
-      "Toast-Restaurant-External-ID": env.TOAST_RESTAURANT_GUID,
-    },
-  });
-  if (!res.ok) {
-    const detail = (await res.text()).slice(0, 240);
-    throw new Error(`Toast Menus v2 failed (${res.status}): ${detail}`);
+  const headers = {
+    authorization: `Bearer ${token}`,
+    "Toast-Restaurant-External-ID": env.TOAST_RESTAURANT_GUID,
+  };
+  const [menusRes, stockRes] = await Promise.all([
+    fetch(`${host}/menus/v2/menus`, { headers }),
+    fetch(`${host}/stock/v1/inventory`, { headers }).catch(() => null),
+  ]);
+  if (!menusRes.ok) {
+    const detail = (await menusRes.text()).slice(0, 240);
+    throw new Error(`Toast Menus v2 failed (${menusRes.status}): ${detail}`);
   }
-  return await res.json();
+  const raw = await menusRes.json();
+  const outOfStockGuids = new Set();
+  if (stockRes && stockRes.ok) {
+    try {
+      const inv = await stockRes.json();
+      if (Array.isArray(inv)) {
+        for (const row of inv) {
+          if (row && row.guid && (row.status === "OUT_OF_STOCK" || row.quantity === 0)) {
+            outOfStockGuids.add(row.guid);
+          }
+        }
+      }
+    } catch {
+      // Non-fatal: continue with menu data if stock response fails to parse
+    }
+  }
+  return { raw, outOfStockGuids };
 }
 
 function slugify(text) {
@@ -92,7 +110,7 @@ function cleanText(name) {
     .replace(/Fried Green Tomatos/g, "Fried Green Tomatoes");
 }
 
-function convertGroups(toastMenu, descMap) {
+function convertGroups(toastMenu, descMap, outOfStockGuids = new Set()) {
   if (!toastMenu) return [];
   const cats = [];
   for (const grp of toastMenu.menuGroups || []) {
@@ -102,7 +120,8 @@ function convertGroups(toastMenu, descMap) {
     for (const it of grp.menuItems || []) {
       const iname = cleanText(it.name);
       if (!iname || SKIP_ITEMS.has(iname.toLowerCase())) continue;
-      if (it.outOfStock || it.visibility === "NONE") continue;
+      if (it.outOfStock || (it.guid && outOfStockGuids.has(it.guid))) continue;
+      if (it.visibility === "NONE" || (Array.isArray(it.visibility) && it.visibility.length === 0)) continue;
       const price = formatPrice(it.price);
       if (!price) continue;
       const desc = String(it.description || "").trim() || descMap.get(normKey(iname)) || "";
@@ -119,7 +138,7 @@ function convertGroups(toastMenu, descMap) {
   return cats;
 }
 
-export function buildSiteMenusFromToast(raw, existingMenusJson) {
+export function buildSiteMenusFromToast(raw, existingMenusJson, outOfStockGuids = new Set()) {
   const descMap = new Map();
   for (const m of (existingMenusJson && existingMenusJson.menus) || []) {
     for (const c of m.categories || []) {
@@ -131,7 +150,7 @@ export function buildSiteMenusFromToast(raw, existingMenusJson) {
   const menus = Array.isArray(raw && raw.menus) ? raw.menus : [];
   const byName = (n) => menus.find((m) => m.name === n);
 
-  const mainCats = convertGroups(byName("Main Menu"), descMap);
+  const mainCats = convertGroups(byName("Main Menu"), descMap, outOfStockGuids);
   mainCats.sort((a, b) => {
     const ia = MAIN_ORDER.indexOf(a.id);
     const ib = MAIN_ORDER.indexOf(b.id);
@@ -139,18 +158,18 @@ export function buildSiteMenusFromToast(raw, existingMenusJson) {
   });
 
   const seasonalCats = [
-    ...convertGroups(byName("Seasonal Menu 11 to 7pm"), descMap),
-    ...convertGroups(byName("Happy Hour Wednesday"), descMap).filter((c) => c.name.toLowerCase().includes("food")),
-    ...convertGroups(byName("Taco Monday"), descMap),
-    ...convertGroups(byName("Happy Hour"), descMap),
+    ...convertGroups(byName("Seasonal Menu 11 to 7pm"), descMap, outOfStockGuids),
+    ...convertGroups(byName("Happy Hour Wednesday"), descMap, outOfStockGuids).filter((c) => c.name.toLowerCase().includes("food")),
+    ...convertGroups(byName("Taco Monday"), descMap, outOfStockGuids),
+    ...convertGroups(byName("Happy Hour"), descMap, outOfStockGuids),
   ];
 
   const barCats = [
-    ...convertGroups(byName("Cocktails"), descMap),
-    ...convertGroups(byName("Beer"), descMap),
-    ...convertGroups(byName("Wine"), descMap),
-    ...convertGroups(byName("Martini Monday"), descMap),
-    ...convertGroups(byName("Liquor"), descMap),
+    ...convertGroups(byName("Cocktails"), descMap, outOfStockGuids),
+    ...convertGroups(byName("Beer"), descMap, outOfStockGuids),
+    ...convertGroups(byName("Wine"), descMap, outOfStockGuids),
+    ...convertGroups(byName("Martini Monday"), descMap, outOfStockGuids),
+    ...convertGroups(byName("Liquor"), descMap, outOfStockGuids),
   ];
 
   return {
@@ -201,8 +220,8 @@ export async function runToastSync(env, { apply = false, actor = "cron" } = {}) 
   }
   const existingRaw = env.CONTENT ? await env.CONTENT.get("data:data/menus.json") : null;
   const existing = existingRaw ? JSON.parse(existingRaw) : null;
-  const raw = await fetchToastMenus(env);
-  const siteMenus = buildSiteMenusFromToast(raw, existing);
+  const { raw, outOfStockGuids } = await fetchToastMenus(env);
+  const siteMenus = buildSiteMenusFromToast(raw, existing, outOfStockGuids);
   const itemCount = siteMenus.menus.reduce(
     (sum, m) => sum + m.categories.reduce((s2, c) => s2 + c.items.length, 0),
     0

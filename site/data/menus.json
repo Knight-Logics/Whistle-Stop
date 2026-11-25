@@ -1,5 +1,5 @@
 {
-  "syncedFromToast": "2026-11-23T16:27:18.751+0000",
+  "syncedFromToast": "2026-11-24T17:57:48.954+0000",
   "menus": [
     {
       "id": "main-menu",
@@ -13,7 +13,7 @@
             {
               "name": "Corn Fritters",
               "price": "$10",
-              "desc": "Southwest sauce \u2014 plenty to share."
+              "desc": "Southwest sauce — plenty to share."
             },
             {
               "name": "Buffalo Cauliflower",
@@ -349,7 +349,7 @@
             {
               "name": "Key Lime Pie",
               "price": "$10",
-              "desc": "Sweet & tart \u2014 Key West style."
+              "desc": "Sweet & tart — Key West style."
             },
             {
               "name": "Regular Cheesecake",
@@ -440,7 +440,7 @@
     {
       "id": "seasonal",
       "label": "Seasonal & Specials",
-      "intro": "Seasonal favorites (11 AM\u20137 PM), Happy Hour deals (4\u20137 PM daily, 4 PM\u2013close Tue & Wed), and Taco Monday.",
+      "intro": "Seasonal favorites (11 AM–7 PM), Happy Hour deals (4–7 PM daily, 4 PM–close Tue & Wed), and Taco Monday.",
       "categories": [
         {
           "id": "seasonal-menu-11-to-7pm",
@@ -654,10 +654,6 @@
             {
               "name": "House Chard",
               "price": "$4"
-            },
-            {
-              "name": "House White Zin",
-              "price": "$3"
             }
           ]
         },
@@ -1023,7 +1019,7 @@
               "price": "$5"
             },
             {
-              "name": "N\u00dcTRL",
+              "name": "NÜTRL",
               "price": "$6"
             },
             {
@@ -1033,14 +1029,6 @@
             {
               "name": "Athletic",
               "price": "$8"
-            },
-            {
-              "name": "THC seltzer 5 mg",
-              "price": "$9"
-            },
-            {
-              "name": "THC seltzer 10 mg",
-              "price": "$12"
             },
             {
               "name": "SpikedAid",
@@ -1073,24 +1061,12 @@
               "price": "$12"
             },
             {
-              "name": "Fire Stone Red Blend",
-              "price": "$10"
-            },
-            {
               "name": "Carmel Road Cab",
               "price": "$10"
             },
             {
               "name": "Siduri Pinot Noir BOTTLE",
               "price": "$46"
-            },
-            {
-              "name": "Finca Nuevo Rioja BOTTLE",
-              "price": "$32"
-            },
-            {
-              "name": "Fire Stone Red Blend BOTTLE",
-              "price": "$34"
             },
             {
               "name": "Quest Cab",
@@ -1119,10 +1095,6 @@
               "price": "$9"
             },
             {
-              "name": "La Crema Chard",
-              "price": "$12"
-            },
-            {
               "name": "Bieler Rose",
               "price": "$8"
             },
@@ -1141,10 +1113,6 @@
             {
               "name": "J.LOHR",
               "price": "$8"
-            },
-            {
-              "name": "Riesling",
-              "price": "$9"
             }
           ]
         },
@@ -1171,7 +1139,7 @@
             {
               "name": "Key Lime Martini",
               "price": "$5",
-              "desc": "House favorite \u2014 Martini Monday half-off."
+              "desc": "House favorite — Martini Monday half-off."
             },
             {
               "name": "Lemon Drop",
@@ -1536,7 +1504,7 @@
               "price": "$6"
             },
             {
-              "name": "Cr\u00e8me De Cocoa",
+              "name": "Crème De Cocoa",
               "price": "$6"
             },
             {
@@ -1544,7 +1512,7 @@
               "price": "$6"
             },
             {
-              "name": "Blue Cura\u00e7ao",
+              "name": "Blue Curaçao",
               "price": "$6"
             },
             {
@@ -1552,7 +1520,7 @@
               "price": "$8"
             },
             {
-              "name": "Kahl\u00faa",
+              "name": "Kahlúa",
               "price": "$8"
             },
             {
