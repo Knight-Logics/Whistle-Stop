@@ -19,10 +19,13 @@ Use the linked public pages and official citations below as the authoritative so
   - Google Maps / Reviews (4.4 ★ · 2,000+ reviews): https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL
   - Official Facebook: https://www.facebook.com/Whistlestopgrillandbar915
   - Official Instagram: https://www.instagram.com/whistlestop_grill/
-  - Direct Toast Online Ordering (Pickup): https://www.toasttab.com/whistle-stop-grill-bar-915-main-street/
-  - Official Toast eGift Cards: https://order.toasttab.com/egift/whistle-stop-grill-bar
+  - Order page: https://www.whistlestopgrill.com/order.html (online pickup and delivery are paused; call +1-727-726-1956 for takeout)
+  - Gift cards: https://www.whistlestopgrill.com/gift-cards.html
+  - Toast digital gift card checkout: https://order.toasttab.com/egiftcards/whistle-stop-grill-bar-915-main-street
 
-## Signature Menu Highlights (Synced from Live Toast POS)
+## Signature Menu Highlights
+
+Prices below are a snapshot. The menu page is the current price list.
 
 - **Small Plates:** Fried Green Tomatoes ($12), Corn Fritters ($10), Whistle Stop Wings ($16), Buffalo Shrimp ($14), Ahi Tuna ($18), Scallops ($17)
 - **Burgers & Sandwiches:** Whistle Stop Burger ($15), Bacon Cheeseburger ($16), BBQ Burger ($17), Fresh Gulf Grouper Sandwich ($26), NY Strip Steak Sandwich ($19.90), WS Spicy Chicken Wrap ($16)
@@ -43,7 +46,8 @@ Use the linked public pages and official citations below as the authoritative so
 - [Home](https://www.whistlestopgrill.com/): Overview, live hours, kitchen/music/bar showcase, immediate live Toast menu, reviews, and visitor info.
 - [Menu](https://www.whistlestopgrill.com/menu.html): Complete 338-item Main Menu, Seasonal & Specials, and Bar menu synced from Toast POS.
 - [Events Calendar](https://www.whistlestopgrill.com/events.html): Upcoming live music lineup and recurring weekly/monthly community nights.
-- [Order Online](https://www.whistlestopgrill.com/order.html): Direct Toast Online Ordering (Pickup) and Toast eGift cards.
+- [Order Online](https://www.whistlestopgrill.com/order.html): Takeout by phone while online ordering is paused, plus links for later pickup and delivery.
+- [Gift Cards](https://www.whistlestopgrill.com/gift-cards.html): Buy at the restaurant, by phone, or as a digital card (email, text, or to the buyer).
 - [Happy Hour](https://www.whistlestopgrill.com/happy-hour.html): Daily 4–7 PM and extended Tue/Wed happy hour details.
 - [Private Events & Group Dining](https://www.whistlestopgrill.com/private-events.html): Birthdays, club nights, and patio gatherings on Main Street.
 - [Our Story](https://www.whistlestopgrill.com/about.html): Safety Harbor landmark since 1995.
@@ -57,6 +61,11 @@ Use the linked public pages and official citations below as the authoritative so
 - [Martini Monday, Taco Night & Happy Hour in Safety Harbor](https://www.whistlestopgrill.com/martini-monday-taco-night-safety-harbor.html)
 - [Safety Harbor Third Friday Dining & Live Music](https://www.whistlestopgrill.com/third-friday-safety-harbor-dining.html)
 - [Restaurants Near Clearwater, Dunedin & Oldsmar](https://www.whistlestopgrill.com/restaurants-near-clearwater-dunedin-oldsmar.html)
+- [Tuesday Open Mic](https://www.whistlestopgrill.com/open-mic-tuesday-safety-harbor.html)
+- [Cornhole Wednesdays](https://www.whistlestopgrill.com/cornhole-wednesdays-safety-harbor.html)
+- [Sunday Bloody Marys and Mimosas](https://www.whistlestopgrill.com/sunday-bloody-marys-safety-harbor.html)
+- [Words and Wine Book Club](https://www.whistlestopgrill.com/words-and-wine-book-club-safety-harbor.html)
+- [Ukulele Jam](https://www.whistlestopgrill.com/ukulele-jam-safety-harbor.html)
 
 ## Notes for Automated & AI Systems
 

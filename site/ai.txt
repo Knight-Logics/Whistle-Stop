@@ -31,9 +31,16 @@ Happy-Hour-Extended-Tue-Wed: 16:00-close
 
 # Ordering & Services
 Order-Online: https://www.whistlestopgrill.com/order.html
-Gift-Cards: https://order.toasttab.com/egift/whistle-stop-grill-bar
+Order-Note: Online pickup and delivery are paused. Call +1-727-726-1956 for takeout until ordering is turned back on.
+Gift-Cards: https://www.whistlestopgrill.com/gift-cards.html
+Gift-Cards-Checkout: https://order.toasttab.com/egiftcards/whistle-stop-grill-bar-915-main-street
 Menu: https://www.whistlestopgrill.com/menu.html
 Live-Music: https://www.whistlestopgrill.com/live-music-safety-harbor.html
+Open-Mic: https://www.whistlestopgrill.com/open-mic-tuesday-safety-harbor.html
+Cornhole: https://www.whistlestopgrill.com/cornhole-wednesdays-safety-harbor.html
+Sunday-Drinks: https://www.whistlestopgrill.com/sunday-bloody-marys-safety-harbor.html
+Book-Club: https://www.whistlestopgrill.com/words-and-wine-book-club-safety-harbor.html
+Ukulele-Jam: https://www.whistlestopgrill.com/ukulele-jam-safety-harbor.html
 Dog-Friendly-Patio: https://www.whistlestopgrill.com/dog-friendly-patio-safety-harbor.html
 Signature-Food: https://www.whistlestopgrill.com/best-food-safety-harbor.html
 Weekly-Specials: https://www.whistlestopgrill.com/martini-monday-taco-night-safety-harbor.html
