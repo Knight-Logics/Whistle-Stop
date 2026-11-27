@@ -60,7 +60,7 @@
     street: "915 Main Street",
     cityLine: "Safety Harbor, FL 34695",
     maps: "https://maps.google.com/?q=Whistle+Stop+Grill+Bar+915+Main+Street+Safety+Harbor+FL",
-    giftCards: "https://order.toasttab.com/egift/whistle-stop-grill-bar",
+    giftCards: "https://order.toasttab.com/egiftcards/whistle-stop-grill-bar-915-main-street",
     facebook: "https://www.facebook.com/Whistlestopgrillandbar915",
     instagram: "https://www.instagram.com/whistlestop_grill/",
     WEEK,

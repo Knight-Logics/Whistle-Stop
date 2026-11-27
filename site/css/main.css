@@ -1794,6 +1794,11 @@ section {
   transition: transform 0.35s var(--ease-out), border-color 0.35s;
 }
 
+/* Text-only cards have no .card-body, so the heading sat on the rounded edge and the first letter was clipped. */
+.card:not(:has(.card-body)):not(:has(.card-img)) {
+  padding: 1.35rem 1.5rem 1.5rem;
+}
+
 .card:hover {
   transform: translateY(-6px);
   border-color: rgba(184, 224, 74, 0.35);

@@ -93,7 +93,7 @@ window.WSAdminQRCodes = (function () {
       id: "gift-cards",
       title: "Gift cards",
       placement: "Host stand",
-      url: trackUrl("https://order.toasttab.com/egift/whistle-stop-grill-bar", "gift-card", "host-stand"),
+      url: trackUrl("https://order.toasttab.com/egiftcards/whistle-stop-grill-bar-915-main-street", "gift-card", "host-stand"),
     },
     {
       id: "events",
