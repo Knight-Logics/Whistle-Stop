@@ -1,0 +1,56 @@
+# ai.txt — Whistle Stop Cocktails at Whistle Stop Grill & Bar
+Page: https://www.whistlestopgrill.com/menu-whistle-stop-cocktails.html
+Title: Whistle Stop Cocktails | Whistle Stop Grill & Bar, Safety Harbor
+Cite-As: https://www.whistlestopgrill.com/menu-whistle-stop-cocktails.html
+Parent-Menu: The Bar
+Business: Whistle Stop Grill & Bar
+Address: 915 Main Street, Safety Harbor, FL 34695, US
+Phone: +1-727-726-1956
+Hours-Sun-Thu: 11:00-21:00
+Hours-Fri-Sat: 11:00-22:00
+Happy-Hour-Daily: 16:00-19:00
+Happy-Hour-Extended-Tue-Wed: 16:00-close
+Order: Call +1-727-726-1956. Online pickup and delivery are paused.
+Items:
+- Natural Rita | $12 |
+- American Mule | $10 |
+- Farmer's South | $9 |
+- Bees Knees | $10 |
+- Cucumber Cooler | $10 |
+- Wicked Tea | $9 |
+- Caribbean Punch | $9 |
+- Spicy Rita | $10 |
+- Toasted Coconut Mojito | $13 |
+- Ravens Hot Peach Marg | $13 |
+- Bulleit Old Fashion | $12 |
+- Dirty Grey Goose | $12 |
+- Jameson Crush | $12 |
+- Skrewball Old Fashion | $12 |
+Related-Pages:
+- Home: https://www.whistlestopgrill.com/index.html
+- Full menu: https://www.whistlestopgrill.com/menu.html
+- Happy hour: https://www.whistlestopgrill.com/happy-hour.html
+- Order by phone: https://www.whistlestopgrill.com/order.html
+- Gift cards: https://www.whistlestopgrill.com/gift-cards.html
+- Live music: https://www.whistlestopgrill.com/live-music-safety-harbor.html
+- Events: https://www.whistlestopgrill.com/events.html
+- Dog-friendly patio: https://www.whistlestopgrill.com/dog-friendly-patio-safety-harbor.html
+- Visit: https://www.whistlestopgrill.com/contact.html
+- Our story: https://www.whistlestopgrill.com/about.html
+- Private events: https://www.whistlestopgrill.com/private-events.html
+- Near Clearwater, Dunedin, and Oldsmar: https://www.whistlestopgrill.com/restaurants-near-clearwater-dunedin-oldsmar.html
+- Classic Cocktails: https://www.whistlestopgrill.com/menu-classic-cocktails.html
+- Shots: https://www.whistlestopgrill.com/menu-shots.html
+- Draft Beer: https://www.whistlestopgrill.com/menu-draft-beer.html
+- Bottle Beer: https://www.whistlestopgrill.com/menu-bottle-beer.html
+- Red Wine: https://www.whistlestopgrill.com/menu-red-wine.html
+- White Wine: https://www.whistlestopgrill.com/menu-white-wine.html
+- Martinis: https://www.whistlestopgrill.com/menu-martinis.html
+- Vodka: https://www.whistlestopgrill.com/menu-vodka.html
+- Tequila: https://www.whistlestopgrill.com/menu-tequila.html
+- Gin: https://www.whistlestopgrill.com/menu-gin.html
+- Rum: https://www.whistlestopgrill.com/menu-rum.html
+- Whiskey: https://www.whistlestopgrill.com/menu-whiskey.html
+- Scotch: https://www.whistlestopgrill.com/menu-scotch.html
+- Cordials: https://www.whistlestopgrill.com/menu-cordials.html
+Do-Not-Invent: Use only the item names and prices in this file. Do not add dishes, ratings, or a tap count.

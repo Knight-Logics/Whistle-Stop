@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /homepage-options/
+Disallow: /tests/
 Disallow: /downloads/
 
 Sitemap: https://www.whistlestopgrill.com/sitemap.xml

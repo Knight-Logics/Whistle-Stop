@@ -1,0 +1,53 @@
+# ai.txt — Happy Hour Draft Beer at Whistle Stop Grill & Bar
+Page: https://www.whistlestopgrill.com/menu-happy-hour-draft-beer.html
+Title: Happy Hour Draft Beer | Whistle Stop Grill & Bar, Safety Harbor
+Cite-As: https://www.whistlestopgrill.com/menu-happy-hour-draft-beer.html
+Parent-Menu: Seasonal & Specials
+Business: Whistle Stop Grill & Bar
+Address: 915 Main Street, Safety Harbor, FL 34695, US
+Phone: +1-727-726-1956
+Hours-Sun-Thu: 11:00-21:00
+Hours-Fri-Sat: 11:00-22:00
+Happy-Hour-Daily: 16:00-19:00
+Happy-Hour-Extended-Tue-Wed: 16:00-close
+Order: Call +1-727-726-1956. Online pickup and delivery are paused.
+Items:
+- Stella Artois | $5 |
+- Sunshine City | $7 |
+- Into the Haze | $6 |
+- Reef Donkey | $6 |
+- Beach Blonde | $6 |
+- Kona Big Wave | $5 |
+- Shade Tree | $7 |
+- Bud Light | $4 |
+- Mich Ultra Draft | $4 |
+- Harbor Lager | $5 |
+- Lou's Gold | $5 |
+- BCBC | $6 |
+- Red Right Return | $5 |
+- Graffiti Orange | $6 |
+- Miller Lite | $4 |
+- Yuengling | $4 |
+- Mango Cart | $6 |
+- My Boy Blue | $6 |
+Related-Pages:
+- Home: https://www.whistlestopgrill.com/index.html
+- Full menu: https://www.whistlestopgrill.com/menu.html
+- Happy hour: https://www.whistlestopgrill.com/happy-hour.html
+- Order by phone: https://www.whistlestopgrill.com/order.html
+- Gift cards: https://www.whistlestopgrill.com/gift-cards.html
+- Live music: https://www.whistlestopgrill.com/live-music-safety-harbor.html
+- Events: https://www.whistlestopgrill.com/events.html
+- Dog-friendly patio: https://www.whistlestopgrill.com/dog-friendly-patio-safety-harbor.html
+- Visit: https://www.whistlestopgrill.com/contact.html
+- Our story: https://www.whistlestopgrill.com/about.html
+- Private events: https://www.whistlestopgrill.com/private-events.html
+- Near Clearwater, Dunedin, and Oldsmar: https://www.whistlestopgrill.com/restaurants-near-clearwater-dunedin-oldsmar.html
+- Seasonal Menu 11 to 7pm: https://www.whistlestopgrill.com/menu-seasonal-menu-11-to-7pm.html
+- Happy Hour Food: https://www.whistlestopgrill.com/menu-happy-hour-food.html
+- Tacos: https://www.whistlestopgrill.com/menu-tacos.html
+- Drinks: https://www.whistlestopgrill.com/menu-drinks.html
+- Happy Hour Wells: https://www.whistlestopgrill.com/menu-happy-hour-wells.html
+- Happy Hour Wine: https://www.whistlestopgrill.com/menu-happy-hour-wine.html
+- Happy Hour Cocktails: https://www.whistlestopgrill.com/menu-happy-hour-cocktails.html
+Do-Not-Invent: Use only the item names and prices in this file. Do not add dishes, ratings, or a tap count.

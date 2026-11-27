@@ -77,38 +77,139 @@ Prices below are a snapshot. The menu page is the current price list.
 <!-- menu-categories:start -->
 ## Menu category pages
 
-- [Small Plates](https://www.whistlestopgrill.com/menu-small-plates.html) (Main Menu)
-- [Salads](https://www.whistlestopgrill.com/menu-salads.html) (Main Menu)
-- [Burgers](https://www.whistlestopgrill.com/menu-burgers.html) (Main Menu)
-- [Sandwiches](https://www.whistlestopgrill.com/menu-sandwiches.html) (Main Menu)
-- [Wraps](https://www.whistlestopgrill.com/menu-wraps.html) (Main Menu)
-- [Flatbreads](https://www.whistlestopgrill.com/menu-flatbreads.html) (Main Menu)
-- [Large Plates](https://www.whistlestopgrill.com/menu-large-plates.html) (Main Menu)
-- [Sides](https://www.whistlestopgrill.com/menu-sides.html) (Main Menu)
-- [Kid's Meals](https://www.whistlestopgrill.com/menu-kid-s-meals.html) (Main Menu)
-- [Desserts](https://www.whistlestopgrill.com/menu-desserts.html) (Main Menu)
-- [Beverages](https://www.whistlestopgrill.com/menu-beverages.html) (Main Menu)
-- [Seasonal Menu 11 to 7pm](https://www.whistlestopgrill.com/menu-seasonal-menu-11-to-7pm.html) (Seasonal & Specials)
-- [Happy Hour Food](https://www.whistlestopgrill.com/menu-happy-hour-food.html) (Seasonal & Specials)
-- [Tacos](https://www.whistlestopgrill.com/menu-tacos.html) (Seasonal & Specials)
-- [Drinks](https://www.whistlestopgrill.com/menu-drinks.html) (Seasonal & Specials)
-- [Happy Hour Draft Beer](https://www.whistlestopgrill.com/menu-happy-hour-draft-beer.html) (Seasonal & Specials)
-- [Happy Hour Wells](https://www.whistlestopgrill.com/menu-happy-hour-wells.html) (Seasonal & Specials)
-- [Happy Hour Wine](https://www.whistlestopgrill.com/menu-happy-hour-wine.html) (Seasonal & Specials)
-- [Happy Hour Cocktails](https://www.whistlestopgrill.com/menu-happy-hour-cocktails.html) (Seasonal & Specials)
-- [Whistle Stop Cocktails](https://www.whistlestopgrill.com/menu-whistle-stop-cocktails.html) (The Bar)
-- [Classic Cocktails](https://www.whistlestopgrill.com/menu-classic-cocktails.html) (The Bar)
-- [Shots](https://www.whistlestopgrill.com/menu-shots.html) (The Bar)
-- [Draft Beer](https://www.whistlestopgrill.com/menu-draft-beer.html) (The Bar)
-- [Bottle Beer](https://www.whistlestopgrill.com/menu-bottle-beer.html) (The Bar)
-- [Red Wine](https://www.whistlestopgrill.com/menu-red-wine.html) (The Bar)
-- [White Wine](https://www.whistlestopgrill.com/menu-white-wine.html) (The Bar)
-- [Martinis](https://www.whistlestopgrill.com/menu-martinis.html) (The Bar)
-- [Vodka](https://www.whistlestopgrill.com/menu-vodka.html) (The Bar)
-- [Tequila](https://www.whistlestopgrill.com/menu-tequila.html) (The Bar)
-- [Gin](https://www.whistlestopgrill.com/menu-gin.html) (The Bar)
-- [Rum](https://www.whistlestopgrill.com/menu-rum.html) (The Bar)
-- [Whiskey](https://www.whistlestopgrill.com/menu-whiskey.html) (The Bar)
-- [Scotch](https://www.whistlestopgrill.com/menu-scotch.html) (The Bar)
-- [Cordials](https://www.whistlestopgrill.com/menu-cordials.html) (The Bar)
+### Small Plates
+
+Page: [Small Plates](https://www.whistlestopgrill.com/menu-small-plates.html). AI citation: [small-plates.ai.txt](https://www.whistlestopgrill.com/citations/small-plates.ai.txt). LLM citation: [small-plates.llms.txt](https://www.whistlestopgrill.com/citations/small-plates.llms.txt). Menu: Main Menu. Current items and prices: Corn Fritters $10, Buffalo Cauliflower $12, Whistle Stop Wings $16, Buffalo Shrimp $14, Scallops $17, Fried Green Tomatoes $12, Fried Pickle Chips $10, Smoked Fish Spread $14, Roasted Brussel Sprouts $10, Ahi Tuna $18, Frizzled Onions $9, WSG Chips $12, Hummus $10. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Salads
+
+Page: [Salads](https://www.whistlestopgrill.com/menu-salads.html). AI citation: [salads.ai.txt](https://www.whistlestopgrill.com/citations/salads.ai.txt). LLM citation: [salads.llms.txt](https://www.whistlestopgrill.com/citations/salads.llms.txt). Menu: Main Menu. Current items and prices: Black & Blue NY Strip Salad $18.90, Main Street Cobb Salad $16, Mediterranean Salad $16, Ahi Tuna Salad $18, Kale Caesar salad with Chix $16. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Burgers
+
+Page: [Burgers](https://www.whistlestopgrill.com/menu-burgers.html). AI citation: [burgers.ai.txt](https://www.whistlestopgrill.com/citations/burgers.ai.txt). LLM citation: [burgers.llms.txt](https://www.whistlestopgrill.com/citations/burgers.llms.txt). Menu: Main Menu. Current items and prices: Whistle Stop Burger $15, Bacon Cheeseburger $16, Black & Blue Burger $15, BBQ Burger $17, Hemp Burger $15, Cheeseburger $15. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Sandwiches
+
+Page: [Sandwiches](https://www.whistlestopgrill.com/menu-sandwiches.html). AI citation: [sandwiches.ai.txt](https://www.whistlestopgrill.com/citations/sandwiches.ai.txt). LLM citation: [sandwiches.llms.txt](https://www.whistlestopgrill.com/citations/sandwiches.llms.txt). Menu: Main Menu. Current items and prices: Grouper Sandwich $26, NY Strip Steak Sandwich $19.90, Salmon BLT $18, Harbor-Q Pork $16, Shrimp Po Boy $17, BLFGT $14, Cilantro Ranch Sandwich $16. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Wraps
+
+Page: [Wraps](https://www.whistlestopgrill.com/menu-wraps.html). AI citation: [wraps.ai.txt](https://www.whistlestopgrill.com/citations/wraps.ai.txt). LLM citation: [wraps.llms.txt](https://www.whistlestopgrill.com/citations/wraps.llms.txt). Menu: Main Menu. Current items and prices: Florida Club Wrap $16, WS Spicy Chicken Wrap $16, Buffalo Chicken Wrap $15. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Flatbreads
+
+Page: [Flatbreads](https://www.whistlestopgrill.com/menu-flatbreads.html). AI citation: [flatbreads.ai.txt](https://www.whistlestopgrill.com/citations/flatbreads.ai.txt). LLM citation: [flatbreads.llms.txt](https://www.whistlestopgrill.com/citations/flatbreads.llms.txt). Menu: Main Menu. Current items and prices: Steak and Arugula Flatbread $18.90, Uptown Chicken Flatbread $15, Garden Veggie Flatbread $14, Faroe Island Grilled Salmon Flatbread $18. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Large Plates
+
+Page: [Large Plates](https://www.whistlestopgrill.com/menu-large-plates.html). AI citation: [large-plates.ai.txt](https://www.whistlestopgrill.com/citations/large-plates.ai.txt). LLM citation: [large-plates.llms.txt](https://www.whistlestopgrill.com/citations/large-plates.llms.txt). Menu: Main Menu. Current items and prices: Grouper Dinner $26, Faroe Island Salmon $19, Mojo Pork Tacos $16, Steak Frites $23, Baja Taco Bowl $16, Fish & Chips $16, Smoked Gouda Mac $16, Baja Tacos $15, PBR Bowl $16, Steak Tacos $19.90, Bowl of Goodness $16, Paleo Bowl w Chicken $16, Adult Tenders & Fries $14. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Sides
+
+Page: [Sides](https://www.whistlestopgrill.com/menu-sides.html). AI citation: [sides.ai.txt](https://www.whistlestopgrill.com/citations/sides.ai.txt). LLM citation: [sides.llms.txt](https://www.whistlestopgrill.com/citations/sides.llms.txt). Menu: Main Menu. Current items and prices: Fries $4.90, Black Beans & Rice $4.90, Coleslaw $4.90, Grilled Veggies $4.90, Sweet Potato Fries $4.90, Side Salad $4.90, Side Gouda Mac $6. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Kid's Meals
+
+Page: [Kid's Meals](https://www.whistlestopgrill.com/menu-kid-s-meals.html). AI citation: [kid-s-meals.ai.txt](https://www.whistlestopgrill.com/citations/kid-s-meals.ai.txt). LLM citation: [kid-s-meals.llms.txt](https://www.whistlestopgrill.com/citations/kid-s-meals.llms.txt). Menu: Main Menu. Current items and prices: Kid's Mac & Cheese $8, Kid's Hot Dog $8.90, Kid's Grilled Cheese $7.90, Kid's Chicken Tenders $10, Kid's Chicken Beans and Rice $9.90. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Desserts
+
+Page: [Desserts](https://www.whistlestopgrill.com/menu-desserts.html). AI citation: [desserts.ai.txt](https://www.whistlestopgrill.com/citations/desserts.ai.txt). LLM citation: [desserts.llms.txt](https://www.whistlestopgrill.com/citations/desserts.llms.txt). Menu: Main Menu. Current items and prices: Whistle Stop Cheesecake $13, Chocolate Cake $11, Key Lime Pie $10, Regular Cheesecake $10, Oreo Cheesecake $13. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Beverages
+
+Page: [Beverages](https://www.whistlestopgrill.com/menu-beverages.html). AI citation: [beverages.ai.txt](https://www.whistlestopgrill.com/citations/beverages.ai.txt). LLM citation: [beverages.llms.txt](https://www.whistlestopgrill.com/citations/beverages.llms.txt). Menu: Main Menu. Current items and prices: Sweet Tea $2.95, Unsweet Tea $2.95, Coke $2.95, Coke Zero $2.95, Sprite $2.95, Fanta $2.95, Lemonade $2.95, Raspberry Tea $2.95, Gingerale $2.95, Pineapple Juice $2.95, Grapefruit Juice $2.95, Cranberry Juice $2.95, Orange Juice $2.95, Tomato Juice $2.95, Coffee $2.95, Tea $2.95, Milk $2.95. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Seasonal Menu 11 to 7pm
+
+Page: [Seasonal Menu 11 to 7pm](https://www.whistlestopgrill.com/menu-seasonal-menu-11-to-7pm.html). AI citation: [seasonal-menu-11-to-7pm.ai.txt](https://www.whistlestopgrill.com/citations/seasonal-menu-11-to-7pm.ai.txt). LLM citation: [seasonal-menu-11-to-7pm.llms.txt](https://www.whistlestopgrill.com/citations/seasonal-menu-11-to-7pm.llms.txt). Menu: Seasonal & Specials. Current items and prices: Classic Quesadilla $10.99, Smash Burger $10.99, Potato Skins $10.99, Harbor Q Sandwich $10.99, Ice Cream Sandwich $10.99. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Happy Hour Food
+
+Page: [Happy Hour Food](https://www.whistlestopgrill.com/menu-happy-hour-food.html). AI citation: [happy-hour-food.ai.txt](https://www.whistlestopgrill.com/citations/happy-hour-food.ai.txt). LLM citation: [happy-hour-food.llms.txt](https://www.whistlestopgrill.com/citations/happy-hour-food.llms.txt). Menu: Seasonal & Specials. Current items and prices: HH Fried Mozz $8, HH Boneless Wings $8, HH Chicken Quesadilla $8. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Tacos
+
+Page: [Tacos](https://www.whistlestopgrill.com/menu-tacos.html). AI citation: [tacos.ai.txt](https://www.whistlestopgrill.com/citations/tacos.ai.txt). LLM citation: [tacos.llms.txt](https://www.whistlestopgrill.com/citations/tacos.llms.txt). Menu: Seasonal & Specials. Current items and prices: Chicken Tacos $6, Beef Tacos $6, Shrimp Tacos $6, Fish Tacos $6, Black Bean Tacos $6. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Drinks
+
+Page: [Drinks](https://www.whistlestopgrill.com/menu-drinks.html). AI citation: [drinks.ai.txt](https://www.whistlestopgrill.com/citations/drinks.ai.txt). LLM citation: [drinks.llms.txt](https://www.whistlestopgrill.com/citations/drinks.llms.txt). Menu: Seasonal & Specials. Current items and prices: Chelada $5, Michelada $5.50, Margarita $5. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Happy Hour Draft Beer
+
+Page: [Happy Hour Draft Beer](https://www.whistlestopgrill.com/menu-happy-hour-draft-beer.html). AI citation: [happy-hour-draft-beer.ai.txt](https://www.whistlestopgrill.com/citations/happy-hour-draft-beer.ai.txt). LLM citation: [happy-hour-draft-beer.llms.txt](https://www.whistlestopgrill.com/citations/happy-hour-draft-beer.llms.txt). Menu: Seasonal & Specials. Current items and prices: Stella Artois $5, Sunshine City $7, Into the Haze $6, Reef Donkey $6, Beach Blonde $6, Kona Big Wave $5, Shade Tree $7, Bud Light $4, Mich Ultra Draft $4, Harbor Lager $5, Lou's Gold $5, BCBC $6, Red Right Return $5, Graffiti Orange $6, Miller Lite $4, Yuengling $4, Mango Cart $6, My Boy Blue $6. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Happy Hour Wells
+
+Page: [Happy Hour Wells](https://www.whistlestopgrill.com/menu-happy-hour-wells.html). AI citation: [happy-hour-wells.ai.txt](https://www.whistlestopgrill.com/citations/happy-hour-wells.ai.txt). LLM citation: [happy-hour-wells.llms.txt](https://www.whistlestopgrill.com/citations/happy-hour-wells.llms.txt). Menu: Seasonal & Specials. Current items and prices: Vodka $3, Gin $3, Tequila $3, Rum $3, Whiskey $3, Scotch $3. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Happy Hour Wine
+
+Page: [Happy Hour Wine](https://www.whistlestopgrill.com/menu-happy-hour-wine.html). AI citation: [happy-hour-wine.ai.txt](https://www.whistlestopgrill.com/citations/happy-hour-wine.ai.txt). LLM citation: [happy-hour-wine.llms.txt](https://www.whistlestopgrill.com/citations/happy-hour-wine.llms.txt). Menu: Seasonal & Specials. Current items and prices: House Cab $4, House Merlot $4, House Chard $4. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Happy Hour Cocktails
+
+Page: [Happy Hour Cocktails](https://www.whistlestopgrill.com/menu-happy-hour-cocktails.html). AI citation: [happy-hour-cocktails.ai.txt](https://www.whistlestopgrill.com/citations/happy-hour-cocktails.ai.txt). LLM citation: [happy-hour-cocktails.llms.txt](https://www.whistlestopgrill.com/citations/happy-hour-cocktails.llms.txt). Menu: Seasonal & Specials. Current items and prices: Margarita $5. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Whistle Stop Cocktails
+
+Page: [Whistle Stop Cocktails](https://www.whistlestopgrill.com/menu-whistle-stop-cocktails.html). AI citation: [whistle-stop-cocktails.ai.txt](https://www.whistlestopgrill.com/citations/whistle-stop-cocktails.ai.txt). LLM citation: [whistle-stop-cocktails.llms.txt](https://www.whistlestopgrill.com/citations/whistle-stop-cocktails.llms.txt). Menu: The Bar. Current items and prices: Natural Rita $12, American Mule $10, Farmer's South $9, Bees Knees $10, Cucumber Cooler $10, Wicked Tea $9, Caribbean Punch $9, Spicy Rita $10, Toasted Coconut Mojito $13, Ravens Hot Peach Marg $13, Bulleit Old Fashion $12, Dirty Grey Goose $12, Jameson Crush $12, Skrewball Old Fashion $12. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Classic Cocktails
+
+Page: [Classic Cocktails](https://www.whistlestopgrill.com/menu-classic-cocktails.html). AI citation: [classic-cocktails.ai.txt](https://www.whistlestopgrill.com/citations/classic-cocktails.ai.txt). LLM citation: [classic-cocktails.llms.txt](https://www.whistlestopgrill.com/citations/classic-cocktails.llms.txt). Menu: The Bar. Current items and prices: Margarita $10, Top Shelf Margarita $12, Old Fashioned $10, Long Island Iced Tea $10, Long Beach Iced Tea $10, Mojito $8, White Russian $10, Black Russian $10, Fuzzy Navel $8, Mudslide $10, shake me a coffee girllll $10, Godmother $10, Rum Runner $12, Tequila Sunrise $10, Tequila Sunset $10, Bay Breeze $8, Mimosa $10, Mai Tai $10, Tom Collins $8, $5 Bloody $5, $5 Mimosa $5, Irish Coffee $10, Cosmo Martini $10. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Shots
+
+Page: [Shots](https://www.whistlestopgrill.com/menu-shots.html). AI citation: [shots.ai.txt](https://www.whistlestopgrill.com/citations/shots.ai.txt). LLM citation: [shots.llms.txt](https://www.whistlestopgrill.com/citations/shots.llms.txt). Menu: The Bar. Current items and prices: Green Tea Shot $9, White Tea Shot $9, Elvis $9, Lemon Drop $9, Key Lime Shot $9, Pickleback $9. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Draft Beer
+
+Page: [Draft Beer](https://www.whistlestopgrill.com/menu-draft-beer.html). AI citation: [draft-beer.ai.txt](https://www.whistlestopgrill.com/citations/draft-beer.ai.txt). LLM citation: [draft-beer.llms.txt](https://www.whistlestopgrill.com/citations/draft-beer.llms.txt). Menu: The Bar. Current items and prices: Stella Artois $6, Sunshine City $8, Into the Haze $7, Reef Donkey $7, Beach Blonde $7, Kona Big Wave $6, Shade Tree $8, Bud Light $5, Mich Ultra Draft $5, Harbor Lager $6, Lou's Gold $6, BCBC $7, Red Right Return $6, Graffiti Orange $7, Miller Lite $5, Yuengling $5, Beer Flight $12, Mango Cart $7, My Boy Blue $7, Bud light Pitcher $14, Miller lite Pitcher $14, Yuengling Pitcher $14. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Bottle Beer
+
+Page: [Bottle Beer](https://www.whistlestopgrill.com/menu-bottle-beer.html). AI citation: [bottle-beer.ai.txt](https://www.whistlestopgrill.com/citations/bottle-beer.ai.txt). LLM citation: [bottle-beer.llms.txt](https://www.whistlestopgrill.com/citations/bottle-beer.llms.txt). Menu: The Bar. Current items and prices: Angry Orchard Btl $5.50, Corona Extra Btl $5, Miller Lite Btl $5, Blue Moon Btl $5.50, Mich Ultra Btl $5, Budweiser Btl $4, Corona Premier Btl $5, O'Doul's Btl $4, Bud Lite Btl $4, Guinness $6, Jai Alai $7, Coors Light Btl $4, Heineken Btl $5, Heineken Zero Btl $5, NÜTRL $6, Surf Side $6, Athletic $8, SpikedAid $6. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Red Wine
+
+Page: [Red Wine](https://www.whistlestopgrill.com/menu-red-wine.html). AI citation: [red-wine.ai.txt](https://www.whistlestopgrill.com/citations/red-wine.ai.txt). LLM citation: [red-wine.llms.txt](https://www.whistlestopgrill.com/citations/red-wine.llms.txt). Menu: The Bar. Current items and prices: House Cab $8, House Merlot $8, Uppercut $9, Sangria $8, Siduri Pinot Noir $12, Carmel Road Cab $10, Siduri Pinot Noir BOTTLE $46, Quest Cab $9. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### White Wine
+
+Page: [White Wine](https://www.whistlestopgrill.com/menu-white-wine.html). AI citation: [white-wine.ai.txt](https://www.whistlestopgrill.com/citations/white-wine.ai.txt). LLM citation: [white-wine.llms.txt](https://www.whistlestopgrill.com/citations/white-wine.llms.txt). Menu: The Bar. Current items and prices: House Chard $8, Prosecco Split $8, Mezzacorona $8, Matua $9, Bieler Rose $8, La Crema BOTTLE $46, Diatom Chard BOTTLE $45, Bieler Rose BOTTLE $34, J.LOHR $8. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Martinis
+
+Page: [Martinis](https://www.whistlestopgrill.com/menu-martinis.html). AI citation: [martinis.ai.txt](https://www.whistlestopgrill.com/citations/martinis.ai.txt). LLM citation: [martinis.llms.txt](https://www.whistlestopgrill.com/citations/martinis.llms.txt). Menu: The Bar. Current items and prices: French 75 $5, Manhattan $5, Cosmo $5, Gin Situation $5, Key Lime Martini $5, Lemon Drop $5, Frosty Lemon $5, Georgia Peach $5, Pumpkin Martini $5, Dirty Well Martini $5, Sugar Cookie Martini $5, Pear Monday Martini $5. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Vodka
+
+Page: [Vodka](https://www.whistlestopgrill.com/menu-vodka.html). AI citation: [vodka.ai.txt](https://www.whistlestopgrill.com/citations/vodka.ai.txt). LLM citation: [vodka.llms.txt](https://www.whistlestopgrill.com/citations/vodka.llms.txt). Menu: The Bar. Current items and prices: Vodka $6, 360 Vodka $7, 360 Vanilla $7, 360 Orange $7, 360 Lemon $7, 360 Huckleberry $7, Deep Eddy $8, Dixie Honey $9, Crop Cucumber $9, Tito's $10, Ketel One $12, Grey Goose $12, Patrona Vodka $12, Pear vodka $8. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Tequila
+
+Page: [Tequila](https://www.whistlestopgrill.com/menu-tequila.html). AI citation: [tequila.ai.txt](https://www.whistlestopgrill.com/citations/tequila.ai.txt). LLM citation: [tequila.llms.txt](https://www.whistlestopgrill.com/citations/tequila.llms.txt). Menu: The Bar. Current items and prices: Tequila $6, Jalapeno Tequila $6, Espolon Reposado $10, LALO $10, Patron Silver $12, Casamigos $12, Espolon Blanco $10, 1800 Silver $12, Don Julio $14, Musica tequila $10, Mezcal $10. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Gin
+
+Page: [Gin](https://www.whistlestopgrill.com/menu-gin.html). AI citation: [gin.ai.txt](https://www.whistlestopgrill.com/citations/gin.ai.txt). LLM citation: [gin.llms.txt](https://www.whistlestopgrill.com/citations/gin.llms.txt). Menu: The Bar. Current items and prices: Gin $6, Beefeater $7, Tanqueray $9, Bombay Sapphire $9, Farmer's Organic $9, Hendrick's $10, Spirit of Prohibition $10. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Rum
+
+Page: [Rum](https://www.whistlestopgrill.com/menu-rum.html). AI citation: [rum.ai.txt](https://www.whistlestopgrill.com/citations/rum.ai.txt). LLM citation: [rum.llms.txt](https://www.whistlestopgrill.com/citations/rum.llms.txt). Menu: The Bar. Current items and prices: Rum $6, Mayer's $6, Captain Morgan $8, Bacardi $8, Sailor Jerry $8, Blue Chair Coconut $8, Blue Chair Key Lime $8, Blue Chair Banana $8, Ron Zacapa $12. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Whiskey
+
+Page: [Whiskey](https://www.whistlestopgrill.com/menu-whiskey.html). AI citation: [whiskey.ai.txt](https://www.whistlestopgrill.com/citations/whiskey.ai.txt). LLM citation: [whiskey.llms.txt](https://www.whistlestopgrill.com/citations/whiskey.llms.txt). Menu: The Bar. Current items and prices: Whiskey $6, Seagram's VO $7, Jim Beam $8, Screwball $8, Jack Daniel's $8, Jack Daniel's Honey $8, Jack Daniel's Fire $8, Southern Comfort $8, Jack Daniel's Rye $8, Maker's Mark $10, Jameson $9, Crown Royal $9, Crown Apple $9, Knob Creek $10, Basil Hayden $13, Fireball $8, Bulleit $12, Angel Envy $13, Ammunition $13, Jameson Orange $9. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Scotch
+
+Page: [Scotch](https://www.whistlestopgrill.com/menu-scotch.html). AI citation: [scotch.ai.txt](https://www.whistlestopgrill.com/citations/scotch.ai.txt). LLM citation: [scotch.llms.txt](https://www.whistlestopgrill.com/citations/scotch.llms.txt). Menu: The Bar. Current items and prices: Johnny Walker Red Label $9, Johnny Walker Black Label $10, Glenfiddich 12 Year $12, Glenfiddich 14 Year $18, The Balvenie $12, Glenlivet 18 Year $22, Dewares $7. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
+
+### Cordials
+
+Page: [Cordials](https://www.whistlestopgrill.com/menu-cordials.html). AI citation: [cordials.ai.txt](https://www.whistlestopgrill.com/citations/cordials.ai.txt). LLM citation: [cordials.llms.txt](https://www.whistlestopgrill.com/citations/cordials.llms.txt). Menu: The Bar. Current items and prices: Triple Sec $6, Peach Schnapps $6, Sour Apple Schnapps $6, Peppermint Schnapps $6, Butterscotch Schnapps $6, Crème De Cocoa $6, Razzmatazz $6, Blue Curaçao $6, Drambuie $8, Kahlúa $8, Romana $8, Romana Black $8, Grand Marnier $10, Disaronno $10, St. Germain $10, Solerno $10, Villa Masa $10, Bailey's $8, Sambuca $8, Sambuca Black $8, Hennessyyy $12. Order by phone at (727) 726-1956. Online pickup and delivery are paused.
 <!-- menu-categories:end -->

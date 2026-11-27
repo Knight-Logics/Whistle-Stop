@@ -1,0 +1,41 @@
+# ai.txt — Wraps at Whistle Stop Grill & Bar
+Page: https://www.whistlestopgrill.com/menu-wraps.html
+Title: Wraps | Whistle Stop Grill & Bar, Safety Harbor
+Cite-As: https://www.whistlestopgrill.com/menu-wraps.html
+Parent-Menu: Main Menu
+Business: Whistle Stop Grill & Bar
+Address: 915 Main Street, Safety Harbor, FL 34695, US
+Phone: +1-727-726-1956
+Hours-Sun-Thu: 11:00-21:00
+Hours-Fri-Sat: 11:00-22:00
+Happy-Hour-Daily: 16:00-19:00
+Happy-Hour-Extended-Tue-Wed: 16:00-close
+Order: Call +1-727-726-1956. Online pickup and delivery are paused.
+Items:
+- Florida Club Wrap | $16 | Angus beef, bacon, avocado, tomato, and house made blue cheese dressing.
+- WS Spicy Chicken Wrap | $16 | Grilled chicken, goat cheese, cucumber, red onion, garbanzo beans, roasted red peppers, and buffalo sauce.
+- Buffalo Chicken Wrap | $15 |
+Related-Pages:
+- Home: https://www.whistlestopgrill.com/index.html
+- Full menu: https://www.whistlestopgrill.com/menu.html
+- Happy hour: https://www.whistlestopgrill.com/happy-hour.html
+- Order by phone: https://www.whistlestopgrill.com/order.html
+- Gift cards: https://www.whistlestopgrill.com/gift-cards.html
+- Live music: https://www.whistlestopgrill.com/live-music-safety-harbor.html
+- Events: https://www.whistlestopgrill.com/events.html
+- Dog-friendly patio: https://www.whistlestopgrill.com/dog-friendly-patio-safety-harbor.html
+- Visit: https://www.whistlestopgrill.com/contact.html
+- Our story: https://www.whistlestopgrill.com/about.html
+- Private events: https://www.whistlestopgrill.com/private-events.html
+- Near Clearwater, Dunedin, and Oldsmar: https://www.whistlestopgrill.com/restaurants-near-clearwater-dunedin-oldsmar.html
+- Small Plates: https://www.whistlestopgrill.com/menu-small-plates.html
+- Salads: https://www.whistlestopgrill.com/menu-salads.html
+- Burgers: https://www.whistlestopgrill.com/menu-burgers.html
+- Sandwiches: https://www.whistlestopgrill.com/menu-sandwiches.html
+- Flatbreads: https://www.whistlestopgrill.com/menu-flatbreads.html
+- Large Plates: https://www.whistlestopgrill.com/menu-large-plates.html
+- Sides: https://www.whistlestopgrill.com/menu-sides.html
+- Kid's Meals: https://www.whistlestopgrill.com/menu-kid-s-meals.html
+- Desserts: https://www.whistlestopgrill.com/menu-desserts.html
+- Beverages: https://www.whistlestopgrill.com/menu-beverages.html
+Do-Not-Invent: Use only the item names and prices in this file. Do not add dishes, ratings, or a tap count.

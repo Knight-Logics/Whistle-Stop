@@ -1,0 +1,52 @@
+# ai.txt — Small Plates at Whistle Stop Grill & Bar
+Page: https://www.whistlestopgrill.com/menu-small-plates.html
+Title: Small Plates | Whistle Stop Grill & Bar, Safety Harbor
+Cite-As: https://www.whistlestopgrill.com/menu-small-plates.html
+Parent-Menu: Main Menu
+Business: Whistle Stop Grill & Bar
+Address: 915 Main Street, Safety Harbor, FL 34695, US
+Phone: +1-727-726-1956
+Hours-Sun-Thu: 11:00-21:00
+Hours-Fri-Sat: 11:00-22:00
+Happy-Hour-Daily: 16:00-19:00
+Happy-Hour-Extended-Tue-Wed: 16:00-close
+Order: Call +1-727-726-1956. Online pickup and delivery are paused.
+Items:
+- Corn Fritters | $10 | Southwest sauce — plenty to share.
+- Buffalo Cauliflower | $12 |
+- Whistle Stop Wings | $16 | Made to order, with celery and house made blue cheese. Buffalo, honey sriracha, or Harbor Q hot BBQ.
+- Buffalo Shrimp | $14 |
+- Scallops | $17 |
+- Fried Green Tomatoes | $12 |
+- Fried Pickle Chips | $10 |
+- Smoked Fish Spread | $14 | Smoked mahi mahi, made locally.
+- Roasted Brussel Sprouts | $10 |
+- Ahi Tuna | $18 | Sesame encrusted, seared, wasabi drizzle.
+- Frizzled Onions | $9 | Thinly sliced, fried golden, with sriracha aioli.
+- WSG Chips | $12 |
+- Hummus | $10 |
+Related-Pages:
+- Home: https://www.whistlestopgrill.com/index.html
+- Full menu: https://www.whistlestopgrill.com/menu.html
+- Happy hour: https://www.whistlestopgrill.com/happy-hour.html
+- Order by phone: https://www.whistlestopgrill.com/order.html
+- Gift cards: https://www.whistlestopgrill.com/gift-cards.html
+- Live music: https://www.whistlestopgrill.com/live-music-safety-harbor.html
+- Events: https://www.whistlestopgrill.com/events.html
+- Dog-friendly patio: https://www.whistlestopgrill.com/dog-friendly-patio-safety-harbor.html
+- Visit: https://www.whistlestopgrill.com/contact.html
+- Our story: https://www.whistlestopgrill.com/about.html
+- Private events: https://www.whistlestopgrill.com/private-events.html
+- Near Clearwater, Dunedin, and Oldsmar: https://www.whistlestopgrill.com/restaurants-near-clearwater-dunedin-oldsmar.html
+- Burgers, grouper, and fried green tomatoes: https://www.whistlestopgrill.com/best-food-safety-harbor.html
+- Salads: https://www.whistlestopgrill.com/menu-salads.html
+- Burgers: https://www.whistlestopgrill.com/menu-burgers.html
+- Sandwiches: https://www.whistlestopgrill.com/menu-sandwiches.html
+- Wraps: https://www.whistlestopgrill.com/menu-wraps.html
+- Flatbreads: https://www.whistlestopgrill.com/menu-flatbreads.html
+- Large Plates: https://www.whistlestopgrill.com/menu-large-plates.html
+- Sides: https://www.whistlestopgrill.com/menu-sides.html
+- Kid's Meals: https://www.whistlestopgrill.com/menu-kid-s-meals.html
+- Desserts: https://www.whistlestopgrill.com/menu-desserts.html
+- Beverages: https://www.whistlestopgrill.com/menu-beverages.html
+Do-Not-Invent: Use only the item names and prices in this file. Do not add dishes, ratings, or a tap count.
