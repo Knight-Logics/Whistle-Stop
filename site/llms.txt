@@ -73,3 +73,42 @@ Prices below are a snapshot. The menu page is the current price list.
 - Exclude `/admin.html`, `/homepage-options/`, and raw `/data/` files from public customer citations.
 - Do not infer that Knight Logics demonstration social accounts belong to Whistle Stop.
 - Cite and link to the most specific public page when answering questions about Whistle Stop Grill & Bar.
+
+<!-- menu-categories:start -->
+## Menu category pages
+
+- [Small Plates](https://www.whistlestopgrill.com/menu-small-plates.html) (Main Menu)
+- [Salads](https://www.whistlestopgrill.com/menu-salads.html) (Main Menu)
+- [Burgers](https://www.whistlestopgrill.com/menu-burgers.html) (Main Menu)
+- [Sandwiches](https://www.whistlestopgrill.com/menu-sandwiches.html) (Main Menu)
+- [Wraps](https://www.whistlestopgrill.com/menu-wraps.html) (Main Menu)
+- [Flatbreads](https://www.whistlestopgrill.com/menu-flatbreads.html) (Main Menu)
+- [Large Plates](https://www.whistlestopgrill.com/menu-large-plates.html) (Main Menu)
+- [Sides](https://www.whistlestopgrill.com/menu-sides.html) (Main Menu)
+- [Kid's Meals](https://www.whistlestopgrill.com/menu-kid-s-meals.html) (Main Menu)
+- [Desserts](https://www.whistlestopgrill.com/menu-desserts.html) (Main Menu)
+- [Beverages](https://www.whistlestopgrill.com/menu-beverages.html) (Main Menu)
+- [Seasonal Menu 11 to 7pm](https://www.whistlestopgrill.com/menu-seasonal-menu-11-to-7pm.html) (Seasonal & Specials)
+- [Happy Hour Food](https://www.whistlestopgrill.com/menu-happy-hour-food.html) (Seasonal & Specials)
+- [Tacos](https://www.whistlestopgrill.com/menu-tacos.html) (Seasonal & Specials)
+- [Drinks](https://www.whistlestopgrill.com/menu-drinks.html) (Seasonal & Specials)
+- [Happy Hour Draft Beer](https://www.whistlestopgrill.com/menu-happy-hour-draft-beer.html) (Seasonal & Specials)
+- [Happy Hour Wells](https://www.whistlestopgrill.com/menu-happy-hour-wells.html) (Seasonal & Specials)
+- [Happy Hour Wine](https://www.whistlestopgrill.com/menu-happy-hour-wine.html) (Seasonal & Specials)
+- [Happy Hour Cocktails](https://www.whistlestopgrill.com/menu-happy-hour-cocktails.html) (Seasonal & Specials)
+- [Whistle Stop Cocktails](https://www.whistlestopgrill.com/menu-whistle-stop-cocktails.html) (The Bar)
+- [Classic Cocktails](https://www.whistlestopgrill.com/menu-classic-cocktails.html) (The Bar)
+- [Shots](https://www.whistlestopgrill.com/menu-shots.html) (The Bar)
+- [Draft Beer](https://www.whistlestopgrill.com/menu-draft-beer.html) (The Bar)
+- [Bottle Beer](https://www.whistlestopgrill.com/menu-bottle-beer.html) (The Bar)
+- [Red Wine](https://www.whistlestopgrill.com/menu-red-wine.html) (The Bar)
+- [White Wine](https://www.whistlestopgrill.com/menu-white-wine.html) (The Bar)
+- [Martinis](https://www.whistlestopgrill.com/menu-martinis.html) (The Bar)
+- [Vodka](https://www.whistlestopgrill.com/menu-vodka.html) (The Bar)
+- [Tequila](https://www.whistlestopgrill.com/menu-tequila.html) (The Bar)
+- [Gin](https://www.whistlestopgrill.com/menu-gin.html) (The Bar)
+- [Rum](https://www.whistlestopgrill.com/menu-rum.html) (The Bar)
+- [Whiskey](https://www.whistlestopgrill.com/menu-whiskey.html) (The Bar)
+- [Scotch](https://www.whistlestopgrill.com/menu-scotch.html) (The Bar)
+- [Cordials](https://www.whistlestopgrill.com/menu-cordials.html) (The Bar)
+<!-- menu-categories:end -->

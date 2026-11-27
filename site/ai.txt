@@ -48,3 +48,4 @@ Third-Friday: https://www.whistlestopgrill.com/third-friday-safety-harbor-dining
 Nearby-Cities: https://www.whistlestopgrill.com/restaurants-near-clearwater-dunedin-oldsmar.html
 Private-Events: https://www.whistlestopgrill.com/private-events.html
 Events-Calendar: https://www.whistlestopgrill.com/events.html
+Menu-Category-Pages: https://www.whistlestopgrill.com/menu.html and one page per category, named menu-{category}.html

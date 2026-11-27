@@ -76,7 +76,7 @@
       .join("");
     return `
       <section class="menu-category-block" id="${menu.id}-${cat.id}" data-category="${cat.id}">
-        <h2 class="menu-category-title">${escapeHtml(cat.name)}</h2>
+        <h2 class="menu-category-title"><a href="menu-${escapeHtml(cat.id)}.html">${escapeHtml(cat.name)}</a></h2>
         ${note}${orderNote}
         <div class="menu-items">${items}</div>
       </section>`;
@@ -100,7 +100,7 @@
     return menu.categories
       .map(
         (c) => `
-      <a href="#${menu.id}-${c.id}" class="menu-cat-link" data-cat="${c.id}">
+      <a href="menu-${escapeHtml(c.id)}.html" class="menu-cat-link" data-cat="${c.id}">
         ${escapeHtml(c.name)}
       </a>`
       )
@@ -207,6 +207,8 @@
     sidebar.innerHTML = renderSidebar(menu);
     sidebar.querySelectorAll(".menu-cat-link").forEach((link) => {
       link.addEventListener("click", (e) => {
+        const href = link.getAttribute("href") || "";
+        if (!href.startsWith("#")) return;
         e.preventDefault();
         const id = link.getAttribute("href").slice(1);
         const el = document.getElementById(id);
