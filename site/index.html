@@ -54,18 +54,27 @@
       gap: 28px; align-items: center;
       width: min(1180px, calc(100% - 2rem)); margin-inline: auto;
     }
-    .hero-scenes h1 {
+    .hero-scenes .hero-name {
       margin: 8px 0 0;
       font-family: "Bebas Neue", sans-serif; font-weight: 400;
       font-size: clamp(2.9rem, 5.4vw, 4.7rem); line-height: .92; color: #f7f3ea;
     }
-    .hero-scenes h1 .hero-sub {
+    .hero-scenes .hero-name .hero-sub {
       display: block; margin-top: 8px;
       font-size: clamp(1.1rem, 2vw, 1.55rem); line-height: 1.15; letter-spacing: .04em; color: #f3d285;
     }
-    .hero-scenes .scene-kicker {
-      margin: 14px 0 0; font-weight: 700; font-size: 1rem; letter-spacing: .12em;
-      text-transform: uppercase; color: #c6f135;
+    .hero-scenes h1.scene-bar {
+      display: inline-block;
+      margin: 16px 0 0;
+      padding: 7px 14px 6px;
+      border-radius: 8px;
+      background: #c6f135;
+      color: #14180c;
+      font-family: "Bebas Neue", sans-serif;
+      font-weight: 400;
+      font-size: clamp(1.55rem, 2.6vw, 2.15rem);
+      line-height: 1;
+      letter-spacing: .03em;
     }
     .hero-scenes .scene-lead {
       margin: 10px 0 0; max-width: 44ch; font-size: 1.08rem; color: rgba(247, 243, 234, .92);
@@ -459,16 +468,16 @@
       <div class="scene-frame">
         <div class="scene-copy">
           <p class="hero-eyebrow reveal visible" data-hero-eyebrow>915 Main Street &middot; Safety Harbor, FL</p>
-          <h1 class="reveal stagger-1 visible">
+          <p class="hero-name reveal stagger-1 visible">
             <span data-hero-title-1>Whistle Stop</span> <span data-hero-title-2>Grill &amp; Bar</span>
             <span class="hero-sub" data-hero-tagline>Live Music, Patio Dining &amp; Bar in Safety Harbor</span>
-          </h1>
+          </p>
           <div aria-live="polite">
-            <p class="scene-kicker" data-for="0">From the kitchen</p>
+            <h1 class="scene-bar" data-for="0">Patio Dining on Main Street</h1>
             <p class="scene-lead" data-for="0" data-hero-lead>Safety Harbor's favorite Main Street grill &amp; dog-friendly patio &mdash; fried green tomatoes, Gulf grouper, burgers, and 20+ cold taps.</p>
-            <p class="scene-kicker" data-for="1" hidden>Live music &amp; gatherings</p>
+            <h1 class="scene-bar" data-for="1" hidden>Live Music in Safety Harbor</h1>
             <p class="scene-lead" data-for="1" hidden>Live local artists Friday &amp; Saturday (6:30&ndash;9:30 PM), Tuesday Open Mic, and Wednesday Cornhole on the patio.</p>
-            <p class="scene-kicker" data-for="2" hidden>At the bar</p>
+            <h1 class="scene-bar" data-for="2" hidden>Happy Hour &amp; the Bar</h1>
             <p class="scene-lead" data-for="2" hidden>Daily Happy Hour 4&ndash;7 PM ($3 wells, $4 wine, $5 drafts), extended Tue &amp; Wed until close, $5 Martini Mondays, and $5 Sunday Bloody Marys.</p>
           </div>
           <div class="scene-actions">
